@@ -1,1 +1,2 @@
+[![pipeline status](https://git.informatik.tu-cottbus.de/swp/ws1718/monopoly-ws1718-g1/badges/master/pipeline.svg)](https://git.informatik.tu-cottbus.de/swp/ws1718/monopoly-ws1718-g1/commits/master)
 # Monopoly
