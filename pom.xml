@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>de.btu.monopoly</groupId>
+    <artifactId>Monopoly</artifactId>
+    <version>0.1-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <name>Monopoly</name>
+    <description>Brettspiel "Monopoly"</description>
+    <inceptionYear>2017</inceptionYear>
+    <organization>
+        <name>BTU Cottbus-Senftenberg / Chair of Software Engineering</name>
+        <url>https://www.b-tu.de/fg-software-systemtechnik/</url>
+    </organization>
+
+
+    <!-- SCM Metadata -->
+    <scm>
+        <connection>scm:git:https://git.informatik.tu-cottbus.de/swp/ws1718/monopoly-ws1718-g1.git</connection>
+        <developerConnection>scm:git:https://git.informatik.tu-cottbus.de/swp/ws1718/monopoly-ws1718-g1.git</developerConnection>
+        <url>https://git.informatik.tu-cottbus.de/swp/ws1718/monopoly-ws1718-g1</url>
+    </scm>
+
+    <!-- Developers -->
+    <developers>
+        <developer>
+            <id>prinzach</id>
+            <name>Achilles Christian Prinz</name>
+            <email>prinzach@b-tu.de</email>
+        </developer>
+        <developer>
+            <id>kostoele</id>
+            <name>Eleonora Kostova</name>
+            <email>kostoele@b-tu.de</email>
+        </developer>
+        <developer>
+            <id>augatjoh</id>
+            <name>John Augat</name>
+            <email>augatjoh@b-tu.de</email>
+        </developer>
+        <developer>
+            <id>belsmaxi</id>
+            <name>Maximilian Oliver Bels</name>
+            <email>belsmaxi@b-tu.de</email>
+        </developer>
+        <developer>
+            <id>kalwepat</id>
+            <name>Patrick Hartmut Christian Kalweit</name>
+            <email>kalwepat@b-tu.de</email>
+        </developer>
+    </developers>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <project.mainClass>de.btu.monopoly.Launcher</project.mainClass>
+    </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.0.2</version>
+                <executions>
+                    <execution>
+                        <id>default-jar</id>
+                        <phase>never</phase>
+                        <configuration>
+                            <finalName>unwanted</finalName>
+                            <classifier>unwanted</classifier>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>com.zenjava</groupId>
+                <artifactId>javafx-maven-plugin</artifactId>
+                <version>8.8.3</version>
+                <configuration>
+                    <mainClass>${project.mainClass}</mainClass>
+                    <jfxAppOutputDir>${project.build.directory}</jfxAppOutputDir>
+                    <jfxMainAppJarName>${project.build.finalName}.jar</jfxMainAppJarName>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.6.0</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.20.1</version>
+                <!--
+                <configuration>
+                    <additionalClasspathElements>
+                        <additionalClasspathElement>${java.home}/lib/jfxrt.jar</additionalClasspathElement>
+                    </additionalClasspathElements>
+                </configuration>
+                -->
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.esotericsoftware</groupId>
+            <artifactId>kryonet</artifactId>
+            <version>2.22.0-RC1</version>
+        </dependency>
+    </dependencies>
+
+</project>
