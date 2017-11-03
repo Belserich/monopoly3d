@@ -6,7 +6,7 @@ In the context of our research study, please record the three most important dec
 ## Actions following the sprint planning
 
 * At the end of the sprint planning, the team selects the three to five most important decisions.
-** Optional: An explicit vote ([see study guide](https://git.informatik.tu-cottbus.de/schubmat/markdown-decision-records) + Grafik unten)
+ * Optional: An explicit vote ([see study guide](https://git.informatik.tu-cottbus.de/schubmat/markdown-decision-records) + figure below)
 * A selected team member transfers the decisions to MDR files and places them on Gitlab.
 
 ## Sprint End Actions
