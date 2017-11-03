@@ -24,6 +24,23 @@ To ease the documentation of decision during the _Softwarepraktikum_ / _Software
 
 Therefore, at least three files should be created per sprint, which represent the most important decisions.
 
+## Markdown Decision Record -- File Name Conventions
+
+Please use the following naming scheme for your MDRs (explained by three examples and corresponding elaboration) and store them in the `doc/mdr/` project folder:
+
+Examples:
+
+  * `2017-01-01 Choose a database.md`
+  * `2017-01-02 Handle more users.md`
+  * `2017-01-03 Improve application security.md`
+
+Naming scheme:
+
+  * The name has the date as YYYY-MM-DD. This arrangement is ISO standard, and is useful for easily sorting by date. 
+  * The name has a present tense imperative verb phrase. This is helpful for readability and matches a commit message format.
+  * The name uses sentence capitalization and spaces. This is helpful for readability.
+  * The extension is markdown. This can be useful for easy formatting.
+
 ## Misc 
 
 If a vote on the most important decisions is really necessary, then it should take place in turn and without discussion, in order to make things as efficient as possible.
