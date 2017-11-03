@@ -27,4 +27,5 @@ Therefore, at least three files should be created per sprint, which represent th
 ## Misc 
 
 If a vote on the most important decisions is really necessary, then it should take place in turn and without discussion, in order to make things as efficient as possible.
+
 ![SelectionProcess.svg](https://git.informatik.tu-cottbus.de/schubmat/markdown-decision-records/raw/master/misc/img/SelectionProcess.png)
