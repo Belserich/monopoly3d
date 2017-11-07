@@ -25,7 +25,7 @@ public class Launcher extends Application {
         Scene scene = new Scene(root);
         scene.getStylesheets().add("/styles/Styles.css");
 
-        stage.setTitle("Softwarepraktikum WS 17/18");
+        stage.setTitle("Monopoly");
         stage.setScene(scene);
         stage.show();
     }
