@@ -47,6 +47,11 @@ public class Player {
      * Tage im Gefaengnis
      */
     private int daysInJail;
+    
+    /**
+     * Position des Spielers
+     */
+    private int position;
 
     /**
      *
@@ -61,6 +66,7 @@ public class Player {
         this.inJail = false;
         this.jailCardAmount = 0;
         this.daysInJail = 0;
+        this.position = 0;
     }
 
     public Player(String name, int money) { //geht das mit Default ID?
@@ -155,4 +161,21 @@ public class Player {
     public void setMoney(int money) {
         this.money = money;
     }
+    
+    /**
+     * Festlegen der Spielerposition
+     * @param pos 
+     */
+    public void setPosition(int pos){
+        this.position = pos;
+    }
+    
+    /**
+     * Rückgabe der Spielerposition
+     * @return 
+     */
+    public int getPosition(){
+        return position;
+    }
+    
 }
