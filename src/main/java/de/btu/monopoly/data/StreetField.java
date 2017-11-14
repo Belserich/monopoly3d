@@ -20,15 +20,15 @@ public class StreetField extends Property {
 
     /**
      *
-     * @param name - Strassenname
-     * @param price - Kaufpreis
-     * @param rent0 - Miete unbebaut
-     * @param rent1 - Miete mit 1 Haus
-     * @param rent2 - Miete mit 2 Haeusern
-     * @param rent3 - Miete mit 3 Haeusern
-     * @param rent4 - Miete mit 4 Haeusern
-     * @param rent5 - Miete mit Hotel
-     * @param housePrice - Preis fuer ein Haus
+     * @param name Strassenname
+     * @param price Kaufpreis der Strasse
+     * @param rent0 Miete unbebaut
+     * @param rent1 Miete mit 1 Haus
+     * @param rent2 Miete mit 2 Haeusern
+     * @param rent3 Miete mit 3 Haeusern
+     * @param rent4 Miete mit 4 Haeusern
+     * @param rent5 Miete mit Hotel
+     * @param housePrice Preis fuer ein Haus
      */
     public StreetField(String name,
             int price,
@@ -55,7 +55,7 @@ public class StreetField extends Property {
     }
 
     /**
-     * @return aktuelle Miete
+     * @return aktuelle Miete der Strasse
      */
     public int getRent() {
         if (!isMortgageTaken()) {
