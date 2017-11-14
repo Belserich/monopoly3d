@@ -47,7 +47,7 @@ public class Player {
      * Tage im Gefaengnis
      */
     private int daysInJail;
-    
+
     /**
      * Position des Spielers
      */
@@ -103,7 +103,7 @@ public class Player {
 
     /**
      *
-     * @return Tage im Gefaengnis
+     * @return ob der Spieler im Gefängnis ist
      */
     public boolean isInJail() {
         return inJail;
@@ -161,21 +161,23 @@ public class Player {
     public void setMoney(int money) {
         this.money = money;
     }
-    
+
     /**
      * Festlegen der Spielerposition
-     * @param pos 
+     *
+     * @param pos
      */
-    public void setPosition(int pos){
+    public void setPosition(int pos) {
         this.position = pos;
     }
-    
+
     /**
      * Rückgabe der Spielerposition
-     * @return 
+     *
+     * @return
      */
-    public int getPosition(){
+    public int getPosition() {
         return position;
     }
-    
+
 }
