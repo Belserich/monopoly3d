@@ -18,3 +18,5 @@
 ehthumbs.db
 Thumbs.db
 hs_err_pid*
+.idea/
+.iml
