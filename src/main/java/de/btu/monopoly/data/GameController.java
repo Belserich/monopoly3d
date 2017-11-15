@@ -1,10 +1,7 @@
 package de.btu.monopoly.data;
 
 /**
- * Created by Belserich Gremory on 13/11/2017. Muss diese Klasse eventuell
- * umbenannt werden in GameInit oder InitGame? Der GameController an sich ist ja
- * ein gesamtes Paket, bzw. eine Klasse im Paket GameController.
- *
+ * Created by Belserich Gremory on 13/11/2017.
  */
 public class GameController {
 
