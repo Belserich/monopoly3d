@@ -6,15 +6,6 @@ package de.btu.monopoly.data;
 public class Player {
 
     /**
-     * Standardname des Spielers
-     */
-    private static final String DEFAULT_NAME = "Hauptspieler";
-    /**
-     * Standard ID des Spielers
-     */
-    private static final int DEFAULT_ID = 0;
-
-    /**
      * Name des Spielers
      */
     private final String name;
@@ -51,7 +42,12 @@ public class Player {
     /**
      * Position des Spielers
      */
-    private int position;
+    private Field position;
+
+    /**
+     * ob der Spieler ein Zuschauer (ausgeschieden) ist
+     */
+    private boolean isSpectator;
 
     /**
      *
@@ -66,15 +62,7 @@ public class Player {
         this.inJail = false;
         this.jailCardAmount = 0;
         this.daysInJail = 0;
-        this.position = 0;
-    }
-
-    public Player(String name, int money) { //geht das mit Default ID?
-        this(name, DEFAULT_ID, money);
-    }
-
-    public Player(int money) { // geht das ohne ID?
-        this(DEFAULT_NAME, money);
+        this.position = null;
     }
 
     /**
@@ -167,7 +155,7 @@ public class Player {
      *
      * @param pos
      */
-    public void setPosition(int pos) {
+    public void setPosition(Field pos) {
         this.position = pos;
     }
 
@@ -176,8 +164,24 @@ public class Player {
      *
      * @return
      */
-    public int getPosition() {
-        return position;
+    public Field getPosition() {
+        return this.position;
+    }
+
+    /**
+     *
+     * @return ob der Spieler Zuschauer ist (ausgeschieden)
+     */
+    public boolean isSpectator() {
+        return isSpectator;
+    }
+
+    /**
+     *
+     * @param isSpectator ob der Spieler ausgeschieden ist
+     */
+    public void setSpectator(boolean isSpectator) {
+        this.isSpectator = isSpectator;
     }
 
 }
