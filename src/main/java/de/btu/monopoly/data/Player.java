@@ -184,4 +184,11 @@ public class Player {
         this.isSpectator = isSpectator;
     }
 
+    /**
+     * @param inJail ob der Spieler im Gefaengnis ist
+     */
+    public void setInJail(boolean inJail) {
+        this.inJail = inJail;
+    }
+
 }
