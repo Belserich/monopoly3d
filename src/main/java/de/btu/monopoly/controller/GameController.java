@@ -47,7 +47,7 @@ public class GameController {
         doubletCounter = 0;
 
         if (activePlayer.isInJail()) {
-            prisonPhase;
+            prisonPhase();
         }
         while (isDoublet) {
             rollPhase();
@@ -56,5 +56,21 @@ public class GameController {
             }
             actionPhase();
         }
+    }
+
+    private void prisonPhase() {
+
+    }
+
+    private void rollPhase() {
+
+    }
+
+    private void fieldPhase() {
+
+    }
+
+    private void actionPhase() {
+
     }
 }
