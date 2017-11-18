@@ -297,14 +297,20 @@ public class GameController {
      */
     private void roll() {
 
+        // 2 interne Würfel
         int dice1;
         int dice2;
 
+        // Erzeugen der Zufallszahl
         dice1 = (int) (Math.random() * 6);
         dice2 = (int) (Math.random() * 6);
 
+        // Bei Pasch, erhöhe doubletCounter und isDoublet
         if (dice1 == dice2) {
             doubletCounter++;
+            isDoublet = true;
+        } else {
+            isDoublet = false;
         }
 
         diceResult = dice1 + dice2;
@@ -316,9 +322,8 @@ public class GameController {
      *
      */
     private void movePlayer() {
-        /*
-         * TODO Patrick & John -- ueber-LOS-gehen beachten!
-         */
+
+        //TODO Patrick & John - eventuell warten auf Implementierung des Gameboard
     }
 
     /**
@@ -326,7 +331,7 @@ public class GameController {
      */
     private void moveToJail() {
         /*
-         * TODO Patrick & John
+         * TODO Patrick & John - eventuell warten auf Implementierung des Gameboard
          */
     }
 
@@ -337,14 +342,14 @@ public class GameController {
      * @param amount Geld was der Spieler besitzen muss
      */
     private boolean checkLiquidity(Player player, int amount) {
-        /*
-         * TODO Patrick & John -- (Hierbei ist der Spieler noch variabel, da ich
-         * noch nicht weiss, ob man die Methode fuer eine Karte eventuell auf
-         * andere nicht aktive Spieler anwenden muss. Ist dies nicht der Fall,
-         * kann die Methodenuebergabe fuer Player player wegfallen und in der
-         * Methode nur der activePlayer implementiert werden)
-         */
-        return false; //Platzhalter
+
+        // Die Methode benötigt die Übergabe des Spielers, da bei einem Ereignisfeld, eine Karte vorkommt, bei der der
+        // actualPlayer Geld von den Mitspielern einsammeln kann
+        if ((player.getMoney() - amount) < 0) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
     /**
@@ -354,9 +359,9 @@ public class GameController {
      * @param amount Betrag der dem Spieler abgezogen wird
      */
     private void takeMoney(Player player, int amount) {
-        /*
-         * TODO Patrick & John
-         */
+
+        player.setMoney(player.getMoney() - amount);
+
     }
 
     /**
@@ -366,9 +371,9 @@ public class GameController {
      * @param amount Betrag der dem Spieler gutgeschrieben wird
      */
     private void giveMoney(Player player, int amount) {
-        /*
-         * TODO Patrick & John
-         */
+
+        player.setMoney(player.getMoney() + amount);
+
     }
 
     /**
