@@ -1,0 +1,355 @@
+Ereigniskarten
+
+Card 01 (Gefangnisfrei)
+
+	Text: "Du kommst aus dem Gefangnis frei"
+	
+	Methode: 
+				1) Karte behalten
+	
+	
+
+
+
+	
+Card 02(Strafzettel)
+
+	Text:"Strafzettel! Zahle 15"
+	
+	Methoden: 
+				1) Geld abbuchen(15)
+	
+
+
+
+
+Card 03(Bahnhof)
+
+	Text:"Rucke vor bis zum nachsten Bahnhof.
+	Der Eigentumer erhalt das Doppelte der normalen Miete.
+	Wenn der Bahnhof noch niemandem gehort, kannst du ihn von der Bank kaufen."
+	
+	Methoden: 
+				1) Position andern
+				2) LOS uberprufen
+					a) Gled uberweisen(200)
+				3) Besitzer ermitteln
+					a) Geld abbuchen (Miete ?2, Mitspieler)
+					b) Kaufen/versteigern
+
+			
+
+Card 04(Zuruck 3 Felder)
+
+	Text:"Gehe 3 Felder zuruck."
+	
+	Methoden:
+				1) Position andern
+				2) Besitzer ermitteln
+					a) Geld abbuchen(Miete/Steuer, Mitspieler/Bank)
+					b) Kaufen/Versteigern/Bauen
+			
+
+		
+Card 05(Bausparvertrag)
+
+	Text:"Dein Bausparvertrag wird fallig. Du erhalst 150."
+	
+	Methoden: 
+				1) Geld uberweisen(150)
+
+
+Card 06(Seestra?e)
+
+	Text:"Rucke vor bis zum Seestra?e. Wenn du uber LOS kommst, ziehe 200"
+	
+	Methoden:
+				1) Position andern
+				2) LOS uberprufen
+					a) Geld uberweisen(200)
+				3) Besitzer ermitteln
+					a) Geld abbuchen(Miete, Mitspieler)
+					b) Kaufen/Versteigern/Bauen
+					
+			
+	
+Card 07(LOS)
+
+	Text:"Rucke vor bis auf LOS."
+	
+	Methoden:
+				1) Position andern
+				2) Geld uberweisen(200*)
+			
+			
+Card 08(Schlossallee)
+
+	Text: "Rucke vor bis zum Schossallee."
+			
+			
+	Methoden:
+				1) Position andern
+					a) 'Optionel: LOS uberprufen und Geld uberweisen(200)'
+				2) Besitzer ermitteln
+					a) Geld abbuchen(Miete, Mitspieler)
+					b) Kaufen/Versteigern/Bauen
+			
+			
+Card 09(Renovieren)
+
+	Text:"Du lasst deine Hauser renovieren. Zahle: 25 pro Haus, 100 pro Hotel."
+	
+	Methoden:
+				1) Prufe Gebauden
+				2)  Hauser zahlen
+					a) Multiplizieren mit 25
+				3) Hotels zahlen
+					a) Multiplizieren mit 100
+				4) Geld abbuchen (Summe)
+		
+				
+
+Card 10(Bahnhof)
+
+	Text:"Rucke vor bis zum nachsten Bahnhof.
+	Der Eigentumer erhalt das Doppelte der normalen Miete.
+	Wenn der Bahnhof noch niemandem gehort, kannst du ihn von der Bank kaufen."
+	
+	Methoden: 
+				1) Position andern
+				2) Los uberprufen
+				3) Besitzer ermitteln
+					a) Geld abbuchen (Miete ?2, Mitspieler)
+					b) Kaufen/Versteigern
+
+
+
+Card 11(Vorstand)
+
+	Text:"Du bist zum Vorstand gewahlt worden. Zahle jedem Spieler 50"
+	
+	Methoden: 
+				1) Spieler zahlen
+				2) Geld abbuchen(Anzahl der Spieler ?50)
+	
+			
+			
+			
+Card 12(Dividende)
+
+	Text:"Die Bank zahlt dir eine Dividende von 50"
+	
+	Methoden: 
+			1) Geld uberweisen(50)
+		
+		
+Card 13(Opernplatz)
+
+		Text:"Rucke vor bis zum Opernplatz. Wenn du uber LOS kommst, ziehe 200"
+		
+		Methoden:
+					1) Position andern
+					2) LOS uberprufen
+						a) Geld uberweisen(200)
+					3) Besitzer ermitteln
+						a) Geld abbuchen(Miete, Mitspieler)
+						b) Kaufen/Versteigern/Bauen
+				
+		
+Card 14(Sudbahnhof)
+
+	Text:"Mache einen Ausflug zum Sudbahnhof. Wenn du uber LOS kommst, ziehe 200."
+	
+	Methoden:
+				1) Position andern
+				2) LOS uberprufen
+					a) Geld uberweisen(200)
+				3) Besitzer ermitteln
+					a) Geld abbuchen(Miete, Mitspieler)
+					b) Kaufen/Versteigern
+			
+			
+			
+Card 15(Gefangnis)
+
+	Text:"Gehe in das Gefangnis. Begib dich direkt dorthin. Gehe nicht uber LOS. Ziehe nicht 200."
+	
+	Methoden: 
+				1) Position andern(Gefangnis)
+			
+			
+Card 16(Werk)
+
+	Text:"Rucke vor bis zum nachsten Werk.
+	Wirf die Wurfel und zahle dem Eigentumer den zehnfachen Betrag  deinses Wurfergebnisses.
+	Wenn das Werk noch niemandem gehort, kannst du es von der Bank kaufen."
+	
+	Methoden:
+				1) Position andern
+				2) LOS uberprufen
+					a) Geld uberweisen(200)
+				3) Besitzer ermitteln
+					a) Geld abbuchen(Augenzahl?10, Mitspieler)
+					b) Kaufen/Versteigern
+			
+			
+	
+	
+Gemeinschaftskarten
+
+
+Card 01(Bank-Irrtum)
+
+	Text:"Bank-Irrtum  zu deinen Gutsten. Ziehe 200."
+	
+	
+	Methoden:
+				1)  Geld uberweisen(200)
+	
+	
+Card 02(LOS)
+
+	Text:"Rucke vor bis auf LOS. Ziehe 200"
+	
+	Methoden: 
+				1) Position andern
+				2) Geld uberweisen(200*)
+			
+			
+
+Card 03(Geburtstag)
+
+	Text:"Du hast Geburtstag. Jeder Spieler schenkt dir 10"
+	
+	Methoden: 
+				1) Spieler zahlen
+				2) Geld von jedem Spieler abbuchen(10)
+				3) Geld uberweisen(Anzahl der Spieler ?10)
+			
+			
+Card 04(Schonheit)
+
+	Text:"Zweiter Preis im Schonheitswettbewerb. Du erhalst 10"
+	
+	Methoden:
+				1)  Geld uberweisen(10)
+	
+	
+Card 05(ins Gefangnis)
+
+	Text:"Gehe in das Gefangnis. Begib dich direkt dorthin. Gehe nicht uber LOS. Ziehe nicht 200."
+	
+	Methoden: 
+				1) Position andern(Gefangnis)
+			
+			
+Card 06(Lagerverkauf)
+
+	Text:"Aus Lagerverkaufen erhalst du 50."
+	
+	Methoden:
+				1)  Geld uberweisen(50)
+			
+			
+			
+Card 07(Lebensversicherung)
+
+	Text:"Deine Lebensversicherung wird fallig. Du erhalst 100."
+	
+	Methoden:
+				1)  Geld uberweisen(100)
+			
+			
+Card 08(Schulgeld)
+
+	Text:"Zahle Schulgeld 50."
+	
+	Methoden:
+				1)  Geld abbuchen(50)
+			
+			
+
+Card 09(Einkommensteuerruckzahlung)
+
+		Text:"Einkommensteuerruckzahlung. Du erhalst 20."
+		
+		Methoden:
+					1)  Geld uberweisen(20)
+				
+				
+				
+Card 10(Urlaubsgeld)
+
+	Text:"Urlaubsgeld. Du erhalst 100."
+	
+	Methoden:
+				1)  Geld uberweisen(100)
+			
+			
+Card 11(Arztkosten)
+
+	Text:"Arztkosten. Zahle 50."
+	
+	Methoden:
+				1)  Geld abbuchen(50)
+	
+	
+Card 12(Beratungsgebuhr)
+
+	Text:"Du erhalst eine Beratungsgebuhr von 25."
+	
+	Methoden:
+				1)  Geld uberweisen(25)
+			
+			
+Card 13(Karnkenhausgebuhen)
+
+	Text:"Karnkenhausgebuhren. Du zahlst 100."
+	
+	Methoden:
+				1)  Geld abbuchen(100)
+			
+			
+Card 14(Erben)
+
+	Text:"Du erbst 100."
+	
+	Methoden:
+				1)  Geld uberweisen(100)
+			
+			
+Card 15(Gefangnisfrei)
+
+	Text:"Du kommst aus dem Gefangnis frei. 
+			Behalte diese Karte, bis du sie baruchst oder verkaufst."
+			
+			
+	Methode: 
+				1) Karte behalten
+	
+	
+Card 16(Starssenausbesserungen)
+
+	Text:"Kostwn fur Starssenausbesserungen! Zahle: 40 pro Haus, 115 pro Hotel"
+	
+	Methoden:
+				1) Prufe Gebauden
+				2)  Hauser zahlen
+					a) Multiplizieren mit 40
+				3) Hotels zahlen
+					a) Multiplizieren mit 115
+				4) Geld abbuchen (Summe)
+		
+	
+	
+	
+		
+			
+	
+	
+	
+				
+				
+				
+
+
