@@ -84,7 +84,7 @@ public class GameController {
 //----------- EINZELNE PHASEN -------------------------------------------------
 //-----------------------------------------------------------------------------
     /**
-     * @todo die Gefängnisphase
+     * die Gefängnisphase
      */
     private void prisonPhase() {
         switch (prisonChoice) {
@@ -102,7 +102,7 @@ public class GameController {
             case 2:
                 if (activePlayer.getJailCardAmount() > 0) {
                     activePlayer.removeJailCard();
-                    returnJailCard(); //TODO
+                    returnJailCard(); //TODO Einsetzen
                     activePlayer.setInJail(false);
                 } else { // muss in der GUI deaktiviert sein!!!
 
@@ -153,7 +153,7 @@ public class GameController {
      */
     private void fieldPhase() {
         locate(activePlayer);
-        //TODO
+        //TODO Christian
     }
 
     /**
@@ -177,18 +177,24 @@ public class GameController {
 //----------- EINZELNE METHODEN------------------------------------------------
 //-----------------------------------------------------------------------------
     /**
-     * das Wuerfeln. Summe in rollResult speichern. Pasch nicht vergessen
+     * das Wuerfeln.
      */
     private void roll() {
-        //TODO
+        /*
+         * TODO Patrick & John ! Summe in rollResult speichern. Pasch nicht
+         * vergessen
+         */
+
     }
 
     /**
      * bewegt den Spieler (activePlayer) zu einer neuen Position.
-     * ueber-LOS-gehen beachten!
+     *
      */
     private void movePlayer() {
-        //TODO
+        /*
+         * TODO Patrick & John ! ueber-LOS-gehen beachten!
+         */
     }
 
     /**
@@ -201,17 +207,19 @@ public class GameController {
 
     /**
      * ueberpruft ob der uebergebene Spieler mindestens soviel Geld besitzt, wie
-     * die Methode uebergeben bekommt. (Hierbei ist der Spieler noch variabel,
-     * da ich noch nicht weiss, ob man die Methode fuer eine Karte eventuell auf
-     * andere nicht aktive Spieler anwenden muss. Ist dies nicht der Fall, kann
-     * die Methodenuebergabe fuer Player player wegfallen und in der Methode nur
-     * der activePlayer implementiert werden)
+     * die Methode uebergeben bekommt.
      *
      * @param player Spieler der auf Liquiditaet geprueft wird
      * @param amount Geld was der Spieler besitzen muss
      */
     private boolean checkLiquidity(Player player, int amount) {
-        //TODO
+        /*
+         * TODO Patrick & John ! (Hierbei ist der Spieler noch variabel, da ich
+         * noch nicht weiss, ob man die Methode fuer eine Karte eventuell auf
+         * andere nicht aktive Spieler anwenden muss. Ist dies nicht der Fall,
+         * kann die Methodenuebergabe fuer Player player wegfallen und in der
+         * Methode nur der activePlayer implementiert werden)
+         */
         return false; //Platzhalter
     }
 
@@ -222,7 +230,9 @@ public class GameController {
      * @param amount Betrag der dem Spieler abgezogen wird
      */
     private void takeMoney(Player player, int amount) {
-        //TODO
+        /*
+         * TODO Patrick & John !
+         */
     }
 
     /**
@@ -232,39 +242,48 @@ public class GameController {
      * @param amount Betrag der dem Spieler gutgeschrieben wird
      */
     private void giveMoney(Player player, int amount) {
-        //TODO
+        /*
+         * TODO Patrick & John !
+         */
     }
 
     /**
-     * Macht einen Spieler zum Beobachter (fertig). Entfernt all seinen Besitz!
-     * HIER MUESST IHR EUCH WAS CLEVERES UEBERLEGEN
+     * Macht einen Spieler zum Beobachter.
      *
      * @param player Spieler der bankrott gegangen ist
      */
     private void bankrupt(Player player) {
         activePlayer.setSpectator(true);
-        //TODO
+        /*
+         * TODO Patrick & John ! Spieler wurde schon zum Beobachter gemacht!
+         * Entfernt all seinen Besitz fehlt noch! HIER MUESST IHR EUCH WAS
+         * CLEVERES UEBERLEGEN
+         */
     }
 
     /**
-     * fügt dem Kartenstapel wieder eine Gefaengnis-frei-Karte hinzu. WIE MACHEN
-     * WIR DAS, WENN DIE KARTEN IDs HABEN? Wenn diese Methode nur eine Zeile
-     * hat, dann entfernt sie bitte und fügt diese Zeile beim Case 2 in der
-     * prisonPhase hinzu
+     * fügt dem Kartenstapel wieder eine Gefaengnis-frei-Karte hinzu.
      */
     private void returnJailCard() {
-        //TODO
+        /*
+         * TODO Patrick & John ! WIE MACHEN WIR DAS, WENN DIE KARTEN IDs HABEN?
+         * Wenn diese Methode nur eine Zeile hat, dann entfernt sie bitte und
+         * fügt diese Zeile beim Case 2 in der prisonPhase hinzu (das To Do
+         * Einsetzen)
+         */
     }
 
     /**
      * ermittelt anhand der Position des Spielers das Feld mit der ID auf dem
-     * GameBoard, welches der Variablen actualField uebergeben wird. Bitte mit
-     * Maxi absprechen, wie er das mit der Datenstruktur un der Initialisierung
-     * der Felder auf dem Spielbrett geloest hat.
+     * GameBoard, welches der Variablen actualField uebergeben wird.
      *
      * @param player Spieler dessen Position ermittelt werden soll
      */
     private void locate(Player player) {
-        //TODO
+        /*
+         * TODO Patrick & John ! Bitte mit Maxi absprechen, wie er das mit der
+         * Datenstruktur un der Initialisierung der Felder auf dem Spielbrett
+         * geloest hat.
+         */
     }
 }
