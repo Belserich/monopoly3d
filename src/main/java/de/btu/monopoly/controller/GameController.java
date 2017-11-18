@@ -296,7 +296,9 @@ public class GameController {
      * das Wuerfeln. Summe in rollResult speichern. Pasch nicht vergessen
      */
     private void roll() {
-        //TODO Patrick und John !
+        /*
+         * TODO Patrick & John
+         */
     }
 
     /**
@@ -305,7 +307,7 @@ public class GameController {
      */
     private void movePlayer() {
         /*
-         * TODO Patrick und John ! ueber-LOS-gehen beachten!
+         * TODO Patrick & John -- ueber-LOS-gehen beachten!
          */
     }
 
@@ -315,23 +317,25 @@ public class GameController {
      */
     private void moveToJail() {
         /*
-         * TODO Patrick & John !
+         * TODO Patrick & John
          */
     }
 
     /**
      * ueberpruft ob der uebergebene Spieler mindestens soviel Geld besitzt, wie
-     * die Methode uebergeben bekommt. (Hierbei ist der Spieler noch variabel,
-     * da ich noch nicht weiss, ob man die Methode fuer eine Karte eventuell auf
-     * andere nicht aktive Spieler anwenden muss. Ist dies nicht der Fall, kann
-     * die Methodenuebergabe fuer Player player wegfallen und in der Methode nur
-     * der activePlayer implementiert werden)
+     * die Methode uebergeben bekommt.
      *
      * @param player Spieler der auf Liquiditaet geprueft wird
      * @param amount Geld was der Spieler besitzen muss
      */
     private boolean checkLiquidity(Player player, int amount) {
-        //TODO
+        /*
+         * TODO Patrick & John -- (Hierbei ist der Spieler noch variabel, da ich
+         * noch nicht weiss, ob man die Methode fuer eine Karte eventuell auf
+         * andere nicht aktive Spieler anwenden muss. Ist dies nicht der Fall,
+         * kann die Methodenuebergabe fuer Player player wegfallen und in der
+         * Methode nur der activePlayer implementiert werden)
+         */
         return false; //Platzhalter
     }
 
@@ -342,7 +346,9 @@ public class GameController {
      * @param amount Betrag der dem Spieler abgezogen wird
      */
     private void takeMoney(Player player, int amount) {
-        //TODO
+        /*
+         * TODO Patrick & John
+         */
     }
 
     /**
@@ -352,59 +358,55 @@ public class GameController {
      * @param amount Betrag der dem Spieler gutgeschrieben wird
      */
     private void giveMoney(Player player, int amount) {
-        //TODO
+        /*
+         * TODO Patrick & John
+         */
     }
 
     /**
-     * Macht einen Spieler zum Beobachter (fertig). Entfernt all seinen Besitz!
-     * HIER MUESST IHR EUCH WAS CLEVERES UEBERLEGEN
+     * Macht einen Spieler zum Beobachter und entfernt all seinen Besitz!
+     *
      *
      * @param player Spieler der bankrott gegangen ist
      */
     private void bankrupt(Player player) {
         activePlayer.setSpectator(true);
-        //TODO
+        /*
+         * TODO Patrick & John -- HIER MUESST IHR EUCH WAS CLEVERES UEBERLEGEN
+         * WIE MAN DEN BESITZ ENTFERNT
+         */
     }
 
     /**
-     * fügt dem Kartenstapel wieder eine Gefaengnis-frei-Karte hinzu. WIE MACHEN
-     * WIR DAS, WENN DIE KARTEN IDs HABEN? Wenn diese Methode nur eine Zeile
-     * hat, dann entfernt sie bitte und fügt diese Zeile beim Case 2 in der
-     * prisonPhase hinzu
+     * fügt dem Kartenstapel wieder eine Gefaengnis-frei-Karte hinzu.
      */
     private void enqueueJailCard() {
         /*
-         * TODO Patrick & John ! WIE MACHEN WIR DAS, WENN DIE KARTEN IDs HABEN?
+         * TODO Patrick & John -- WIE MACHEN WIR DAS, WENN DIE KARTEN IDs HABEN?
+         * macht die Methode erst später, wenn Maxi seinen branch fertig hat
          * muss der Methode evtl. noch der Stapel übergeben werden?
          */
     }
 
     /**
-     * entfernt eine
+     * entfernt eine Gefaengnis-frei-Karte von einem Stapel
      */
     private void dequeueJailCard() {
         /*
-         * TODO Patrick & John ! Kommentar analog zu enqueue
+         * TODO Patrick & John -- Kommentar analog zu enqueue
          */
-    }
-
-    private void returnJailCard() {
-        //TODO
-
     }
 
     /**
      * ermittelt anhand der Position des Spielers das Feld mit der ID auf dem
-     * GameBoard, welches der Variablen actualField uebergeben wird. Bitte mit
-     * Maxi absprechen, wie er das mit der Datenstruktur un der Initialisierung
-     * der Felder auf dem Spielbrett geloest hat.
+     * GameBoard, welches der Variablen actualField uebergeben wird.
      *
      * @param player Spieler dessen Position ermittelt werden soll
      */
     private void locate(Player player) {
 
         /*
-         * TODO Patrick & John ! Bitte mit Maxi absprechen, wie er das mit der
+         * TODO Patrick & John -- Bitte mit Maxi absprechen, wie er das mit der
          * Datenstruktur und der Initialisierung der Felder auf dem Spielbrett
          * geloest hat. ausserdem wird hier der int fieldSwitch je nach
          * ermitteltem Feld angepasst. Folgende Liste fuer den Fieldswitch
