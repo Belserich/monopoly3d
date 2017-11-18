@@ -1,10 +1,12 @@
 package de.btu.monopoly.controller;
 
+import de.btu.monopoly.data.CardField;
 import de.btu.monopoly.data.Field;
 import de.btu.monopoly.data.GameBoard;
 import de.btu.monopoly.data.Player;
 import de.btu.monopoly.data.Property;
 import de.btu.monopoly.data.SupplyField;
+import de.btu.monopoly.data.TaxField;
 
 /**
  *
@@ -186,7 +188,6 @@ public class GameController {
     private void fieldPhase() {
         locate(activePlayer);
 
-        //TODO Christian
         switch (fieldSwitch) {
 
             case 1: // Strasse / Bahnhof
@@ -242,11 +243,24 @@ public class GameController {
                 // hier passier in jedem Fall nichts
                 break;
 
-            case 5: // Steuer
-                checkLiquidity(activePlayer, diceResult);
+            case 5: // Steuerfeld
+                if (actualField instanceof TaxField) {
+                    TaxField taxField = (TaxField) actualField;
+                    checkLiquidity(activePlayer, taxField.getTax());
+                    takeMoney(activePlayer, taxField.getTax());
+                    // spaeter kommt hier evtl. der Steuertopf zum Zuge @rules
+                } else { // kann nicht auftreten
+
+                }
                 break;
 
             case 6: // Kartenfeld
+                if (actualField instanceof CardField) {
+                    CardField cardField = (CardField) actualField;
+                    // TODO Christian & Maxi -- hier ist zu klären wie wir das endgültig lösen mit den Karten und den Stapeln
+                } else { // kann nicht auftreten
+
+                }
 
                 break;
 
@@ -282,15 +296,17 @@ public class GameController {
      * das Wuerfeln. Summe in rollResult speichern. Pasch nicht vergessen
      */
     private void roll() {
-        //TODO
+        //TODO Patrick und John !
     }
 
     /**
      * bewegt den Spieler (activePlayer) zu einer neuen Position.
-     * ueber-LOS-gehen beachten!
+     *
      */
     private void movePlayer() {
-        //TODO
+        /*
+         * TODO Patrick und John ! ueber-LOS-gehen beachten!
+         */
     }
 
     /**
