@@ -293,12 +293,22 @@ public class GameController {
 //----------- EINZELNE METHODEN------------------------------------------------
 //-----------------------------------------------------------------------------
     /**
-     * das Wuerfeln. Summe in rollResult speichern. Pasch nicht vergessen
+     * das Wuerfeln. Summe in diceResult speichern. Pasch nicht vergessen
      */
     private void roll() {
-        /*
-         * TODO Patrick & John
-         */
+
+        int dice1;
+        int dice2;
+
+        dice1 = (int) (Math.random() * 6);
+        dice2 = (int) (Math.random() * 6);
+
+        if (dice1 == dice2) {
+            doubletCounter++;
+        }
+
+        diceResult = dice1 + dice2;
+
     }
 
     /**
@@ -312,8 +322,7 @@ public class GameController {
     }
 
     /**
-     * analog zu movePlayer(), nur dass kein Geld beim ueber-LOS-gehen
-     * ueberwiesen wird!
+     * analog zu movePlayer(), nur dass kein Geld beim ueber-LOS-gehen ueberwiesen wird!
      */
     private void moveToJail() {
         /*
@@ -322,8 +331,7 @@ public class GameController {
     }
 
     /**
-     * ueberpruft ob der uebergebene Spieler mindestens soviel Geld besitzt, wie
-     * die Methode uebergeben bekommt.
+     * ueberpruft ob der uebergebene Spieler mindestens soviel Geld besitzt, wie die Methode uebergeben bekommt.
      *
      * @param player Spieler der auf Liquiditaet geprueft wird
      * @param amount Geld was der Spieler besitzen muss
@@ -398,8 +406,8 @@ public class GameController {
     }
 
     /**
-     * ermittelt anhand der Position des Spielers das Feld mit der ID auf dem
-     * GameBoard, welches der Variablen actualField uebergeben wird.
+     * ermittelt anhand der Position des Spielers das Feld mit der ID auf dem GameBoard, welches der Variablen actualField
+     * uebergeben wird.
      *
      * @param player Spieler dessen Position ermittelt werden soll
      */
@@ -424,8 +432,7 @@ public class GameController {
     //------------ Karten Methoden --------------------------------------------
     //-------------------------------------------------------------------------
     /**
-     * Doppelte Miete -- Diese Methode wird verwendet, wenn in einer Karte
-     * gefordert ist die doppelte Miete zu zahlen.
+     * Doppelte Miete -- Diese Methode wird verwendet, wenn in einer Karte gefordert ist die doppelte Miete zu zahlen.
      *
      * @param giver Spieler der zahlen muss
      * @param taker Spieler der die Miete bekommt
