@@ -1,6 +1,6 @@
 package de.btu.monopoly.controller;
 
-import de.btu.monopoly.data.Field;
+import de.btu.monopoly.data.field.Field;
 import de.btu.monopoly.data.GameBoard;
 import de.btu.monopoly.data.Player;
 
@@ -27,7 +27,6 @@ public class GameController {
     private int prisonChoice;
 
     public GameController(int playerCount) {
-        this.board = new GameBoard();
         this.players = new Player[playerCount];
         init();
     }

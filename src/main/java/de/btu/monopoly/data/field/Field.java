@@ -1,4 +1,4 @@
-package de.btu.monopoly.data;
+package de.btu.monopoly.data.field;
 
 public abstract class Field {
     
@@ -13,11 +13,19 @@ public abstract class Field {
     private final int id;
     
     /**
+     * @param id Identifikationsnummer
      * @param name des Feldes
      */
-    public Field(String name, int id) {
-        this.name = name;
+    public Field(int id, String name) {
         this.id = id;
+        this.name = name;
+    }
+    
+    /**
+     * @return Identifikationsnummer des Feldes
+     */
+    public int getId() {
+        return id;
     }
     
     /**
@@ -25,9 +33,5 @@ public abstract class Field {
      */
     public String getName() {
         return name;
-    }
-    
-    public int getId() {
-        return id;
     }
 }

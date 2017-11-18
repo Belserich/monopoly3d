@@ -1,5 +1,7 @@
 package de.btu.monopoly.data;
 
+import de.btu.monopoly.data.field.Field;
+
 public class Player {
 
     /**
@@ -19,6 +21,7 @@ public class Player {
      * Spielfigur des Spielers
      */
     //TODO Spielfigur
+    
     /**
      * Geldmenge auf dem SpielerKonto (Kapital)
      */

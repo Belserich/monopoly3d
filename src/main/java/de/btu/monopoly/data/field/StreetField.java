@@ -1,4 +1,4 @@
-package de.btu.monopoly.data;
+package de.btu.monopoly.data.field;
 
 public class StreetField extends Property {
 
@@ -16,9 +16,6 @@ public class StreetField extends Property {
     private int houseCount;
 
     /**
-     *
-     * @param name Strassenname
-     * @param price Kaufpreis der Strasse
      * @param rent0 Miete unbebaut
      * @param rent1 Miete mit 1 Haus
      * @param rent2 Miete mit 2 Haeusern
@@ -27,7 +24,9 @@ public class StreetField extends Property {
      * @param rent5 Miete mit Hotel
      * @param housePrice Preis fuer ein Haus
      */
-    public StreetField(String name,
+    public StreetField(
+            int id,
+            String name,
             int price,
             int rent0,
             int rent1,
@@ -35,8 +34,10 @@ public class StreetField extends Property {
             int rent3,
             int rent4,
             int rent5,
-            int housePrice) {
-        super(name, price);
+            int housePrice,
+            int mortgage,
+            int mortgageBack) {
+        super(id, name, price, mortgage, mortgageBack);
 
         this.rents = new int[6];
         this.rents[0] = rent0;
@@ -52,16 +53,6 @@ public class StreetField extends Property {
     }
 
     /**
-     * @return aktuelle Miete der Strasse
-     */
-    public int getRent() {
-        if (!isMortgageTaken()) {
-            return rents[houseCount];
-        }
-        return -1;
-    }
-
-    /**
      * @return Preis für ein Haus
      */
     public int getHousePrice() {
@@ -73,5 +64,9 @@ public class StreetField extends Property {
      */
     public int getHouseCount() {
         return houseCount;
+    }
+    
+    public int getRent(int number) {
+        return rents[number];
     }
 }

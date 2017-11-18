@@ -1,4 +1,7 @@
-package de.btu.monopoly.data;
+package de.btu.monopoly.data.field;
+
+import de.btu.monopoly.data.Player;
+import de.btu.monopoly.data.field.Field;
 
 public abstract class Property extends Field {
 
@@ -25,19 +28,18 @@ public abstract class Property extends Field {
     private boolean mortgageTaken;
 
     /**
-     *
-     * @param name Grundstücksname
      * @param price Kaufpreis des Grundstuecks
+     * @param mortgage Hypothekswert
+     * @param mortgageBack Hypotheksrückwert
      */
-    public Property(String name, int price) {
-        super(name);
+    public Property(int id, String name, int price, int mortgage, int mortgageBack) {
+        super(id, name);
         this.price = price;
-        this.mortgage = (int) (price * 0.5d);
-        this.mortgageBack = (int) (mortgage + (mortgage * 0.1d));
+        this.mortgage = mortgage;
+        this.mortgageBack = mortgageBack;
     }
 
     /**
-     *
      * @return Besitzer des Grundstuecks
      */
     public Player getOwner() {
@@ -83,9 +85,4 @@ public abstract class Property extends Field {
     public void setMortgageTaken(boolean mortgageTaken) {
         this.mortgageTaken = mortgageTaken;
     }
-
-    int getRent() {
-        return -1;
-    }
-;
 }
