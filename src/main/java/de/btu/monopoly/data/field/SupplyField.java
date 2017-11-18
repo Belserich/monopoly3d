@@ -12,8 +12,8 @@ public class SupplyField extends Property {
      */
     private int mult2;
     
-    public SupplyField(int id, String name, int price, int mortgage, int mortgageBack, int mult1, int mult2) {
-        super(id, name, price, mortgage, mortgageBack);
+    public SupplyField(int id, String name, int price, int mortgage, int mortgageBack, int[] neighbourIds, int mult1, int mult2) {
+        super(id, name, price, mortgage, mortgageBack, neighbourIds);
         
         this.mult1 = mult1;
         this.mult2 = mult2;

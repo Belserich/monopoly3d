@@ -36,8 +36,9 @@ public class StreetField extends Property {
             int rent5,
             int housePrice,
             int mortgage,
-            int mortgageBack) {
-        super(id, name, price, mortgage, mortgageBack);
+            int mortgageBack,
+            int[] neighbourIds) {
+        super(id, name, price, mortgage, mortgageBack, neighbourIds);
 
         this.rents = new int[6];
         this.rents[0] = rent0;

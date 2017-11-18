@@ -22,21 +22,29 @@ public abstract class Property extends Field {
      * Besitzer des Grundstuecks
      */
     private Player ownedBy;
+    
     /**
      * ist die Hypothek aufgenommen
      */
     private boolean mortgageTaken;
+    
+    /**
+     * Enthält die IDs der "Nachbarn" eines Felds
+     */
+    private int[] neighbourIds;
 
     /**
      * @param price Kaufpreis des Grundstuecks
      * @param mortgage Hypothekswert
      * @param mortgageBack Hypotheksrückwert
      */
-    Property(int id, String name, int price, int mortgage, int mortgageBack) {
+    Property(int id, String name, int price, int mortgage, int mortgageBack, int[] neighbourIds) {
         super(id, name);
+        
         this.price = price;
         this.mortgage = mortgage;
         this.mortgageBack = mortgageBack;
+        this.neighbourIds = neighbourIds;
     }
 
     /**

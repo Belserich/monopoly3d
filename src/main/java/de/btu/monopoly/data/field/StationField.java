@@ -16,8 +16,9 @@ public class StationField extends Property {
             int rent2,
             int rent3,
             int mortgage,
-            int mortgageBack) {
-        super(id, name, price, mortgage, mortgageBack);
+            int mortgageBack,
+            int[] neighbourIds) {
+        super(id, name, price, mortgage, mortgageBack, neighbourIds);
         
         rents = new int[4];
         rents[0] = rent0;
