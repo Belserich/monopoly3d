@@ -10,6 +10,9 @@ public class GoJailField extends Field {
      */
     private static final String NAME = "Gehen Sie ins Gefängnis";
 
+    /**
+     * Konstruktor
+     */
     public GoJailField() {
         super(NAME);
     }
