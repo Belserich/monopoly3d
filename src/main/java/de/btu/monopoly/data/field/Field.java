@@ -1,6 +1,6 @@
 package de.btu.monopoly.data.field;
 
-public abstract class Field {
+public class Field {
     
     /**
      * Name des Feldes
@@ -16,7 +16,7 @@ public abstract class Field {
      * @param id Identifikationsnummer
      * @param name des Feldes
      */
-    Field(int id, String name) {
+    public Field(int id, String name) {
         this.id = id;
         this.name = name;
     }

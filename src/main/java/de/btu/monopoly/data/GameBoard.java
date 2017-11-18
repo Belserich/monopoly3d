@@ -9,4 +9,8 @@ public class GameBoard
     public GameBoard(Field[] fields) {
         this.fields = fields;
     }
+    
+    public Field[] getFields() {
+        return fields;
+    }
 }
