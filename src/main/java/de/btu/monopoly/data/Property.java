@@ -84,7 +84,11 @@ public abstract class Property extends Field {
         this.mortgageTaken = mortgageTaken;
     }
 
-    int getRent() {
+    /**
+     * gibt die Miete des Grundstuecks zurueck. Im Falle eines werkes entspricht
+     * die Miete dem Multiplikator fuer die Augenzahl
+     */
+    public int getRent() {
         return -1;
     }
 ;

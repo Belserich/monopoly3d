@@ -21,7 +21,7 @@ public class StationField extends Property {
     }
 
     @Override
-    int getRent() {
+    public int getRent() {
         return RENTS[0]; // TODO
     }
 }
