@@ -9,7 +9,12 @@ import de.btu.monopoly.data.Player;
  * @author Christian Prinz
  */
 public class GameController {
-
+    
+    /**
+     * Pfad zur Datensammlung
+     */
+    private static final String BOARD_DATA_PATH = "data/felddaten.txt";
+    
     private GameBoard board;
     private final Player[] players;
     private Player activePlayer;
