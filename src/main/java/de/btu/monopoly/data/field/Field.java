@@ -16,7 +16,7 @@ public abstract class Field {
      * @param id Identifikationsnummer
      * @param name des Feldes
      */
-    public Field(int id, String name) {
+    Field(int id, String name) {
         this.id = id;
         this.name = name;
     }

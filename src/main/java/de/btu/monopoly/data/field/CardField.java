@@ -13,7 +13,7 @@ public class CardField extends Field {
     private final Card[] cards;
     private Random rand;
 
-    private CardField(int id, String name, Random rand, Card... cards) {
+    public CardField(int id, String name, Random rand, Card... cards) {
         super(id, name);
         this.rand = rand;
         this.cards = cards;

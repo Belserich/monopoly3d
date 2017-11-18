@@ -32,7 +32,7 @@ public abstract class Property extends Field {
      * @param mortgage Hypothekswert
      * @param mortgageBack Hypotheksrückwert
      */
-    public Property(int id, String name, int price, int mortgage, int mortgageBack) {
+    Property(int id, String name, int price, int mortgage, int mortgageBack) {
         super(id, name);
         this.price = price;
         this.mortgage = mortgage;

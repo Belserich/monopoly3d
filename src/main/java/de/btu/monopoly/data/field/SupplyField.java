@@ -12,7 +12,7 @@ public class SupplyField extends Property {
      */
     private int mult2;
     
-    private SupplyField(int id, String name, int price, int mortgage, int mortgageBack, int mult1, int mult2) {
+    public SupplyField(int id, String name, int price, int mortgage, int mortgageBack, int mult1, int mult2) {
         super(id, name, price, mortgage, mortgageBack);
         
         this.mult1 = mult1;
