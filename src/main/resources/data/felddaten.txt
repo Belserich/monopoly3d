@@ -1,0 +1,33 @@
+Straßenname, Kaufpreis, Farbe, Miete (Hßuser) (0, 1, 2, 3, 4, Hotel)
+
+Badstraße, 60, lila, 2, 10, 30, 90, 160, 250
+Turmstraße, 60, lila, 4, 20, 60, 180, 320, 450
+
+Chausseestraße, 100, hellblau, 6, 30, 90, 270, 400, 550
+Elisenstraße, 100 hellblau, 6, 30, 90, 270, 400, 550
+Poststraße, 120, hellblau, 8, 40, 100, 300, 450, 600
+
+Seestraße, 140, violet, 10, 50, 150, 450, 625, 750
+Hafenstraße, 140, violet, 10, 50, 150, 450, 625, 750
+Neue Straße, 160, violet, 12, 60, 180, 500, 700, 900
+
+Münchener Straße, 180, orange, 14, 70, 200, 550, 750, 950
+Wiener Straße, 180, orange, 14, 70, 200, 550, 750, 950
+Berliner Straße, 200, orange, 16, 80, 220, 600, 800, 1000
+
+Theaterstraße, 220, rot, 18, 90, 250, 700, 875, 1050
+Museumstraße, 220, rot, 18, 90, 250, 700, 875, 1050
+Opernplatz, 240, rot, 20, 100, 300, 750, 925, 1100
+
+Lessingstraße, 260, gelb, 22, 110, 330, 800, 975, 1150
+Schillerstraße, 260, gelb, 22, 110, 330, 800, 975, 1150
+Goethestraße, 280, gelb, 24, 120, 360, 850, 1025, 1200
+
+Rathausplatz, grün, 300, 26, 130, 390, 900, 110, 1275
+Hauptstraße, grün, 300, 26, 130, 390, 900, 1100, 1275
+Bahnhofstraße, grün, 320, 28, 150, 450, 1000, 1200, 1400
+
+Parkstraße, 350, blau, 35, 175, 500, 1100, 1300, 1500
+Schlossallee, 400, blau, 50, 200, 600, 1400, 1700, 2000
+
+Hypothekswert einer Straße: Kaufpreis * 0.5
