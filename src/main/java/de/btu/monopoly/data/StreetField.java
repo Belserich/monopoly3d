@@ -1,8 +1,5 @@
 package de.btu.monopoly.data;
 
-/**
- * @author Maximilian Bels on 13/11/2017. Ein Strassenfeld
- */
 public class StreetField extends Property {
 
     /**
