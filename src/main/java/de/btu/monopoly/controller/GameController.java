@@ -13,7 +13,7 @@ public class GameController {
     /**
      * Pfad zur Datensammlung
      */
-    private static final String BOARD_DATA_PATH = "data/felddaten.txt";
+    private static final String BOARD_DATA_PATH = "field_data.config";
     
     private GameBoard board;
     private final Player[] players;

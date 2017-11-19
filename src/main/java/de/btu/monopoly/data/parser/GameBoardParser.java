@@ -138,7 +138,7 @@ public class GameBoardParser {
     /**
      * Die allgemeine Exception-Nachricht für diese Klasse
      */
-    private String IO_ERROR_MESSAGE = "Error while reading game board data. Corrupted resource file!";
+    private static final String IO_ERROR_MESSAGE = "Error while reading game board data. Corrupted resource file!";
     
     /**
      * Liest erst alle Zeilen Daten aus der Textdatei, entfernt sämtliche Steuerzeichen (ASCII 0 - 32) und wertet jede Zeile einzeln aus.
@@ -148,7 +148,7 @@ public class GameBoardParser {
      * @throws IOException Wenn die Datei nicht geöffnet, oder einzelne Zeilen nicht gelesen werden konnten. Allgemein, wenn sie beschädigt
      * oder falsch editiert wurde.
      */
-    public final GameBoard readBoard(String path) throws IOException {
+    public static GameBoard readBoard(String path) throws IOException {
         String[] lines = readSignificantLines(path);
         
         // Es gibt immer genau so viele Zeilen wie Felder, da sie in einer 1:1 Beziehung zueinander stehen.
@@ -185,7 +185,7 @@ public class GameBoardParser {
      * @return Die Zeilen der Textdatei, frei von Steuerzeichen und unter Ausschluss leerer Zeilen.
      * @throws IOException Datei ist nicht lesbar, nicht vorhanden oder beschädigt.
      */
-    private String[] readSignificantLines(String path) throws IOException {
+    private static String[] readSignificantLines(String path) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(GameBoardParser.class.getClassLoader().getResourceAsStream(path)));
         String[] retObj = reader.lines()
                 .map(s -> { int i = s.indexOf(C); return i == -1 ? s : s.substring(0, i); }) // trims comments
@@ -203,7 +203,7 @@ public class GameBoardParser {
      * @return die entsprechende Feld-Instanz
      * @throws IOException Fehlschlag (korrupte Datei)
      */
-    private GoField tryParseGo(String line) throws IOException {
+    private static GoField tryParseGo(String line) throws IOException {
         if (line.matches(GO_PATTERN)) {
             StringTokenizer tokenizer = new StringTokenizer(line);
             return new GoField(
@@ -222,7 +222,7 @@ public class GameBoardParser {
      * @return die entsprechende Feld-Instanz
      * @throws IOException Fehlschlag (korrupte Datei)
      */
-    private SupplyField tryParseSupplyField(String line, int propertyCounter) throws IOException {
+    private static SupplyField tryParseSupplyField(String line, int propertyCounter) throws IOException {
         if (line.matches(SUPPLY_PATTERN)) {
             StringTokenizer tokenizer = new StringTokenizer(line);
             return new SupplyField(
@@ -246,7 +246,7 @@ public class GameBoardParser {
      * @return die entsprechende Feld-Instanz
      * @throws IOException Fehlschlag (korrupte Datei)
      */
-    private StationField tryParseStationField(String line, int propertyCounter) throws IOException {
+    private static StationField tryParseStationField(String line, int propertyCounter) throws IOException {
         if (line.matches(STATION_PATTERN)) {
             StringTokenizer tokenizer = new StringTokenizer(line);
             return new StationField(
@@ -271,7 +271,7 @@ public class GameBoardParser {
      * @return die entsprechende Feld-Instanz
      * @throws IOException Fehlschlag (korrupte Datei)
      */
-    private TaxField tryParseTaxField(String line) throws IOException {
+    private static TaxField tryParseTaxField(String line) throws IOException {
         if (line.matches(TAX_PATTERN)) {
             StringTokenizer tokenizer = new StringTokenizer(line);
             return new TaxField(
@@ -289,7 +289,7 @@ public class GameBoardParser {
      * @return die entsprechende Feld-Instanz
      * @throws IOException Fehlschlag (korrupte Datei)
      */
-    private CardField tryParseCardField(String line) throws IOException {
+    private static CardField tryParseCardField(String line) throws IOException {
         if (line.matches(CARD_PATTERN)) {
             StringTokenizer tokenizer = new StringTokenizer(line);
             return new CardField(
@@ -308,7 +308,7 @@ public class GameBoardParser {
      * @return die entsprechende Feld-Instanz
      * @throws IOException Fehlschlag (korrupte Datei)
      */
-    private StreetField tryParseStreetField(String line, int propertyCounter) throws IOException {
+    private static StreetField tryParseStreetField(String line, int propertyCounter) throws IOException {
         if (line.matches(STREET_PATTERN)) {
             StringTokenizer tokenizer = new StringTokenizer(line);
             return new StreetField(
@@ -336,7 +336,7 @@ public class GameBoardParser {
      * @return die entsprechende Feld-Instanz
      * @throws IOException Fehlschlag (korrupte Datei)
      */
-    private Field tryParseCorner(String line) throws IOException {
+    private static Field tryParseCorner(String line) throws IOException {
         if (line.matches(CORNER_PATTERN)) {
             StringTokenizer tokenizer = new StringTokenizer(line);
             return new Field(

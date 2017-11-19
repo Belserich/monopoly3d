@@ -8,15 +8,12 @@ import java.io.IOException;
 /**
  * @author Maximilian Bels (belsmaxi@b-tu.de)
  */
-public class GameBoardTest
-{
+public class GameBoardTest {
     
-    private static final String BOARD_DATA_PATH = "data/felddaten.txt";
+    private static final String BOARD_DATA_PATH = "field_data.config";
     
-    public static void main(String[] args) throws IOException
-    {
-        GameBoardParser parser = new GameBoardParser();
-        GameBoard board = parser.readBoard(BOARD_DATA_PATH);
+    public static void main(String[] args) throws IOException {
+        GameBoard board = GameBoardParser.readBoard(BOARD_DATA_PATH);
         for (Field f : board.getFields())
         {
             System.out.println(f.getClass());
