@@ -445,4 +445,18 @@ public class GameController {
     private void doubleRent(Player giver, Player taker) {
         //TODO
     }
+
+    /**
+     * Alle Gebaeuden eines Spielers werden gezaehlt
+     *
+     * Die Preise fuer Renovierung werden von dem entsprechenden Karte bekannt und dies wird mit der Anzahl von Haeuser/Hotels
+     * multipliziert und am Ende addiert = Summe
+     *
+     * @param house_price
+     * @param hotel_price
+     */
+    private void sumRenovation(int house_price, int hotel_price) {
+        //TODO
+    }
+
 }
