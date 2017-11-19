@@ -1,5 +1,8 @@
 import java.util.Random;
 
+/**
+ * @author Maximilian Bels (belsmaxi@b-tu.de)
+ */
 public class SeedRandomTest {
     
     /**
@@ -15,8 +18,7 @@ public class SeedRandomTest {
      * 3
      * 892128508
      */
-    public static void main(String[] args)
-    {
+    public static void main(String[] args) {
         Random rng = new Random(1);
         
         System.out.println(rng.nextInt(6));

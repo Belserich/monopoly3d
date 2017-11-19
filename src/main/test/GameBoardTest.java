@@ -5,14 +5,20 @@ import de.btu.monopoly.data.parser.GameBoardParser;
 
 import java.io.IOException;
 
-public class GameBoardTest {
+/**
+ * @author Maximilian Bels (belsmaxi@b-tu.de)
+ */
+public class GameBoardTest
+{
     
     private static final String BOARD_DATA_PATH = "data/felddaten.txt";
     
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException
+    {
         GameBoardParser parser = new GameBoardParser();
         GameBoard board = parser.readBoard(BOARD_DATA_PATH);
-        for (Field f : board.getFields()) {
+        for (Field f : board.getFields())
+        {
             System.out.println(f.getClass());
         }
     }

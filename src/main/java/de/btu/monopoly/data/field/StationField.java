@@ -1,5 +1,8 @@
 package de.btu.monopoly.data.field;
 
+/**
+ * @author Maximilian Bels (belsmaxi@b-tu.de)
+ */
 public class StationField extends Property {
     
     /**

@@ -1,27 +1,34 @@
 package de.btu.monopoly.data.field;
 
+/**
+ * @author Maximilian Bels (belsmaxi@b-tu.de)
+ */
 public class StreetField extends Property {
 
     /**
-     * die Miete der Straße, abhänging vom Bebauungsstatus
+     * Mietswerte der Straße
      */
     private final int[] rents;
+    
     /**
-     * der Preis für ein Haus
+     * Preis für ein Haus
      */
     private final int housePrice;
+    
     /**
-     * Anzahl der Haeuser auf der Strasse
+     * Anzahl der Haeuser auf dieser Strasse
      */
     private int houseCount;
 
     /**
+     * Instanzen dieser Klasse stellen eine kaufbare Straße dar. Auf ihr kann man bis zu fünf Häuser bauen.
+     *
      * @param rent0 Miete unbebaut
      * @param rent1 Miete mit 1 Haus
      * @param rent2 Miete mit 2 Haeusern
      * @param rent3 Miete mit 3 Haeusern
      * @param rent4 Miete mit 4 Haeusern
-     * @param rent5 Miete mit Hotel
+     * @param rent5 Miete mit 5 Haeusern (Hotel)
      * @param housePrice Preis fuer ein Haus
      */
     public StreetField(
@@ -50,7 +57,6 @@ public class StreetField extends Property {
         this.housePrice = housePrice;
 
         this.houseCount = 0;
-
     }
 
     /**
@@ -65,9 +71,5 @@ public class StreetField extends Property {
      */
     public int getHouseCount() {
         return houseCount;
-    }
-    
-    public int getRent(int number) {
-        return rents[number];
     }
 }

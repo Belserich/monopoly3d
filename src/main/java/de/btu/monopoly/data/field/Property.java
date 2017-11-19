@@ -3,18 +3,21 @@ package de.btu.monopoly.data.field;
 import de.btu.monopoly.data.Player;
 import de.btu.monopoly.data.field.Field;
 
+/**
+ * @author Maximilian Bels (belsmaxi@b-tu.de)
+ */
 public abstract class Property extends Field {
 
     /**
-     * der Preis des Grundstuecks
+     * Preis des Grundstuecks
      */
     private final int price;
     /**
-     * die Hypothek des Grundstuecks
+     * Hypothek des Grundstuecks
      */
     private final int mortgage;
     /**
-     * der Rueckkaufwert der Hypothek
+     * Rueckkaufwert der Hypothek
      */
     private final int mortgageBack;
 
@@ -24,16 +27,20 @@ public abstract class Property extends Field {
     private Player ownedBy;
     
     /**
-     * ist die Hypothek aufgenommen
+     * gibt an, ob Hypothek aufgenommen
      */
     private boolean mortgageTaken;
     
     /**
-     * Enthält die IDs der "Nachbarn" eines Felds
+     * IDs der "Nachbarn" eines Feldes
      */
     private int[] neighbourIds;
 
     /**
+     * Die abstrakte Oberklasse aller Felder, die kaufbar und mit Mietspreisen belegt sind.
+     * Man soll diese Felder außerdem mit einer Hypothek belasten können und diese auch für
+     * {@code (Hypothekswert + 10% des Kaufpreises)} Einheiten der gewählten Währung zurückzahlen können.
+     *
      * @param price Kaufpreis des Grundstuecks
      * @param mortgage Hypothekswert
      * @param mortgageBack Hypotheksrückwert
@@ -64,7 +71,7 @@ public abstract class Property extends Field {
 
     /**
      *
-     * @return Wert der Hypothek (ausgezahlt)
+     * @return Wert der zu zahlenden Hypothek
      */
     public int getMortgageValue() {
         return mortgage;
@@ -72,7 +79,7 @@ public abstract class Property extends Field {
 
     /**
      *
-     * @return ob die Hypothek aufgenommen wurde
+     * @return Gibt an,ob die Hypothek aufgenommen wurde.
      */
     public boolean isMortgageTaken() {
         return mortgageTaken;
@@ -88,7 +95,7 @@ public abstract class Property extends Field {
 
     /**
      *
-     * @param mortgageTaken ob die Hypothek aufgenommen wurde
+     * @param mortgageTaken Gibt an, ob die Hypothek aufgenommen wurde.
      */
     public void setMortgageTaken(boolean mortgageTaken) {
         this.mortgageTaken = mortgageTaken;

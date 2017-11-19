@@ -1,5 +1,8 @@
 package de.btu.monopoly.data.field;
 
+/**
+ * @author Maximilian Bels (belsmaxi@b-tu.de)
+ */
 public class Field {
     
     /**
@@ -8,11 +11,14 @@ public class Field {
     private final String name;
     
     /**
-     * Die Id des Felds
+     * ID des Felds
      */
     private final int id;
     
     /**
+     * Die Klasse {@code Field} ist eine Oberklasse für sämtliche Felder auf denen sich der Spieler während des Spiels bewegt.
+     * Alle Eckfelder, außer dem LOS-Feld, sind direkte Instanzen dieser Klasse.
+     *
      * @param id Identifikationsnummer
      * @param name des Feldes
      */
@@ -22,7 +28,7 @@ public class Field {
     }
     
     /**
-     * @return Identifikationsnummer des Feldes
+     * @return ID des Feldes
      */
     public int getId() {
         return id;
