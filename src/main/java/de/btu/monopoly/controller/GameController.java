@@ -302,8 +302,8 @@ public class GameController {
         int dice2;
 
         // Erzeugen der Zufallszahl
-        dice1 = (int) (Math.random() * 6);
-        dice2 = (int) (Math.random() * 6);
+        dice1 = ((int) (Math.random() * 6)) + 1;
+        dice2 = ((int) (Math.random() * 6)) + 1;
 
         // Bei Pasch, erhöhe doubletCounter und isDoublet
         if (dice1 == dice2) {
