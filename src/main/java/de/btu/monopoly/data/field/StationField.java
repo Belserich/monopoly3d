@@ -11,6 +11,7 @@ public class StationField extends Property {
     public final int[] rents;
 
     /**
+     * Die Klasse steht für sämtliche Bahnhofsfelder des Spielbretts
      *
      * @param name Bahnhofsname
      */
@@ -26,22 +27,10 @@ public class StationField extends Property {
 
     @Override
     public int getRent() {
-        switch (ownedStations()) {
-            case 1:
-                return rents[0];
-            case 2:
-                return rents[1];
-            case 3:
-                return rents[2];
-            case 4:
-                return rents[3];
-
-        }
-        return 0;
+        return rents[ownedStations()];
     }
 
     /**
-     *
      * @return Anzahl der Bahnhofe im selben Besitz
      */
     public int ownedStations() {
