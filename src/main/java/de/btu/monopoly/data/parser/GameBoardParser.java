@@ -199,6 +199,10 @@ public class GameBoardParser {
                 int id = INT_PARSER.apply(tokenizer.nextToken(S));
                 String name = tokenizer.nextToken(S);
                 
+                if (id < 0 || id >= FIELD_STRUCTURE.length) {
+                    throw new IOException(IO_EXCEPTION_MESSAGE);
+                }
+                
                 fields[i] = tryParse(FIELD_STRUCTURE[id], line, id, name, tokenizer);
             }
             else throw new IOException(IO_EXCEPTION_MESSAGE +
