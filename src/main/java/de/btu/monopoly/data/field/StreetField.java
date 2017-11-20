@@ -62,7 +62,12 @@ public class StreetField extends Property {
     public int getRent() {
         if (!isMortgageTaken()) {
             if (complete()) {
-                return rents[houseCount == 0 ? houseCount * 2 : houseCount]; // inline if
+                if (houseCount == 0) {
+                    return rents[houseCount * 2];
+                }
+                else {
+                    return rents[houseCount];
+                }
             } else {
                 return rents[0];
             }

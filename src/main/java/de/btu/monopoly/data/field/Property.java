@@ -64,7 +64,6 @@ public abstract class Property extends Field {
     }
 
     /**
-     *
      * @return Kaufpreis des Grundstuecks
      */
     public int getPrice() {
@@ -72,7 +71,6 @@ public abstract class Property extends Field {
     }
 
     /**
-     *
      * @return Wert der zu zahlenden Hypothek
      */
     public int getMortgageValue() {
@@ -80,15 +78,13 @@ public abstract class Property extends Field {
     }
 
     /**
-     *
-     * @return Gibt an,ob die Hypothek aufgenommen wurde.
+     * @return Gibt an, ob die Hypothek aufgenommen wurde.
      */
     public boolean isMortgageTaken() {
         return mortgageTaken;
     }
 
     /**
-     *
      * @param player Besitzer des Grundstuecks
      */
     public void setOwner(Player player) {
@@ -96,7 +92,6 @@ public abstract class Property extends Field {
     }
 
     /**
-     *
      * @param mortgageTaken Gibt an, ob die Hypothek aufgenommen wurde.
      */
     public void setMortgageTaken(boolean mortgageTaken) {
@@ -104,15 +99,15 @@ public abstract class Property extends Field {
     }
 
     /**
-     * gibt die Miete des Grundstuecks zurueck. Im Falle eines werkes entspricht
-     * die Miete dem Multiplikator fuer die Augenzahl
+     * Gibt die Miete des Grundstuecks zurueck. Im Falle eines Werkes entspricht
+     * die Miete dem Multiplikator fuer die Augenzahl.
      */
     public int getRent() {
         return 0;
     }
 
     /**
-     * fuegt dem Grundstueck ein Nachbargrundstueck hinzu
+     * Fuegt dem Grundstueck ein Nachbargrundstueck hinzu.
      *
      * @param neighbour neuer Nachbar
      */

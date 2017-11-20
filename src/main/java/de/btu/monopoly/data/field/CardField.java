@@ -10,7 +10,6 @@ public class CardField extends Field {
     private CardQueue cards;
 
     /**
-     *
      * @param name Name des Kartenfeldes
      */
     public CardField(String name) {

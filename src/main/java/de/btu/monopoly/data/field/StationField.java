@@ -8,7 +8,7 @@ public class StationField extends Property {
     /**
      * Die Miete des Bahnhofs in Abhaengigkeit der Anzahl Bahnhöfe im Besitz
      */
-    public final int[] rents;
+    private final int[] rents;
 
     /**
      * Die Klasse steht für sämtliche Bahnhofsfelder des Spielbretts
