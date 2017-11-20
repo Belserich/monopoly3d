@@ -56,7 +56,7 @@ public class GameController {
     /**
      * Feld, auf dem sich der Spieler befindet
      */
-    private Field actualField;
+    private Field currField;
     
     /**
      * Feldtyp
@@ -200,8 +200,8 @@ public class GameController {
 
             case 1: // Strasse / Bahnhof
 
-                if (actualField instanceof Property) {
-                    Property actualProperty = (Property) actualField;
+                if (currField instanceof Property) {
+                    Property actualProperty = (Property) currField;
                     // wenn das Feld in eigenem Besitz ist
                     if (actualProperty.getOwner() == currPlayer) {
                         break;
@@ -256,8 +256,8 @@ public class GameController {
                 break;
 
             case 5: // Steuerfeld
-                if (actualField instanceof TaxField) {
-                    TaxField taxField = (TaxField) actualField;
+                if (currField instanceof TaxField) {
+                    TaxField taxField = (TaxField) currField;
                     if (checkLiquidity(currPlayer, taxField.getTax())) {
                         takeMoney(currPlayer, taxField.getTax());
                     } else {
@@ -270,8 +270,8 @@ public class GameController {
                 break;
 
             case 6: // Kartenfeld
-                if (actualField instanceof CardField) {
-                    CardField cardField = (CardField) actualField;
+                if (currField instanceof CardField) {
+                    CardField cardField = (CardField) currField;
                     // TODO Christian & Maxi -- hier ist zu klären wie wir das endgueltig lösen mit den Karten und den Stapeln
                 } else { // kann nicht auftreten
 
@@ -422,7 +422,7 @@ public class GameController {
 
     /**
      * ermittelt anhand der Position des Spielers das Feld mit der ID auf dem
-     * GameBoard, welches der Variablen actualField uebergeben wird.
+     * GameBoard, welches der Variablen currField uebergeben wird.
      *
      * @param player Spieler dessen Position ermittelt werden soll
      */
