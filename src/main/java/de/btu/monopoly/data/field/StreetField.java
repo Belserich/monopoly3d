@@ -1,5 +1,8 @@
-package de.btu.monopoly.data;
+package de.btu.monopoly.data.field;
 
+/**
+ * @author Maximilian Bels (belsmaxi@b-tu.de)
+ */
 public class StreetField extends Property {
 
     /**
@@ -19,7 +22,7 @@ public class StreetField extends Property {
      *
      * @param name Strassenname
      * @param price Kaufpreis der Strasse
-     * @param rent0 Miete unbebaut
+     * @param rent0 doppelte Miete unbebaut!
      * @param rent1 Miete mit 1 Haus
      * @param rent2 Miete mit 2 Haeusern
      * @param rent3 Miete mit 3 Haeusern
@@ -35,8 +38,8 @@ public class StreetField extends Property {
             int rent3,
             int rent4,
             int rent5,
-            int housePrice) {
-        super(name, price);
+            int housePrice, int mortgage, int mortgageBack, int id) {
+        super(id, name, price, mortgage, mortgageBack);
 
         this.rents = new int[6];
         this.rents[0] = rent0;
@@ -56,9 +59,13 @@ public class StreetField extends Property {
      */
     public int getRent() {
         if (!isMortgageTaken()) {
-            return rents[houseCount];
+            if (complete()) {
+                return rents[houseCount];
+            } else {
+                return rents[0] / 2;
+            }
         }
-        return -1;
+        return 0;
     }
 
     /**
@@ -73,5 +80,18 @@ public class StreetField extends Property {
      */
     public int getHouseCount() {
         return houseCount;
+    }
+
+    /**
+     *
+     * @return sind alle Strassen des Strassenzuges in selbem besitz
+     */
+    public boolean complete() {
+        for (Property nei : super.getNeighbours()) {
+            if (!(nei.getOwner().equals(super.getOwner()))) {
+                return false;
+            }
+        }
+        return true;
     }
 }

@@ -1,36 +1,35 @@
 package de.btu.monopoly.data;
 
+/**
+ * @author Maximilian Bels (belsmaxi@b-tu.de)
+ */
 public class Player {
 
     /**
      * Name des Spielers
      */
     private final String name;
+
     /**
      * ID des Spielers
      */
     private final int id;
-    /**
-     * Farbe des Spielers
-     */
-    //TODO Farbe
 
     /**
-     * Spielfigur des Spielers
-     */
-    //TODO Spielfigur
-    /**
-     * Geldmenge auf dem SpielerKonto (Kapital)
+     * Kapital
      */
     private int money;
+
     /**
-     * ob er im Gefaengnis ist
+     * Gibt an, ob der Spieler im Gefängnis ist.
      */
     private boolean inJail;
+
     /**
-     * Anzahl Gefaengnis-frei-Karten
+     * Anzahl Gefaengnis-Frei-Karten
      */
     private int jailCardAmount;
+
     /**
      * Tage im Gefaengnis
      */
@@ -39,7 +38,7 @@ public class Player {
     /**
      * Position des Spielers
      */
-    private Field position;
+    private int position;
 
     /**
      * ob der Spieler ein Zuschauer (ausgeschieden) ist
@@ -47,9 +46,10 @@ public class Player {
     private boolean isSpectator;
 
     /**
+     * Erstellt eine neue Spielerinstanz.
      *
      * @param name Spielername
-     * @param id Spieler ID
+     * @param id Spieler-ID
      * @param money Kapital des Spielers
      */
     public Player(String name, int id, int money) {
@@ -59,28 +59,25 @@ public class Player {
         this.inJail = false;
         this.jailCardAmount = 0;
         this.daysInJail = 0;
-        this.position = null;
+        this.position = 0;
     }
 
     /**
-     *
-     * @return Spielername
+     * @return Name
      */
     public String getName() {
         return name;
     }
 
     /**
-     *
-     * @return Spieler ID
+     * @return ID
      */
     public int getId() {
         return id;
     }
 
     /**
-     *
-     * @return SpielerKapital
+     * @return Kapital
      */
     public int getMoney() {
         return money;
@@ -95,15 +92,13 @@ public class Player {
     }
 
     /**
-     *
-     * @return Anzahl Gefaengnis-frei-Karten
+     * @return Anzahl Gefaengnis-Frei-Karten
      */
     public int getJailCardAmount() {
         return jailCardAmount;
     }
 
     /**
-     *
      * @return Tage im Gefaengnis
      */
     public int getDaysInJail() {
@@ -111,21 +106,20 @@ public class Player {
     }
 
     /**
-     * erhöht die Anzahl der Gefaengnis-frei-Karten um 1
+     * Erhöht die Anzahl der Gefaengnis-frei-Karten um 1.
      */
     public void addJailCardAmount() {
         this.jailCardAmount++;
     }
 
     /**
-     * senkt die Anzahl der Gefaengnis-frei-Karten um 1
+     * Senkt die Anzahl der Gefaengnis-frei-Karten um 1.
      */
     public void removeJailCard() {
         this.jailCardAmount--;
     }
 
     /**
-     *
      * @param days Tage im Gefaengnis
      */
     public void setDaysInJail(int days) {
@@ -133,56 +127,51 @@ public class Player {
     }
 
     /**
-     * erhöht die Tage im Gefaengnis um 1
+     * Erhöht die Anzahl der Tage im Gefaengnis um 1.
      */
     public void addDayInJail() {
         this.daysInJail++;
     }
 
     /**
-     *
-     * @param money SpielerKapital
+     * @param money neues Kapital
      */
     public void setMoney(int money) {
         this.money = money;
     }
 
     /**
-     * Festlegen der Spielerposition
-     *
-     * @param pos
+     * *
+     * @param pos neue Position
      */
-    public void setPosition(Field pos) {
+    public void setPosition(int pos) {
         this.position = pos;
     }
 
     /**
-     * Rückgabe der Spielerposition
-     *
-     * @return
+     * @return Position
      */
-    public Field getPosition() {
+    public int getPosition() {
         return this.position;
     }
 
     /**
      *
-     * @return ob der Spieler Zuschauer ist (ausgeschieden)
+     * @return ob Spieler ausgeschieden (Zuschauer) ist
      */
     public boolean isSpectator() {
         return isSpectator;
     }
 
     /**
-     *
-     * @param isSpectator ob der Spieler ausgeschieden ist
+     * @param isSpectator neuer Zuschauerstatus
      */
     public void setSpectator(boolean isSpectator) {
         this.isSpectator = isSpectator;
     }
 
     /**
-     * @param inJail ob der Spieler im Gefaengnis ist
+     * @param inJail ob Spieler im Gefaengnis ist
      */
     public void setInJail(boolean inJail) {
         this.inJail = inJail;

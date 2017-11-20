@@ -1,12 +1,12 @@
 package de.btu.monopoly.controller;
 
-import de.btu.monopoly.data.CardField;
-import de.btu.monopoly.data.Field;
 import de.btu.monopoly.data.GameBoard;
 import de.btu.monopoly.data.Player;
-import de.btu.monopoly.data.Property;
-import de.btu.monopoly.data.SupplyField;
-import de.btu.monopoly.data.TaxField;
+import de.btu.monopoly.data.field.CardField;
+import de.btu.monopoly.data.field.Field;
+import de.btu.monopoly.data.field.Property;
+import de.btu.monopoly.data.field.SupplyField;
+import de.btu.monopoly.data.field.TaxField;
 
 /**
  *
@@ -59,8 +59,8 @@ public class GameController {
      */
     private int freeStreetChoice = 1; //@editInMultiplayer "=1" muss weg
 
-    public GameController(int playerCount) {
-        this.board = new GameBoard();
+    public GameController(int playerCount, Field[] fields) { //TODO MAXI
+        this.board = new GameBoard(fields);
         this.players = new Player[playerCount];
         init();
     }
@@ -327,16 +327,19 @@ public class GameController {
     }
 
     /**
-     * analog zu movePlayer(), nur dass kein Geld beim ueber-LOS-gehen ueberwiesen wird!
+     * analog zu movePlayer(), nur dass kein Geld beim ueber-LOS-gehen
+     * ueberwiesen wird!
      */
     private void moveToJail() {
         /*
-         * TODO Patrick & John - eventuell warten auf Implementierung des Gameboard
+         * TODO Patrick & John - eventuell warten auf Implementierung des
+         * Gameboard
          */
     }
 
     /**
-     * ueberpruft ob der uebergebene Spieler mindestens soviel Geld besitzt, wie die Methode uebergeben bekommt.
+     * ueberpruft ob der uebergebene Spieler mindestens soviel Geld besitzt, wie
+     * die Methode uebergeben bekommt.
      *
      * @param player Spieler der auf Liquiditaet geprueft wird
      * @param amount Geld was der Spieler besitzen muss
@@ -411,8 +414,8 @@ public class GameController {
     }
 
     /**
-     * ermittelt anhand der Position des Spielers das Feld mit der ID auf dem GameBoard, welches der Variablen actualField
-     * uebergeben wird.
+     * ermittelt anhand der Position des Spielers das Feld mit der ID auf dem
+     * GameBoard, welches der Variablen actualField uebergeben wird.
      *
      * @param player Spieler dessen Position ermittelt werden soll
      */
@@ -437,7 +440,8 @@ public class GameController {
     //------------ Karten Methoden --------------------------------------------
     //-------------------------------------------------------------------------
     /**
-     * Doppelte Miete -- Diese Methode wird verwendet, wenn in einer Karte gefordert ist die doppelte Miete zu zahlen.
+     * Doppelte Miete -- Diese Methode wird verwendet, wenn in einer Karte
+     * gefordert ist die doppelte Miete zu zahlen.
      *
      * @param giver Spieler der zahlen muss
      * @param taker Spieler der die Miete bekommt
@@ -449,8 +453,9 @@ public class GameController {
     /**
      * Alle Gebaeuden eines Spielers werden gezaehlt
      *
-     * Die Preise fuer Renovierung werden von dem entsprechenden Karte bekannt und dies wird mit der Anzahl von Haeuser/Hotels
-     * multipliziert und am Ende addiert = Summe
+     * Die Preise fuer Renovierung werden von dem entsprechenden Karte bekannt
+     * und dies wird mit der Anzahl von Haeuser/Hotels multipliziert und am Ende
+     * addiert = Summe
      *
      * @param house_price
      * @param hotel_price
