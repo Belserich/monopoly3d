@@ -6,12 +6,12 @@ package de.btu.monopoly.data.field;
 public class StreetField extends Property {
 
     /**
-     * die Miete der Straße, abhänging vom Bebauungsstatus
+     * Miete der Straße, abhänging vom Bebauungsstatus
      */
     private final int[] rents;
 
     /**
-     * der Preis für ein Haus
+     * Preis für ein Haus
      */
     private final int housePrice;
 
@@ -21,10 +21,11 @@ public class StreetField extends Property {
     private int houseCount;
 
     /**
+     * Instanzen dieser Klasse repräsentieren sämtliche Straßen des Spiels.
      *
      * @param name Strassenname
      * @param price Kaufpreis der Strasse
-     * @param rent0 doppelte Miete unbebaut!
+     * @param rent0 Miete unbebaut
      * @param rent1 Miete mit 1 Haus
      * @param rent2 Miete mit 2 Haeusern
      * @param rent3 Miete mit 3 Haeusern
@@ -53,18 +54,17 @@ public class StreetField extends Property {
         this.housePrice = housePrice;
 
         this.houseCount = 0;
-
     }
 
     /**
-     * @return aktuelle Miete der Strasse
+     * @return Miete der Strasse
      */
     public int getRent() {
         if (!isMortgageTaken()) {
             if (complete()) {
-                return rents[houseCount];
+                return rents[houseCount == 0 ? houseCount * 2 : houseCount]; // inline if
             } else {
-                return rents[0] / 2;
+                return rents[0];
             }
         }
         return 0;
@@ -85,8 +85,7 @@ public class StreetField extends Property {
     }
 
     /**
-     *
-     * @return sind alle Strassen des Strassenzuges in selbem besitz
+     * @return Gibt an, ob alle Straßen des zugehörigen Straßenzugs im Besitz desselben Spielers sind.
      */
     public boolean complete() {
         for (Property nei : super.getNeighbours()) {

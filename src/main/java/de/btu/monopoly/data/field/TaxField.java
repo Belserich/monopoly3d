@@ -13,7 +13,7 @@ public class TaxField extends Field {
     private int tax;
     
     /**
-     * Feldklasse für das Einkommens- und das Zusatzsteuerfeld.
+     * Feldklasse für Felder, wie das Einkommens- und das Zusatzsteuerfeld.
      *
      * @param tax Betrag, der zu versteuernden Währung
      */
