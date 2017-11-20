@@ -101,6 +101,11 @@ public class GameBoardParser {
      */
     
     /**
+     * ID, Name, alles andere
+     */
+    private static final String GENERAL_LINE_PATTERN = B + F + ".*" + E;
+    
+    /**
      * ID, Name, Startgeld
      */
     private static final String GO_PATTERN = B + F + S + D + E;
@@ -138,45 +143,16 @@ public class GameBoardParser {
     /**
      * Die allgemeine Exception-Nachricht für diese Klasse
      */
-    private static final String IO_ERROR_MESSAGE = "Error while reading game board data. Corrupted resource file!";
+    private static final String IO_EXCEPTION_MESSAGE = "Exception while reading game board data. Corrupted resource file!";
     
-    /**
-     * Liest erst alle Zeilen Daten aus der Textdatei, entfernt sämtliche Steuerzeichen (ASCII 0 - 32) und wertet jede Zeile einzeln aus.
-     *
-     * @param path Pfad zur Textdatei
-     * @return Gameboard-Instanz
-     * @throws IOException Wenn die Datei nicht geöffnet, oder einzelne Zeilen nicht gelesen werden konnten. Allgemein, wenn sie beschädigt
-     * oder falsch editiert wurde.
-     */
-    public static GameBoard readBoard(String path) throws IOException {
-        String[] lines = readSignificantLines(path);
-        
-        // Es gibt immer genau so viele Zeilen wie Felder, da sie in einer 1:1 Beziehung zueinander stehen.
-        if (lines.length != FIELD_STRUCTURE.length) {
-            throw new IOException(IO_ERROR_MESSAGE);
-        }
-        
-        // Zählt die Anzahl der Unterinstanzen von Property um die korrekten Nachbar-IDs zu übergeben.
-        int propertyCounter = 0;
-        
-        // Die Felder, mit sämtlichen benutzerdefinierten Infos
-        Field[] fields = new Field[FIELD_STRUCTURE.length];
-        
-        for (int i = 0; i < FIELD_STRUCTURE.length; i++) {
-            FieldType type = FIELD_STRUCTURE[i];
-            switch (type) {
-                case GO: fields[i] = tryParseGo(lines[i]); break;
-                case CORNER: fields[i] = tryParseCorner(lines[i]); break;
-                case STREET: fields[i] = tryParseStreetField(lines[i], propertyCounter++); break;
-                case CARD: fields[i] = tryParseCardField(lines[i]); break;
-                case TAX: fields[i] = tryParseTaxField(lines[i]); break;
-                case STATION: fields[i] = tryParseStationField(lines[i], propertyCounter++); break;
-                case SUPPLY: fields[i] = tryParseSupplyField(lines[i], propertyCounter++); break;
-            }
-        }
-        
-        return new GameBoard(fields);
-    }
+    // Zählt die Anzahl der Unterinstanzen von Property um die korrekten Nachbar-IDs zu übergeben.
+    private int propertyCounter;
+    
+    // teilt eine Zeile in ihre Parameter auf
+    private StringTokenizer tokenizer;
+    
+    // Die Felder, mit sämtlichen benutzerdefinierten Infos
+    private Field[] fields;
     
     /**
      * Reduziert den Inhalt einer Textdatei auf seine Informationen.
@@ -185,7 +161,7 @@ public class GameBoardParser {
      * @return Die Zeilen der Textdatei, frei von Steuerzeichen und unter Ausschluss leerer Zeilen.
      * @throws IOException Datei ist nicht lesbar, nicht vorhanden oder beschädigt.
      */
-    private static String[] readSignificantLines(String path) throws IOException {
+    private String[] readSignificantLines(String path) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(GameBoardParser.class.getClassLoader().getResourceAsStream(path)));
         String[] retObj = reader.lines()
                 .map(s -> { int i = s.indexOf(C); return i == -1 ? s : s.substring(0, i); }) // trims comments
@@ -197,152 +173,157 @@ public class GameBoardParser {
     }
     
     /**
-     * Versucht aus den Daten in line die nötigen Informationen für das entsprechende Feld zu nehmen.
+     * Liest erst alle Zeilen Daten aus der Textdatei, entfernt sämtliche Steuerzeichen (ASCII 0 - 32) und wertet jede Zeile einzeln aus.
      *
-     * @param line Die aktuelle Zeile (enthält alle wichtigen Parameter)
-     * @return die entsprechende Feld-Instanz
-     * @throws IOException Fehlschlag (korrupte Datei)
+     * @param path Pfad zur Textdatei
+     * @return Gameboard-Instanz
+     * @throws IOException Wenn die Datei nicht geöffnet, oder einzelne Zeilen nicht gelesen werden konnten. Allgemein, wenn sie beschädigt
+     * oder falsch editiert wurde.
      */
-    private static GoField tryParseGo(String line) throws IOException {
-        if (line.matches(GO_PATTERN)) {
-            StringTokenizer tokenizer = new StringTokenizer(line);
-            return new GoField(
-                    INT_PARSER.apply(tokenizer.nextToken(S)),
-                    tokenizer.nextToken(),
-                    INT_PARSER.apply(tokenizer.nextToken(S)));
+    public GameBoard readBoard(String path) throws IOException {
+        propertyCounter = 0;
+        fields = new Field[FIELD_STRUCTURE.length];
+        
+        String[] lines = readSignificantLines(path);
+        
+        // Es gibt immer genau so viele Zeilen wie Felder, da sie in einer 1:1 Beziehung zueinander stehen.
+        if (lines.length != FIELD_STRUCTURE.length) {
+            throw new IOException(IO_EXCEPTION_MESSAGE);
         }
-        else throw new IOException(IO_ERROR_MESSAGE);
+        
+        for (int i = 0; i < FIELD_STRUCTURE.length; i++) {
+            String line = lines[i];
+            if (line.matches(GENERAL_LINE_PATTERN)) {
+                tokenizer = new StringTokenizer(line);
+    
+                int id = INT_PARSER.apply(tokenizer.nextToken(S));
+                String name = tokenizer.nextToken(S);
+                
+                fields[i] = tryParse(FIELD_STRUCTURE[id], line, id, name, tokenizer);
+            }
+            else throw new IOException(IO_EXCEPTION_MESSAGE +
+                    "\nLine didn't match pattern! (line: " + line + " pattern: " + GENERAL_LINE_PATTERN);
+        }
+        return new GameBoard(fields);
     }
     
     /**
-     * Versucht aus den Daten in line die nötigen Informationen für das entsprechende Feld zu nehmen.
-     *
-     * @param line Die aktuelle Zeile (enthält alle wichtigen Parameter)
-     * @param propertyCounter Property-Zähler
-     * @return die entsprechende Feld-Instanz
-     * @throws IOException Fehlschlag (korrupte Datei)
+     * Prüft auf das jeweilige Pattern.
      */
-    private static SupplyField tryParseSupplyField(String line, int propertyCounter) throws IOException {
-        if (line.matches(SUPPLY_PATTERN)) {
-            StringTokenizer tokenizer = new StringTokenizer(line);
-            return new SupplyField(
-                    INT_PARSER.apply(tokenizer.nextToken(S)),
-                    tokenizer.nextToken(S),
-                    INT_PARSER.apply(tokenizer.nextToken(S)),
-                    INT_PARSER.apply(tokenizer.nextToken(S)),
-                    INT_PARSER.apply(tokenizer.nextToken(S)),
-                    NEIGHBOUR_IDS[propertyCounter],
-                    INT_PARSER.apply(tokenizer.nextToken(S)),
-                    INT_PARSER.apply(tokenizer.nextToken(S)));
+    private Field tryParse(FieldType type, String line, int id, String name, StringTokenizer tokenizer) throws IOException {
+        switch (type) {
+            case GO: {
+                if (!line.matches(GO_PATTERN)) {
+                    throw new IOException(IO_EXCEPTION_MESSAGE);
+                }
+                return parseGoField(id, name, tokenizer);
+            }
+            case CORNER: {
+                if (!line.matches(CORNER_PATTERN)) {
+                    throw new IOException(IO_EXCEPTION_MESSAGE);
+                }
+                return parseCornerField(id, name);
+            }
+            case STREET: {
+                if (!line.matches(STREET_PATTERN)) {
+                    throw new IOException(IO_EXCEPTION_MESSAGE);
+                }
+                return parseStreetField(id, name, tokenizer, NEIGHBOUR_IDS[propertyCounter++]);
+            }
+            case CARD: {
+                if (!line.matches(CARD_PATTERN)) {
+                    throw new IOException(IO_EXCEPTION_MESSAGE);
+                }
+                return parseCardField(id, name, tokenizer);
+            }
+            case TAX: {
+                if (!line.matches(TAX_PATTERN)) {
+                    throw new IOException(IO_EXCEPTION_MESSAGE);
+                }
+                return parseTaxField(id, name, tokenizer);
+            }
+            case STATION: {
+                if (!line.matches(STATION_PATTERN)) {
+                    throw new IOException(IO_EXCEPTION_MESSAGE);
+                }
+                return parseStationField(id, name, tokenizer, NEIGHBOUR_IDS[propertyCounter++]);
+            }
+            case SUPPLY: {
+                if (!line.matches(SUPPLY_PATTERN)) {
+                    throw new IOException(IO_EXCEPTION_MESSAGE);
+                }
+                return parseSupplyField(id, name, tokenizer, NEIGHBOUR_IDS[propertyCounter++]);
+            }
+            default: throw new IOException(IO_EXCEPTION_MESSAGE); // sollte niemals passieren
         }
-        else throw new IOException(IO_ERROR_MESSAGE);
     }
     
     /**
-     * Versucht aus den Daten in line die nötigen Informationen für das entsprechende Feld zu nehmen.
+     * Entnimmt dem tokenizer die entsprechende Information für die jeweilige Feldinstanz.
      *
-     * @param line Die aktuelle Zeile (enthält alle wichtigen Parameter)
-     * @param propertyCounter Property-Zähler
+     * @param id ID
+     * @param name Name
      * @return die entsprechende Feld-Instanz
-     * @throws IOException Fehlschlag (korrupte Datei)
      */
-    private static StationField tryParseStationField(String line, int propertyCounter) throws IOException {
-        if (line.matches(STATION_PATTERN)) {
-            StringTokenizer tokenizer = new StringTokenizer(line);
-            return new StationField(
-                    INT_PARSER.apply(tokenizer.nextToken(S)),
-                    tokenizer.nextToken(S),
-                    INT_PARSER.apply(tokenizer.nextToken(S)),
-                    INT_PARSER.apply(tokenizer.nextToken(S)),
-                    INT_PARSER.apply(tokenizer.nextToken(S)),
-                    INT_PARSER.apply(tokenizer.nextToken(S)),
-                    INT_PARSER.apply(tokenizer.nextToken(S)),
-                    INT_PARSER.apply(tokenizer.nextToken(S)),
-                    INT_PARSER.apply(tokenizer.nextToken(S)),
-                    NEIGHBOUR_IDS[propertyCounter]);
-        }
-        else throw new IOException(IO_ERROR_MESSAGE);
+    private GoField parseGoField(int id, String name, StringTokenizer tokenizer) {
+        return new GoField(
+                id, name,
+                INT_PARSER.apply(tokenizer.nextToken(S)));  // Betrag
     }
     
-    /**
-     * Versucht aus den Daten in line die nötigen Informationen für das entsprechende Feld zu nehmen.
-     *
-     * @param line Die aktuelle Zeile (enthält alle wichtigen Parameter)
-     * @return die entsprechende Feld-Instanz
-     * @throws IOException Fehlschlag (korrupte Datei)
-     */
-    private static TaxField tryParseTaxField(String line) throws IOException {
-        if (line.matches(TAX_PATTERN)) {
-            StringTokenizer tokenizer = new StringTokenizer(line);
-            return new TaxField(
-                    INT_PARSER.apply(tokenizer.nextToken(S)),
-                    tokenizer.nextToken(S),
-                    INT_PARSER.apply(tokenizer.nextToken(S)));
-        }
-        else throw new IOException(IO_ERROR_MESSAGE);
+    private SupplyField parseSupplyField(int id, String name, StringTokenizer tokenizer, int[] neighbourIds) {
+        return new SupplyField(
+                id, name,
+                INT_PARSER.apply(tokenizer.nextToken(S)),   // Preis
+                INT_PARSER.apply(tokenizer.nextToken(S)),   // Hypothekswert
+                INT_PARSER.apply(tokenizer.nextToken(S)),   // Hypotheksrückwert
+                neighbourIds,                               // Nachbar-IDs
+                INT_PARSER.apply(tokenizer.nextToken(S)),   // 1. Multiplikator
+                INT_PARSER.apply(tokenizer.nextToken(S)));  // 2. Multiplikator
     }
     
-    /**
-     * Versucht aus den Daten in line die nötigen Informationen für das entsprechende Feld zu nehmen.
-     *
-     * @param line Die aktuelle Zeile (enthält alle wichtigen Parameter)
-     * @return die entsprechende Feld-Instanz
-     * @throws IOException Fehlschlag (korrupte Datei)
-     */
-    private static CardField tryParseCardField(String line) throws IOException {
-        if (line.matches(CARD_PATTERN)) {
-            StringTokenizer tokenizer = new StringTokenizer(line);
-            return new CardField(
-                    INT_PARSER.apply(tokenizer.nextToken(S)),
-                    tokenizer.nextToken(S),
-                    null, new Card[0]);
-        }
-        else throw new IOException(IO_ERROR_MESSAGE);
+    private StationField parseStationField(int id, String name, StringTokenizer tokenizer, int[] neighbourIds) {
+        return new StationField(
+                id, name,
+                INT_PARSER.apply(tokenizer.nextToken(S)),   // Preis
+                INT_PARSER.apply(tokenizer.nextToken(S)),   // Miete 0
+                INT_PARSER.apply(tokenizer.nextToken(S)),   // Miete 1
+                INT_PARSER.apply(tokenizer.nextToken(S)),   // Miete 2
+                INT_PARSER.apply(tokenizer.nextToken(S)),   // Miete 3
+                INT_PARSER.apply(tokenizer.nextToken(S)),   // Hypothekswert
+                INT_PARSER.apply(tokenizer.nextToken(S)),   // Hypotheksrückwert
+                neighbourIds);                              // Nachbar-IDs
     }
     
-    /**
-     * Versucht aus den Daten in line die nötigen Informationen für das entsprechende Feld zu nehmen.
-     *
-     * @param line Die aktuelle Zeile (enthält alle wichtigen Parameter)
-     * @param propertyCounter Property-Zähler
-     * @return die entsprechende Feld-Instanz
-     * @throws IOException Fehlschlag (korrupte Datei)
-     */
-    private static StreetField tryParseStreetField(String line, int propertyCounter) throws IOException {
-        if (line.matches(STREET_PATTERN)) {
-            StringTokenizer tokenizer = new StringTokenizer(line);
-            return new StreetField(
-                    INT_PARSER.apply(tokenizer.nextToken(S)),    // ID
-                    tokenizer.nextToken(S),                      // Name
-                    INT_PARSER.apply(tokenizer.nextToken(S)),    // Preis
-                    INT_PARSER.apply(tokenizer.nextToken(S)),    // Miete0
-                    INT_PARSER.apply(tokenizer.nextToken(S)),    // Miete1
-                    INT_PARSER.apply(tokenizer.nextToken(S)),    // Miete2
-                    INT_PARSER.apply(tokenizer.nextToken(S)),    // Miete3
-                    INT_PARSER.apply(tokenizer.nextToken(S)),    // Miete4
-                    INT_PARSER.apply(tokenizer.nextToken(S)),    // Miete5
-                    INT_PARSER.apply(tokenizer.nextToken(S)),    // Hauspreis
-                    INT_PARSER.apply(tokenizer.nextToken(S)),    // Hypothekswert
-                    INT_PARSER.apply(tokenizer.nextToken(S)),    // Hypotheksrückwert
-                    NEIGHBOUR_IDS[propertyCounter]);            // Nachbar-IDs
-        }
-        else throw new IOException(IO_ERROR_MESSAGE);
+    private TaxField parseTaxField(int id, String name, StringTokenizer tokenizer) {
+        return new TaxField(
+                id, name,
+                INT_PARSER.apply(tokenizer.nextToken(S)));  // Betrag
     }
     
-    /**
-     * Versucht aus den Daten in line die nötigen Informationen für das entsprechende Feld zu nehmen.
-     *
-     * @param line Die aktuelle Zeile (enthält alle wichtigen Parameter)
-     * @return die entsprechende Feld-Instanz
-     * @throws IOException Fehlschlag (korrupte Datei)
-     */
-    private static Field tryParseCorner(String line) throws IOException {
-        if (line.matches(CORNER_PATTERN)) {
-            StringTokenizer tokenizer = new StringTokenizer(line);
-            return new Field(
-                    INT_PARSER.apply(tokenizer.nextToken(S)),
-                    tokenizer.nextToken(S));
-        }
-        else throw new IOException(IO_ERROR_MESSAGE);
+    private CardField parseCardField(int id, String name, StringTokenizer tokenizer) {
+        return new CardField(
+                id, name,
+                null, new Card[0]);
+    }
+    
+    private StreetField parseStreetField(int id, String name, StringTokenizer tokenizer, int[] neighbourIds) {
+        return new StreetField(
+                id, name,
+                INT_PARSER.apply(tokenizer.nextToken(S)),    // Preis
+                INT_PARSER.apply(tokenizer.nextToken(S)),    // Miete0
+                INT_PARSER.apply(tokenizer.nextToken(S)),    // Miete1
+                INT_PARSER.apply(tokenizer.nextToken(S)),    // Miete2
+                INT_PARSER.apply(tokenizer.nextToken(S)),    // Miete3
+                INT_PARSER.apply(tokenizer.nextToken(S)),    // Miete4
+                INT_PARSER.apply(tokenizer.nextToken(S)),    // Miete5
+                INT_PARSER.apply(tokenizer.nextToken(S)),    // Hauspreis
+                INT_PARSER.apply(tokenizer.nextToken(S)),    // Hypothekswert
+                INT_PARSER.apply(tokenizer.nextToken(S)),    // Hypotheksrückwert
+                neighbourIds);                               // Nachbar-IDs
+    }
+    
+    private Field parseCornerField(int id, String name) {
+        return new Field(id, name);
     }
 }
