@@ -12,7 +12,7 @@ import java.util.Queue;
  *
  * @author Christian Prinz
  */
-class CardQueue {
+public class CardQueue {
 
     /**
      * Name des Kartenstapels

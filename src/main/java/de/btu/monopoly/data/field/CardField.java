@@ -1,5 +1,7 @@
 package de.btu.monopoly.data.field;
 
+import de.btu.monopoly.data.CardQueue;
+
 /**
  * @author Maximilian Bels (belsmaxi@b-tu.de)
  */
