@@ -1,7 +1,5 @@
 package de.btu.monopoly.data.field;
 
-import de.btu.monopoly.data.field.Field;
-
 /**
  * @author Maximilian Bels (belsmaxi@b-tu.de)
  */
@@ -16,9 +14,8 @@ public class GoField extends Field {
      * Erzeugt eine Instanz des LOS-Feldes. Bewegt sich ein Spieler während des Spiels über dieses Feld,
      * bekommt dieser {@code amount} Einheiten der gewählten Währung auf sein Konto überschrieben.
      */
-    public GoField(int id, String name, int amount) {
-        super(id, name);
-        
+    public GoField(String name, int amount) {
+        super(name);
         this.amount = amount;
     }
 

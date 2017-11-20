@@ -13,8 +13,8 @@ public class CardField extends Field {
      *
      * @param name Name des Kartenfeldes
      */
-    public CardField(int id, String name) {
-        super(id, name);
+    public CardField(String name) {
+        super(name);
     }
 
 }

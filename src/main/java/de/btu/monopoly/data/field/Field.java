@@ -11,28 +11,14 @@ public class Field {
     private final String name;
 
     /**
-     * ID des Felds
-     */
-    private final int id;
-
-    /**
      * Die Klasse {@code Field} ist eine Oberklasse für sämtliche Felder auf
      * denen sich der Spieler während des Spiels bewegt. Alle Eckfelder, außer
      * dem LOS-Feld, sind direkte Instanzen dieser Klasse.
      *
-     * @param id Identifikationsnummer
-     * @param name des Feldes
+     * @param name Name des Feldes
      */
-    public Field(int id, String name) {
-        this.id = id;
+    public Field(String name) {
         this.name = name;
-    }
-
-    /**
-     * @return ID des Feldes
-     */
-    public int getId() {
-        return id;
     }
 
     /**

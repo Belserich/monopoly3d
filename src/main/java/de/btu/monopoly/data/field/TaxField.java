@@ -17,8 +17,8 @@ public class TaxField extends Field {
      *
      * @param tax Betrag, der zu versteuernden Währung
      */
-    public TaxField(int id, String name, int tax) {
-        super(id, name);
+    public TaxField(String name, int tax) {
+        super(name);
         this.tax = tax;
     }
     

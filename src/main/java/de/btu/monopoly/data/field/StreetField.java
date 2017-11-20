@@ -9,10 +9,12 @@ public class StreetField extends Property {
      * die Miete der Straße, abhänging vom Bebauungsstatus
      */
     private final int[] rents;
+
     /**
      * der Preis für ein Haus
      */
     private final int housePrice;
+
     /**
      * Anzahl der Haeuser auf der Strasse
      */
@@ -38,8 +40,8 @@ public class StreetField extends Property {
             int rent3,
             int rent4,
             int rent5,
-            int housePrice, int mortgage, int mortgageBack, int id) {
-        super(id, name, price, mortgage, mortgageBack);
+            int housePrice, int mortgage, int mortgageBack) {
+        super(name, price, mortgage, mortgageBack);
 
         this.rents = new int[6];
         this.rents[0] = rent0;

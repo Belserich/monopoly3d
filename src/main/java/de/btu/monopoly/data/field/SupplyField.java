@@ -7,12 +7,8 @@ public class SupplyField extends Property {
 
     private final int[] rents;
 
-    /**
-     * @param name Werksname
-     * @param price Kaufpreis des Werks
-     */
-    private SupplyField(String name, int price, int multiplikator1, int multiplikator2, int mortgage, int mortgageBack, int id) {
-        super(id, name, price, mortgage, mortgageBack);
+    private SupplyField(String name, int price, int multiplikator1, int multiplikator2, int mortgage, int mortgageBack) {
+        super(name, price, mortgage, mortgageBack);
 
         this.rents = new int[2];
         this.rents[0] = multiplikator1;

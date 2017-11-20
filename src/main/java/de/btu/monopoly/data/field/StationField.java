@@ -14,8 +14,8 @@ public class StationField extends Property {
      *
      * @param name Bahnhofsname
      */
-    public StationField(String name, int price, int rent1, int rent2, int rent3, int rent4, int mortgage, int mortgageBack, int id) {
-        super(id, name, price, mortgage, mortgageBack);
+    public StationField(String name, int price, int rent1, int rent2, int rent3, int rent4, int mortgage, int mortgageBack) {
+        super(name, price, mortgage, mortgageBack);
 
         this.rents = new int[4];
         this.rents[0] = rent1;

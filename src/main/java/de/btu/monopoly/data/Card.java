@@ -14,16 +14,22 @@ public class Card {
      * Kartentext
      */
     private final String text;
-    
+
+    /**
+     * Kartenargumente
+     */
+    private final String[] args;
+
     /**
      * Repräsentiert eine Ereignis- oder Gemeinschaftskarte
      *
      * @param type
      * @param text
      */
-    private Card(int type, String text) {
+    private Card(int type, String text, String[] args) {
         this.type = type;
         this.text = text;
+        this.args = args;
     }
     
     /**
@@ -38,5 +44,12 @@ public class Card {
      */
     public String getText() {
         return text;
+    }
+
+    /**
+     * @return Kartenargumente
+     */
+    public String[] getArgs() {
+        return args;
     }
 }

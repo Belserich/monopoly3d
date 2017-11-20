@@ -9,57 +9,67 @@ import de.btu.monopoly.data.field.SupplyField;
 import de.btu.monopoly.data.field.TaxField;
 
 /**
- *
  * @author Christian Prinz
  */
 public class GameController {
 
-    private GameBoard board;
-    private final Player[] players;
     /**
-     * der aktive Spieler, welcher gerade dran ist
+     * das Spielbrett
      */
-    private Player activePlayer;
+    private GameBoard board;
+
     /**
-     * wenn alle bis auf einen Spieler pleite sind
+     * die Mitspieler
+     */
+    private final Player[] players;
+    
+    /**
+     * momentaner Spieler
+     */
+    private Player currPlayer;
+    
+    /**
+     * Gibt an, ob das Spiel beendet ist. 
      */
     private boolean gameOver;
+    
     /**
-     * while-boolean für die Wdh. der Feldphase
+     * Gibt an, ob die Feldphase wiederholt werden soll.
      */
     private boolean repeatFieldPhase;
+    
     /**
-     * Anzahl Pasche
+     * Anzahl Pasches
      */
     private int doubletCounter;
+    
     /**
-     * wurde ein Pasch gewuerfelt?
+     * Gibt an, ob ein Pasch gewürfelt wurde
      */
     private boolean isDoublet;
+    
     /**
-     * Ergebnis des letzten mal wuerfelns
+     * letztes Wurfergebnis
      */
     private int diceResult;
+    
     /**
-     * das Feld auf dem sich der Spieler soeben befindet
+     * Feld, auf dem sich der Spieler befindet
      */
     private Field actualField;
+    
     /**
-     * ein int fuer die unterschiedlichen Typen von Feldern 1-
+     * Feldtyp
      */
     private int fieldSwitch;
 
-    // Steuerung:
     /**
-     * Optionen im Gefaengnis: (1 Bezahlen, 2 Karte, 3 Wuerfeln)
+     * Die zentrale Manager-Klasse für alles was ein Spiel betrifft.
+     *
+     * @param playerCount Anzahl Spieler
+     * @param fields sämtliche Felder
      */
-    private int prisonChoice;
-    /**
-     * Optionen beim betreten einer freien Straße (1 Kaufen, 2 Auktion)
-     */
-    private int freeStreetChoice = 1; //@editInMultiplayer "=1" muss weg
-
-    public GameController(int playerCount, Field[] fields) { //TODO MAXI
+    public GameController(int playerCount, Field[] fields) {
         this.board = new GameBoard(fields);
         this.players = new Player[playerCount];
         init();
@@ -70,34 +80,31 @@ public class GameController {
      */
     public void init() {
         startGame();
-        // TODO Maxi
+        // TODO (Maxi)
     }
 
     /**
-     * das gestartete Spiel mit seiner phasenbasierte Grundstruktur
+     * Spielstart
      */
     public void startGame() {
-        /*
-         * Schleife für Spieler
-         */
-        for (Player p : players) {
-            /*
-             * Rundenphase
-             */
-            activePlayer = p;		// aktiven Spieler setzen
-            if (!(p.isSpectator())) {	// Beobachter ist nicht am Zug
-                turnPhase();
+        do
+        {
+            for (int i = 0; i < players.length; i++) {  // für alle Spieler
+                currPlayer = players[i];		        // aktiven Spieler setzen
+                if (!(currPlayer.isSpectator())) {	    // Beobachter ist nicht am Zug
+                    turnPhase();
+                }
             }
         }
+        while (!gameOver);
     }
 
     /**
-     * die Rundenphase
+     * Rundenphase
      */
     private void turnPhase() {
-        doubletCounter = 0;		// PaschZaehler zuruecksetzen
-
-        if (activePlayer.isInJail()) {	// Spieler im Gefaengnis?
+        doubletCounter = 0; 	        // PaschZaehler zuruecksetzen
+        if (currPlayer.isInJail()) {	// Spieler im Gefaengnis
             prisonPhase();
         }
         do {		// bei Pasch wiederholen
@@ -117,26 +124,28 @@ public class GameController {
 //----------- EINZELNE PHASEN -------------------------------------------------
 //-----------------------------------------------------------------------------
     /**
-     * @todo die Gefängnisphase
+     * Gefängnisphase
+     * TODO
      */
     private void prisonPhase() {
+        int prisonChoice = -1;
         switch (prisonChoice) { // @GUI
             //OPTION 1: Bezahlen
             case 1:
-                if (checkLiquidity(activePlayer, 50)) {
-                    takeMoney(activePlayer, 50);
-                    activePlayer.setInJail(false);
+                if (checkLiquidity(currPlayer, 50)) {
+                    takeMoney(currPlayer, 50);
+                    currPlayer.setInJail(false);
                 } else { // muss in der GUI deaktiviert sein!!!
-                    bankrupt(activePlayer);
+                    bankrupt(currPlayer);
                 }
                 break;
 
-            //OPTION 2: GfKarte ausspielen
+            //OPTION 2: Freikarte ausspielen
             case 2:
-                if (activePlayer.getJailCardAmount() > 0) {
-                    activePlayer.removeJailCard();
+                if (currPlayer.getJailCardAmount() > 0) {
+                    currPlayer.removeJailCard();
                     enqueueJailCard(); //TODO Einsetzen
-                    activePlayer.setInJail(false);
+                    currPlayer.setInJail(false);
                 } else { // muss in der GUI deaktiviert sein!!!
 
                 }
@@ -144,40 +153,39 @@ public class GameController {
 
             //OPTION 3: 3mal wuerfeln
             case 3:
-                roll();             //wuerfeln
-                if (!isDoublet) {   //kein Pasch > im Gefaengnis bleiben
-                    activePlayer.setDaysInJail(activePlayer.getDaysInJail() + 1);
-                } else {            //sonst frei
-                    activePlayer.setInJail(false);
-                    activePlayer.setDaysInJail(0);
+                roll();                 // wuerfeln
+                if (!isDoublet) {       // kein Pasch > im Gefaengnis bleiben
+                    currPlayer.addDayInJail();
+                } else {                        // sonst frei
+                    currPlayer.setInJail(false);
+                    currPlayer.setDaysInJail(0);
                 }
                 // Wenn 3 mal kein Pasch dann bezahlen
-                if (activePlayer.getDaysInJail() == 3) {
-                    if (checkLiquidity(activePlayer, 50)) {
-                        takeMoney(activePlayer, 50);
-                        activePlayer.setInJail(false);
+                if (currPlayer.getDaysInJail() == 3) {
+                    if (checkLiquidity(currPlayer, 50)) {
+                        takeMoney(currPlayer, 50);
+                        currPlayer.setInJail(false);
                     } else {        //wenn pleite game over
-                        bankrupt(activePlayer);
+                        bankrupt(currPlayer);
                     }
                 }
-
         }
     }
 
     /**
-     * die Wurfphase (würfeln und ziehen)
+     * die Wurfphase (wuerfeln und ziehen)
      */
     private void rollPhase() {
-        if (!(activePlayer.isInJail())) { //Gefaengnis hat eigenes Wuerfeln
+        if (!(currPlayer.isInJail())) { //Gefaengnis hat eigenes Wuerfeln
             roll();
             if (doubletCounter == 3) {
-                activePlayer.setInJail(true);
+                currPlayer.setInJail(true);
                 moveToJail();
-                activePlayer.setDaysInJail(0);
+                currPlayer.setDaysInJail(0);
                 doubletCounter = 0;
             }
         }
-        if (!(activePlayer.isInJail())) { //kann sich nach wuerfeln aendern
+        if (!(currPlayer.isInJail())) { //kann sich nach wuerfeln aendern
             movePlayer();
         }
     }
@@ -186,7 +194,7 @@ public class GameController {
      * die Feldphase (Feldaktionen)
      */
     private void fieldPhase() {
-        locate(activePlayer);
+        locate(currPlayer);
 
         switch (fieldSwitch) {
 
@@ -195,20 +203,21 @@ public class GameController {
                 if (actualField instanceof Property) {
                     Property actualProperty = (Property) actualField;
                     // wenn das Feld in eigenem Besitz ist
-                    if (actualProperty.getOwner() == activePlayer) {
+                    if (actualProperty.getOwner() == currPlayer) {
                         break;
                     } else if (actualProperty.getOwner() == null) { //wenn frei
+                        int freeStreetChoice = 1;
                         switch (freeStreetChoice) { //@GUI
                             case 1: //Kaufen
-                                if (checkLiquidity(activePlayer, actualProperty.getPrice())) {
-                                    actualProperty.setOwner(activePlayer);
-                                    takeMoney(activePlayer, actualProperty.getPrice());
+                                if (checkLiquidity(currPlayer, actualProperty.getPrice())) {
+                                    actualProperty.setOwner(currPlayer);
+                                    takeMoney(currPlayer, actualProperty.getPrice());
                                 } else { // muss in der GUI deaktiviert sein!
 
                                 }
                                 break;
 
-                            case 2: //Auktion - NOCH DEAKTIVIERT @editInMultiplayer
+                            case 2: //Auktion - NOCH DEAKTIVIERT @multiplayer
                                 betPhase();
                                 break;
                         }
@@ -220,11 +229,11 @@ public class GameController {
                         if (actualProperty instanceof SupplyField) {
                             rent = rent * diceResult;
                         }
-                        if (checkLiquidity(activePlayer, rent)) {
-                            takeMoney(activePlayer, rent);
+                        if (checkLiquidity(currPlayer, rent)) {
+                            takeMoney(currPlayer, rent);
                             giveMoney(owner, rent);
                         } else {
-                            bankrupt(activePlayer);
+                            bankrupt(currPlayer);
                         }
                     }
 
@@ -249,10 +258,10 @@ public class GameController {
             case 5: // Steuerfeld
                 if (actualField instanceof TaxField) {
                     TaxField taxField = (TaxField) actualField;
-                    if (checkLiquidity(activePlayer, taxField.getTax())) {
-                        takeMoney(activePlayer, taxField.getTax());
+                    if (checkLiquidity(currPlayer, taxField.getTax())) {
+                        takeMoney(currPlayer, taxField.getTax());
                     } else {
-                        bankrupt(activePlayer);
+                        bankrupt(currPlayer);
                     }
                     // spaeter kommt hier evtl. der Steuertopf zum Zuge @rules
                 } else { // kann nicht auftreten
@@ -263,7 +272,7 @@ public class GameController {
             case 6: // Kartenfeld
                 if (actualField instanceof CardField) {
                     CardField cardField = (CardField) actualField;
-                    // TODO Christian & Maxi -- hier ist zu klären wie wir das endgültig lösen mit den Karten und den Stapeln
+                    // TODO Christian & Maxi -- hier ist zu klären wie wir das endgueltig lösen mit den Karten und den Stapeln
                 } else { // kann nicht auftreten
 
                 }
@@ -279,20 +288,21 @@ public class GameController {
     }
 
     /**
-     * Die Aktionsphase (Handeln, Bebauung, Hypothek)
+     * Die Aktionsphase (Bebauung, Hypothek, Handeln)
      */
     private void actionPhase() {
-        // Bebauung
-
-        // Hypothek
-        // Handeln NOCH NICHT BENOETIGT!
+        // buyHouse(StreetField field), 
+        // sellHouse(StreetField field), 
+        // checkBalance() (Gleichgewicht der Haeuser)
+        // takeMortgage(StreetField field)
+        // payMortgage(StreetField field))
     }
 
     /**
      * die Versteigerungsphase
      */
     private void betPhase() {
-        // FUER DIE SINGLEPLAYER-IMPLEMENTIERUNG NICHT BENOETIGT!!
+        // @multiplayer 
     }
 
 //-----------------------------------------------------------------------------
@@ -303,7 +313,7 @@ public class GameController {
      */
     private void roll() {
 
-        // 2 interne Würfel
+        // 2 interne Wuerfel
         int dice1;
         int dice2;
 
@@ -324,11 +334,11 @@ public class GameController {
     }
 
     /**
-     * bewegt den Spieler (activePlayer) zu einer neuen Position.
+     * bewegt den Spieler (currPlayer) zu einer neuen Position.
      *
      */
     private void movePlayer() {
-
+        //
         //TODO Patrick & John - eventuell warten auf Implementierung des Gameboard
     }
 
@@ -352,7 +362,7 @@ public class GameController {
      */
     private boolean checkLiquidity(Player player, int amount) {
 
-        // Die Methode benötigt die Übergabe des Spielers, da bei einem Ereignisfeld, eine Karte vorkommt, bei der der
+        // Die Methode benötigt die uebergabe des Spielers, da bei einem Ereignisfeld, eine Karte vorkommt, bei der der
         // actualPlayer Geld von den Mitspielern einsammeln kann
         if ((player.getMoney() - amount) < 0) {
             return false;
@@ -392,7 +402,7 @@ public class GameController {
      * @param player Spieler der bankrott gegangen ist
      */
     private void bankrupt(Player player) {
-        activePlayer.setSpectator(true);
+        currPlayer.setSpectator(true);
         /*
          * TODO Patrick & John -- HIER MUESST IHR EUCH WAS CLEVERES UEBERLEGEN
          * WIE MAN DEN BESITZ ENTFERNT
@@ -400,22 +410,13 @@ public class GameController {
     }
 
     /**
-     * fügt dem Kartenstapel wieder eine Gefaengnis-frei-Karte hinzu.
+     * fuegt dem Kartenstapel wieder eine Gefaengnis-frei-Karte hinzu.
      */
     private void enqueueJailCard() {
         /*
          * TODO Patrick & John -- WIE MACHEN WIR DAS, WENN DIE KARTEN IDs HABEN?
          * macht die Methode erst später, wenn Maxi seinen branch fertig hat
-         * muss der Methode evtl. noch der Stapel übergeben werden?
-         */
-    }
-
-    /**
-     * entfernt eine Gefaengnis-frei-Karte von einem Stapel
-     */
-    private void dequeueJailCard() {
-        /*
-         * TODO Patrick & John -- Kommentar analog zu enqueue
+         * muss der Methode evtl. noch der Stapel uebergeben werden?
          */
     }
 

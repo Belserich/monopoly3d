@@ -10,17 +10,17 @@ import java.util.List;
 public abstract class Property extends Field {
 
     /**
-     * der Preis des Grundstuecks
+     * Preis des Grundstuecks
      */
     private final int price;
 
     /**
-     * die Hypothek des Grundstuecks
+     * Hypothek des Grundstuecks
      */
     private final int mortgage;
 
     /**
-     * die Hypothek des Grundstuecks
+     * Hypothek des Grundstuecks
      */
     private final int mortgageBack;
 
@@ -30,12 +30,12 @@ public abstract class Property extends Field {
     private Player ownedBy;
 
     /**
-     * gibt an, ob Hypothek aufgenommen
+     * Gibt an, ob die Hypothek aufgenommen wurde.
      */
     private boolean mortgageTaken;
 
     /**
-     * Liste der Nachbaern des Feldes (Straßenzug)
+     * Liste der Nachbarn des Feldes (Straßenzug)
      */
     List<Property> neighbours = new ArrayList<>();
 
@@ -49,9 +49,8 @@ public abstract class Property extends Field {
      * @param mortgage Hypothekswert
      * @param mortgageBack Hypotheksrückwert
      */
-    Property(int id, String name, int price, int mortgage, int mortgageBack) {
-        super(id, name);
-
+    Property(String name, int price, int mortgage, int mortgageBack) {
+        super(name);
         this.price = price;
         this.mortgage = mortgage;
         this.mortgageBack = mortgageBack;

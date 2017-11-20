@@ -18,6 +18,7 @@ public class CardQueue {
      * Name des Kartenstapels
      */
     String name;
+
     /**
      * Kartenstapel (Queue)
      */
