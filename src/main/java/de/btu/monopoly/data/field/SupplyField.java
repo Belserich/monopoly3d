@@ -5,28 +5,39 @@ package de.btu.monopoly.data.field;
  */
 public class SupplyField extends Property {
 
-    private final int[] rents;
-
-    private SupplyField(String name, int price, int multiplikator1, int multiplikator2, int mortgage, int mortgageBack) {
+    private final int mult1;
+    private final int mult2;
+    
+    /**
+     * Instanzen dieser Klasse stellen Versogungswerke, wie das Wasser- und das Elektizitätswerk dar.
+     *
+     * @param mult1 1. Multiplikator
+     * @param mult2 2. Multipliaktor
+     */
+    public SupplyField(String name, int price, int mortgage, int mortgageBack, int mult1, int mult2) {
         super(name, price, mortgage, mortgageBack);
-
-        this.rents = new int[2];
-        this.rents[0] = multiplikator1;
-        this.rents[1] = multiplikator2;
+        this.mult1 = mult1;
+        this.mult2 = mult2;
     }
-
+    
+    /**
+     * Gibt, statt eines Mietswertes, den entsprechenden Multiplikator zurück.
+     *
+     * @return Multiplikator
+     */
     @Override
     public int getRent() {
         if (complete()) {
-            return rents[1];
+            return mult1;
         } else {
-            return rents[0];
+            return mult2;
         }
     }
 
     /**
+     * Prüft, ob alle zugehörigen Werke im Besitz desselben Spielers sind.
      *
-     * @return sind beide Werke im selben Besitz
+     * @return true, wenn alle Werke im Besitz des Spielers sind, sonst false.
      */
     public boolean complete() {
         for (Property nei : super.getNeighbours()) {
