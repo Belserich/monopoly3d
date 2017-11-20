@@ -220,9 +220,12 @@ public class GameController {
                         if (actualProperty instanceof SupplyField) {
                             rent = rent * diceResult;
                         }
-                        checkLiquidity(activePlayer, rent);
-                        takeMoney(activePlayer, rent);
-                        giveMoney(owner, rent);
+                        if (checkLiquidity(activePlayer, rent)) {
+                            takeMoney(activePlayer, rent);
+                            giveMoney(owner, rent);
+                        } else {
+                            bankrupt(activePlayer);
+                        }
                     }
 
                 } else { // kann nicht auftreten
@@ -246,8 +249,11 @@ public class GameController {
             case 5: // Steuerfeld
                 if (actualField instanceof TaxField) {
                     TaxField taxField = (TaxField) actualField;
-                    checkLiquidity(activePlayer, taxField.getTax());
-                    takeMoney(activePlayer, taxField.getTax());
+                    if (checkLiquidity(activePlayer, taxField.getTax())) {
+                        takeMoney(activePlayer, taxField.getTax());
+                    } else {
+                        bankrupt(activePlayer);
+                    }
                     // spaeter kommt hier evtl. der Steuertopf zum Zuge @rules
                 } else { // kann nicht auftreten
 
