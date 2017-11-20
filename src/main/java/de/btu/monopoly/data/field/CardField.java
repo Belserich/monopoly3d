@@ -12,8 +12,9 @@ public class CardField extends Field {
     /**
      * @param name Name des Kartenfeldes
      */
-    public CardField(String name) {
+    public CardField(String name, CardQueue cards) {
         super(name);
+        this.cards = cards;
     }
 
 }

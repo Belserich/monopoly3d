@@ -1,5 +1,6 @@
 import de.btu.monopoly.data.GameBoard;
 import de.btu.monopoly.data.field.Field;
+import de.btu.monopoly.data.field.Property;
 import de.btu.monopoly.data.parser.GameBoardParser;
 
 import java.io.IOException;
@@ -16,7 +17,9 @@ public class GameBoardTest {
         GameBoard board = parser.readBoard(BOARD_DATA_PATH);
         for (Field f : board.getFields())
         {
-            System.out.println(f.getClass());
+            if (f instanceof Property) {
+                ((Property) f).getNeighbours().forEach(p -> System.out.println(p.getClass()));
+            }
         }
     }
     

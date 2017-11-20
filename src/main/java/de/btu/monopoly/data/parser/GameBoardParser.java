@@ -38,8 +38,8 @@ public class GameBoardParser {
      */
     private static final int[][] NEIGHBOUR_IDS = {
         {3}, {1}, {15, 25, 35}, {8, 9}, {6, 9}, {6, 8}, // Erste Reihe
-        {13, 14}, {21}, {11, 14}, {11, 13}, {5, 25, 35}, {18, 19}, {16, 19}, {16, 18}, // Zweite Reihe
-        {23, 24}, {21, 24}, {23, 21}, {5, 15, 35}, {27, 29}, {26, 29}, {8}, {26, 27}, // Dritte Reihe
+        {13, 14}, {28}, {11, 14}, {11, 13}, {5, 25, 35}, {18, 19}, {16, 19}, {16, 18}, // Zweite Reihe
+        {23, 24}, {21, 24}, {23, 21}, {5, 15, 35}, {27, 29}, {26, 29}, {12}, {26, 27}, // Dritte Reihe
         {32, 34}, {31, 34}, {32, 31}, {5, 15, 25}, {39}, {37} // Vierte Reihe
     };
 
@@ -182,7 +182,6 @@ public class GameBoardParser {
      * beschädigt oder falsch editiert wurde.
      */
     public GameBoard readBoard(String path) throws IOException {
-        propertyCounter = 0;
         fields = new Field[FIELD_STRUCTURE.length];
 
         String[] lines = readSignificantLines(path);
@@ -204,61 +203,72 @@ public class GameBoardParser {
                     throw new IOException(IO_EXCEPTION_MESSAGE);
                 }
 
-                fields[i] = tryParse(FIELD_STRUCTURE[id], line, id, name, tokenizer);
+                fields[i] = tryParse(FIELD_STRUCTURE[id], line, name, tokenizer);
             } else {
                 throw new IOException(IO_EXCEPTION_MESSAGE
                         + "\nLine didn't match pattern! (line: " + line + " pattern: " + GENERAL_LINE_PATTERN);
             }
         }
+    
+        // fügt allen Property-Feldern sämtliche Nachbarn hinzu
+        propertyCounter = 0;
+        for (Field field : fields) {
+            if (field instanceof Property) {
+                for (int id : NEIGHBOUR_IDS[propertyCounter++]) {
+                    ((Property) field).addNeighbour(((Property)fields[id]));
+                }
+            }
+        }
+        
         return new GameBoard(fields);
     }
 
     /**
      * Prüft auf das jeweilige Pattern.
      */
-    private Field tryParse(FieldType type, String line, int id, String name, StringTokenizer tokenizer) throws IOException {
+    private Field tryParse(FieldType type, String line, String name, StringTokenizer tokenizer) throws IOException {
         switch (type) {
             case GO: {
                 if (!line.matches(GO_PATTERN)) {
                     throw new IOException(IO_EXCEPTION_MESSAGE);
                 }
-                return parseGoField(id, name, tokenizer);
+                return parseGoField(name, tokenizer);
             }
             case CORNER: {
                 if (!line.matches(CORNER_PATTERN)) {
                     throw new IOException(IO_EXCEPTION_MESSAGE);
                 }
-                return parseCornerField(id, name);
+                return parseCornerField(name);
             }
             case STREET: {
                 if (!line.matches(STREET_PATTERN)) {
                     throw new IOException(IO_EXCEPTION_MESSAGE);
                 }
-                return parseStreetField(id, name, tokenizer, NEIGHBOUR_IDS[propertyCounter++]);
+                return parseStreetField(name, tokenizer);
             }
             case CARD: {
                 if (!line.matches(CARD_PATTERN)) {
                     throw new IOException(IO_EXCEPTION_MESSAGE);
                 }
-                return parseCardField(id, name, tokenizer);
+                return parseCardField(name);
             }
             case TAX: {
                 if (!line.matches(TAX_PATTERN)) {
                     throw new IOException(IO_EXCEPTION_MESSAGE);
                 }
-                return parseTaxField(id, name, tokenizer);
+                return parseTaxField(name, tokenizer);
             }
             case STATION: {
                 if (!line.matches(STATION_PATTERN)) {
                     throw new IOException(IO_EXCEPTION_MESSAGE);
                 }
-                return parseStationField(id, name, tokenizer, NEIGHBOUR_IDS[propertyCounter++]);
+                return parseStationField(name, tokenizer);
             }
             case SUPPLY: {
                 if (!line.matches(SUPPLY_PATTERN)) {
                     throw new IOException(IO_EXCEPTION_MESSAGE);
                 }
-                return parseSupplyField(id, name, tokenizer, NEIGHBOUR_IDS[propertyCounter++]);
+                return parseSupplyField(name, tokenizer);
             }
             default:
                 throw new IOException(IO_EXCEPTION_MESSAGE); // sollte niemals passieren
@@ -277,7 +287,7 @@ public class GameBoardParser {
                 INT_PARSER.apply(tokenizer.nextToken(S)));  // Betrag
     }
 
-    private SupplyField parseSupplyField(String name, StringTokenizer tokenizer, int[] neighbourIds) {
+    private SupplyField parseSupplyField(String name, StringTokenizer tokenizer) {
         return new SupplyField(
                 name,
                 INT_PARSER.apply(tokenizer.nextToken(S)),   // Preis
@@ -287,7 +297,7 @@ public class GameBoardParser {
                 INT_PARSER.apply(tokenizer.nextToken(S)));  // 2. Multiplikator
     }
 
-    private StationField parseStationField(int id, String name, StringTokenizer tokenizer, int[] neighbourIds) {
+    private StationField parseStationField(String name, StringTokenizer tokenizer) {
         return new StationField(
                 name,
                 INT_PARSER.apply(tokenizer.nextToken(S)),   // Preis
@@ -296,23 +306,23 @@ public class GameBoardParser {
                 INT_PARSER.apply(tokenizer.nextToken(S)),   // Miete 2
                 INT_PARSER.apply(tokenizer.nextToken(S)),   // Miete 3
                 INT_PARSER.apply(tokenizer.nextToken(S)),   // Hypothekswert
-                INT_PARSER.apply(tokenizer.nextToken(S)),   // Hypotheksrückwert
+                INT_PARSER.apply(tokenizer.nextToken(S))    // Hypotheksrückwert
+        );
     }
-    private TaxField parseTaxField(int id, String name, StringTokenizer tokenizer) {
+    private TaxField parseTaxField(String name, StringTokenizer tokenizer) {
         return new TaxField(
-                id, name,
+                name,
                 INT_PARSER.apply(tokenizer.nextToken(S)));  // Betrag
     }
 
-    private CardField parseCardField(int id, String name, StringTokenizer tokenizer) {
+    private CardField parseCardField(String name) {
         return new CardField(
-                id, name,
-                null, new Card[0]);
+                name, null);
     }
 
-    private StreetField parseStreetField(int id, String name, StringTokenizer tokenizer, int[] neighbourIds) {
+    private StreetField parseStreetField(String name, StringTokenizer tokenizer) {
         return new StreetField(
-                id, name,
+                name,
                 INT_PARSER.apply(tokenizer.nextToken(S)),    // Preis
                 INT_PARSER.apply(tokenizer.nextToken(S)),    // Miete0
                 INT_PARSER.apply(tokenizer.nextToken(S)),    // Miete1
@@ -322,11 +332,11 @@ public class GameBoardParser {
                 INT_PARSER.apply(tokenizer.nextToken(S)),    // Miete5
                 INT_PARSER.apply(tokenizer.nextToken(S)),    // Hauspreis
                 INT_PARSER.apply(tokenizer.nextToken(S)),    // Hypothekswert
-                INT_PARSER.apply(tokenizer.nextToken(S)),    // Hypotheksrückwert
-                neighbourIds);                               // Nachbar-IDs
+                INT_PARSER.apply(tokenizer.nextToken(S))     // Hypotheksrückwert
+        );
 }
 
-private Field parseCornerField(int id, String name) {
-        return new Field(id, name);
+private Field parseCornerField(String name) {
+        return new Field(name);
     }
 }
