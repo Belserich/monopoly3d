@@ -6,34 +6,31 @@ package de.btu.monopoly.data.field;
 public class StreetField extends Property {
 
     /**
-     * Mietswerte der Straße
+     * die Miete der Straße, abhänging vom Bebauungsstatus
      */
     private final int[] rents;
-    
     /**
-     * Preis für ein Haus
+     * der Preis für ein Haus
      */
     private final int housePrice;
-    
     /**
-     * Anzahl der Haeuser auf dieser Strasse
+     * Anzahl der Haeuser auf der Strasse
      */
     private int houseCount;
 
     /**
-     * Instanzen dieser Klasse stellen eine kaufbare Straße dar. Auf ihr kann man bis zu fünf Häuser bauen.
      *
-     * @param rent0 Miete unbebaut
+     * @param name Strassenname
+     * @param price Kaufpreis der Strasse
+     * @param rent0 doppelte Miete unbebaut!
      * @param rent1 Miete mit 1 Haus
      * @param rent2 Miete mit 2 Haeusern
      * @param rent3 Miete mit 3 Haeusern
      * @param rent4 Miete mit 4 Haeusern
-     * @param rent5 Miete mit 5 Haeusern (Hotel)
+     * @param rent5 Miete mit Hotel
      * @param housePrice Preis fuer ein Haus
      */
-    public StreetField(
-            int id,
-            String name,
+    public StreetField(String name,
             int price,
             int rent0,
             int rent1,
@@ -41,11 +38,8 @@ public class StreetField extends Property {
             int rent3,
             int rent4,
             int rent5,
-            int housePrice,
-            int mortgage,
-            int mortgageBack,
-            int[] neighbourIds) {
-        super(id, name, price, mortgage, mortgageBack, neighbourIds);
+            int housePrice, int mortgage, int mortgageBack, int id) {
+        super(id, name, price, mortgage, mortgageBack);
 
         this.rents = new int[6];
         this.rents[0] = rent0;
@@ -57,6 +51,21 @@ public class StreetField extends Property {
         this.housePrice = housePrice;
 
         this.houseCount = 0;
+
+    }
+
+    /**
+     * @return aktuelle Miete der Strasse
+     */
+    public int getRent() {
+        if (!isMortgageTaken()) {
+            if (complete()) {
+                return rents[houseCount];
+            } else {
+                return rents[0] / 2;
+            }
+        }
+        return 0;
     }
 
     /**
@@ -71,5 +80,18 @@ public class StreetField extends Property {
      */
     public int getHouseCount() {
         return houseCount;
+    }
+
+    /**
+     *
+     * @return sind alle Strassen des Strassenzuges in selbem besitz
+     */
+    public boolean complete() {
+        for (Property nei : super.getNeighbours()) {
+            if (!(nei.getOwner().equals(super.getOwner()))) {
+                return false;
+            }
+        }
+        return true;
     }
 }

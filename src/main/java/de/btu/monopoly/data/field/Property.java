@@ -1,7 +1,8 @@
 package de.btu.monopoly.data.field;
 
 import de.btu.monopoly.data.Player;
-import de.btu.monopoly.data.field.Field;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Maximilian Bels (belsmaxi@b-tu.de)
@@ -9,15 +10,17 @@ import de.btu.monopoly.data.field.Field;
 public abstract class Property extends Field {
 
     /**
-     * Preis des Grundstuecks
+     * der Preis des Grundstuecks
      */
     private final int price;
+
     /**
-     * Hypothek des Grundstuecks
+     * die Hypothek des Grundstuecks
      */
     private final int mortgage;
+
     /**
-     * Rueckkaufwert der Hypothek
+     * die Hypothek des Grundstuecks
      */
     private final int mortgageBack;
 
@@ -25,33 +28,33 @@ public abstract class Property extends Field {
      * Besitzer des Grundstuecks
      */
     private Player ownedBy;
-    
+
     /**
      * gibt an, ob Hypothek aufgenommen
      */
     private boolean mortgageTaken;
-    
-    /**
-     * IDs der "Nachbarn" eines Feldes
-     */
-    private int[] neighbourIds;
 
     /**
-     * Die abstrakte Oberklasse aller Felder, die kaufbar und mit Mietspreisen belegt sind.
-     * Man soll diese Felder außerdem mit einer Hypothek belasten können und diese auch für
-     * {@code (Hypothekswert + 10% des Kaufpreises)} Einheiten der gewählten Währung zurückzahlen können.
+     * Liste der Nachbaern des Feldes (Straßenzug)
+     */
+    List<Property> neighbours = new ArrayList<>();
+
+    /**
+     * Die abstrakte Oberklasse aller Felder, die kaufbar und mit Mietspreisen
+     * belegt sind. Man soll diese Felder außerdem mit einer Hypothek belasten
+     * können und diese auch für {@code (Hypothekswert + 10% des Kaufpreises)}
+     * Einheiten der gewählten Währung zurückzahlen können.
      *
      * @param price Kaufpreis des Grundstuecks
      * @param mortgage Hypothekswert
      * @param mortgageBack Hypotheksrückwert
      */
-    Property(int id, String name, int price, int mortgage, int mortgageBack, int[] neighbourIds) {
+    Property(int id, String name, int price, int mortgage, int mortgageBack) {
         super(id, name);
-        
+
         this.price = price;
         this.mortgage = mortgage;
         this.mortgageBack = mortgageBack;
-        this.neighbourIds = neighbourIds;
     }
 
     /**
@@ -100,4 +103,29 @@ public abstract class Property extends Field {
     public void setMortgageTaken(boolean mortgageTaken) {
         this.mortgageTaken = mortgageTaken;
     }
+
+    /**
+     * gibt die Miete des Grundstuecks zurueck. Im Falle eines werkes entspricht
+     * die Miete dem Multiplikator fuer die Augenzahl
+     */
+    public int getRent() {
+        return 0;
+    }
+
+    /**
+     * fuegt dem Grundstueck ein Nachbargrundstueck hinzu
+     *
+     * @param neighbour neuer Nachbar
+     */
+    public void addNeighbour(Property neighbour) {
+        this.getNeighbours().add(neighbour);
+    }
+
+    /**
+     * @return Liste der Nachbarn
+     */
+    public List<Property> getNeighbours() {
+        return neighbours;
+    }
+
 }

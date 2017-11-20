@@ -4,33 +4,51 @@ package de.btu.monopoly.data.field;
  * @author Maximilian Bels (belsmaxi@b-tu.de)
  */
 public class StationField extends Property {
-    
+
     /**
-     * Eine Sammlung aller Mietspreise
+     * Die Miete des Bahnhofs in Abhaengigkeit der Anzahl Bahnhöfe im Besitz
      */
-    private final int[] rents;
-    
-    public StationField(
-            int id,
-            String name,
-            int price,
-            int rent0,
-            int rent1,
-            int rent2,
-            int rent3,
-            int mortgage,
-            int mortgageBack,
-            int[] neighbourIds) {
-        super(id, name, price, mortgage, mortgageBack, neighbourIds);
-        
-        rents = new int[4];
-        rents[0] = rent0;
-        rents[1] = rent1;
-        rents[2] = rent2;
-        rents[3] = rent3;
+    public final int[] rents = null;
+
+    /**
+     *
+     * @param name Bahnhofsname
+     */
+    public StationField(String name, int price, int rent1, int rent2, int rent3, int rent4, int mortgage, int mortgageBack, int id) {
+        super(id, name, price, mortgage, mortgageBack);
+        this.rents[0] = rent1;
+        this.rents[1] = rent2;
+        this.rents[2] = rent3;
+        this.rents[3] = rent4;
     }
-    
-    public int getRent(int number) {
-        return rents[number];
+
+    @Override
+    public int getRent() {
+        switch (ownedStations()) {
+            case 1:
+                return rents[0];
+            case 2:
+                return rents[1];
+            case 3:
+                return rents[2];
+            case 4:
+                return rents[3];
+
+        }
+        return 0;
+    }
+
+    /**
+     *
+     * @return Anzahl der Bahnhofe im selben Besitz
+     */
+    public int ownedStations() {
+        int numberOfStationsOwned = 1;
+        for (Property nei : super.getNeighbours()) {
+            if (nei.getOwner().equals(super.getOwner())) {
+                numberOfStationsOwned++;
+            }
+        }
+        return numberOfStationsOwned;
     }
 }

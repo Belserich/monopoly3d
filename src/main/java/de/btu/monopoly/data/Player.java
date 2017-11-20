@@ -1,7 +1,5 @@
 package de.btu.monopoly.data;
 
-import de.btu.monopoly.data.field.Field;
-
 /**
  * @author Maximilian Bels (belsmaxi@b-tu.de)
  */
@@ -11,27 +9,27 @@ public class Player {
      * Name des Spielers
      */
     private final String name;
-    
+
     /**
      * ID des Spielers
      */
     private final int id;
-    
+
     /**
      * Kapital
      */
     private int money;
-    
+
     /**
      * Gibt an, ob der Spieler im Gefängnis ist.
      */
     private boolean inJail;
-    
+
     /**
      * Anzahl Gefaengnis-Frei-Karten
      */
     private int jailCardAmount;
-    
+
     /**
      * Tage im Gefaengnis
      */
@@ -40,10 +38,10 @@ public class Player {
     /**
      * Position des Spielers
      */
-    private Field position;
+    private int position;
 
     /**
-     * Gibt an, ob der Spieler ausgeschieden (Zuschauer) ist.
+     * ob der Spieler ein Zuschauer (ausgeschieden) ist
      */
     private boolean isSpectator;
 
@@ -61,7 +59,7 @@ public class Player {
         this.inJail = false;
         this.jailCardAmount = 0;
         this.daysInJail = 0;
-        this.position = null;
+        this.position = 0;
     }
 
     /**
@@ -87,7 +85,7 @@ public class Player {
 
     /**
      *
-     * @return ob Spieler im Gefängnis
+     * @return ob der Spieler im Gefängnis ist
      */
     public boolean isInJail() {
         return inJail;
@@ -142,17 +140,18 @@ public class Player {
         this.money = money;
     }
 
-    /**     *
+    /**
+     * *
      * @param pos neue Position
      */
-    public void setPosition(Field pos) {
+    public void setPosition(int pos) {
         this.position = pos;
     }
 
     /**
      * @return Position
      */
-    public Field getPosition() {
+    public int getPosition() {
         return this.position;
     }
 
