@@ -1,5 +1,7 @@
 build-job:
     when: on_success
+    only:
+    - development
     script:
     - mvn clean jfx:jar
     - mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.2:sonar
