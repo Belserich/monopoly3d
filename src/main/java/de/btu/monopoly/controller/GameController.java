@@ -285,6 +285,8 @@ public class GameController {
     }
 
     /**
+     * @author Eli
+     *
      * Die Aktionsphase (Bebauung, Hypothek, Handeln)
      */
     private void actionPhase() {
