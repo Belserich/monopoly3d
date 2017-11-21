@@ -22,42 +22,42 @@ public class GameController {
      * die Mitspieler
      */
     private final Player[] players;
-    
+
     /**
      * momentaner Spieler
      */
     private Player currPlayer;
-    
+
     /**
-     * Gibt an, ob das Spiel beendet ist. 
+     * Gibt an, ob das Spiel beendet ist.
      */
     private boolean gameOver;
-    
+
     /**
      * Gibt an, ob die Feldphase wiederholt werden soll.
      */
     private boolean repeatFieldPhase;
-    
+
     /**
      * Anzahl Pasches
      */
     private int doubletCounter;
-    
+
     /**
      * Gibt an, ob ein Pasch gewürfelt wurde
      */
     private boolean isDoublet;
-    
+
     /**
      * letztes Wurfergebnis
      */
     private int diceResult;
-    
+
     /**
      * Feld, auf dem sich der Spieler befindet
      */
     private Field currField;
-    
+
     /**
      * Feldtyp
      */
@@ -87,16 +87,14 @@ public class GameController {
      * Spielstart
      */
     public void startGame() {
-        do
-        {
+        do {
             for (int i = 0; i < players.length; i++) {  // für alle Spieler
                 currPlayer = players[i];		        // aktiven Spieler setzen
                 if (!(currPlayer.isSpectator())) {	    // Beobachter ist nicht am Zug
                     turnPhase();
                 }
             }
-        }
-        while (!gameOver);
+        } while (!gameOver);
     }
 
     /**
@@ -124,8 +122,7 @@ public class GameController {
 //----------- EINZELNE PHASEN -------------------------------------------------
 //-----------------------------------------------------------------------------
     /**
-     * Gefängnisphase
-     * TODO
+     * Gefängnisphase TODO
      */
     private void prisonPhase() {
         int prisonChoice = -1;
@@ -291,8 +288,8 @@ public class GameController {
      * Die Aktionsphase (Bebauung, Hypothek, Handeln)
      */
     private void actionPhase() {
-        // buyHouse(StreetField field), 
-        // sellHouse(StreetField field), 
+        // buyHouse(StreetField field),
+        // sellHouse(StreetField field),
         // checkBalance() (Gleichgewicht der Haeuser)
         // takeMortgage(StreetField field)
         // payMortgage(StreetField field))
@@ -302,7 +299,7 @@ public class GameController {
      * die Versteigerungsphase
      */
     private void betPhase() {
-        // @multiplayer 
+        // @multiplayer
     }
 
 //-----------------------------------------------------------------------------
@@ -338,24 +335,41 @@ public class GameController {
      *
      */
     private void movePlayer() {
+        /*
+        falls die Zahl 39 ueberschritten wird und damit das Spielfeld
+        dann geht der Spieler ueber Los (bekommt 200) und wird auf die Position
+        aktuelles Feld + Wuerfelanzahl minus der Gesamtfeldanzahl
+        falls nicht
+        dann geht der Spieler nicht ueber Los und wird einfach auf das
+        aktuelle Feld plus der Anzahl der Wuerfelanzahl gesetzt
+         */
+        if ((currPlayer.getPosition() + diceResult) > 39) {
+            currPlayer.setMoney(currPlayer.getMoney() + 200);
+            currPlayer.setPosition(((currPlayer.getPosition() + diceResult) - 39));
+        } else {
+            currPlayer.setPosition(currPlayer.getPosition() + diceResult);
+        }
+
         //
         //TODO Patrick & John - eventuell warten auf Implementierung des Gameboard
     }
 
     /**
-     * analog zu movePlayer(), nur dass kein Geld beim ueber-LOS-gehen
-     * ueberwiesen wird!
+     * analog zu movePlayer(), nur dass kein Geld beim ueber-LOS-gehen ueberwiesen wird!
      */
     private void moveToJail() {
         /*
-         * TODO Patrick & John - eventuell warten auf Implementierung des
-         * Gameboard
+         Spieler wird auf Position 10 gesetzt
+         setInJail wird true, damit der Spieler nicht "nur zu Besuch" ist
+         Die Tage im Gefängnis werden auf 0 gesetzt
          */
+        currPlayer.setPosition(10);
+        currPlayer.setInJail(true);
+        currPlayer.setDaysInJail(0);
     }
 
     /**
-     * ueberpruft ob der uebergebene Spieler mindestens soviel Geld besitzt, wie
-     * die Methode uebergeben bekommt.
+     * ueberpruft ob der uebergebene Spieler mindestens soviel Geld besitzt, wie die Methode uebergeben bekommt.
      *
      * @param player Spieler der auf Liquiditaet geprueft wird
      * @param amount Geld was der Spieler besitzen muss
@@ -386,7 +400,7 @@ public class GameController {
     /**
      * Einem Spieler wird der uebergebene Betrag auf dem Konto gutgeschrieben.
      *
-     * @param player Spieler dem der BEtrag gutgeschrieben wird
+     * @param player Spieler dem der Betrag gutgeschrieben wird
      * @param amount Betrag der dem Spieler gutgeschrieben wird
      */
     private void giveMoney(Player player, int amount) {
@@ -421,8 +435,8 @@ public class GameController {
     }
 
     /**
-     * ermittelt anhand der Position des Spielers das Feld mit der ID auf dem
-     * GameBoard, welches der Variablen currField uebergeben wird.
+     * ermittelt anhand der Position des Spielers das Feld mit der ID auf dem GameBoard, welches der Variablen currField
+     * uebergeben wird.
      *
      * @param player Spieler dessen Position ermittelt werden soll
      */
@@ -447,8 +461,7 @@ public class GameController {
     //------------ Karten Methoden --------------------------------------------
     //-------------------------------------------------------------------------
     /**
-     * Doppelte Miete -- Diese Methode wird verwendet, wenn in einer Karte
-     * gefordert ist die doppelte Miete zu zahlen.
+     * Doppelte Miete -- Diese Methode wird verwendet, wenn in einer Karte gefordert ist die doppelte Miete zu zahlen.
      *
      * @param giver Spieler der zahlen muss
      * @param taker Spieler der die Miete bekommt
@@ -460,9 +473,8 @@ public class GameController {
     /**
      * Alle Gebaeuden eines Spielers werden gezaehlt
      *
-     * Die Preise fuer Renovierung werden von dem entsprechenden Karte bekannt
-     * und dies wird mit der Anzahl von Haeuser/Hotels multipliziert und am Ende
-     * addiert = Summe
+     * Die Preise fuer Renovierung werden von dem entsprechenden Karte bekannt und dies wird mit der Anzahl von Haeuser/Hotels
+     * multipliziert und am Ende addiert = Summe
      *
      * @param house_price
      * @param hotel_price
