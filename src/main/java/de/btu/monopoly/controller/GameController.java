@@ -348,7 +348,7 @@ public class GameController {
         aktuelle Feld plus der Anzahl der Wuerfelanzahl gesetzt
          */
         if ((currPlayer.getPosition() + diceResult) > 39) {
-            currPlayer.setMoney(currPlayer.getMoney() + 200);
+            currPlayer.setMoney(currPlayer.getMoney() + ((GoField) board.getFields()[0]).getAmount());
             currPlayer.setPosition(((currPlayer.getPosition() + diceResult) - 39));
         } else {
             currPlayer.setPosition(currPlayer.getPosition() + diceResult);
