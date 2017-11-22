@@ -48,13 +48,4 @@ public class CardQueue {
 
     }
 
-    /**
-     * fügt eine Karte hinzu
-     *
-     * @param card Karte die hinzugefügt wird
-     */
-    public void returnCard(Card card) {
-        addCard(card);
-    }
-
 }
