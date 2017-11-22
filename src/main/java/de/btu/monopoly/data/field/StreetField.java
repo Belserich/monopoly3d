@@ -64,8 +64,7 @@ public class StreetField extends Property {
             if (complete()) {
                 if (houseCount == 0) {
                     return rents[houseCount * 2];
-                }
-                else {
+                } else {
                     return rents[houseCount];
                 }
             } else {
@@ -87,6 +86,10 @@ public class StreetField extends Property {
      */
     public int getHouseCount() {
         return houseCount;
+    }
+
+    public void setHouseCount(int count) {
+        houseCount = count;
     }
 
     /**
