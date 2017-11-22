@@ -255,7 +255,7 @@ public class GameController {
 
             case 6: // Kartenfeld
                 if (currField instanceof CardField) {
-                    CardField cardField = (CardField) currField;
+                    // CardField cardField = (CardField) currField;
                     /*
                      * TODO @cards - Karten auslesen und co, wenn man hier auf ein anderes Feld gesetzt wird, muss in der
                      * Kartenmethode die Feldphase nochmal aufgerufen werden, oder ein in der Karte vorgegebener alternativer
@@ -487,7 +487,7 @@ public class GameController {
      *
      * @param player Spieler der bankrott gegangen ist
      */
-    private void bankrupt(Player player) {
+    private void bankrupt(Player player) { //TODO !hier sollt ihr nicht den currPlayer sondern den parameter nehmen!!!
 
         // Spieler auf Spectator setzen
         currPlayer.setSpectator(true);
@@ -676,7 +676,7 @@ public class GameController {
      * @param hotel_price
      */
     private void sumRenovation(int house_price, int hotel_price) {
-        //TODO Eli hier musst du den Houscount switchen 1-4 = houses, 5 = hotel
+        //TODO Eli hier musst du den Houscount switchen 1-4 = houses, 5 = hotel. Außerdem variablenNamen im CamelCase schreiben!
         StreetField field = (StreetField) currField;
 
         int renovation_house = house_price * field.getHouseCount();
