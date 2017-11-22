@@ -430,10 +430,11 @@ public class GameController {
      */
     private void enqueueJailCard() {
         /*
-         * TODO Patrick & John -- WIE MACHEN WIR DAS, WENN DIE KARTEN IDs HABEN?
-         * macht die Methode erst später, wenn Maxi seinen branch fertig hat
-         * muss der Methode evtl. noch der Stapel uebergeben werden?
+         * TODO Patrick & John --
+         * Methode ist fertig mit: "CardQueue".addCard(JailCard);
+         * Nur wissen wir noch nicht, wie der Kartenstapel initialisiert wird..
          */
+
     }
 
     /**
