@@ -4,6 +4,7 @@ import de.btu.monopoly.data.GameBoard;
 import de.btu.monopoly.data.Player;
 import de.btu.monopoly.data.field.CardField;
 import de.btu.monopoly.data.field.Field;
+import de.btu.monopoly.data.field.GoField;
 import de.btu.monopoly.data.field.Property;
 import de.btu.monopoly.data.field.SupplyField;
 import de.btu.monopoly.data.field.TaxField;
@@ -352,8 +353,6 @@ public class GameController {
             currPlayer.setPosition(currPlayer.getPosition() + diceResult);
         }
 
-        //
-        //TODO Patrick & John - eventuell warten auf Implementierung des Gameboard
     }
 
     /**
@@ -438,19 +437,33 @@ public class GameController {
 
     /**
      * ermittelt anhand der Position des Spielers das Feld mit der ID auf dem GameBoard, welches der Variablen currField
-     * uebergeben wird.
+     * uebergeben wird, zudem wird fieldSwitch festgelegt, zur GameController Steuerung
      *
      * @param player Spieler dessen Position ermittelt werden soll
      */
     private void locate(Player player) {
 
-        /*
-         * TODO Patrick & John -- Bitte mit Maxi absprechen, wie er das mit der
-         * Datenstruktur und der Initialisierung der Felder auf dem Spielbrett
-         * geloest hat. ausserdem wird hier der int fieldSwitch je nach
-         * ermitteltem Feld angepasst. Folgende Liste fuer den Fieldswitch
-         * beachten:
-         */
+        // Da es keine Implementierung des Gefängnisfeldes
+        // und des Freiparkenfeldes gibt. Wurden die zwei
+        // if Abfragen zunächst über die Spielerposition realisiert
+        // Frage: Was ist mit GoToJail???? -> FieldSwitch
+        currField = board.getFields()[player.getPosition()];
+
+        if (currField instanceof Property) {
+            fieldSwitch = 1;
+        } else if (currField instanceof GoField) {
+            fieldSwitch = 2;
+        } else if (player.getPosition() == 20) {
+            fieldSwitch = 3;
+        } else if (player.getPosition() == 10) {
+            fieldSwitch = 4;
+        } else if (currField instanceof TaxField) {
+            fieldSwitch = 5;
+        } else if (currField instanceof CardField) {
+            fieldSwitch = 6;
+        }
+
+        // fieldSwitch Belegung
         // 1 - Straße / Bahnhof / Werk (Property)
         // 2 - LOS
         // 3 - Frei-Parken
