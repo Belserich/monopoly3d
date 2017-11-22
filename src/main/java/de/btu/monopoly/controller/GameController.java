@@ -2,13 +2,7 @@ package de.btu.monopoly.controller;
 
 import de.btu.monopoly.data.GameBoard;
 import de.btu.monopoly.data.Player;
-import de.btu.monopoly.data.field.CardField;
-import de.btu.monopoly.data.field.Field;
-import de.btu.monopoly.data.field.GoField;
-import de.btu.monopoly.data.field.Property;
-import de.btu.monopoly.data.field.StreetField;
-import de.btu.monopoly.data.field.SupplyField;
-import de.btu.monopoly.data.field.TaxField;
+import de.btu.monopoly.data.field.*;
 
 /**
  * @author Christian Prinz
@@ -34,11 +28,6 @@ public class GameController {
      * Gibt an, ob das Spiel beendet ist.
      */
     private boolean gameOver;
-
-    /**
-     * Gibt an, ob die Feldphase wiederholt werden soll.
-     */
-    private boolean repeatFieldPhase;
 
     /**
      * Anzahl Pasches
@@ -82,7 +71,7 @@ public class GameController {
      */
     public void init() {
         startGame();
-        // TODO (Maxi)
+        // TODO Maxi ist die Initialisierung komplett?
     }
 
     /**
@@ -109,13 +98,7 @@ public class GameController {
         }
         do {		// bei Pasch wiederholen
             rollPhase();
-            /*
-             * bekommt der Spieler eine Karte, die ihn Zwingt auf ein neues Feld
-             * zu gehen, muss die Feldphase erneut stattfinden
-             */
-            do { // TODO Christian -- eventuell weg, wenn rekursiv
-                fieldPhase();
-            } while (repeatFieldPhase);
+            fieldPhase();
             actionPhase();
         } while (isDoublet);
     }
@@ -124,7 +107,7 @@ public class GameController {
 //----------- EINZELNE PHASEN -------------------------------------------------
 //-----------------------------------------------------------------------------
     /**
-     * Gefängnisphase TODO
+     * Gefängnisphase
      */
     private void prisonPhase() {
         int prisonChoice = -1;
@@ -134,6 +117,7 @@ public class GameController {
                 if (checkLiquidity(currPlayer, 50)) {
                     takeMoney(currPlayer, 50);
                     currPlayer.setInJail(false);
+                    currPlayer.setDaysInJail(0);
                 } else { // muss in der GUI deaktiviert sein!!!
                     bankrupt(currPlayer);
                 }
@@ -143,8 +127,9 @@ public class GameController {
             case 2:
                 if (currPlayer.getJailCardAmount() > 0) {
                     currPlayer.removeJailCard();
-                    enqueueJailCard(); //TODO Einsetzen
+                    enqueueJailCard();
                     currPlayer.setInJail(false);
+                    currPlayer.setDaysInJail(0);
                 } else { // muss in der GUI deaktiviert sein!!!
 
                 }
@@ -271,11 +256,19 @@ public class GameController {
             case 6: // Kartenfeld
                 if (currField instanceof CardField) {
                     CardField cardField = (CardField) currField;
-                    // TODO Christian & Maxi -- hier ist zu klären wie wir das endgueltig lösen mit den Karten und den Stapeln
+                    /*
+                     * TODO @cards - Karten auslesen und co, wenn man hier auf ein anderes Feld gesetzt wird, muss in der
+                     * Kartenmethode die Feldphase nochmal aufgerufen werden, oder ein in der Karte vorgegebener alternativer
+                     * Feldphasenabruf stattfinden. FeldPhase muss so nicht "geschleift" werden.
+                     */
                 } else { // kann nicht auftreten
 
                 }
 
+                break;
+
+            case 7: // GehInsGefaengnis-Feld
+                moveToJail();
                 break;
 
             default: // kann nicht auftreten!
@@ -292,11 +285,92 @@ public class GameController {
      * Die Aktionsphase (Bebauung, Hypothek, Handeln)
      */
     private void actionPhase() {
-        // buyHouse(StreetField field),
-        // sellHouse(StreetField field),
-        // checkBalance() (Gleichgewicht der Haeuser)
-        // takeMortgage(StreetField field)
-        // payMortgage(StreetField field))
+        if (currPlayer.isInJail() && (currPlayer.getDaysInJail() < 1)) {
+            // actionPhase() entfaellt, wenn der Spieler grade ins Gefaengnis kam
+        } else {
+            // TODO Eli, hier noch Überlegungen zum input (2 Stellen), (Auflistung alle Straßen im Besitz?)
+            int selectedField = 0; //speziell hier...
+            this.currField = board.getFields()[selectedField];
+
+            if (currField instanceof StreetField) { //wenn Feld eine Straße ist
+                StreetField field = (StreetField) currField;
+                int actionSwitch = 0; // dann genau hier von 1 - 4....
+                switch (actionSwitch) {
+                    case 1: // Haus bauen
+                        // wenn im Besitz und nicht vollgebaut
+                        if ((field.getOwner().equals(currPlayer)) && (field.getHouseCount() < 5)) {
+                            buyBuilding(field);
+                        } else {
+                            //@output: Diese Straße gehört dir nicht, oder ist vollgebaut.
+                        }
+                        break;
+
+                    case 2: // Haus verkaufen
+                        // wenn im Besitz und nicht Hauslos
+                        if ((field.getOwner().equals(currPlayer)) && (field.getHouseCount() > 0)) {
+                            sellBuilding(field);
+                        } else {
+                            //@output: Diese Straße gehört dir nicht, oder hat keine Häuser zum verkaufen.
+                        }
+                        break;
+
+                    case 3: // Hypothek aufnehmen
+                        // wenn im Besitz und noch keine Hypothek aufgenommen
+                        if (field.getOwner().equals(currPlayer) && (!(field.isMortgageTaken()))) {
+                            takeMortgage(field);
+                        } else {
+                            //@output Diese Straße gehört dir nicht, oder hat schon eine Hypothek.
+                        }
+                        break;
+
+                    case 4: // Hypothek abbezahlen
+                        // wenn im Besitz und Hypothek aufgenommen
+                        if (field.getOwner().equals(currPlayer) && (field.isMortgageTaken())) {
+                            payMortgage(field);
+                        } else {
+                            //@output Diese Straße gehört dir nicht, oder hat keine Hypothek zum abzahlen.
+                        }
+                        break;
+
+                    default:
+
+                        break;
+                }
+            }
+
+            if (currField instanceof Property) { //wenn Feld ein Bahnhof oder Werk ist
+                Property field = (Property) currField;
+                int actionSwitch = 0; // ...oder alternativ hier von 1 - 2
+                switch (actionSwitch) {
+                    case 1: // Hypothek aufnehmen
+                        // wenn im Besitz und noch keine Hypothek aufgenommen
+                        if (field.getOwner().equals(currPlayer) && (!(field.isMortgageTaken()))) {
+                            takeMortgage(field);
+                        } else {
+                            //@output Dieses Grundstück gehört dir nicht, oder hat schon eine Hypothek.
+                        }
+                        break;
+
+                    case 2: // Hypothek abbezahlen
+                        // wenn im Besitz und Hypothek aufgenommen
+                        if (field.getOwner().equals(currPlayer) && (field.isMortgageTaken())) {
+                            payMortgage(field);
+                        } else {
+                            //@output Dieses Grundstück gehört dir nicht, oder hat keine Hypothek zum abzahlen.
+                        }
+                        break;
+
+                    default:
+
+                        break;
+                }
+            }
+            // buyHouse(StreetField field),
+            // sellHouse(StreetField field),
+            // checkBalance(StreetField field) (Gleichgewicht der Haeuser)
+            // takeMortgage(StreetField field)
+            // payMortgage(StreetField field))
+        }
     }
 
     /**
@@ -340,12 +414,9 @@ public class GameController {
      */
     private void movePlayer() {
         /*
-        falls die Zahl 39 ueberschritten wird und damit das Spielfeld
-        dann geht der Spieler ueber Los (bekommt 200) und wird auf die Position
-        aktuelles Feld + Wuerfelanzahl minus der Gesamtfeldanzahl
-        falls nicht
-        dann geht der Spieler nicht ueber Los und wird einfach auf das
-        aktuelle Feld plus der Anzahl der Wuerfelanzahl gesetzt
+         * falls die Zahl 39 ueberschritten wird und damit das Spielfeld dann geht der Spieler ueber Los (bekommt 200) und wird
+         * auf die Position aktuelles Feld + Wuerfelanzahl minus der Gesamtfeldanzahl falls nicht dann geht der Spieler nicht
+         * ueber Los und wird einfach auf das aktuelle Feld plus der Anzahl der Wuerfelanzahl gesetzt
          */
         if ((currPlayer.getPosition() + diceResult) > 39) {
             currPlayer.setMoney(currPlayer.getMoney() + ((GoField) board.getFields()[0]).getAmount());
@@ -361,9 +432,8 @@ public class GameController {
      */
     private void moveToJail() {
         /*
-         Spieler wird auf Position 10 gesetzt
-         setInJail wird true, damit der Spieler nicht "nur zu Besuch" ist
-         Die Tage im Gefängnis werden auf 0 gesetzt
+         * Spieler wird auf Position 10 gesetzt setInJail wird true, damit der Spieler nicht "nur zu Besuch" ist Die Tage im
+         * Gefängnis werden auf 0 gesetzt
          */
         currPlayer.setPosition(10);
         currPlayer.setInJail(true);
@@ -448,7 +518,7 @@ public class GameController {
 
         }
 
-        // TODO - Gefängnisfreikarten müssen zurück in den Stapel
+        // TODO @cards - Gefängnisfreikarten müssen zurück in den Stapel
     }
 
     /**
@@ -456,9 +526,8 @@ public class GameController {
      */
     private void enqueueJailCard() {
         /*
-         * TODO Patrick & John --
-         * Methode ist fertig mit: "CardQueue".addCard(JailCard);
-         * Nur wissen wir noch nicht, wie der Kartenstapel initialisiert wird..
+         * TODO @cards - Methode ist fertig mit: "CardQueue".addCard(JailCard); Nur wissen wir noch nicht, wie der Kartenstapel
+         * initialisiert wird..
          */
 
     }
@@ -471,11 +540,11 @@ public class GameController {
      */
     private void locate(Player player) {
 
-        // TODO - locate:
+        // locate geloest:
         // Da es keine Implementierung des Gefängnisfeldes
         // und des Freiparkenfeldes gibt. Wurden die zwei
         // if Abfragen zunächst über die Spielerposition realisiert
-        // Frage: Was ist mit GoToJail???? -> FieldSwitch
+        // Lösung ist korrekt so. GoToJail wurde hinzugefügt
         currField = board.getFields()[player.getPosition()];
 
         if (currField instanceof Property) {
@@ -490,6 +559,8 @@ public class GameController {
             fieldSwitch = 5;
         } else if (currField instanceof CardField) {
             fieldSwitch = 6;
+        } else if (player.getPosition() == 30) {
+            fieldSwitch = 7;
         }
 
         // fieldSwitch Belegung
@@ -499,19 +570,25 @@ public class GameController {
         // 4 - Gefaengnis
         // 5 - Steuer
         // 6 - Ereignis- / Gemeinschaftskartenfeld
+        // 7 - Geh ins Gefaengnis
     }
 
     /**
-     * Kauf von Haus/Hotel
+     * Kauf von Haus/Hotel - wenn der aktive Spieler genügend Geld
      *
      * @param field - das Feld worauf ein Haus/Hotel gekauft/gebaut wird
      */
     private void buyBuilding(StreetField field) {
-        //TODO Eli
+        //@Eli, added Hausbau hinzugefuegt. Spectator unmöglich
+
         if (!(currPlayer.isSpectator()) && checkLiquidity(currPlayer, field.getHousePrice())) {
-            if (field.complete() && checkBalance()) {
-                takeMoney(currPlayer, field.getHousePrice() * field.getHouseCount());
+            if (field.complete() && checkBalance(field)) {
+                takeMoney(currPlayer, field.getHousePrice()); // enfernt: * field.getHouseCount());
+                field.setHouseCount(field.getHouseCount() + 1); //Haus bauen
+            } else {
+                //@output Straßenzug nicht komplett, oder unausgeglichen!
             }
+
         }
     }
 
@@ -521,23 +598,37 @@ public class GameController {
      * @param field - das Feld wovon ein haus/Hotel verkauft/abbebaut wird
      */
     private void sellBuilding(StreetField field) {
-        //TODO Eli
-        if (!(currPlayer.isSpectator())) {
+        //TODO Eli, added Bebauung, Spectator unmöglich. HIER MUSS NOCH EIN ANDERES CHECKBALANCE REIN!!! sagt Christian
+        if (!(currPlayer.isSpectator())) {// anderes Checkbalance
             giveMoney(currPlayer, field.getHousePrice());
+            field.setHouseCount(field.getHouseCount() - 1); // Haus abbauen
+        } else {
+            //@output Straßenzug würde unausgeglichen sein
         }
     }
 
     /**
      * @return true wenn eine Strasse gleiches Gewicht von Haeuser hat und false wenn nicht
+     * @param field die auf Ausgeglichenheit im Strassenzug zu pruefende Strasse
      */
-    private boolean checkBalance() {
-        //TODO Eli
-        StreetField field = (StreetField) currField;
-        StreetField neighbours = (StreetField) field.getNeighbours();
-        if ((neighbours.getHouseCount()) == (field.getHouseCount())) {
-            return true;
+    private boolean checkBalance(StreetField field) {
+        //@Eli, replaced. neighbours ist eine Liste
+//        StreetField field = (StreetField) currField;  //als Parameter hinzugefuegt
+//        StreetField neighbours = (StreetField) field.getNeighbours();
+//        if ((neighbours.getHouseCount()) == (field.getHouseCount())) {
+//            return true;
+//        }
+//        return false;
+
+        for (Property nei : field.getNeighbours()) {  // Liste der Nachbarn durchgehen
+
+            int housesHere = field.getHouseCount();      // Haueser auf der aktuellen Strasse
+            int housesThere = ((StreetField) nei).getHouseCount();       // Haeuser auf der Nachbarstrasse
+            if ((housesHere - housesThere) > 0) {        // Wenn die Nachbarn weniger Haueser haben
+                return false;
+            }
         }
-        return false;
+        return true;
     }
 
     /**
@@ -545,8 +636,8 @@ public class GameController {
      *
      * @param filed - das Feld, dessen Hypotheke aufgenommen wurde
      */
-    private void takeMortgage(StreetField field) {
-        //TODO Eli
+    private void takeMortgage(Property field) {
+        //@Eli, ok
         giveMoney(currPlayer, field.getMortgageValue());
         field.setMortgageTaken(true);
     }
@@ -556,8 +647,8 @@ public class GameController {
      *
      * @param field - das Feld ist wieder aktiv und hat Rent
      */
-    private void payMortgage(StreetField field) {
-        //TODO Eli
+    private void payMortgage(Property field) {
+        //TODO Eli, hier ist noch Offen, dass der Betrag beim Zurueckzahlen hoeher sein muss. Streeftfield zu Property geändert
         takeMoney(currPlayer, field.getMortgageValue());
         field.setMortgageTaken(false);
     }
@@ -585,7 +676,7 @@ public class GameController {
      * @param hotel_price
      */
     private void sumRenovation(int house_price, int hotel_price) {
-        //TODO Eli
+        //TODO Eli hier musst du den Houscount switchen 1-4 = houses, 5 = hotel
         StreetField field = (StreetField) currField;
 
         int renovation_house = house_price * field.getHouseCount();
