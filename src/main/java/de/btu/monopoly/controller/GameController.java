@@ -418,11 +418,37 @@ public class GameController {
      * @param player Spieler der bankrott gegangen ist
      */
     private void bankrupt(Player player) {
+
+        // Spieler auf Spectator setzen
         currPlayer.setSpectator(true);
-        /*
-         * TODO Patrick & John -- HIER MUESST IHR EUCH WAS CLEVERES UEBERLEGEN
-         * WIE MAN DEN BESITZ ENTFERNT
-         */
+
+        // Temporär das Feldarray zum Durchgehen zwischenspeichern
+        Field[] fields = board.getFields();
+
+        // Durchgehen des Array fields, ggf. Eigentum löschen
+        for (int i = 0; i < fields.length; i++) {
+
+            if (fields[i] instanceof Property) {
+
+                // Löschen der Hypothek und des Eigentums
+                if (((Property) fields[i]).getOwner() == currPlayer) {
+
+                    ((Property) fields[i]).setOwner(null);
+                    ((Property) fields[i]).setMortgageTaken(false);
+
+                }
+
+                // Löschen der Anzahl an Häusern
+                if (fields[i] instanceof StreetField) {
+
+                    ((StreetField) fields[i]).setHouseCount(0);
+
+                }
+            }
+
+        }
+
+        // TODO - Gefängnisfreikarten müssen zurück in den Stapel
     }
 
     /**
@@ -445,6 +471,7 @@ public class GameController {
      */
     private void locate(Player player) {
 
+        // TODO - locate:
         // Da es keine Implementierung des Gefängnisfeldes
         // und des Freiparkenfeldes gibt. Wurden die zwei
         // if Abfragen zunächst über die Spielerposition realisiert
