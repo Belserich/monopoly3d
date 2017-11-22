@@ -5,6 +5,7 @@ import de.btu.monopoly.data.Player;
 import de.btu.monopoly.data.field.CardField;
 import de.btu.monopoly.data.field.Field;
 import de.btu.monopoly.data.field.Property;
+import de.btu.monopoly.data.field.StreetField;
 import de.btu.monopoly.data.field.SupplyField;
 import de.btu.monopoly.data.field.TaxField;
 
@@ -459,6 +460,67 @@ public class GameController {
         // 6 - Ereignis- / Gemeinschaftskartenfeld
     }
 
+    /**
+     * Kauf von Haus/Hotel
+     *
+     * @param field - das Feld worauf ein Haus/Hotel gekauft/gebaut wird
+     */
+    private void buyBuilding(StreetField field) {
+        //TODO Eli
+        if (!(currPlayer.isSpectator()) && checkLiquidity(currPlayer, field.getHousePrice())) {
+            if (field.complete() && checkBalance()) {
+                takeMoney(currPlayer, field.getHousePrice() * field.getHouseCount());
+            }
+        }
+    }
+
+    /**
+     * Verkauf von Haus/Hotel
+     *
+     * @param field - das Feld wovon ein haus/Hotel verkauft/abbebaut wird
+     */
+    private void sellBuilding(StreetField field) {
+        //TODO Eli
+        if (!(currPlayer.isSpectator())) {
+            giveMoney(currPlayer, field.getHousePrice());
+        }
+    }
+
+    /**
+     * @return true wenn eine Strasse gleiches Gewicht von Haeuser hat und false wenn nicht
+     */
+    private boolean checkBalance() {
+        //TODO Eli
+        StreetField field = (StreetField) currField;
+        StreetField neighbours = (StreetField) field.getNeighbours();
+        if ((neighbours.getHouseCount()) == (field.getHouseCount())) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Hypotheke aufnehmen
+     *
+     * @param filed - das Feld, dessen Hypotheke aufgenommen wurde
+     */
+    private void takeMortgage(StreetField field) {
+        //TODO Eli
+        giveMoney(currPlayer, field.getMortgageValue());
+        field.setMortgageTaken(true);
+    }
+
+    /**
+     * Hypotheke zurueck zahlen
+     *
+     * @param field - das Feld ist wieder aktiv und hat Rent
+     */
+    private void payMortgage(StreetField field) {
+        //TODO Eli
+        takeMoney(currPlayer, field.getMortgageValue());
+        field.setMortgageTaken(false);
+    }
+
     //-------------------------------------------------------------------------
     //------------ Karten Methoden --------------------------------------------
     //-------------------------------------------------------------------------
@@ -482,7 +544,17 @@ public class GameController {
      * @param hotel_price
      */
     private void sumRenovation(int house_price, int hotel_price) {
-        //TODO
+        //TODO Eli
+        StreetField field = (StreetField) currField;
+
+        int renovation_house = house_price * field.getHouseCount();
+        int renovation_hotel = hotel_price; //????? getHotelCount??
+        int sum = renovation_house + renovation_hotel;
+        if (checkLiquidity(currPlayer, sum)) {
+            takeMoney(currPlayer, sum);
+        } else {
+            gameOver = true;
+        }
     }
 
 }
