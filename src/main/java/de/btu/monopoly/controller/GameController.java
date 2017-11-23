@@ -78,6 +78,9 @@ public class GameController {
      * Spielstart
      */
     public void startGame() {
+        /*
+         * @output: "Das Spiel beginnt!"
+         */
         do {
             for (int i = 0; i < players.length; i++) {  // für alle Spieler
                 currPlayer = players[i];		        // aktiven Spieler setzen
@@ -92,12 +95,17 @@ public class GameController {
      * Rundenphase
      */
     private void turnPhase() {
+        /*
+         * @output: currPlayer.getName() + " ist dran!"
+         */
         doubletCounter = 0; 	        // PaschZaehler zuruecksetzen
         if (currPlayer.isInJail()) {	// Spieler im Gefaengnis
             prisonPhase();
         }
         do {		// bei Pasch wiederholen
-            //@output: if(isDoublet){ "Du bist nochmal dran."}
+            /*
+             * @output: if(isDoublet){ "Du bist nochmal dran."}
+             */
             rollPhase();
             fieldPhase();
             actionPhase();
