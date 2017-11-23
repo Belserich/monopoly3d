@@ -1,9 +1,13 @@
 package de.btu.monopoly.controller;
 
+import com.sun.istack.internal.logging.Logger;
 import de.btu.monopoly.data.GameBoard;
 import de.btu.monopoly.data.Player;
 import de.btu.monopoly.data.field.*;
+import de.btu.monopoly.data.parser.*;
+import java.io.IOException;
 import java.util.Scanner;
+import java.util.logging.Level;
 
 /**
  * @author Christian Prinz
@@ -58,17 +62,22 @@ public class GameController {
     /**
      * Waehrungstyp
      */
-    public static final String CURRENCY_TYPE = "Euro";
+    public static final String CURRENCY_TYPE = " Euro"; //TODO € durch CURRENCY_TYPE ersetzen
+
+    /**
+     * Logger für den GameController
+     */
+    private static final Logger logger = Logger.getLogger("de.btu.monopoly.controller", GameController.class);
 
     /**
      * Die zentrale Manager-Klasse für alles was ein Spiel betrifft.
      *
      * @param playerCount Anzahl Spieler
-     * @param fields sämtliche Felder
+     *
      */
-    public GameController(int playerCount, Field[] fields) {
-        this.board = new GameBoard(fields);
+    public GameController(int playerCount) {
         this.players = new Player[playerCount];
+        //TODO @cards Kartenstapel initialisieren
         init();
     }
 
@@ -76,20 +85,32 @@ public class GameController {
      * Spielinitialisierung
      */
     public void init() {
+        logger.log(Level.FINE, "Spiel wird initialisiert");
+
+        // Board init
+        GameBoardParser parser = new GameBoardParser();
+        try {
+            this.board = parser.readBoard("data/field_data.config");
+        } catch (IOException ex) {
+            System.err.println("field_data.config konnte nicht gelesen werden"); //@output
+        }
+
+        // Player init
+        for (int i = 0; i < players.length; i++) {
+            players[i] = new Player("Mathias " + i, i, 1500); //@parser @rules
+        }
+
         startGame();
-        // TODO Maxi ist die Initialisierung komplett?
     }
 
     /**
      * Spielstart
      */
     public void startGame() {
-        /*
-         * @output: "Das Spiel beginnt!"
-         */
+        logger.log(Level.FINER, "Spiel beginnt.");
         do {
-            for (int i = 0; i < players.length; i++) {  // für alle Spieler
-                currPlayer = players[i];		        // aktiven Spieler setzen
+            for (int i = 0; i < players.length; i++) {      // für alle Spieler
+                currPlayer = players[i];		    // aktiven Spieler setzen
                 if (!(currPlayer.isSpectator())) {	    // Beobachter ist nicht am Zug
                     turnPhase();
                 }
@@ -101,12 +122,10 @@ public class GameController {
      * Rundenphase
      */
     private void turnPhase() {
-        /*
-         * @output: currPlayer.getName() + " ist dran!"
-         */
+        logger.log(Level.FINER, currPlayer.getName() + " ist dran!");
         doubletCounter = 0; 	        // PaschZaehler zuruecksetzen
         if (currPlayer.isInJail()) {	// Spieler im Gefaengnis
-            prisonPhase();
+            jailPhase();
         }
         do {		// bei Pasch wiederholen
             /*
@@ -114,7 +133,11 @@ public class GameController {
              */
             rollPhase();
             fieldPhase();
-            actionPhase();
+            if (currPlayer.isInJail() && (currPlayer.getDaysInJail() < 1)) {
+                // actionPhase() entfaellt, wenn der Spieler grade ins Gefaengnis kam
+            } else {
+                actionPhase();
+            }
         } while (isDoublet);
     }
 
@@ -124,94 +147,86 @@ public class GameController {
     /**
      * Gefängnisphase
      */
-    private void prisonPhase() {
-        /*
-         * @output: "Du bist im Gefängnis! Du kannst: \n1. 3 mal Würfeln, um mit einem Pasch freizukommen \n2. Bezahlen (50€) \n3.
-         * Gefängnis-Frei-Karte benutzen"
-         */
-        int prisonChoice = -1;
-        switch (prisonChoice) { // @GUI
-            //OPTION 1: 3mal wuerfeln
-            case 1:
-                roll();                 // wuerfeln
-                if (!isDoublet) {       // kein Pasch > im Gefaengnis bleiben
-                    /*
-                     * @output: "Du hast keinen Pasch und bleibst im Gefängnis."
-                     */
-                    currPlayer.addDayInJail();
-                } else {                        // sonst frei
-                    /*
-                     * @output: "Du hast einen Pasch und bist frei."
-                     */
-                    currPlayer.setInJail(false);
-                    currPlayer.setDaysInJail(0);
-                }
-                // Wenn 3 mal kein Pasch dann bezahlen
-                if (currPlayer.getDaysInJail() == 3) {
+    private void jailPhase() {
+
+        boolean repeat;
+        do {
+            repeat = false;
+            logger.log(Level.FINER, "Du bist im Gefängnis! Du kannst: \n1. 3 mal Würfeln, um mit einem Pasch freizukommen "
+                    + "\n2. Bezahlen (50€) \n3. Gefängnis-Frei-Karte benutzen");
+            switch (getUserInput(3)) { // @GUI
+                //OPTION 1: 3mal wuerfeln
+                case 1:
+                    roll();                 // wuerfeln
+                    if (!isDoublet) {       // kein Pasch > im Gefaengnis bleiben
+                        logger.log(Level.FINER, "Du hast keinen Pasch und bleibst im Gefängnis.");
+                        currPlayer.addDayInJail();
+                    } else {                        // sonst frei
+                        logger.log(Level.FINER, "Du hast einen Pasch und bist frei.");
+                        currPlayer.setInJail(false);
+                        currPlayer.setDaysInJail(0);
+                    }
+                    // Wenn 3 mal kein Pasch dann bezahlen
+                    if (currPlayer.getDaysInJail() == 3) {
+                        if (checkLiquidity(currPlayer, 50)) {
+                            logger.log(Level.FINER, "Du hast schon 3 mal gewürfelt. nun musst du 50€ zahlen!");
+                            takeMoney(currPlayer, 50);
+                            currPlayer.setInJail(false);
+                            currPlayer.setDaysInJail(0);
+                        } else {        //wenn pleite game over
+                            logger.log(Level.FINER, "Du hast schon 3 mal gewürfelt und kannst nicht zahlen.");
+                            bankrupt(currPlayer);
+                        }
+                    }
+                    break;
+
+                //OPTION 2: Bezahlen
+                case 2:
                     if (checkLiquidity(currPlayer, 50)) {
-                        /*
-                         * @output: "Du hast schon 3 mal gewürfelt. nun musst du 50€ zahlen!"
-                         */
+                        logger.log(Level.FINER, "Du hast 50€ gezahlt und bist frei!");
                         takeMoney(currPlayer, 50);
                         currPlayer.setInJail(false);
-                    } else {        //wenn pleite game over
-                        /*
-                         * @output: "Du hast schon 3 mal gewürfelt und kannst nicht zahlen."
-                         */
-                        bankrupt(currPlayer);
+                        currPlayer.setDaysInJail(0);
+                    } else { // muss in der GUI deaktiviert sein!!!
+                        logger.log(Level.FINER, "Du hast kein Geld um dich freizukaufen.");
+                        repeat = true;
                     }
-                }
-                break;
+                    break;
 
-            //OPTION 2: Bezahlen
-            case 2:
-                if (checkLiquidity(currPlayer, 50)) {
-                    /*
-                     * @output: "Du hast 50€ gezahlt und bist frei!"
-                     */
-                    takeMoney(currPlayer, 50);
-                    currPlayer.setInJail(false);
-                    currPlayer.setDaysInJail(0);
-                } else { // muss in der GUI deaktiviert sein!!!
-                    bankrupt(currPlayer);
-                }
-                break;
+                //OPTION 3: Freikarte ausspielen
+                case 3:
+                    if (currPlayer.getJailCardAmount() > 0) {
+                        logger.log(Level.FINER, "Du hast eine Gefängnis-Frei-Karte benutzt.");
+                        currPlayer.removeJailCard();
+                        enqueueJailCard();
+                        currPlayer.setInJail(false);
+                        currPlayer.setDaysInJail(0);
+                    } else { // muss in der GUI deaktiviert sein!!!
+                        logger.log(Level.FINER, "Du hast keine Gefängnis-Frei-Karten mehr.");
+                        repeat = true;
+                    }
+                    break;
 
-            //OPTION 3: Freikarte ausspielen
-            case 3:
-                if (currPlayer.getJailCardAmount() > 0) {
-                    /*
-                     * @output: "Du hast eine Gefängnis-Frei-Karte benutzt."
-                     */
-                    currPlayer.removeJailCard();
-                    enqueueJailCard();
-                    currPlayer.setInJail(false);
-                    currPlayer.setDaysInJail(0);
-                } else { // muss in der GUI deaktiviert sein!!!
+                default:
+                    logger.log(Level.WARNING, "FEHLER: Gefängnis-Switch überschritten");
+                    repeat = true;
+                    break;
 
-                }
-                break;
+            }
+        } while (repeat);
 
-        }
     }
 
     /**
      * die Wurfphase (wuerfeln und ziehen)
      */
     private void rollPhase() {
-        /*
-         * @output: "Du bist dran mit würfeln."
-         */
+        logger.log(Level.FINER, "Du bist dran mit würfeln.");
         if (!(currPlayer.isInJail())) { //Gefaengnis hat eigenes Wuerfeln
             roll();
             if (doubletCounter == 3) {
-                /*
-                 * @output: "Du hast deinen 3. Pasch und gehst nicht über LOS, direkt ins Gefängnis!"
-                 */
-                currPlayer.setInJail(true);
+                logger.log(Level.FINER, "Du hast deinen 3. Pasch und gehst nicht über LOS, direkt ins Gefängnis!");
                 moveToJail();
-                currPlayer.setDaysInJail(0);
-                doubletCounter = 0;
             }
         }
         if (!(currPlayer.isInJail())) { //kann sich nach wuerfeln aendern
@@ -225,121 +240,91 @@ public class GameController {
     private void fieldPhase() {
         locate(currPlayer);
 
-        switch (fieldSwitch) {
-
-            case 1: // Strasse / Bahnhof
-
+        switch (fieldSwitch) { //@optimize
+            case 1: // Strasse / Bahnhof / Werk
+                logger.log(Level.FINER, "Du befindest dich auf " + currField.getName());
                 if (currField instanceof Property) {
                     Property actualProperty = (Property) currField;
                     // wenn das Feld in eigenem Besitz ist
                     if (actualProperty.getOwner() == currPlayer) {
-                        /*
-                         * @output: "Du stehst auf deinem eigenen Grundstück."
-                         */
+                        logger.log(Level.FINER, "Du stehst auf deinem eigenen Grundstück.");
                         break;
                     } else if (actualProperty.getOwner() == null) { //wenn frei
-                        /*
-                         * @output: "Du stehst auf einem freien Grundstück. Du kannst es: \n1. Kaufen \n2. nicht Kaufen"
-                         */
-                        int freeStreetChoice = 1;
-                        switch (freeStreetChoice) { //@GUI
+                        logger.log(Level.FINER, "Du stehst auf einem freien Grundstück. Du kannst es: \n1. Kaufen \n2. nicht Kaufen");
+                        switch (getUserInput(2)) { //@GUI
                             case 1: //Kaufen
                                 if (checkLiquidity(currPlayer, actualProperty.getPrice())) {
-                                    /*
-                                     * @output: "Du kaufst das Grundstück für " + actualProperty.getPrice() + "€!"
-                                     */
+                                    logger.log(Level.FINER, "Du kaufst das Grundstück für " + actualProperty.getPrice() + "€!");
                                     actualProperty.setOwner(currPlayer);
                                     takeMoney(currPlayer, actualProperty.getPrice());
-                                } else { // muss in der GUI deaktiviert sein!
-
+                                    break;
+                                } else {
+                                    logger.log(Level.FINER, "Du hast nicht genug Geld.");
                                 }
-                                break;
-
                             case 2: //Auktion - NOCH DEAKTIVIERT @multiplayer
+                                logger.log(Level.FINER, "Auktionsphase noch nicht implementert.");
                                 betPhase();
+                                break;
+                            default:
+                                logger.log(Level.WARNING, "FEHLER: SteetBuySwitch überlaufen.");
                                 break;
                         }
                     } else { // wenn nicht in eigenem Besitz
-                        /*
-                         * @output: "Dieses Grundstück gehört jemand anderes."
-                         */
-                        Player owner = actualProperty.getOwner();
+                        logger.log(Level.FINER, "Dieses Grundstück gehört jemand anderes.");
                         int rent = actualProperty.getRent();
-
                         // wenn es sich um ein Werk handelt:
                         if (actualProperty instanceof SupplyField) {
                             rent = rent * diceResult;
                         }
+
                         if (checkLiquidity(currPlayer, rent)) {
-                            /*
-                             * @output: "Du zahlst " + rent + "€ Miete!"
-                             */
+                            logger.log(Level.FINER, "Du zahlst Miete:");
                             takeMoney(currPlayer, rent);
-                            giveMoney(owner, rent);
+                            giveMoney(actualProperty.getOwner(), rent);
                         } else {
-                            /*
-                             * @output: "Du kannst die Miete nicht zahlen!"
-                             */
+                            logger.log(Level.FINER, "Du kannst die Miete nicht zahlen!");
                             bankrupt(currPlayer);
                         }
                     }
-
                 } else { // kann nicht auftreten
-                    break;
+                    logger.log(Level.WARNING, "FEHLER: Field falsch ermittelt! (Property)");
                 }
                 break;
 
-            case 2: //LOS
-                /*
-                 * @output: "Du bist auf LOS gelandet und erhältst " + ((GoField) board.getFields()[0]).getAmount()) + "€."
-                 */
+            case 2: // LOS
                 // LOS abfrage erfolgt in der Methode movePlayer()
                 // ansonsten passiert hier nicht @rules
                 break;
 
             case 3: // Frei-Parken
-                /*
-                 * @output: "Du bist auf Frei-Parken gelandet."
-                 */
                 // hier passier normalerweise nichts @rules
                 break;
 
             case 4: // Gefaengnis
-                /*
-                 * @output: "Du bist im Gefängnis... zum Glück nur zu Besuch"
-                 */
                 // hier passier in jedem Fall nichts
                 break;
 
             case 5: // Steuerfeld
-                /*
-                 * @output: "Du musst Steuern zahlen."
-                 */
+                logger.log(Level.FINER, "Du musst Steuern zahlen.");
                 if (currField instanceof TaxField) {
                     TaxField taxField = (TaxField) currField;
                     if (checkLiquidity(currPlayer, taxField.getTax())) {
-                        /*
-                         * @output: "Dir werden " + taxField.getTax() + "€ abgezogen!"
-                         */
+                        logger.log(Level.FINER, "Dir werden " + taxField.getTax() + "€ abgezogen!");
                         takeMoney(currPlayer, taxField.getTax());
                     } else {
-                        /*
-                         * @output: "Die kannst du aber nicht zahlen!"
-                         */
+                        logger.log(Level.FINER, "Die kannst du aber nicht zahlen!");
                         bankrupt(currPlayer);
                     }
                     // spaeter kommt hier evtl. der Steuertopf zum Zuge @rules
                 } else { // kann nicht auftreten
-
+                    logger.log(Level.WARNING, "FEHLER: FieldSwitch überlaufen! (Steuerfeld)");
                 }
                 break;
 
             case 6: // Kartenfeld
                 if (currField instanceof CardField) {
-                    /*
-                     * @output: "Du bist auf einem Kartenfeld gelandet. Die Karten liegen aber noch in der Druckerei. Nichts
-                     * passiert."
-                     */
+                    logger.log(Level.FINER, "Du bist auf einem Kartenfeld gelandet. Die Karten liegen aber noch in der Druckerei. "
+                            + "Nichts passiert.");
                     // CardField cardField = (CardField) currField;
                     /*
                      * TODO @cards - Karten auslesen und co, wenn man hier auf ein anderes Feld gesetzt wird, muss in der
@@ -347,22 +332,19 @@ public class GameController {
                      * Feldphasenabruf stattfinden. FeldPhase muss so nicht "geschleift" werden.
                      */
                 } else { // kann nicht auftreten
-
+                    logger.log(Level.WARNING, "FEHLER: FieldSwitch überlaufen (Cardfield)");
                 }
 
                 break;
 
             case 7: // GehInsGefaengnis-Feld
-                /*
-                 * @output: "Du wurdest bei einer Straftat erwischt.
-                 */
+                logger.log(Level.FINER, "Du wurdest bei einer Straftat erwischt.");
                 moveToJail();
                 break;
 
             default: // kann nicht auftreten!
-
+                logger.log(Level.WARNING, "FEHLER: FieldSwitch überlaufen.");
                 break;
-
         }
 
     }
@@ -372,131 +354,123 @@ public class GameController {
      *
      * Die Aktionsphase (Bebauung, Hypothek, Handeln)
      */
-    private void actionPhase() {
-        if (currPlayer.isInJail() && (currPlayer.getDaysInJail() < 1)) {
-            // actionPhase() entfaellt, wenn der Spieler grade ins Gefaengnis kam
-        } else {
-            // TODO Eli, hier noch Überlegungen zum input (2 Stellen), (Auflistung aller Straßen im Besitz?). alles noch iwie schleifen!
-            int selectedField = 0; //speziell hier...
-            this.currField = board.getFields()[selectedField];
+    private void actionPhase() { //@optimize switches vereinfachen
+        // TODO Eli, hier noch Überlegungen zum input (2 Stellen), (Auflistung aller Straßen im Besitz?).
+        // alles noch iwie schleifen!
 
-            if (currField instanceof StreetField) { //wenn Feld eine Straße ist
-                /*
-                 * @output: "Du hast eine Straße gewählt. Du kannst hier: \n1. ein Haus bauen. \n2. ein Haus abreißen. \n3. eine
-                 * Hypothek aufnehmen. \n4. die Hypothek abzahlen"
-                 */
-                StreetField field = (StreetField) currField;
-                int actionSwitch = 0; // dann genau hier von 1 - 4....
-                switch (actionSwitch) {
-                    case 1: // Haus bauen
-                        // wenn im Besitz und nicht vollgebaut
-                        if ((field.getOwner().equals(currPlayer)) && (field.getHouseCount() < 5)) {
-                            buyBuilding(field);
-                            /*
-                             * @output: "Haus gebaut.
-                             */
-                        } else {
-                            /*
-                             * @output: "Diese Straße gehört dir nicht, oder ist vollgebaut."
-                             */
-                        }
-                        break;
+        logger.log(Level.FINER, "Wähle ein Feld. LOS ist Feld 1"); //TODO MAXI Felder zeigen
+        this.currField = board.getFields()[getUserInput(40) - 1]; //Wahl der Strasse
 
-                    case 2: // Haus verkaufen
-                        // wenn im Besitz und nicht Hauslos
-                        if ((field.getOwner().equals(currPlayer)) && (field.getHouseCount() > 0)) {
-                            sellBuilding(field);
-                            /*
-                             * @output: "Haus abgerissen"
-                             */
-                        } else {
-                            /*
-                             * @output: "Diese Straße gehört dir nicht, oder hat keine Häuser zum verkaufen."
-                             */
-                        }
-                        break;
+        if (currField instanceof StreetField) { //wenn Feld eine Straße ist
+            /*
+             * @output: "Du hast eine Straße gewählt. Du kannst hier: \n1. ein Haus bauen. \n2. ein Haus abreißen. \n3. eine
+             * Hypothek aufnehmen. \n4. die Hypothek abzahlen"
+             */
+            StreetField field = (StreetField) currField;
+            switch (getUserInput(4)) {
+                case 1: // Haus bauen
+                    // wenn im Besitz und nicht vollgebaut
+                    if ((field.getOwner().equals(currPlayer)) && (field.getHouseCount() < 5)) {
+                        buyBuilding(field);
+                        /*
+                         * @output: "Haus gebaut.
+                         */
+                    } else {
+                        /*
+                         * @output: "Diese Straße gehört dir nicht, oder ist vollgebaut."
+                         */
+                    }
+                    break;
 
-                    case 3: // Hypothek aufnehmen
-                        // wenn im Besitz und noch keine Hypothek aufgenommen
-                        if (field.getOwner().equals(currPlayer) && (!(field.isMortgageTaken()))) {
-                            takeMortgage(field);
-                            /*
-                             * @output: "Hypothek aufgenommen."
-                             */
-                        } else {
-                            /*
-                             * @output: "Diese Straße gehört dir nicht, oder hat schon eine Hypothek."
-                             */
-                        }
-                        break;
+                case 2: // Haus verkaufen
+                    // wenn im Besitz und nicht Hauslos
+                    if ((field.getOwner().equals(currPlayer)) && (field.getHouseCount() > 0)) {
+                        sellBuilding(field);
+                        /*
+                         * @output: "Haus abgerissen"
+                         */
+                    } else {
+                        /*
+                         * @output: "Diese Straße gehört dir nicht, oder hat keine Häuser zum verkaufen."
+                         */
+                    }
+                    break;
 
-                    case 4: // Hypothek abbezahlen
-                        // wenn im Besitz und Hypothek aufgenommen
-                        if (field.getOwner().equals(currPlayer) && (field.isMortgageTaken())) {
-                            payMortgage(field);
-                            /*
-                             * @output: "Hypothek abgezahlt."
-                             */
-                        } else {
-                            /*
-                             * @output: "Diese Straße gehört dir nicht, oder hat keine Hypothek zum abzahlen."
-                             */
-                        }
-                        break;
+                case 3: // Hypothek aufnehmen TODO Maxi guck dir das mal an ob die cases nicht weg können
+                    // wenn im Besitz und noch keine Hypothek aufgenommen
+                    if (field.getOwner().equals(currPlayer) && (!(field.isMortgageTaken()))) {
+                        takeMortgage(field);
+                        /*
+                         * @output: "Hypothek aufgenommen."
+                         */
+                    } else {
+                        /*
+                         * @output: "Diese Straße gehört dir nicht, oder hat schon eine Hypothek."
+                         */
+                    }
+                    break;
 
-                    default:
+                case 4: // Hypothek abbezahlen
+                    // wenn im Besitz und Hypothek aufgenommen
+                    if (field.getOwner().equals(currPlayer) && (field.isMortgageTaken())) {
+                        payMortgage(field);
+                        /*
+                         * @output: "Hypothek abgezahlt."
+                         */
+                    } else {
+                        /*
+                         * @output: "Diese Straße gehört dir nicht, oder hat keine Hypothek zum abzahlen."
+                         */
+                    }
+                    break;
 
-                        break;
-                }
+                default:
+                    // @output Warning StreetFieldSwitch überlaufen
+                    break;
             }
-
-            if (currField instanceof Property) { //wenn Feld ein Bahnhof oder Werk ist
-                /*
-                 * @output: "Du hast einen Bahhof, oder ein Werk gewählt. Du kannst hier: \n1.Hypothek aufnehmen \n2. Hypothek
-                 * abzahlen."
-                 */
-                Property field = (Property) currField;
-                int actionSwitch = 0; // ...oder alternativ hier von 1 - 2
-                switch (actionSwitch) {
-                    case 1: // Hypothek aufnehmen
-                        // wenn im Besitz und noch keine Hypothek aufgenommen
-                        if (field.getOwner().equals(currPlayer) && (!(field.isMortgageTaken()))) {
-                            takeMortgage(field);
-                            /*
-                             * @output: "Hypothek aufgenommen."
-                             */
-                        } else {
-                            /*
-                             * @output: "Dieses Grundstück gehört dir nicht, oder hat schon eine Hypothek."
-                             */
-                        }
-                        break;
-
-                    case 2: // Hypothek abbezahlen
-                        // wenn im Besitz und Hypothek aufgenommen
-                        if (field.getOwner().equals(currPlayer) && (field.isMortgageTaken())) {
-                            payMortgage(field);
-                            /*
-                             * @output: "Hypothek abgezahlt."
-                             */
-                        } else {
-                            /*
-                             * @output: "Dieses Grundstück gehört dir nicht, oder hat keine Hypothek zum abzahlen."
-                             */
-                        }
-                        break;
-
-                    default:
-
-                        break;
-                }
-            }
-            // buyHouse(StreetField field),
-            // sellHouse(StreetField field),
-            // checkBalance(StreetField field) (Gleichgewicht der Haeuser)
-            // takeMortgage(StreetField field)
-            // payMortgage(StreetField field))
         }
+
+        if (currField instanceof Property) { //wenn Feld ein Bahnhof oder Werk ist
+            /*
+             * @output: "Du hast einen Bahhof, oder ein Werk gewählt. Du kannst hier: \n1.Hypothek aufnehmen \n2. Hypothek
+             * abzahlen."
+             */
+            Property field = (Property) currField;
+            switch (getUserInput(2)) {
+                case 1: // Hypothek aufnehmen
+                    // wenn im Besitz und noch keine Hypothek aufgenommen
+                    if (field.getOwner().equals(currPlayer) && (!(field.isMortgageTaken()))) {
+                        takeMortgage(field);
+                        /*
+                         * @output: "Hypothek aufgenommen."
+                         */
+                    } else {
+                        /*
+                         * @output: "Dieses Grundstück gehört dir nicht, oder hat schon eine Hypothek."
+                         */
+                    }
+                    break;
+
+                case 2: // Hypothek abbezahlen
+                    // wenn im Besitz und Hypothek aufgenommen
+                    if (field.getOwner().equals(currPlayer) && (field.isMortgageTaken())) {
+                        payMortgage(field);
+                        /*
+                         * @output: "Hypothek abgezahlt."
+                         */
+                    } else {
+                        /*
+                         * @output: "Dieses Grundstück gehört dir nicht, oder hat keine Hypothek zum abzahlen."
+                         */
+                    }
+                    break;
+
+                default:
+
+                    break;
+            }
+        }
+
     }
 
     /**
@@ -553,9 +527,6 @@ public class GameController {
         } else {
             currPlayer.setPosition(currPlayer.getPosition() + diceResult);
         }
-        //@output fuer Spielerbewegung
-        System.out.println(currPlayer.getName() + "rueckt vor bis auf " + board.getFields()[currPlayer.getPosition()] + ".");
-
     }
 
     /**
@@ -681,7 +652,7 @@ public class GameController {
      */
     private void locate(Player player) {
 
-        // locate geloest:
+        // locate: TODO fieldSwitch als return!
         // Da es keine Implementierung des Gefängnisfeldes
         // und des Freiparkenfeldes gibt. Wurden die zwei
         // if Abfragen zunächst über die Spielerposition realisiert
@@ -720,10 +691,10 @@ public class GameController {
      * @param field - das Feld worauf ein Haus/Hotel gekauft/gebaut wird
      */
     private void buyBuilding(StreetField field) {
-        //@Eli, added Hausbau hinzugefuegt. Spectator unmöglich
+        //@Eli, added Hausbau hinzugefuegt. TODO Spectator unmöglich
 
         if (!(currPlayer.isSpectator()) && checkLiquidity(currPlayer, field.getHousePrice())) {
-            if (field.complete() && checkBalance(field)) {
+            if (field.complete() && checkBalance(field, true)) {
                 takeMoney(currPlayer, field.getHousePrice()); // enfernt: * field.getHouseCount());
                 field.setHouseCount(field.getHouseCount() + 1); //Haus bauen
             } else {
@@ -740,7 +711,7 @@ public class GameController {
      */
     private void sellBuilding(StreetField field) {
         //TODO Eli, added Bebauung, Spectator unmöglich. HIER MUSS NOCH EIN ANDERES CHECKBALANCE REIN!!! sagt Christian
-        if (!(currPlayer.isSpectator())) {// anderes Checkbalance
+        if (!(currPlayer.isSpectator()) && checkBalance(field, false)) {// anderes Checkbalance
             giveMoney(currPlayer, field.getHousePrice());
             field.setHouseCount(field.getHouseCount() - 1); // Haus abbauen
         } else {
@@ -751,21 +722,18 @@ public class GameController {
     /**
      * @return true wenn eine Strasse gleiches Gewicht von Haeuser hat und false wenn nicht
      * @param field die auf Ausgeglichenheit im Strassenzug zu pruefende Strasse
+     * @param buyIntend gibt an, ob der Spieler ein Haus kaufen möchte
      */
-    private boolean checkBalance(StreetField field) {
+    private boolean checkBalance(StreetField field, boolean buyIntend) {
         //@Eli, replaced. neighbours ist eine Liste
-//        StreetField field = (StreetField) currField;  //als Parameter hinzugefuegt
-//        StreetField neighbours = (StreetField) field.getNeighbours();
-//        if ((neighbours.getHouseCount()) == (field.getHouseCount())) {
-//            return true;
-//        }
-//        return false;
 
         for (Property nei : field.getNeighbours()) {  // Liste der Nachbarn durchgehen
 
             int housesHere = field.getHouseCount();      // Haueser auf der aktuellen Strasse
             int housesThere = ((StreetField) nei).getHouseCount();       // Haeuser auf der Nachbarstrasse
-            if ((housesHere - housesThere) > 0) {        // Wenn die Nachbarn weniger Haueser haben
+            if (((housesHere - housesThere) > 0) && buyIntend) {        // Wenn die Nachbarn weniger Haueser haben
+                return false;
+            } else if (((housesHere - housesThere) < 0) && !buyIntend) {// Wenn die Nachbarn mehr Haeuser haben
                 return false;
             }
         }
@@ -833,7 +801,7 @@ public class GameController {
     //-------------------------------------------------------------------------
     //------------ Console-Input Methoden -------------------------------------
     //-------------------------------------------------------------------------
-    public int getUserInput(int min, int max) {
+    public int getUserInput(int max) {
 
         Scanner scanner = new Scanner(System.in);
         int output;
@@ -844,7 +812,7 @@ public class GameController {
 
             output = scanner.nextInt();
 
-            if (output >= min && output <= max) {
+            if (output >= 1 && output <= max) {
                 return output;
             }
 
