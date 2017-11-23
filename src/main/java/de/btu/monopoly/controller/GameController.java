@@ -556,11 +556,8 @@ public class GameController {
         // actualPlayer Geld von den Mitspielern einsammeln kann
         System.out.println("Es wird geprüft, ob du genug Geld hast für die folgende Transaktion.");
 
-        if ((player.getMoney() - amount) < 0) {
-            return false;
-        } else {
-            return true;
-        }
+        return ((player.getMoney() - amount) > 0);
+
     }
 
     /**
@@ -572,7 +569,7 @@ public class GameController {
     private void takeMoney(Player player, int amount) {
 
         player.setMoney(player.getMoney() - amount);
-
+        //@output
         System.out.println("Dir werden " + amount + "Monopoly Dollar abgezogen.");
 
     }
@@ -586,7 +583,7 @@ public class GameController {
     private void giveMoney(Player player, int amount) {
 
         player.setMoney(player.getMoney() + amount);
-
+        //output
         System.out.println("Du erhälst " + amount + " Monopoly Dollar.");
 
     }
@@ -598,7 +595,7 @@ public class GameController {
      * @param player Spieler der bankrott gegangen ist
      */
     private void bankrupt(Player player) { //TODO !hier sollt ihr nicht den currPlayer sondern den parameter nehmen!!!
-
+        //@output
         System.out.println("Du bist Bankrott und ab jetzt nur noch Zuschauer.");
 
         // Spieler auf Spectator setzen
@@ -609,23 +606,24 @@ public class GameController {
 
         // Durchgehen des Array fields, ggf. Eigentum löschen
         for (int i = 0; i < fields.length; i++) {
-
-            if (fields[i] instanceof Property) {
+            Field field = fields[i];
+            if (field instanceof Property) {
 
                 // Löschen der Hypothek und des Eigentums
-                if (((Property) fields[i]).getOwner() == currPlayer) {
+                if (((Property) field).getOwner() == currPlayer) {
 
-                    ((Property) fields[i]).setOwner(null);
-                    ((Property) fields[i]).setMortgageTaken(false);
+                    ((Property) field).setOwner(null);
+                    ((Property) field).setMortgageTaken(false);
+
+                    // Löschen der Anzahl an Häusern
+                    if (field instanceof StreetField) {
+
+                        ((StreetField) fields[i]).setHouseCount(0);
+
+                    }
 
                 }
 
-                // Löschen der Anzahl an Häusern
-                if (fields[i] instanceof StreetField) {
-
-                    ((StreetField) fields[i]).setHouseCount(0);
-
-                }
             }
 
         }
@@ -710,9 +708,8 @@ public class GameController {
      * @param field - das Feld wovon ein haus/Hotel verkauft/abbebaut wird
      */
     private void sellBuilding(StreetField field) {
-        //TODO Eli, added Bebauung, Spectator unmöglich. HIER MUSS NOCH EIN ANDERES CHECKBALANCE REIN!!! sagt Christian
-        if (!(currPlayer.isSpectator()) && checkBalance(field, false)) {// anderes Checkbalance
-            giveMoney(currPlayer, field.getHousePrice());
+        if (!(currPlayer.isSpectator()) && checkBalance(field, false)) {
+            giveMoney(currPlayer, field.getHousePrice()); //@rules MAXI du moegest bitte pruefen!
             field.setHouseCount(field.getHouseCount() - 1); // Haus abbauen
         } else {
             //@output Straßenzug würde unausgeglichen sein
@@ -746,7 +743,6 @@ public class GameController {
      * @param filed - das Feld, dessen Hypotheke aufgenommen wurde
      */
     private void takeMortgage(Property field) {
-        //@Eli, ok
         giveMoney(currPlayer, field.getMortgageValue());
         field.setMortgageTaken(true);
     }
@@ -758,7 +754,9 @@ public class GameController {
      */
     private void payMortgage(Property field) {
         //TODO Eli, hier ist noch Offen, dass der Betrag beim Zurueckzahlen hoeher sein muss. Streeftfield zu Property geändert
-        takeMoney(currPlayer, field.getMortgageValue());
+        int mortageBack;
+        mortageBack = (field.getMortgageValue() / 100) * 110;
+        takeMoney(currPlayer, mortageBack);
         field.setMortgageTaken(false);
     }
 
@@ -772,7 +770,7 @@ public class GameController {
      * @param taker Spieler der die Miete bekommt
      */
     private void doubleRent(Player giver, Player taker) {
-        //TODO
+        //TODO Maxi
     }
 
     /**
@@ -785,7 +783,8 @@ public class GameController {
      * @param hotel_price
      */
     private void sumRenovation(int house_price, int hotel_price) {
-        //TODO Eli hier musst du den Houscount switchen 1-4 = houses, 5 = hotel. Außerdem variablenNamen im CamelCase schreiben!
+        //TODO spaeter, wenn Kartenstapel gedruckt wurde
+        StreetField field = (StreetField) currField;
         int renovation_hotel = 0;
         int renovation_house = 0;
         for (Property nei : field.getNeighbours()) {
