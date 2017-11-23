@@ -97,6 +97,7 @@ public class GameController {
             prisonPhase();
         }
         do {		// bei Pasch wiederholen
+            //@output: if(isDoublet){ "Du bist nochmal dran."}
             rollPhase();
             fieldPhase();
             actionPhase();
@@ -110,11 +111,49 @@ public class GameController {
      * Gefängnisphase
      */
     private void prisonPhase() {
+        /*
+         * @output: "Du bist im Gefängnis! Du kannst: \n1. 3 mal Würfeln, um mit einem Pasch freizukommen \n2. Bezahlen (50€) \n3.
+         * Gefängnis-Frei-Karte benutzen"
+         */
         int prisonChoice = -1;
         switch (prisonChoice) { // @GUI
-            //OPTION 1: Bezahlen
+            //OPTION 1: 3mal wuerfeln
             case 1:
+                roll();                 // wuerfeln
+                if (!isDoublet) {       // kein Pasch > im Gefaengnis bleiben
+                    /*
+                     * @output: "Du hast keinen Pasch und bleibst im Gefängnis."
+                     */
+                    currPlayer.addDayInJail();
+                } else {                        // sonst frei
+                    /*
+                     * @output: "Du hast einen Pasch und bist frei."
+                     */
+                    currPlayer.setInJail(false);
+                    currPlayer.setDaysInJail(0);
+                }
+                // Wenn 3 mal kein Pasch dann bezahlen
+                if (currPlayer.getDaysInJail() == 3) {
+                    if (checkLiquidity(currPlayer, 50)) {
+                        /*
+                         * @output: "Du hast schon 3 mal gewürfelt. nun musst du 50€ zahlen!"
+                         */
+                        takeMoney(currPlayer, 50);
+                        currPlayer.setInJail(false);
+                    } else {        //wenn pleite game over
+                        /*
+                         * @output: "Du hast schon 3 mal gewürfelt und kannst nicht zahlen."
+                         */
+                        bankrupt(currPlayer);
+                    }
+                }
+
+            //OPTION 2: Bezahlen
+            case 2:
                 if (checkLiquidity(currPlayer, 50)) {
+                    /*
+                     * @output: "Du hast 50€ gezahlt und bist frei!"
+                     */
                     takeMoney(currPlayer, 50);
                     currPlayer.setInJail(false);
                     currPlayer.setDaysInJail(0);
@@ -123,9 +162,12 @@ public class GameController {
                 }
                 break;
 
-            //OPTION 2: Freikarte ausspielen
-            case 2:
+            //OPTION 3: Freikarte ausspielen
+            case 3:
                 if (currPlayer.getJailCardAmount() > 0) {
+                    /*
+                     * @output: "Du hast eine Gefängnis-Frei-Karte benutzt."
+                     */
                     currPlayer.removeJailCard();
                     enqueueJailCard();
                     currPlayer.setInJail(false);
@@ -135,24 +177,6 @@ public class GameController {
                 }
                 break;
 
-            //OPTION 3: 3mal wuerfeln
-            case 3:
-                roll();                 // wuerfeln
-                if (!isDoublet) {       // kein Pasch > im Gefaengnis bleiben
-                    currPlayer.addDayInJail();
-                } else {                        // sonst frei
-                    currPlayer.setInJail(false);
-                    currPlayer.setDaysInJail(0);
-                }
-                // Wenn 3 mal kein Pasch dann bezahlen
-                if (currPlayer.getDaysInJail() == 3) {
-                    if (checkLiquidity(currPlayer, 50)) {
-                        takeMoney(currPlayer, 50);
-                        currPlayer.setInJail(false);
-                    } else {        //wenn pleite game over
-                        bankrupt(currPlayer);
-                    }
-                }
         }
     }
 
@@ -160,9 +184,15 @@ public class GameController {
      * die Wurfphase (wuerfeln und ziehen)
      */
     private void rollPhase() {
+        /*
+         * @output: "Du bist dran mit würfeln."
+         */
         if (!(currPlayer.isInJail())) { //Gefaengnis hat eigenes Wuerfeln
             roll();
             if (doubletCounter == 3) {
+                /*
+                 * @output: "Du hast deinen 3. Pasch und gehst nicht über LOS, direkt ins Gefängnis!"
+                 */
                 currPlayer.setInJail(true);
                 moveToJail();
                 currPlayer.setDaysInJail(0);
@@ -188,12 +218,21 @@ public class GameController {
                     Property actualProperty = (Property) currField;
                     // wenn das Feld in eigenem Besitz ist
                     if (actualProperty.getOwner() == currPlayer) {
+                        /*
+                         * @output: "Du stehst auf deinem eigenen Grundstück."
+                         */
                         break;
                     } else if (actualProperty.getOwner() == null) { //wenn frei
+                        /*
+                         * @output: "Du stehst auf einem freien Grundstück. Du kannst es: \n1. Kaufen \n2. nicht Kaufen"
+                         */
                         int freeStreetChoice = 1;
                         switch (freeStreetChoice) { //@GUI
                             case 1: //Kaufen
                                 if (checkLiquidity(currPlayer, actualProperty.getPrice())) {
+                                    /*
+                                     * @output: "Du kaufst das Grundstück für " + actualProperty.getPrice() + "€!"
+                                     */
                                     actualProperty.setOwner(currPlayer);
                                     takeMoney(currPlayer, actualProperty.getPrice());
                                 } else { // muss in der GUI deaktiviert sein!
@@ -206,6 +245,9 @@ public class GameController {
                                 break;
                         }
                     } else { // wenn nicht in eigenem Besitz
+                        /*
+                         * @output: "Dieses Grundstück gehört jemand anderes."
+                         */
                         Player owner = actualProperty.getOwner();
                         int rent = actualProperty.getRent();
 
@@ -214,9 +256,15 @@ public class GameController {
                             rent = rent * diceResult;
                         }
                         if (checkLiquidity(currPlayer, rent)) {
+                            /*
+                             * @output: "Du zahlst " + rent + "€ Miete!"
+                             */
                             takeMoney(currPlayer, rent);
                             giveMoney(owner, rent);
                         } else {
+                            /*
+                             * @output: "Du kannst die Miete nicht zahlen!"
+                             */
                             bankrupt(currPlayer);
                         }
                     }
@@ -227,24 +275,42 @@ public class GameController {
                 break;
 
             case 2: //LOS
+                /*
+                 * @output: "Du bist auf LOS gelandet und erhältst " + ((GoField) board.getFields()[0]).getAmount()) + "€."
+                 */
                 // LOS abfrage erfolgt in der Methode movePlayer()
                 // ansonsten passiert hier nicht @rules
                 break;
 
             case 3: // Frei-Parken
+                /*
+                 * @output: "Du bist auf Frei-Parken gelandet."
+                 */
                 // hier passier normalerweise nichts @rules
                 break;
 
             case 4: // Gefaengnis
+                /*
+                 * @output: "Du bist im Gefängnis... zum Glück nur zu Besuch"
+                 */
                 // hier passier in jedem Fall nichts
                 break;
 
             case 5: // Steuerfeld
+                /*
+                 * @output: "Du musst Steuern zahlen."
+                 */
                 if (currField instanceof TaxField) {
                     TaxField taxField = (TaxField) currField;
                     if (checkLiquidity(currPlayer, taxField.getTax())) {
+                        /*
+                         * @output: "Dir werden " + taxField.getTax() + "€ abgezogen!"
+                         */
                         takeMoney(currPlayer, taxField.getTax());
                     } else {
+                        /*
+                         * @output: "Die kannst du aber nicht zahlen!"
+                         */
                         bankrupt(currPlayer);
                     }
                     // spaeter kommt hier evtl. der Steuertopf zum Zuge @rules
@@ -255,6 +321,10 @@ public class GameController {
 
             case 6: // Kartenfeld
                 if (currField instanceof CardField) {
+                    /*
+                     * @output: "Du bist auf einem Kartenfeld gelandet. Die Karten liegen aber noch in der Druckerei. Nichts
+                     * passiert."
+                     */
                     // CardField cardField = (CardField) currField;
                     /*
                      * TODO @cards - Karten auslesen und co, wenn man hier auf ein anderes Feld gesetzt wird, muss in der
@@ -268,6 +338,9 @@ public class GameController {
                 break;
 
             case 7: // GehInsGefaengnis-Feld
+                /*
+                 * @output: "Du wurdest bei einer Straftat erwischt.
+                 */
                 moveToJail();
                 break;
 
@@ -288,11 +361,15 @@ public class GameController {
         if (currPlayer.isInJail() && (currPlayer.getDaysInJail() < 1)) {
             // actionPhase() entfaellt, wenn der Spieler grade ins Gefaengnis kam
         } else {
-            // TODO Eli, hier noch Überlegungen zum input (2 Stellen), (Auflistung alle Straßen im Besitz?)
+            // TODO Eli, hier noch Überlegungen zum input (2 Stellen), (Auflistung aller Straßen im Besitz?). alles noch iwie schleifen!
             int selectedField = 0; //speziell hier...
             this.currField = board.getFields()[selectedField];
 
             if (currField instanceof StreetField) { //wenn Feld eine Straße ist
+                /*
+                 * @output: "Du hast eine Straße gewählt. Du kannst hier: \n1. ein Haus bauen. \n2. ein Haus abreißen. \n3. eine
+                 * Hypothek aufnehmen. \n4. die Hypothek abzahlen"
+                 */
                 StreetField field = (StreetField) currField;
                 int actionSwitch = 0; // dann genau hier von 1 - 4....
                 switch (actionSwitch) {
@@ -300,8 +377,13 @@ public class GameController {
                         // wenn im Besitz und nicht vollgebaut
                         if ((field.getOwner().equals(currPlayer)) && (field.getHouseCount() < 5)) {
                             buyBuilding(field);
+                            /*
+                             * @output: "Haus gebaut.
+                             */
                         } else {
-                            //@output: Diese Straße gehört dir nicht, oder ist vollgebaut.
+                            /*
+                             * @output: "Diese Straße gehört dir nicht, oder ist vollgebaut."
+                             */
                         }
                         break;
 
@@ -309,8 +391,13 @@ public class GameController {
                         // wenn im Besitz und nicht Hauslos
                         if ((field.getOwner().equals(currPlayer)) && (field.getHouseCount() > 0)) {
                             sellBuilding(field);
+                            /*
+                             * @output: "Haus abgerissen"
+                             */
                         } else {
-                            //@output: Diese Straße gehört dir nicht, oder hat keine Häuser zum verkaufen.
+                            /*
+                             * @output: "Diese Straße gehört dir nicht, oder hat keine Häuser zum verkaufen."
+                             */
                         }
                         break;
 
@@ -318,8 +405,13 @@ public class GameController {
                         // wenn im Besitz und noch keine Hypothek aufgenommen
                         if (field.getOwner().equals(currPlayer) && (!(field.isMortgageTaken()))) {
                             takeMortgage(field);
+                            /*
+                             * @output: "Hypothek aufgenommen."
+                             */
                         } else {
-                            //@output Diese Straße gehört dir nicht, oder hat schon eine Hypothek.
+                            /*
+                             * @output: "Diese Straße gehört dir nicht, oder hat schon eine Hypothek."
+                             */
                         }
                         break;
 
@@ -327,8 +419,13 @@ public class GameController {
                         // wenn im Besitz und Hypothek aufgenommen
                         if (field.getOwner().equals(currPlayer) && (field.isMortgageTaken())) {
                             payMortgage(field);
+                            /*
+                             * @output: "Hypothek abgezahlt."
+                             */
                         } else {
-                            //@output Diese Straße gehört dir nicht, oder hat keine Hypothek zum abzahlen.
+                            /*
+                             * @output: "Diese Straße gehört dir nicht, oder hat keine Hypothek zum abzahlen."
+                             */
                         }
                         break;
 
@@ -339,6 +436,10 @@ public class GameController {
             }
 
             if (currField instanceof Property) { //wenn Feld ein Bahnhof oder Werk ist
+                /*
+                 * @output: "Du hast einen Bahhof, oder ein Werk gewählt. Du kannst hier: \n1.Hypothek aufnehmen \n2. Hypothek
+                 * abzahlen."
+                 */
                 Property field = (Property) currField;
                 int actionSwitch = 0; // ...oder alternativ hier von 1 - 2
                 switch (actionSwitch) {
@@ -346,8 +447,13 @@ public class GameController {
                         // wenn im Besitz und noch keine Hypothek aufgenommen
                         if (field.getOwner().equals(currPlayer) && (!(field.isMortgageTaken()))) {
                             takeMortgage(field);
+                            /*
+                             * @output: "Hypothek aufgenommen."
+                             */
                         } else {
-                            //@output Dieses Grundstück gehört dir nicht, oder hat schon eine Hypothek.
+                            /*
+                             * @output: "Dieses Grundstück gehört dir nicht, oder hat schon eine Hypothek."
+                             */
                         }
                         break;
 
@@ -355,8 +461,13 @@ public class GameController {
                         // wenn im Besitz und Hypothek aufgenommen
                         if (field.getOwner().equals(currPlayer) && (field.isMortgageTaken())) {
                             payMortgage(field);
+                            /*
+                             * @output: "Hypothek abgezahlt."
+                             */
                         } else {
-                            //@output Dieses Grundstück gehört dir nicht, oder hat keine Hypothek zum abzahlen.
+                            /*
+                             * @output: "Dieses Grundstück gehört dir nicht, oder hat keine Hypothek zum abzahlen."
+                             */
                         }
                         break;
 
@@ -488,7 +599,9 @@ public class GameController {
      * @param player Spieler der bankrott gegangen ist
      */
     private void bankrupt(Player player) { //TODO !hier sollt ihr nicht den currPlayer sondern den parameter nehmen!!!
-
+        /*
+         * @output: Du bist Pleite und ab jetzt nur noch Zuschauer!
+         */
         // Spieler auf Spectator setzen
         currPlayer.setSpectator(true);
 
