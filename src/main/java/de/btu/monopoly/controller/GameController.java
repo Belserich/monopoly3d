@@ -147,6 +147,7 @@ public class GameController {
                         bankrupt(currPlayer);
                     }
                 }
+                break;
 
             //OPTION 2: Bezahlen
             case 2:
