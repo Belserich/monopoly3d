@@ -753,7 +753,6 @@ public class GameController {
      * @param field - das Feld ist wieder aktiv und hat Rent
      */
     private void payMortgage(Property field) {
-        //TODO Eli, hier ist noch Offen, dass der Betrag beim Zurueckzahlen hoeher sein muss. Streeftfield zu Property geändert
         int mortageBack;
         mortageBack = (field.getMortgageValue() / 100) * 110;
         takeMoney(currPlayer, mortageBack);
