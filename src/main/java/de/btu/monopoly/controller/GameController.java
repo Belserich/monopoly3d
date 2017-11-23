@@ -55,6 +55,11 @@ public class GameController {
     private int fieldSwitch;
 
     /**
+     * Waehrungstyp
+     */
+    public static final String CURRENCY_TYPE = "Euro";
+
+    /**
      * Die zentrale Manager-Klasse für alles was ein Spiel betrifft.
      *
      * @param playerCount Anzahl Spieler
@@ -540,10 +545,15 @@ public class GameController {
          */
         if ((currPlayer.getPosition() + diceResult) > 39) {
             currPlayer.setMoney(currPlayer.getMoney() + ((GoField) board.getFields()[0]).getAmount());
+            //@output fuer Zahlung von GoField
+            System.out.println(currPlayer.getName() + " ist ueber Los gegangen und erhaelt " + ((GoField) board.getFields()[0]).getAmount()
+                    + " " + CURRENCY_TYPE + ".");
             currPlayer.setPosition(((currPlayer.getPosition() + diceResult) - 39));
         } else {
             currPlayer.setPosition(currPlayer.getPosition() + diceResult);
         }
+        //@output fuer Spielerbewegung
+        System.out.println(currPlayer.getName() + "rueckt vor bis auf " + board.getFields()[currPlayer.getPosition()] + ".");
 
     }
 
@@ -558,6 +568,8 @@ public class GameController {
         currPlayer.setPosition(10);
         currPlayer.setInJail(true);
         currPlayer.setDaysInJail(0);
+        //@output Spieler in das Gefaengnis setzten
+        System.out.println(currPlayer.getName() + " wurde in das Gefaengnis gesetzt.");
     }
 
     /**
