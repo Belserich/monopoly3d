@@ -3,6 +3,7 @@ package de.btu.monopoly.controller;
 import de.btu.monopoly.data.GameBoard;
 import de.btu.monopoly.data.Player;
 import de.btu.monopoly.data.field.*;
+import java.util.Scanner;
 
 /**
  * @author Christian Prinz
@@ -582,6 +583,8 @@ public class GameController {
 
         // Die Methode benötigt die uebergabe des Spielers, da bei einem Ereignisfeld, eine Karte vorkommt, bei der der
         // actualPlayer Geld von den Mitspielern einsammeln kann
+        System.out.println("Es wird geprüft, ob du genug Geld hast für die folgende Transaktion.");
+
         if ((player.getMoney() - amount) < 0) {
             return false;
         } else {
@@ -599,6 +602,8 @@ public class GameController {
 
         player.setMoney(player.getMoney() - amount);
 
+        System.out.println("Dir werden " + amount + "Monopoly Dollar abgezogen.");
+
     }
 
     /**
@@ -611,6 +616,8 @@ public class GameController {
 
         player.setMoney(player.getMoney() + amount);
 
+        System.out.println("Du erhälst " + amount + " Monopoly Dollar.");
+
     }
 
     /**
@@ -620,9 +627,9 @@ public class GameController {
      * @param player Spieler der bankrott gegangen ist
      */
     private void bankrupt(Player player) { //TODO !hier sollt ihr nicht den currPlayer sondern den parameter nehmen!!!
-        /*
-         * @output: Du bist Pleite und ab jetzt nur noch Zuschauer!
-         */
+
+        System.out.println("Du bist Bankrott und ab jetzt nur noch Zuschauer.");
+
         // Spieler auf Spectator setzen
         currPlayer.setSpectator(true);
 
@@ -821,6 +828,30 @@ public class GameController {
         } else {
             gameOver = true;
         }
+    }
+
+    //-------------------------------------------------------------------------
+    //------------ Console-Input Methoden -------------------------------------
+    //-------------------------------------------------------------------------
+    public int getUserInput(int min, int max) {
+
+        Scanner scanner = new Scanner(System.in);
+        int output;
+
+        System.out.println("Eingabe:");
+        // Solange nicht der richtige Wertebereich eingegeben wird, wird die Eingabe wiederholt
+        do {
+
+            output = scanner.nextInt();
+
+            if (output >= min && output <= max) {
+                return output;
+            }
+
+            System.out.println("Deine Eingabe liegt nicht im Wertebereich! Bitte erneut versuchen:");
+
+        } while (true);
+
     }
 
 }
