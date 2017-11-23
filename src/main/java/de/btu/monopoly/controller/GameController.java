@@ -826,12 +826,19 @@ public class GameController {
         Scanner scanner = new Scanner(System.in);
         int output;
 
+        System.out.println("Eingabe:");
         // Solange nicht der richtige Wertebereich eingegeben wird, wird die Eingabe wiederholt
         do {
-            output = Integer.valueOf(scanner.nextLine());
-        } while (output < min && output > max);
 
-        return output;
+            output = scanner.nextInt();
+
+            if (output >= min && output <= max) {
+                return output;
+            }
+
+            System.out.println("Deine Eingabe liegt nicht im Wertebereich! Bitte erneut versuchen:");
+
+        } while (true);
 
     }
 
