@@ -3,6 +3,7 @@ package de.btu.monopoly.controller;
 import de.btu.monopoly.data.GameBoard;
 import de.btu.monopoly.data.Player;
 import de.btu.monopoly.data.field.*;
+import java.util.Scanner;
 
 /**
  * @author Christian Prinz
@@ -815,6 +816,23 @@ public class GameController {
         } else {
             gameOver = true;
         }
+    }
+
+    //-------------------------------------------------------------------------
+    //------------ Console-Input Methoden -------------------------------------
+    //-------------------------------------------------------------------------
+    public int getUserInput(int min, int max) {
+
+        Scanner scanner = new Scanner(System.in);
+        int output;
+
+        // Solange nicht der richtige Wertebereich eingegeben wird, wird die Eingabe wiederholt
+        do {
+            output = Integer.valueOf(scanner.nextLine());
+        } while (output < min && output > max);
+
+        return output;
+
     }
 
 }
