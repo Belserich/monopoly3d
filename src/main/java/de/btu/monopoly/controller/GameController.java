@@ -587,6 +587,8 @@ public class GameController {
 
         player.setMoney(player.getMoney() - amount);
 
+        System.out.println("Dir werden " + amount + "Monopoly Dollar abgezogen.");
+
     }
 
     /**
