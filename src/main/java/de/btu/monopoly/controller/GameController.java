@@ -570,14 +570,11 @@ public class GameController {
 
         // Die Methode benötigt die uebergabe des Spielers, da bei einem Ereignisfeld, eine Karte vorkommt, bei der der
         // actualPlayer Geld von den Mitspielern einsammeln kann
-        System.out.println("Es wird überprüft, ob du noch genug Geld auf deinem Konto hast.");
-
         if ((player.getMoney() - amount) < 0) {
             return false;
         } else {
             return true;
         }
-
     }
 
     /**
@@ -589,8 +586,6 @@ public class GameController {
     private void takeMoney(Player player, int amount) {
 
         player.setMoney(player.getMoney() - amount);
-
-        System.out.println("Dir werden " + amount + " Monopoly Dollar abgezogen.");
 
     }
 
@@ -604,8 +599,6 @@ public class GameController {
 
         player.setMoney(player.getMoney() + amount);
 
-        System.out.println("Du erhälst " + amount + " Monopoly Dollar.");
-
     }
 
     /**
@@ -614,8 +607,10 @@ public class GameController {
      *
      * @param player Spieler der bankrott gegangen ist
      */
-    private void bankrupt(Player player) { //TODO !hier sollt ihr nicht den currPlayer sondern den parameter nehmen!!
-
+    private void bankrupt(Player player) { //TODO !hier sollt ihr nicht den currPlayer sondern den parameter nehmen!!!
+        /*
+         * @output: Du bist Pleite und ab jetzt nur noch Zuschauer!
+         */
         // Spieler auf Spectator setzen
         currPlayer.setSpectator(true);
 
@@ -645,7 +640,6 @@ public class GameController {
 
         }
 
-        System.out.println("Du bist Bankrott und ab jetzt nur noch Zuschauer!");
         // TODO @cards - Gefängnisfreikarten müssen zurück in den Stapel
     }
 
