@@ -362,23 +362,17 @@ public class GameController {
         this.currField = board.getFields()[getUserInput(40) - 1]; //Wahl der Strasse
 
         if (currField instanceof StreetField) { //wenn Feld eine Straße ist
-            /*
-             * @output: "Du hast eine Straße gewählt. Du kannst hier: \n1. ein Haus bauen. \n2. ein Haus abreißen. \n3. eine
-             * Hypothek aufnehmen. \n4. die Hypothek abzahlen"
-             */
+            logger.log(Level.FINER, "Du hast eine Straße gewählt. Du kannst hier: \n1. ein Haus bauen."
+                    + " \n2. ein Haus abreißen. \n3. eine Hypothek aufnehmen. \n4. die Hypothek abzahlen");
             StreetField field = (StreetField) currField;
             switch (getUserInput(4)) {
                 case 1: // Haus bauen
                     // wenn im Besitz und nicht vollgebaut
                     if ((field.getOwner().equals(currPlayer)) && (field.getHouseCount() < 5)) {
                         buyBuilding(field);
-                        /*
-                         * @output: "Haus gebaut.
-                         */
+                        logger.log(Level.FINER, "Haus gebaut.");
                     } else {
-                        /*
-                         * @output: "Diese Straße gehört dir nicht, oder ist vollgebaut."
-                         */
+                        logger.log(Level.FINER, "Diese Straße gehört dir nicht, oder ist vollgebaut.");
                     }
                     break;
 
@@ -386,13 +380,9 @@ public class GameController {
                     // wenn im Besitz und nicht Hauslos
                     if ((field.getOwner().equals(currPlayer)) && (field.getHouseCount() > 0)) {
                         sellBuilding(field);
-                        /*
-                         * @output: "Haus abgerissen"
-                         */
+                        logger.log(Level.FINER, "Haus abgerissen");
                     } else {
-                        /*
-                         * @output: "Diese Straße gehört dir nicht, oder hat keine Häuser zum verkaufen."
-                         */
+                        logger.log(Level.FINER, "Diese Straße gehört dir nicht, oder hat keine Häuser zum verkaufen.");
                     }
                     break;
 
@@ -400,13 +390,9 @@ public class GameController {
                     // wenn im Besitz und noch keine Hypothek aufgenommen
                     if (field.getOwner().equals(currPlayer) && (!(field.isMortgageTaken()))) {
                         takeMortgage(field);
-                        /*
-                         * @output: "Hypothek aufgenommen."
-                         */
+                        logger.log(Level.FINER, "Hypothek aufgenommen.");
                     } else {
-                        /*
-                         * @output: "Diese Straße gehört dir nicht, oder hat schon eine Hypothek."
-                         */
+                        logger.log(Level.FINER, "Diese Straße gehört dir nicht, oder hat schon eine Hypothek.");
                     }
                     break;
 
@@ -414,40 +400,30 @@ public class GameController {
                     // wenn im Besitz und Hypothek aufgenommen
                     if (field.getOwner().equals(currPlayer) && (field.isMortgageTaken())) {
                         payMortgage(field);
-                        /*
-                         * @output: "Hypothek abgezahlt."
-                         */
+                        logger.log(Level.FINER, "Hypothek abgezahlt.");
                     } else {
-                        /*
-                         * @output: "Diese Straße gehört dir nicht, oder hat keine Hypothek zum abzahlen."
-                         */
+                        logger.log(Level.FINER, "Diese Straße gehört dir nicht, oder hat keine Hypothek zum abzahlen.");
                     }
                     break;
 
                 default:
-                    // @output Warning StreetFieldSwitch überlaufen
+                    logger.log(Level.WARNING, "FEHLER: StreetFieldSwitch überlaufen.");
                     break;
             }
         }
 
         if (currField instanceof Property) { //wenn Feld ein Bahnhof oder Werk ist
-            /*
-             * @output: "Du hast einen Bahhof, oder ein Werk gewählt. Du kannst hier: \n1.Hypothek aufnehmen \n2. Hypothek
-             * abzahlen."
-             */
+            logger.log(Level.FINER, "Du hast einen Bahhof, oder ein Werk gewählt. Du kannst hier: "
+                    + "\n1.Hypothek aufnehmen \n2. Hypothek abzahlen.");
             Property field = (Property) currField;
             switch (getUserInput(2)) {
                 case 1: // Hypothek aufnehmen
                     // wenn im Besitz und noch keine Hypothek aufgenommen
                     if (field.getOwner().equals(currPlayer) && (!(field.isMortgageTaken()))) {
                         takeMortgage(field);
-                        /*
-                         * @output: "Hypothek aufgenommen."
-                         */
+                        logger.log(Level.FINER, "Hypothek aufgenommen.");
                     } else {
-                        /*
-                         * @output: "Dieses Grundstück gehört dir nicht, oder hat schon eine Hypothek."
-                         */
+                        logger.log(Level.FINER, "Dieses Grundstück gehört dir nicht, oder hat schon eine Hypothek.");
                     }
                     break;
 
@@ -455,18 +431,14 @@ public class GameController {
                     // wenn im Besitz und Hypothek aufgenommen
                     if (field.getOwner().equals(currPlayer) && (field.isMortgageTaken())) {
                         payMortgage(field);
-                        /*
-                         * @output: "Hypothek abgezahlt."
-                         */
+                        logger.log(Level.FINER, "Hypothek abgezahlt.");
                     } else {
-                        /*
-                         * @output: "Dieses Grundstück gehört dir nicht, oder hat keine Hypothek zum abzahlen."
-                         */
+                        logger.log(Level.FINER, "Dieses Grundstück gehört dir nicht, oder hat keine Hypothek zum abzahlen.");
                     }
                     break;
 
                 default:
-
+                    logger.log(Level.WARNING, "FEHLER: StreetFieldSwitch überlaufen.");
                     break;
             }
         }
@@ -520,9 +492,10 @@ public class GameController {
          */
         if ((currPlayer.getPosition() + diceResult) > 39) {
             currPlayer.setMoney(currPlayer.getMoney() + ((GoField) board.getFields()[0]).getAmount());
-            //@output fuer Zahlung von GoField
-            System.out.println(currPlayer.getName() + " ist ueber Los gegangen und erhaelt " + ((GoField) board.getFields()[0]).getAmount()
+
+            logger.log(Level.FINER, currPlayer.getName() + " ist ueber Los gegangen und erhaelt " + ((GoField) board.getFields()[0]).getAmount()
                     + " " + CURRENCY_TYPE + ".");
+
             currPlayer.setPosition(((currPlayer.getPosition() + diceResult) - 39));
         } else {
             currPlayer.setPosition(currPlayer.getPosition() + diceResult);
@@ -540,8 +513,7 @@ public class GameController {
         currPlayer.setPosition(10);
         currPlayer.setInJail(true);
         currPlayer.setDaysInJail(0);
-        //@output Spieler in das Gefaengnis setzten
-        System.out.println(currPlayer.getName() + " wurde in das Gefaengnis gesetzt.");
+        logger.log(Level.FINER, currPlayer.getName() + " wurde in das Gefaengnis gesetzt.");
     }
 
     /**
@@ -554,8 +526,7 @@ public class GameController {
 
         // Die Methode benötigt die uebergabe des Spielers, da bei einem Ereignisfeld, eine Karte vorkommt, bei der der
         // actualPlayer Geld von den Mitspielern einsammeln kann
-        System.out.println("Es wird geprüft, ob du genug Geld hast für die folgende Transaktion.");
-
+        logger.log(Level.FINER, "Es wird geprüft, ob du genug Geld hast für die folgende Transaktion.");
         return ((player.getMoney() - amount) > 0);
 
     }
@@ -569,8 +540,7 @@ public class GameController {
     private void takeMoney(Player player, int amount) {
 
         player.setMoney(player.getMoney() - amount);
-        //@output
-        System.out.println("Dir werden " + amount + "Monopoly Dollar abgezogen.");
+        logger.log(Level.FINER, "Dir werden " + amount + "Monopoly Dollar abgezogen.");
 
     }
 
@@ -583,8 +553,7 @@ public class GameController {
     private void giveMoney(Player player, int amount) {
 
         player.setMoney(player.getMoney() + amount);
-        //output
-        System.out.println("Du erhälst " + amount + " Monopoly Dollar.");
+        logger.log(Level.FINER, "Du erhälst " + amount + " Monopoly Dollar.");
 
     }
 
@@ -595,8 +564,7 @@ public class GameController {
      * @param player Spieler der bankrott gegangen ist
      */
     private void bankrupt(Player player) { //TODO !hier sollt ihr nicht den currPlayer sondern den parameter nehmen!!!
-        //@output
-        System.out.println("Du bist Bankrott und ab jetzt nur noch Zuschauer.");
+        logger.log(Level.FINER, "Du bist Bankrott und ab jetzt nur noch Zuschauer.");
 
         // Spieler auf Spectator setzen
         currPlayer.setSpectator(true);
@@ -695,8 +663,9 @@ public class GameController {
             if (field.complete() && checkBalance(field, true)) {
                 takeMoney(currPlayer, field.getHousePrice()); // enfernt: * field.getHouseCount());
                 field.setHouseCount(field.getHouseCount() + 1); //Haus bauen
+                logger.log(Level.FINER, "Haus wurde gekauft!");
             } else {
-                //@output Straßenzug nicht komplett, oder unausgeglichen!
+                logger.log(Level.FINER, "Straßenzug nicht komplett, oder unausgeglichen!");
             }
 
         }
@@ -711,8 +680,9 @@ public class GameController {
         if (!(currPlayer.isSpectator()) && checkBalance(field, false)) {
             giveMoney(currPlayer, field.getHousePrice()); //@rules MAXI du moegest bitte pruefen!
             field.setHouseCount(field.getHouseCount() - 1); // Haus abbauen
+            logger.log(Level.FINER, "Haus wurde abbebaut!");
         } else {
-            //@output Straßenzug würde unausgeglichen sein
+            logger.log(Level.FINER, "Straßenzug würde unausgeglichen sein");
         }
     }
 
@@ -745,6 +715,7 @@ public class GameController {
     private void takeMortgage(Property field) {
         giveMoney(currPlayer, field.getMortgageValue());
         field.setMortgageTaken(true);
+        logger.log(Level.FINER, "Hypotheke wurde aufgenommen!");
     }
 
     /**
@@ -757,6 +728,7 @@ public class GameController {
         mortageBack = (field.getMortgageValue() / 100) * 110;
         takeMoney(currPlayer, mortageBack);
         field.setMortgageTaken(false);
+        logger.log(Level.FINER, "Hypotheke wurde zurueckgezahlt!");
     }
 
     //-------------------------------------------------------------------------
