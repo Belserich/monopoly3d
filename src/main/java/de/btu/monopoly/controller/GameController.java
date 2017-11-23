@@ -786,15 +786,23 @@ public class GameController {
      */
     private void sumRenovation(int house_price, int hotel_price) {
         //TODO Eli hier musst du den Houscount switchen 1-4 = houses, 5 = hotel. Außerdem variablenNamen im CamelCase schreiben!
-        StreetField field = (StreetField) currField;
+        int renovation_hotel = 0;
+        int renovation_house = 0;
+        for (Property nei : field.getNeighbours()) {
+            int houses = ((StreetField) nei).getHouseCount();
+            if (houses < 5) {
+                renovation_house += (house_price * houses);
 
-        int renovation_house = house_price * field.getHouseCount();
-        int renovation_hotel = hotel_price; //????? getHotelCount??
+            } else {
+                renovation_hotel += hotel_price;
+
+            }
+        }
         int sum = renovation_house + renovation_hotel;
         if (checkLiquidity(currPlayer, sum)) {
             takeMoney(currPlayer, sum);
         } else {
-            gameOver = true;
+            bankrupt(currPlayer);
         }
     }
 
