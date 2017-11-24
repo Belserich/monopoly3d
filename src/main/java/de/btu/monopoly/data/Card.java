@@ -5,38 +5,51 @@ package de.btu.monopoly.data;
  */
 public class Card {
     
+    public enum Action {
+        JAIL, GO_JAIL, GIVE_MONEY, NEXT_STATION, RENT_AMP, MOVE_PLAYER, PAY_MONEY, SET_POSITION,
+        GIVE_MONEY_IF_GO_PASSED, RENOVATE, NULL_INCOME, NEXT_SUPPLY, BIRTHDAY;
+    }
+    
     /**
-     * Kartentyp
+     * Kartentitel
      */
-    private final int type;
+    private final String name;
     
     /**
      * Kartentext
      */
     private final String text;
+    
+    /**
+     * Kartentypen
+     */
+    private final Action[] actions;
 
     /**
      * Kartenargumente
      */
-    private final String[] args;
+    private final int[] args;
 
     /**
      * Repräsentiert eine Ereignis- oder Gemeinschaftskarte
      *
-     * @param type
-     * @param text
+     * @param actions Kartentaktionen
+     * @param name Kartentitel
+     * @param text Kartentext
+     * @param args Zusatzargumente
      */
-    private Card(int type, String text, String[] args) {
-        this.type = type;
+    public Card(String name, String text, Action[] actions, int[] args) {
+        this.actions = actions;
+        this.name = name;
         this.text = text;
         this.args = args;
     }
     
     /**
-     * @return Typ der Karte
+     * @return Kartentitel
      */
-    public int getType() {
-        return type;
+    public String getName() {
+        return name;
     }
     
     /**
@@ -45,11 +58,18 @@ public class Card {
     public String getText() {
         return text;
     }
+    
+    /**
+     * @return Typen der Karte
+     */
+    public Action[] getActions() {
+        return actions;
+    }
 
     /**
      * @return Kartenargumente
      */
-    public String[] getArgs() {
+    public int[] getArgs() {
         return args;
     }
 }

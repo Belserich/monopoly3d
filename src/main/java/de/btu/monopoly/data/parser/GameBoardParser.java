@@ -47,16 +47,12 @@ public class GameBoardParser {
      * Die folgenden Variablen sind alle Pattern-Strings eines regulären Ausdrucks, Sie werde hier zur Vereinfachugn definiert.
      * Danach werden aus ihnen die eigentlich benötigten Ausdrücke (Regex) zusammengesetzt.
      */
+    
     /**
-     * Kommentarsymbol
+     * Standard Separator Pattern
      */
-    private static final String C = "#";
-
-    /**
-     * Argumentseparator (darf kein Steuerzeichen sein)
-     */
-    private static final String S = ",";
-
+    private static final String S = ParserUtils.S;
+    
     /**
      * Standard Nummer-Pattern (\\d+ steht für beliebig viele Zahlsymbole eines Regex)
      */
@@ -152,27 +148,6 @@ public class GameBoardParser {
     private Field[] fields;
 
     /**
-     * Reduziert den Inhalt einer Textdatei auf seine Informationen.
-     *
-     * @param path Der Pfad der Textdatei
-     * @return Die Zeilen der Textdatei, frei von Steuerzeichen und unter Ausschluss leerer Zeilen.
-     * @throws IOException Datei ist nicht lesbar, nicht vorhanden oder beschädigt.
-     */
-    private String[] readSignificantLines(String path) throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(GameBoardParser.class.getClassLoader().getResourceAsStream(path)));
-        String[] retObj = reader.lines()
-                .map(s -> {
-                    int i = s.indexOf(C);
-                    return i == -1 ? s : s.substring(0, i);
-                }) // trims comments
-                .map(s -> s.replaceAll("[^\\w|" + S + "]", "")) // trimmt alle Kontrollsymbole
-                .filter(s -> s.length() > 0) // trimmt leere Zeilen
-                .toArray(String[]::new); // erstellt ein neues Array und packt alle verbliebenen Zeilen hinein.
-        reader.close();
-        return retObj;
-    }
-
-    /**
      * Liest erst alle Zeilen Daten aus der Textdatei, entfernt sämtliche Steuerzeichen (ASCII 0 - 32) und wertet jede Zeile
      * einzeln aus.
      *
@@ -181,10 +156,10 @@ public class GameBoardParser {
      * @throws IOException Wenn die Datei nicht geöffnet, oder einzelne Zeilen nicht gelesen werden konnten. Allgemein, wenn sie
      * beschädigt oder falsch editiert wurde.
      */
-    public GameBoard readBoard(String path) throws IOException {
+    public GameBoard parseGameBoard(String path) throws IOException {
         fields = new Field[FIELD_STRUCTURE.length];
 
-        String[] lines = readSignificantLines(path);
+        String[] lines = ParserUtils.trimInsignificant(path);
 
         // Es gibt immer genau so viele Zeilen wie Felder, da sie in einer 1:1 Beziehung zueinander stehen.
         if (lines.length != FIELD_STRUCTURE.length) {
