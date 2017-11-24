@@ -6,26 +6,25 @@ import de.btu.monopoly.data.field.*;
 import de.btu.monopoly.data.parser.*;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.InputMismatchException;
 import java.util.Scanner;
-import java.util.logging.Logger;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author Christian Prinz
  */
 public class GameController {
-    
+
     /**
      * Waehrungstyp
      */
     private static final String CURRENCY_TYPE = "€";
-    
+
     /**
      * Logger
      */
     private static final Logger logger = Logger.getLogger(GameController.class.getPackage().getName());
-    
+
     /**
      * das Spielbrett
      */
@@ -87,7 +86,7 @@ public class GameController {
     public void init() {
         logger.setLevel(Level.ALL);
         logger.log(Level.INFO, "Spiel wird initialisiert");
-        
+
         // TODO Maxi (Sprint 3) GameBoardParser überarbeiten
         // Spielbrett
         GameBoardParser parser = new GameBoardParser();
@@ -97,14 +96,14 @@ public class GameController {
             logger.warning("field_data.config konnte nicht gelesen werden");
             ex.printStackTrace();
         }
-        
+
         assert board != null;
-        
+
         // Spieler
         for (int i = 0; i < players.length; i++) {
             players[i] = new Player("Mathias " + i, i, 1500); //@parser @rules
         }
-        
+
         startGame();
     }
 
@@ -113,7 +112,7 @@ public class GameController {
      */
     public void startGame() {
         logger.log(Level.INFO, "Spiel beginnt.");
-        
+
         do {
             for (int i = 0; i < players.length; i++) {
                 currPlayer = players[i];		            // aktiven Spieler setzen
@@ -122,7 +121,7 @@ public class GameController {
                 }
             }
         } while (!gameOver);
-        
+
         // suche letzten aktiven Spieler
         for (Player player : players) {
             if (!player.isSpectator()) {
@@ -136,7 +135,7 @@ public class GameController {
      */
     private void turnPhase() {
         logger.log(Level.INFO, currPlayer.getName() + " ist dran!");
-        
+
         doubletCounter = 0; 	        // Paschzaehler zuruecksetzen
         if (currPlayer.isInJail()) {
             jailPhase();
@@ -154,7 +153,6 @@ public class GameController {
 //-----------------------------------------------------------------------------
 //----------- EINZELNE PHASEN -------------------------------------------------
 //-----------------------------------------------------------------------------
-    
     /**
      * Gefängnisphase
      */
@@ -164,7 +162,7 @@ public class GameController {
             repeat = false;
             logger.log(Level.INFO, "Du bist im Gefängnis! Du kannst: \n1. 3 mal Würfeln, um mit einem Pasch freizukommen "
                     + "\n2. Bezahlen (50€) \n3. Gefängnis-Frei-Karte benutzen");
-            
+
             switch (getUserInput(3)) { // @GUI
                 // OPTION 1: wuerfeln (bis zu drei mal)
                 case 1:
@@ -367,13 +365,13 @@ public class GameController {
     private void actionPhase() { //@optimize switches vereinfachen
         int choice;
         do {
-            logger.log(Level.INFO, "Waehle eine Aktion:\n[1] - Nichts\n[2] - Haus kaufen\n[3] - Haus verkaufen\n[4] - " +
-                    "Hypothek aufnehmen\n[5] - Hypothek abbezahlen");
-    
+            logger.log(Level.INFO, "Waehle eine Aktion:\n[1] - Nichts\n[2] - Haus kaufen\n[3] - Haus verkaufen\n[4] - "
+                    + "Hypothek aufnehmen\n[5] - Hypothek abbezahlen");
+
             choice = getUserInput(5);
             if (choice != 1) {
                 currField = board.getFields()[askForField() - 1]; // Wahl der Strasse
-    
+
                 if (currField instanceof Property) {
                     Property property = (Property) currField;
                     switch (choice) {
@@ -431,10 +429,9 @@ public class GameController {
                     }
                 }
             }
-        }
-        while (choice != 1);
+        } while (choice != 1);
     }
-    
+
     private int askForField() {
         String mesg = "Wähle ein Feld:\n";
         Field[] fields = board.getFields();
@@ -491,10 +488,11 @@ public class GameController {
          * ueber Los und wird einfach auf das aktuelle Feld plus der Anzahl der Wuerfelanzahl gesetzt
          */
         if ((currPlayer.getPosition() + diceResult) > 39) {
-            currPlayer.setMoney(currPlayer.getMoney() + ((GoField) board.getFields()[0]).getAmount());
 
             logger.log(Level.INFO, currPlayer.getName() + " ist ueber Los gegangen und erhaelt " + ((GoField) board.getFields()[0]).getAmount()
                     + " " + CURRENCY_TYPE + ".");
+
+            giveMoney(currPlayer, ((GoField) board.getFields()[0]).getAmount());
 
             currPlayer.setPosition(((currPlayer.getPosition() + diceResult) - 39));
         } else {
@@ -540,11 +538,14 @@ public class GameController {
     private void takeMoney(Player player, int amount) {
 
         player.setMoney(player.getMoney() - amount);
-        logger.log(Level.INFO, "Dir werden " + amount + "Monopoly Dollar abgezogen.");
+        logger.log(Level.INFO, "Dir werden " + amount + "€ abgezogen.");
 
         if (amount < 0) {
             bankrupt(player);
         }
+
+        logger.log(Level.INFO, "Dein Kontostand beträgt nun: " + currPlayer.getMoney() + "€.");
+
     }
 
     /**
@@ -556,8 +557,8 @@ public class GameController {
     private void giveMoney(Player player, int amount) {
 
         player.setMoney(player.getMoney() + amount);
-        logger.log(Level.INFO, "Du erhälst " + amount + " Monopoly Dollar.");
-
+        logger.log(Level.INFO, "Du erhälst " + amount + "€.");
+        logger.log(Level.INFO, "Dein Kontostand beträgt nun: " + currPlayer.getMoney() + "€.");
     }
 
     /**
@@ -574,7 +575,7 @@ public class GameController {
 
         // Temporär das Feldarray zum Durchgehen zwischenspeichern
         Field[] fields = board.getFields();
-        
+
         if (countActivePlayers() <= 1) {
             gameOver = true;
         }
@@ -583,7 +584,7 @@ public class GameController {
         for (int i = 0; i < fields.length; i++) {
             Field field = fields[i];
             if (field instanceof Property) {
-                
+
                 // Löschen der Hypothek und des Eigentums
                 if (((Property) field).getOwner() == currPlayer) {
 
@@ -601,7 +602,7 @@ public class GameController {
         }
         // TODO @cards - Gefängnisfreikarten müssen zurück in den Stapel
     }
-    
+
     private int countActivePlayers() {
         return (int) Arrays.stream(players)
                 .filter(p -> !(p.isSpectator()))
@@ -726,8 +727,7 @@ public class GameController {
             takeMoney(currPlayer, field.getMortgageBack());
             field.setMortgageTaken(false);
             logger.log(Level.INFO, "Hypothek wurde zurueckgezahlt!");
-        }
-        else {
+        } else {
             logger.log(Level.INFO, "Hypothek kann nicht zurückgezahlt werden! (Nicht genug Geld)");
         }
     }
@@ -784,20 +784,21 @@ public class GameController {
 
         Scanner scanner = new Scanner(System.in);
         int output = -1;
-        
+
         // Solange nicht der richtige Wertebereich eingegeben wird, wird die Eingabe wiederholt.
         do {
-            
+
             System.err.print("Eingabe: ");
-            try { output = Integer.parseInt(scanner.nextLine()); }
-            catch (NumberFormatException ex) {}
+            try {
+                output = Integer.parseInt(scanner.nextLine());
+            } catch (NumberFormatException ex) {
+            }
 
             if (output < 1 || output > max) {
                 System.err.println("Deine Eingabe liegt nicht im Wertebereich! Bitte erneut versuchen:");
             }
-        }
-        while (output < 1 || output > max);
-        
+        } while (output < 1 || output > max);
+
         return output;
     }
 }
