@@ -5,6 +5,7 @@
  */
 package de.btu.monopoly;
 
+import de.btu.monopoly.controller.GameController;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
 import javafx.fxml.FXMLLoader;
@@ -38,6 +39,8 @@ public class Launcher extends Application {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        launch(args);
+//        launch(args);
+        GameController controller = new GameController(2);
+        controller.init();
     }
 }

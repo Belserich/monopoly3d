@@ -1,12 +1,12 @@
 package de.btu.monopoly.controller;
 
-import com.sun.istack.internal.logging.Logger;
 import de.btu.monopoly.data.GameBoard;
 import de.btu.monopoly.data.Player;
 import de.btu.monopoly.data.field.*;
 import de.btu.monopoly.data.parser.*;
 import java.io.IOException;
 import java.util.Scanner;
+import java.util.logging.Logger;
 import java.util.logging.Level;
 
 /**
@@ -62,12 +62,12 @@ public class GameController {
     /**
      * Waehrungstyp
      */
-    public static final String CURRENCY_TYPE = " Euro"; //TODO € durch CURRENCY_TYPE ersetzen
+    public static final String CURRENCY_TYPE = " Euro";
 
     /**
      * Logger für den GameController
      */
-    private static final Logger logger = Logger.getLogger("de.btu.monopoly.controller", GameController.class);
+    private static final Logger logger = Logger.getLogger(GameController.class.getPackage().getName());
 
     /**
      * Die zentrale Manager-Klasse für alles was ein Spiel betrifft.
@@ -77,20 +77,20 @@ public class GameController {
      */
     public GameController(int playerCount) {
         this.players = new Player[playerCount];
-        //TODO @cards Kartenstapel initialisieren
-        init();
     }
 
     /**
      * Spielinitialisierung
      */
     public void init() {
-        logger.log(Level.FINE, "Spiel wird initialisiert");
+        logger.setLevel(Level.FINE);
+        logger.log(Level.INFO, "Logging Level: FINE");
+        logger.log(Level.INFO, "Spiel wird initialisiert");
 
         // Board init
         GameBoardParser parser = new GameBoardParser();
         try {
-            this.board = parser.readBoard("data/field_data.config");
+            this.board = parser.parseGameBoard("data/field_data.config");
         } catch (IOException ex) {
             System.err.println("field_data.config konnte nicht gelesen werden"); //@output
         }
@@ -636,7 +636,7 @@ public class GameController {
      */
     private void enqueueJailCard() {
         /*
-         * TODO @cards - Methode ist fertig mit: "CardQueue".addCard(JailCard); Nur wissen wir noch nicht, wie der Kartenstapel
+         * TODO @cards - Methode ist fertig mit: "CardStack".addCard(JailCard); Nur wissen wir noch nicht, wie der Kartenstapel
          * initialisiert wird..
          */
 
