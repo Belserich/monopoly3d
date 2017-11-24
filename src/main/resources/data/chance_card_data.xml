@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<cards>
+    <card>
+        <name>Gefaengnis Frei</name>
+        <type>jail</type>
+        <text>Du kommst aus dem Gefaengnis frei.</text>
+        <amount>2</amount>
+    </card>
+    <card>
+        <name>Strafzettel</name>
+        <type>give_money</type>
+        <text>Strafzettel! Zahle #1{$currency}.</text>
+        <arg>15</arg>
+    </card>
+    <card>
+        <name>Bahnhof</name>
+        <type>next_station</type>
+        <type>rent_amp</type>
+        <text>Ruecke vor bis zum naechsten Bahnhof. Die zu zahlende Miete erhöht sich (x#2). Wenn der Bahnhof noch niemandem gehoert, kannst du ihn von der Bank kaufen.</text>
+        <arg>2</arg>
+        <amount>2</amount>
+    </card>
+    <card>
+        <name>Drei Felder zurueck</name>
+        <type>move_player</type>
+        <text>Gehe #1 Felder zurueck.</text>
+        <arg>-3</arg>
+    </card>
+    <card>
+        <name>Bausparvertrag</name>
+        <type>pay_money</type>
+        <text>Dein Bausparvertrag wird faellig. Du erhaelst #1{$currency}.</text>
+        <arg>150</arg>
+    </card>
+    <card>
+        <name>Seestrasse</name>
+        <type>set_position</type>
+        <type>give_money_if_go_passed</type>
+        <text>Ruecke vor bis zur Seestrasse. Wenn du ueber LOS kommst, ziehe #1{$currency}.</text>
+        <arg>11</arg>
+        <arg>200</arg>
+    </card>
+    <card>
+        <name>LOS</name>
+        <type>give_money</type>
+        <text>Ruecke vor bis auf LOS.</text>
+        <arg>200</arg>
+    </card>
+    <card>
+        <name>Schlossallee</name>
+        <type>set_position</type>
+        <text>Ruecke vor bis zum Schossallee.</text>
+        <arg>39</arg>
+    </card>
+    <card>
+        <name>Renovieren</name>
+        <type>renovate</type>
+        <text>Du laesst deine Haeuser renovieren. Zahle: #1{$currency} pro Haus, (x4 für Hotels).</text>
+        <arg>25</arg>
+    </card>
+    <card>
+        <name>Vorstand</name>
+        <type>pay_money</type>
+        <type>give_money_if_go_passed</type>
+        <text>Du bist zum Vorstand gewahlt worden. Zahle jedem Spieler #1{$currency}.</text>
+        <arg>50</arg>
+    </card>
+    <card>
+        <name>Dividende</name>
+        <type>give_money</type>
+        <text>Die Bank zahlt dir eine Dividende von #1{$currency}</text>
+        <arg>50</arg>
+    </card>
+    <card>
+        <name>Opernplatz</name>
+        <type>set_position</type>
+        <text>Ruecke vor bis zum Opernplatz. Wenn du ueber LOS kommst, ziehe #1{$currency}.</text>
+        <arg>24</arg>
+    </card>
+    <card>
+        <name>Suedbahnhof</name>
+        <type>set_position</type>
+        <text>Mache einen Ausflug zum Suedbahnhof. Wenn du uber LOS kommst, ziehe #1{$currency}.</text>
+        <arg>200</arg>
+    </card>
+    <card>
+        <name>Ins Gefaengnis</name>
+        <type>go_jail</type>
+        <type>null_income</type>
+        <text>Gehe in das Gefaengnis. Begib dich direkt dorthin. Gehe nicht uber LOS. Ziehe keine #1{$currency}.</text>
+        <arg>200</arg>
+    </card>
+    <card>
+        <name>Werk</name>
+        <type>next_supply</type>
+        <text>Ruecke vor bis zum naechsten Werk.</text>
+    </card>
+</cards>
+
