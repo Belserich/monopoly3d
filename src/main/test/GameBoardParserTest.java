@@ -8,13 +8,13 @@ import java.io.IOException;
 /**
  * @author Maximilian Bels (belsmaxi@b-tu.de)
  */
-public class GameBoardTest {
+public class GameBoardParserTest {
     
     private static final String BOARD_DATA_PATH = "data/field_data.config";
     
     public static void main(String[] args) throws IOException {
         GameBoardParser parser = new GameBoardParser();
-        GameBoard board = parser.readBoard(BOARD_DATA_PATH);
+        GameBoard board = parser.parseGameBoard(BOARD_DATA_PATH);
         for (Field f : board.getFields())
         {
             if (f instanceof Property) {
