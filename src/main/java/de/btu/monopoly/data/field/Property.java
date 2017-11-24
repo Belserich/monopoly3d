@@ -83,7 +83,14 @@ public abstract class Property extends Field {
     public boolean isMortgageTaken() {
         return mortgageTaken;
     }
-
+    
+    /**
+     * @return Hypotheksrückwert
+     */
+    public int getMortgageBack() {
+        return mortgageBack;
+    }
+    
     /**
      * @param player Besitzer des Grundstuecks
      */

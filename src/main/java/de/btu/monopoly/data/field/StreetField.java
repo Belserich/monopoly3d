@@ -97,7 +97,7 @@ public class StreetField extends Property {
      */
     public boolean complete() {
         for (Property nei : super.getNeighbours()) {
-            if (!(nei.getOwner().equals(super.getOwner()))) {
+            if (nei.getOwner() != super.getOwner() || nei.getOwner() == null) {
                 return false;
             }
         }
