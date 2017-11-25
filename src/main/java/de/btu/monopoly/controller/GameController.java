@@ -89,9 +89,9 @@ public class GameController {
 
         assert board != null;
 
-        // Spieler
+        // Spieler @multiplayer
         for (int i = 0; i < players.length; i++) {
-            players[i] = new Player("Mathias " + i, i, 1500); //@parser @rules
+            players[i] = new Player("Mathias " + (i + 1), i, 1500); //@parser @rules
         }
 
         startGame();
@@ -611,6 +611,7 @@ public class GameController {
         // Temporär das Feldarray zum Durchgehen zwischenspeichern
         Field[] fields = board.getFields();
 
+        // geht ein Spieler bankrott wird geprueft, ob er der vorletzte war
         if (countActivePlayers() <= 1) {
             gameOver = true;
         }
