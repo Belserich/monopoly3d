@@ -189,7 +189,7 @@ public class GameController {
                         player.setInJail(false);
                         player.setDaysInJail(0);
                     } else { // muss in der GUI deaktiviert sein!!!
-                        logger.log(Level.FINE, player.getName() + " hat kein Geld um sich freizukaufen.");
+                        logger.log(Level.INFO, player.getName() + " hat kein Geld um sich freizukaufen.");
                         repeat = true;
                     }
                     break;
@@ -202,7 +202,7 @@ public class GameController {
                         player.setInJail(false);
                         player.setDaysInJail(0);
                     } else { // muss in der GUI deaktiviert sein!!!
-                        logger.log(Level.FINE, player.getName() + " hat keine Gefängnis-Frei-Karten mehr.");
+                        logger.log(Level.INFO, player.getName() + " hat keine Gefängnis-Frei-Karten mehr.");
                         repeat = true;
                     }
                     break;
@@ -262,7 +262,7 @@ public class GameController {
                                     takeMoney(player, actualProperty.getPrice());
                                     break;
                                 } else {
-                                    logger.log(Level.FINE, player.getName() + " hat nicht genug Geld.");
+                                    logger.log(Level.INFO, player.getName() + " hat nicht genug Geld.");
                                 }
                             case 2: //Auktion - NOCH DEAKTIVIERT @multiplayer
                                 logger.log(Level.INFO, "Auktionsphase noch nicht implementert.");
@@ -362,7 +362,7 @@ public class GameController {
         // TODO hier muss später noch der Handel implementiert werden
         int choice;
         do {
-            logger.log(Level.FINE, player.getName() + "! Waehle eine Aktion:\n[1] - Nichts\n[2] - Haus kaufen\n[3] - Haus verkaufen\n[4] - "
+            logger.log(Level.INFO, player.getName() + "! Waehle eine Aktion:\n[1] - Nichts\n[2] - Haus kaufen\n[3] - Haus verkaufen\n[4] - "
                     + "Hypothek aufnehmen\n[5] - Hypothek abbezahlen");
 
             choice = getUserInput(5);
@@ -376,7 +376,7 @@ public class GameController {
                          * Haus kaufen
                          */ {
                             if (!(currField instanceof StreetField)) {
-                                logger.log(Level.FINE, "Gewähltes Feld ist keine Straße!");
+                                logger.log(Level.INFO, "Gewähltes Feld ist keine Straße!");
                                 break;
                             }
                             StreetField streetField = (StreetField) property;
@@ -384,7 +384,7 @@ public class GameController {
                                 // wenn im Besitz und nicht vollgebaut
                                 buyBuilding(player, streetField);
                             } else {
-                                logger.log(Level.FINE, "Diese Straße gehört dir nicht, oder ist voll bebaut.");
+                                logger.log(Level.INFO, "Diese Straße gehört dir nicht, oder ist voll bebaut.");
                             }
                             break;
                         }
@@ -392,7 +392,7 @@ public class GameController {
                          * Haus verkaufen
                          */ {
                             if (!(currField instanceof StreetField)) {
-                                logger.log(Level.FINE, "Gewähltes Feld ist keine Straße!");
+                                logger.log(Level.INFO, "Gewähltes Feld ist keine Straße!");
                                 break;
                             }
                             StreetField streetField = (StreetField) property;
@@ -400,7 +400,7 @@ public class GameController {
                                 // wenn im Besitz und nicht 'hauslos'
                                 sellBuilding(player, streetField);
                             } else {
-                                logger.log(Level.FINE, "Diese Straße gehört dir nicht, oder hat keine Häuser zum verkaufen.");
+                                logger.log(Level.INFO, "Diese Straße gehört dir nicht, oder hat keine Häuser zum verkaufen.");
                             }
                             break;
                         }
@@ -412,7 +412,7 @@ public class GameController {
                                 takeMortgage(player, property);
                                 logger.log(Level.INFO, "Hypothek aufgenommen.");
                             } else {
-                                logger.log(Level.FINE, "Diese Straße gehört dir nicht, oder hat schon eine Hypothek.");
+                                logger.log(Level.INFO, "Diese Straße gehört dir nicht, oder hat schon eine Hypothek.");
                             }
                             break;
                         }
@@ -424,7 +424,7 @@ public class GameController {
                                 payMortgage(player, property);
                                 logger.log(Level.INFO, "Hypothek abgezahlt.");
                             } else {
-                                logger.log(Level.FINE, "Diese Straße gehört dir nicht, oder hat keine Hypothek zum abzahlen.");
+                                logger.log(Level.INFO, "Diese Straße gehört dir nicht, oder hat keine Hypothek zum abzahlen.");
                             }
                             break;
                         }
@@ -441,7 +441,7 @@ public class GameController {
         String mesg = player.getName() + "! Wähle ein Feld:\n";
         Field[] fields = board.getFields();
         for (int i = 0; i < fields.length; i++) {
-            mesg += String.format("[%d] - %s\n", i + 1, fields[i].getName());
+            mesg += String.format("[%d] - %s%n", i + 1, fields[i].getName());
         }
         logger.log(Level.INFO, mesg);
         return getUserInput(39);
@@ -524,7 +524,7 @@ public class GameController {
      */
     private boolean checkLiquidity(Player player, int amount) {
 
-        logger.log(Level.FINE, "Es wird geprüft, ob " + player.getName() + " genug Geld hat für die Transaktion.");
+        logger.log(Level.INFO, "Es wird geprüft, ob " + player.getName() + " genug Geld hat für die Transaktion.");
         return ((player.getMoney() - amount) > 0);
 
     }
@@ -671,7 +671,7 @@ public class GameController {
                 field.setHouseCount(field.getHouseCount() + 1); //Haus bauen
                 logger.log(Level.INFO, "Haus wurde gekauft!");
             } else {
-                logger.log(Level.FINE, "Straßenzug nicht komplett, oder unausgeglichen!");
+                logger.log(Level.INFO, "Straßenzug nicht komplett, oder unausgeglichen!");
             }
         }
     }
@@ -688,7 +688,7 @@ public class GameController {
             field.setHouseCount(field.getHouseCount() - 1); // Haus abbauen
             logger.log(Level.INFO, "Haus wurde verkauft!");
         } else {
-            logger.log(Level.FINE, "Straßenzug würde unausgeglichen sein");
+            logger.log(Level.INFO, "Straßenzug würde unausgeglichen sein");
         }
     }
 
@@ -736,7 +736,7 @@ public class GameController {
             field.setMortgageTaken(false);
             logger.log(Level.INFO, "Hypothek wurde zurueckgezahlt!");
         } else {
-            logger.log(Level.FINE, "Hypothek kann nicht zurückgezahlt werden! (Nicht genug Geld)");
+            logger.log(Level.INFO, "Hypothek kann nicht zurückgezahlt werden! (Nicht genug Geld)");
         }
     }
 
