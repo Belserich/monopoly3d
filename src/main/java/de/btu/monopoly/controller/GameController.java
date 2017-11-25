@@ -56,11 +56,6 @@ public class GameController {
     private Field currField;
 
     /**
-     * Preis fuer eine zur Auktion freigegebenen Strasse
-     */
-    private int betPrice;
-
-    /**
      * Die zentrale Manager-Klasse für alles was das Spiel betrifft.
      *
      * @param playerCount Anzahl Spieler
@@ -510,7 +505,7 @@ public class GameController {
 
             giveMoney(player, ((GoField) board.getFields()[0]).getAmount());
 
-            player.setPosition(((player.getPosition() + (rollResult[0] + rollResult[1])) - 39));
+            player.setPosition((player.getPosition() + (rollResult[0] + rollResult[1])) - 39);
         } else {
             player.setPosition(player.getPosition() + (rollResult[0] + rollResult[1]));
         }
@@ -560,7 +555,7 @@ public class GameController {
     private boolean checkLiquidity(Player player, int amount) {
 
         logger.log(Level.INFO, "Es wird geprüft, ob " + player.getName() + " genug Geld hat für die Transaktion.");
-        return ((player.getMoney() - amount) > 0);
+        return (player.getMoney() - amount) > 0;
 
     }
 
@@ -619,20 +614,16 @@ public class GameController {
         // Durchgehen des Array fields, ggf. Eigentum löschen
         for (int i = 0; i < fields.length; i++) {
             Field field = fields[i];
-            if (field instanceof Property) {
 
-                // Löschen der Hypothek und des Eigentums
-                if (((Property) field).getOwner() == player) {
+            // Löschen der Hypothek und des Eigentums
+            if (field instanceof Property || (((Property) field).getOwner() == player)) {
+                ((Property) field).setOwner(null);
+                ((Property) field).setMortgageTaken(false);
 
-                    ((Property) field).setOwner(null);
-                    ((Property) field).setMortgageTaken(false);
+                // Löschen der Anzahl an Häusern
+                if (field instanceof StreetField) {
+                    ((StreetField) fields[i]).setHouseCount(0);
 
-                    // Löschen der Anzahl an Häusern
-                    if (field instanceof StreetField) {
-
-                        ((StreetField) fields[i]).setHouseCount(0);
-
-                    }
                 }
             }
         }
@@ -703,7 +694,7 @@ public class GameController {
 
         if (!(player.isSpectator()) && checkLiquidity(player, field.getHousePrice())) {
             if (field.complete() && checkBalance(field, true)) {
-                takeMoney(player, field.getHousePrice()); // enfernt: * field.getHouseCount());
+                takeMoney(player, field.getHousePrice());
                 field.setHouseCount(field.getHouseCount() + 1); //Haus bauen
                 logger.log(Level.INFO, "Haus wurde gekauft!");
             } else {
@@ -780,17 +771,7 @@ public class GameController {
     //------------ Karten Methoden --------------------------------------------
     //-------------------------------------------------------------------------
     /**
-     * Doppelte Miete -- Diese Methode wird verwendet, wenn in einer Karte gefordert ist die doppelte Miete zu zahlen.
-     *
-     * @param giver Spieler der zahlen muss
-     * @param taker Spieler der die Miete bekommt
-     */
-    private void doubleRent(Player giver, Player taker) {
-        //TODO Maxi
-    }
-
-    /**
-     * Alle Gebaeuden eines Spielers werden gezaehlt
+     * Alle Gebaeude eines Spielers werden gezaehlt
      *
      * Die Preise fuer Renovierung werden von dem entsprechenden Karte bekannt und dies wird mit der Anzahl von Haeuser/Hotels
      * multipliziert und am Ende addiert = Summe
@@ -798,22 +779,24 @@ public class GameController {
      * @param house_price
      * @param hotel_price
      */
-    private void sumRenovation(Player player, int house_price, int hotel_price) {
+    private void sumRenovation(Player player, int housePrice, int hotelPrice) {
         //TODO spaeter, wenn Kartenstapel gedruckt wurde
-        StreetField field = (StreetField) currField;
-        int renovation_hotel = 0;
-        int renovation_house = 0;
-        for (Property nei : field.getNeighbours()) {
-            int houses = ((StreetField) nei).getHouseCount();
-            if (houses < 5) {
-                renovation_house += (house_price * houses);
 
-            } else {
-                renovation_hotel += hotel_price;
+        int renovationHotel = 0;
+        int renovationHouse = 0;
+        for (Field field : board.getFields()) {
+            if (field instanceof StreetField) {
+                int houses = ((StreetField) field).getHouseCount();
+                if (houses < 5) {
+                    renovationHouse += (housePrice * houses);
 
+                } else {
+                    renovationHotel += hotelPrice;
+
+                }
             }
         }
-        int sum = renovation_house + renovation_hotel;
+        int sum = renovationHouse + renovationHotel;
         if (checkLiquidity(player, sum)) {
             takeMoney(player, sum);
         } else {
@@ -831,15 +814,15 @@ public class GameController {
 
         // Solange nicht der richtige Wertebereich eingegeben wird, wird die Eingabe wiederholt.
         do {
-
-            System.err.print("Eingabe: ");
+            logger.log(Level.INFO, "Eingabe: ");
             try {
                 output = Integer.parseInt(scanner.nextLine());
             } catch (NumberFormatException ex) {
+                logger.log(Level.WARNING, "FEHLER: falsche Eingabe!");
             }
 
             if (output < 1 || output > max) {
-                System.err.println("Deine Eingabe liegt nicht im Wertebereich! Bitte erneut versuchen:");
+                logger.log(Level.INFO, "Deine Eingabe liegt nicht im Wertebereich! Bitte erneut versuchen:");
             }
         } while (output < 1 || output > max);
 
