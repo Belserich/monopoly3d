@@ -48,12 +48,17 @@ public class GameController {
     /**
      * Array mit beiden Wuerfelergebnissen
      */
-    int[] rollResult = new int[2];
+    private int[] rollResult = new int[2];
 
     /**
      * Feld, auf dem sich der Spieler befindet
      */
     private Field currField;
+
+    /**
+     * Preis fuer eine zur Auktion freigegebenen Strasse
+     */
+    private int betPrice;
 
     /**
      * Die zentrale Manager-Klasse für alles was das Spiel betrifft.
@@ -252,21 +257,20 @@ public class GameController {
                         logger.log(Level.INFO, player.getName() + " steht auf seinem eigenen Grundstück.");
                         break;
                     } else if (actualProperty.getOwner() == null) { //wenn frei
-                        logger.log(Level.INFO, player.getName() + " steht auf einem freien Grundstück und kannst es: \n1. Kaufen \n2. nicht Kaufen");
+                        logger.log(Level.INFO, player.getName() + " steht auf einem freien Grundstück und kann es: \n1. Kaufen \n2. nicht Kaufen");
                         switch (getUserInput(2)) { //@GUI
                             case 1: //Kaufen
-                                if (checkLiquidity(player, actualProperty.getPrice())) {
-                                    logger.log(Level.INFO, player.getName() + " kauft das Grundstück für " + actualProperty.getPrice()
-                                            + CURRENCY_TYPE);
-                                    actualProperty.setOwner(player);
-                                    takeMoney(player, actualProperty.getPrice());
-                                    break;
-                                } else {
-                                    logger.log(Level.INFO, player.getName() + " hat nicht genug Geld.");
+                                /*
+                                 * kauft die Strasse, wenn nicht moeglich, findet Aution statt
+                                 */
+                                if (!buyStreet(player, actualProperty, actualProperty.getPrice())) {
+                                    betPhase(actualProperty);
                                 }
+                                break;
                             case 2: //Auktion - NOCH DEAKTIVIERT @multiplayer
-                                logger.log(Level.INFO, "Auktionsphase noch nicht implementert.");
-                                betPhase();
+                                logger.log(Level.INFO, "Auktionsphase noch nicht abschließend implementert. "
+                                        + "Straße wird dem ersten Spieler für 0" + CURRENCY_TYPE + " verkauft!!!");
+                                betPhase(actualProperty);
                                 break;
                             default:
                                 logger.log(Level.WARNING, "FEHLER: SteetBuySwitch überlaufen.");
@@ -312,7 +316,6 @@ public class GameController {
                 if (currField instanceof TaxField) {
                     TaxField taxField = (TaxField) currField;
                     if (checkLiquidity(player, taxField.getTax())) {
-                        logger.log(Level.INFO, player.getName() + " werden " + taxField.getTax() + CURRENCY_TYPE + " abgezogen!");
                         takeMoney(player, taxField.getTax());
                     } else {
                         logger.log(Level.INFO, player.getName() + " hat nicht genug Geld für die Steuern");
@@ -437,6 +440,12 @@ public class GameController {
         } while (choice != 1);
     }
 
+    /**
+     * Methode zum Auswaehen einer Strasse die Bearbeitet werden soll in der actionPhase()
+     *
+     * @param player Spieler der eine Eingabe machen soll
+     * @return ein int Wert zu auswaehen einer Strasse
+     */
     private int askForField(Player player) {
         String mesg = player.getName() + "! Wähle ein Feld:\n";
         Field[] fields = board.getFields();
@@ -450,7 +459,14 @@ public class GameController {
     /**
      * die Versteigerungsphase
      */
-    private void betPhase() {
+    private void betPhase(Property property) {
+        // Starten einer neuen Autkion
+        Auction auc = new Auction(property, players);
+        auc.startAuction();
+
+        // Kauf der auktionierten Strasse
+        buyStreet(auc.getWinner(), property, auc.getPrice());
+
         // @multiplayer
     }
 
@@ -514,6 +530,25 @@ public class GameController {
         player.setInJail(true);
         player.setDaysInJail(0);
         logger.log(Level.INFO, player.getName() + " ist jetzt im Gefaengnis.");
+    }
+
+    /**
+     *
+     * @param player Spieler der die Strasse kauft
+     * @param property Strasse die gekauft werden soll
+     * @param price Preis der Strasse
+     * @return ob die Strasse gekauft wurde
+     */
+    private boolean buyStreet(Player player, Property property, int price) {
+        if (checkLiquidity(player, price)) {
+            logger.log(Level.INFO, player.getName() + " kauft das Grundstück für " + price + CURRENCY_TYPE);
+            property.setOwner(player);
+            takeMoney(player, price);
+            return true;
+        } else {
+            logger.log(Level.INFO, player.getName() + " hat nicht genug Geld.");
+            return false;
+        }
     }
 
     /**
@@ -809,4 +844,5 @@ public class GameController {
 
         return output;
     }
+
 }
