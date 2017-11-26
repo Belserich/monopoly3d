@@ -2,35 +2,29 @@ package de.btu.monopoly.data.parser;
 
 import de.btu.monopoly.data.Card;
 import de.btu.monopoly.data.CardStack;
+import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import javax.xml.bind.JAXBException;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import java.awt.*;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.function.Function;
-import java.util.logging.Logger;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
-
 /**
  * @author Maximilian Bels (belsmaxi@b-tu.de)
  */
-public class CardParser
-{
+public class CardParser {
+
     /**
-     * Liesst Kartendaten aus einer XML-Datei und wandelt diese in virtuelle Karten um, mit denen
-     * sie dann eine Instanz von CardStack erstellt.
+     * Liesst Kartendaten aus einer XML-Datei und wandelt diese in virtuelle Karten um, mit denen sie dann eine Instanz von
+     * CardStack erstellt.
      *
      * @param path Pfad zur XML-Datei
      * @return Kartenstapel
@@ -40,26 +34,27 @@ public class CardParser
      */
     public static final CardStack parseCardStack(String path) throws ParserConfigurationException, IOException, SAXException {
         Card[] cards;
-    
+
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
-        
+
         File file = new File(CardParser.class.getClassLoader().getResource(path).getFile());
         Document doc = builder.parse(file);
-        
+
         NodeList nList = doc.getElementsByTagName("card");
         cards = new Card[nList.getLength()];
         for (int i = 0; i < nList.getLength(); i++) {
             Node node = nList.item(i);
-            if (node.getNodeType() == Node.ELEMENT_NODE)
+            if (node.getNodeType() == Node.ELEMENT_NODE) {
                 cards[i] = parseElement((Element) node);
+            }
         }
         return new CardStack(cards);
     }
-    
+
     /**
-     * Nimmt alle wichtigen Infos aus den card-Tags, die als Parameter übergeben werden und
-     * erstellt aus diesen eine Instanz von Card.
+     * Nimmt alle wichtigen Infos aus den card-Tags, die als Parameter übergeben werden und erstellt aus diesen eine Instanz von
+     * Card.
      *
      * @param elem Die Element Instanz eines card-Tags
      * @return Die Karte, die mit den entsprechenden Daten erstellt wurde.
@@ -69,42 +64,40 @@ public class CardParser
         Card.Action[] types = null;
         int[] args = null;
         int amount = 1;
-        
+
         try {
             name = elem.getElementsByTagName("name").item(0).getTextContent();
             text = elem.getElementsByTagName("text").item(0).getTextContent();
-    
+
             types = convertNodesToStream(elem.getElementsByTagName("type"))
                     .map(Node::getTextContent)
                     .map(s -> Card.Action.valueOf(s.toUpperCase()))
                     .toArray(Card.Action[]::new);
-        }
-        catch (NullPointerException ex) {
+        } catch (NullPointerException ex) {
             logException(ex);
         }
-        
+
         try {
             args = convertNodesToStream(elem.getElementsByTagName("arg"))
                     .mapToInt(n -> Integer.parseInt(n.getTextContent()))
                     .toArray();
-        }
-        catch (NumberFormatException ex) {
+        } catch (NumberFormatException ex) {
             logException(ex);
         }
-        
+
         NodeList aList = elem.getElementsByTagName("amount");
         if (aList != null && aList.item(0) != null) {
             amount = Integer.parseInt(aList.item(0).getTextContent());
         }
-        
+
         System.out.print(name + " " + text);
         Stream.of(types).forEach(t -> System.out.print(t + " "));
         IntStream.of(args).forEach(arg -> System.out.println(arg + " "));
         System.out.println(amount);
-        
+
         return new Card(name, text, types, args);
     }
-    
+
     /**
      * Hilfsmethode
      *
@@ -118,7 +111,7 @@ public class CardParser
         }
         return builder.build();
     }
-    
+
     /**
      * Logging-Methode
      *
@@ -126,8 +119,7 @@ public class CardParser
      */
     private static void logException(Exception ex) {
         Logger.getLogger(CardParser.class.getPackage().getName())
-                .warning("Exception while reading card data. Corrupted file!");
-        ex.printStackTrace();
-        System.exit(-1);
+                .log(Level.WARNING, "Exception while reading card data. Corrupted file! {0}", ex);
+        // hier stand ein sys.exit -1
     }
 }
