@@ -6,7 +6,6 @@
 package de.btu.monopoly.data;
 
 import java.util.*;
-import java.util.stream.Stream;
 
 /**
  *
@@ -18,21 +17,21 @@ public class CardStack {
      * Ein Kartenstapel.
      */
     LinkedList<Card> cardStack;
-    
+
     /**
      * Liste alle Gefaengnis-Frei-Karten in Spielerhaenden.
      */
     LinkedList<Card> jailCardsInGame;
-    
+
     public CardStack(Card[] cards) {
         this.cardStack = new LinkedList<Card>();
         this.jailCardsInGame = new LinkedList<Card>();
-        
+
         for (Card c : cards) {
             cardStack.add(c);
         }
     }
-    
+
     /**
      * Mischt den Kartenstapel.
      */
@@ -54,12 +53,13 @@ public class CardStack {
         cardStack.add(retObj);
         return retObj;
     }
-    
+
     /**
      * Legt eine Gefaengnis-Frei-Karte zurueck auf de Stapel.
      */
     public void returnJailCard() {
-        assert jailCardsInGame.size() > 0;
-        cardStack.add(jailCardsInGame.remove());
+        if (!jailCardsInGame.isEmpty()) {
+            cardStack.add(jailCardsInGame.remove());
+        }
     }
 }

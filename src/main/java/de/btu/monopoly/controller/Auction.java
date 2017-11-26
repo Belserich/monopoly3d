@@ -30,7 +30,7 @@ public class Auction {
     public void startAuction() {
         /*
          * TODO hier findet die Auktion statt. Resultat der Auktion ist, dass ein Gewinner gefunden und anschliessend der Preis,
-         * sowie der Gewinner in der Klasse gespeichert werden.
+         * sowie der Gewinner in der Klasse gespeichert werden. Hier wird kein Besitz übertragen und kein Geld abgezogen!!!
          */
         //PLATZHALTER:
         this.price = 0;

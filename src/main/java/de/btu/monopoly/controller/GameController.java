@@ -78,8 +78,7 @@ public class GameController {
         try {
             this.board = parser.parseGameBoard("data/field_data.config");
         } catch (IOException ex) {
-            logger.warning("field_data.config konnte nicht gelesen werden");
-            ex.printStackTrace();
+            logger.log(Level.WARNING, "field_data.config konnte nicht gelesen werden: {0}", ex);
         }
 
         assert board != null;
@@ -118,20 +117,20 @@ public class GameController {
     /**
      * Rundenphase eines Spielers
      */
-    private void turnPhase(Player currPlayer) {
-        logger.log(Level.INFO, currPlayer.getName() + " ist dran!");
+    private void turnPhase(Player player) {
+        logger.log(Level.INFO, player.getName() + " ist dran!");
 
         doubletCounter = 0; 	        // Paschzaehler zuruecksetzen
-        if (currPlayer.isInJail()) {
-            jailPhase(currPlayer);
+        if (player.isInJail()) {
+            jailPhase(player);
         }
         do {		                    // bei Pasch wiederholen
-            rollPhase(currPlayer);
-            fieldPhase(currPlayer);
-            if (currPlayer.isInJail() && (currPlayer.getDaysInJail() == 0)) {
+            rollPhase(player);
+            fieldPhase(player);
+            if (player.isInJail() && (player.getDaysInJail() == 0)) {
                 break;                  // actionPhase() entfaellt, wenn der Spieler grade ins Gefaengnis kam
             }
-            actionPhase(currPlayer);
+            actionPhase(player);
         } while (rollResult[0] == rollResult[1]);
 
         //Wuerfelergebnis zuruecksetzen
@@ -744,7 +743,7 @@ public class GameController {
      * @param field Grundstueck, dessen Hypothek aufgenommen wird
      * @param player Spieler, dem das Grundstueck gehoert
      */
-    private void takeMortgage(Player player, Property field) {
+    private void takeMortgage(Player player, Property field) { //TODO Abfrage ob noch Haeuser drauf sind
         giveMoney(player, field.getMortgageValue());
         field.setMortgageTaken(true);
         logger.log(Level.INFO, "Hypothek wurde aufgenommen!");
