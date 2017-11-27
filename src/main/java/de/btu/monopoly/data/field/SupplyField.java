@@ -7,7 +7,7 @@ public class SupplyField extends Property {
 
     private final int mult1;
     private final int mult2;
-    
+
     /**
      * Instanzen dieser Klasse stellen Versogungswerke, wie das Wasser- und das Elektizitätswerk dar.
      *
@@ -19,7 +19,7 @@ public class SupplyField extends Property {
         this.mult1 = mult1;
         this.mult2 = mult2;
     }
-    
+
     /**
      * Gibt, statt eines Mietswertes, den entsprechenden Multiplikator zurück.
      *
@@ -41,7 +41,7 @@ public class SupplyField extends Property {
      */
     public boolean complete() {
         for (Property nei : super.getNeighbours()) {
-            if (!(nei.getOwner().equals(super.getOwner()))) {
+            if (!(nei.getOwner() == (super.getOwner()))) {
                 return false;
             }
         }
