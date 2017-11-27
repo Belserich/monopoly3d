@@ -8,17 +8,11 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import javax.xml.bind.JAXBException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import java.awt.*;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.function.Function;
 import java.util.logging.Logger;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -26,7 +20,7 @@ import java.util.stream.Stream;
 /**
  * @author Maximilian Bels (belsmaxi@b-tu.de)
  */
-public class CardParser
+public class CardStackParser
 {
     /**
      * Liesst Kartendaten aus einer XML-Datei und wandelt diese in virtuelle Karten um, mit denen
@@ -44,7 +38,7 @@ public class CardParser
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
         
-        File file = new File(CardParser.class.getClassLoader().getResource(path).getFile());
+        File file = new File(CardStackParser.class.getClassLoader().getResource(path).getFile());
         Document doc = builder.parse(file);
         
         NodeList nList = doc.getElementsByTagName("card");
@@ -125,7 +119,7 @@ public class CardParser
      * @param ex geworfene Exception
      */
     private static void logException(Exception ex) {
-        Logger.getLogger(CardParser.class.getPackage().getName())
+        Logger.getLogger(CardStackParser.class.getPackage().getName())
                 .warning("Exception while reading card data. Corrupted file!");
         ex.printStackTrace();
         System.exit(-1);
