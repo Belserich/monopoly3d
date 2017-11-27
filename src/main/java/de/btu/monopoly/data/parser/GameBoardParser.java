@@ -21,7 +21,7 @@ public class GameBoardParser {
 
     /**
      * Die Feldstruktur ordnet den ids 0-39 die entsprechenden Feldtypen zu. Fängt beim LOS-Feld an und geht im Uhrzeigersinn
-     * weiter. Für mehr Infos siehe *\src\resources\data\classic_game_board_de.png
+     * weiter. Für mehr Infos siehe *\src\resources\data\game_board_de.png
      */
     private static final FieldType[] FIELD_STRUCTURE = {
         GO, STREET, CARD, STREET, TAX, STATION, STREET, CARD, STREET, STREET,
