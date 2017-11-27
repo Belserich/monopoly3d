@@ -1,9 +1,4 @@
-import de.btu.monopoly.data.CardStack;
-import de.btu.monopoly.data.parser.CardParser;
-
-import java.nio.file.Paths;
-import java.util.Collections;
-import java.util.LinkedList;
+import de.btu.monopoly.data.parser.CardStackParser;
 
 /**
  * @author Maximilian Bels (belsmaxi@b-tu.de)
@@ -11,6 +6,6 @@ import java.util.LinkedList;
 public class CardParserTest
 {
     public static void main(String[] args) throws Exception{
-        CardParser.parseCardStack("data/chance_card_data.xml");
+        CardStackParser.parse("data/card_data.xml");
     }
 }
