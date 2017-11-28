@@ -18,42 +18,41 @@ public class GameController {
     /**
      * Waehrungstyp
      */
-    private static final String CURRENCY_TYPE = "€";
+    public static final String CURRENCY_TYPE = "€";
 
     /**
      * Logger
      */
-    private static final Logger logger = Logger.getLogger(GameController.class.getPackage().getName());
+    public static final Logger logger = Logger.getLogger(GameController.class.getPackage().getName());
 
     /**
      * das Spielbrett
      */
-    private GameBoard board;
+    public GameBoard board;
 
     /**
      * die Mitspieler
      */
-    private final Player[] players;
+    public final Player[] players;
 
     /**
      * Gibt an, ob das Spiel beendet ist.
      */
-    private boolean gameOver;
+    public boolean gameOver;
 
     /**
      * Anzahl Pasches
      */
-    private int doubletCounter;
+    public int doubletCounter;
 
     /**
      * Array mit beiden Wuerfelergebnissen
      */
-    private int[] rollResult = new int[2];
-
+    //public int[] rollResult = new int[2];
     /**
      * Feld, auf dem sich der Spieler befindet
      */
-    private Field currField;
+    public Field currField;
 
     /**
      * Die zentrale Manager-Klasse für alles was das Spiel betrifft.
@@ -88,7 +87,6 @@ public class GameController {
             players[i] = new Player("Mathias " + (i + 1), i, 1500); //@parser @rules
         }
 
-        startGame();
     }
 
     /**
@@ -117,25 +115,26 @@ public class GameController {
     /**
      * Rundenphase eines Spielers
      */
-    private void turnPhase(Player player) {
+    public void turnPhase(Player player) {
         logger.log(Level.INFO, player.getName() + " ist dran!");
 
         doubletCounter = 0; 	        // Paschzaehler zuruecksetzen
         if (player.isInJail()) {
             jailPhase(player);
         }
+        int[] result;
         do {		                    // bei Pasch wiederholen
-            rollPhase(player);
-            fieldPhase(player);
+            result = rollPhase(player);
+            fieldPhase(player, result);
             if (player.isInJail() && (player.getDaysInJail() == 0)) {
                 break;                  // actionPhase() entfaellt, wenn der Spieler grade ins Gefaengnis kam
             }
             actionPhase(player);
-        } while (rollResult[0] == rollResult[1]);
+        } while (result[0] == result[1]);
 
         //Wuerfelergebnis zuruecksetzen
-        rollResult[0] = 0;
-        rollResult[1] = 0;
+        result[0] = 0;
+        result[1] = 0;
     }
 
 //-----------------------------------------------------------------------------
@@ -146,7 +145,7 @@ public class GameController {
      *
      * @param player Spieler in der Gefaengnisphase
      */
-    private void jailPhase(Player player) {
+    public void jailPhase(Player player) {
         boolean repeat;
         do {
             repeat = false;
@@ -156,8 +155,8 @@ public class GameController {
             switch (getUserInput(3)) { // @GUI
                 // OPTION 1: wuerfeln (bis zu drei mal)
                 case 1:
-                    roll(player);                 // wuerfeln
-                    if (!(rollResult[0] == rollResult[1])) {       // kein Pasch -> im Gefaengnis bleiben
+                    int[] result = roll(player);                 // wuerfeln
+                    if (!(result[0] == result[1])) {       // kein Pasch -> im Gefaengnis bleiben
                         logger.log(Level.INFO, player.getName() + " hat keinen Pasch und bleibt im Gefängnis.");
                         player.addDayInJail();
                     } else {                        // sonst frei
@@ -221,18 +220,20 @@ public class GameController {
      *
      * @param player Spieler in der Wurfphase
      */
-    private void rollPhase(Player player) {
+    public int[] rollPhase(Player player) {
+        int[] rollResult = null;
         logger.log(Level.INFO, player.getName() + " ist dran mit würfeln.");
         if (!(player.isInJail())) { //Gefaengnis hat eigenes Wuerfeln
-            roll(player);
+            rollResult = roll(player);
             if (doubletCounter == 3) {
                 logger.log(Level.INFO, player.getName() + " hat seinen 3. Pasch und geht nicht über LOS, direkt ins Gefängnis!");
                 moveToJail(player);
             }
         }
         if (!(player.isInJail())) { //kann sich nach wuerfeln aendern
-            movePlayer(player);
+            movePlayer(player, rollResult);
         }
+        return rollResult;
     }
 
     /**
@@ -240,7 +241,7 @@ public class GameController {
      *
      * @param player Spieler in der Feldphase
      */
-    private void fieldPhase(Player player) {
+    public void fieldPhase(Player player, int[] rollResult) {
 
         switch (locate(player)) { //@optimize
             case 1: // Strasse / Bahnhof / Werk
@@ -355,7 +356,7 @@ public class GameController {
      *
      * @param player Spieler in der Aktionsphase
      */
-    private void actionPhase(Player player) { //@optimize switches vereinfachen
+    public void actionPhase(Player player) { //@optimize switches vereinfachen
         // TODO hier muss später noch der Handel implementiert werden
         int choice;
         do {
@@ -437,7 +438,7 @@ public class GameController {
     /**
      * die Versteigerungsphase
      */
-    private void betPhase(Property property) {
+    public void betPhase(Property property) {
         // Starten einer neuen Autkion
         Auction auc = new Auction(property, players);
         auc.startAuction();
@@ -455,8 +456,8 @@ public class GameController {
     /**
      * das Wuerfeln. Ergebnisse werden lokal in rollResult und doubletCounter gespeichert
      */
-    private void roll(Player player) {
-
+    public int[] roll(Player player) {
+        int[] rollResult = new int[2];
         // Erzeugen der Zufallszahl
         rollResult[0] = ((int) (Math.random() * 6)) + 1;
         rollResult[1] = ((int) (Math.random() * 6)) + 1;
@@ -468,6 +469,8 @@ public class GameController {
 
         logger.log(Level.INFO, player.getName() + " würfelt " + rollResult[0] + " + " + rollResult[1]
                 + " = " + (rollResult[0] + rollResult[1]));
+
+        return rollResult;
     }
 
     /**
@@ -475,7 +478,7 @@ public class GameController {
      *
      * @param player Spieler der bewegt wird
      */
-    private void movePlayer(Player player) {
+    public void movePlayer(Player player, int[] rollResult) {
         /*
          * TODO brauchen wird noch eine Methode um den Spieler FREI zu bewegen? falls die Zahl 39 ueberschritten wird und damit
          * das Spielfeld dann geht der Spieler ueber Los (bekommt 200) und wird auf die Position aktuelles Feld + Wuerfelanzahl
@@ -500,7 +503,7 @@ public class GameController {
      *
      * @param player Spieler der ins Gefaengnis kommt
      */
-    private void moveToJail(Player player) {
+    public void moveToJail(Player player) {
         /*
          * Spieler wird auf Position 10 gesetzt setInJail wird true, damit der Spieler nicht "nur zu Besuch" ist Die Tage im
          * Gefängnis werden auf 0 gesetzt
@@ -517,7 +520,7 @@ public class GameController {
      * @param player Spieler der auf Liquiditaet geprueft wird
      * @param amount Geld was der Spieler besitzen muss
      */
-    private boolean checkLiquidity(Player player, int amount) {
+    public boolean checkLiquidity(Player player, int amount) {
 
         logger.log(Level.INFO, "Es wird geprüft, ob " + player.getName() + " genug Geld hat für die Transaktion.");
         return (player.getMoney() - amount) > 0;
@@ -530,7 +533,7 @@ public class GameController {
      * @param player Spieler dem der Betrag abgezogen wird
      * @param amount Betrag der dem Spieler abgezogen wird
      */
-    private void takeMoney(Player player, int amount) {
+    public void takeMoney(Player player, int amount) {
 
         player.setMoney(player.getMoney() - amount);
         logger.log(Level.INFO, player.getName() + " werden " + amount + CURRENCY_TYPE + " abgezogen.");
@@ -549,7 +552,7 @@ public class GameController {
      * @param player Spieler dem der Betrag gutgeschrieben wird
      * @param amount Betrag der dem Spieler gutgeschrieben wird
      */
-    private void giveMoney(Player player, int amount) {
+    public void giveMoney(Player player, int amount) {
 
         player.setMoney(player.getMoney() + amount);
         logger.log(Level.INFO, player.getName() + " erhält " + amount + CURRENCY_TYPE + ".");
@@ -570,7 +573,7 @@ public class GameController {
      * @param player Spieler dessen Position ermittelt werden soll
      * @return fieldSwitch Wert
      */
-    private int locate(Player player) {
+    public int locate(Player player) {
 
         int fieldSwitch = 0;
         // Da es keine Implementierung des Gefängnisfeldes
@@ -605,7 +608,7 @@ public class GameController {
      *
      * @param player Spieler der bankrott gegangen ist
      */
-    private void bankrupt(Player player) {
+    public void bankrupt(Player player) {
         logger.log(Level.INFO, player.getName() + " ist Bankrott und ab jetzt nur noch Zuschauer. All sein Besitz geht zurück an die Bank.");
 
         // Spieler als Zuschauer festlegen
@@ -642,7 +645,7 @@ public class GameController {
      *
      * @return Anzahl der Spieler die nicht pleite sind
      */
-    private int countActivePlayers() {
+    public int countActivePlayers() {
         return (int) Arrays.stream(players)
                 .filter(p -> !(p.isSpectator()))
                 .count();
@@ -658,7 +661,7 @@ public class GameController {
      * @param price Preis der Strasse
      * @return ob die Strasse gekauft wurde
      */
-    private boolean buyStreet(Player player, Property property, int price) {
+    public boolean buyStreet(Player player, Property property, int price) {
         if (checkLiquidity(player, price)) {
             logger.log(Level.INFO, player.getName() + " kauft das Grundstück für " + price + CURRENCY_TYPE);
             property.setOwner(player);
@@ -676,7 +679,7 @@ public class GameController {
      * @param field Feld worauf ein Haus/Hotel gekauft/gebaut wird
      * @param player Spieler dem die Strasse gehoert
      */
-    private void buyBuilding(Player player, StreetField field) {
+    public void buyBuilding(Player player, StreetField field) {
         //@Eli, added Hausbau hinzugefuegt. TODO Spectator unmöglich
 
         if (!(player.isSpectator()) && checkLiquidity(player, field.getHousePrice())) {
@@ -696,7 +699,7 @@ public class GameController {
      * @param field Feld wovon ein haus/Hotel verkauft/abbebaut wird
      * @param player Spieler dem die Strasse gehoert
      */
-    private void sellBuilding(Player player, StreetField field) {
+    public void sellBuilding(Player player, StreetField field) {
         if (!(player.isSpectator()) && checkBalance(field, false)) {
             giveMoney(player, field.getHousePrice()); //@rules MAXI du moegest bitte pruefen!
             field.setHouseCount(field.getHouseCount() - 1); // Haus abbauen
@@ -711,7 +714,7 @@ public class GameController {
      * @param field die auf Ausgeglichenheit im Strassenzug zu pruefende Strasse
      * @param buyIntend gibt an, ob der Spieler ein Haus <b>kaufen</b> möchte
      */
-    private boolean checkBalance(StreetField field, boolean buyIntend) {
+    public boolean checkBalance(StreetField field, boolean buyIntend) {
         for (Property nei : field.getNeighbours()) {  // Liste der Nachbarn durchgehen
 
             int housesHere = field.getHouseCount();      // Haueser auf der aktuellen Strasse
@@ -731,7 +734,7 @@ public class GameController {
      * @param field Grundstueck, dessen Hypothek aufgenommen wird
      * @param player Spieler, dem das Grundstueck gehoert
      */
-    private void takeMortgage(Player player, Property field) { //TODO Abfrage ob noch Haeuser drauf sind
+    public void takeMortgage(Player player, Property field) { //TODO Abfrage ob noch Haeuser drauf sind
         giveMoney(player, field.getMortgageValue());
         field.setMortgageTaken(true);
         logger.log(Level.INFO, "Hypothek wurde aufgenommen!");
@@ -743,7 +746,7 @@ public class GameController {
      * @param field Grundstueck, desseh Hypothek abgezahlt wird
      * @param player Spieler, dem das Grundstueck gehoert
      */
-    private void payMortgage(Player player, Property field) {
+    public void payMortgage(Player player, Property field) {
         int mortgageBack = field.getMortgageBack();
         if (checkLiquidity(player, mortgageBack)) {
             takeMoney(player, field.getMortgageBack());
@@ -766,7 +769,7 @@ public class GameController {
      * @param house_price
      * @param hotel_price
      */
-    private void sumRenovation(Player player, int housePrice, int hotelPrice) {
+    public void sumRenovation(Player player, int housePrice, int hotelPrice) {
         //TODO spaeter, wenn Kartenstapel gedruckt wurde
 
         int renovationHotel = 0;
@@ -827,7 +830,7 @@ public class GameController {
      * @param player Spieler der eine Eingabe machen soll
      * @return ein int Wert zu auswaehen einer Strasse
      */
-    private int askForField(Player player) {
+    public int askForField(Player player) {
         String mesg = player.getName() + "! Wähle ein Feld:\n";
         Field[] fields = board.getFields();
         for (int i = 0; i < fields.length; i++) {
