@@ -68,8 +68,7 @@ public class GameController {
      * Spielinitialisierung
      */
     public void init() {
-        logger.setLevel(Level.ALL);
-        logger.log(Level.INFO, "Spiel wird initialisiert");
+        logger.log(Level.FINEST, "Spiel wird initialisiert");
 
         // TODO Maxi (Sprint 3) GameBoardParser überarbeiten
         // Spielbrett
@@ -86,7 +85,6 @@ public class GameController {
         for (int i = 0; i < players.length; i++) {
             players[i] = new Player("Mathias " + (i + 1), i, 1500); //@parser @rules
         }
-
     }
 
     /**
@@ -766,8 +764,8 @@ public class GameController {
      * Die Preise fuer Renovierung werden von dem entsprechenden Karte bekannt und dies wird mit der Anzahl von Haeuser/Hotels
      * multipliziert und am Ende addiert = Summe
      *
-     * @param house_price
-     * @param hotel_price
+     * @param housePrice Hauspreis
+     * @param hotelPrice Hotelpreis
      */
     public void sumRenovation(Player player, int housePrice, int hotelPrice) {
         //TODO spaeter, wenn Kartenstapel gedruckt wurde
