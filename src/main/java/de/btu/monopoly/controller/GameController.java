@@ -578,7 +578,7 @@ public class GameController {
         // if Abfragen zunächst über die Spielerposition realisiert
         // Lösung ist korrekt so. GoToJail wurde hinzugefügt
         currField = board.getFields()[player.getPosition()];
-
+        System.out.println(player + " " + currField);
         logger.log(Level.INFO, player.getName() + " befindet sich auf " + currField.getName() + ".");
 
         if (currField instanceof Property) {
