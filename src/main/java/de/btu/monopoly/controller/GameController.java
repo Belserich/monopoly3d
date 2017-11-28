@@ -435,22 +435,6 @@ public class GameController {
     }
 
     /**
-     * Methode zum Auswaehen einer Strasse die Bearbeitet werden soll in der actionPhase()
-     *
-     * @param player Spieler der eine Eingabe machen soll
-     * @return ein int Wert zu auswaehen einer Strasse
-     */
-    private int askForField(Player player) {
-        String mesg = player.getName() + "! Wähle ein Feld:\n";
-        Field[] fields = board.getFields();
-        for (int i = 0; i < fields.length; i++) {
-            mesg += String.format("[%d] - %s%n", i + 1, fields[i].getName());
-        }
-        logger.log(Level.INFO, mesg);
-        return getUserInput(39);
-    }
-
-    /**
      * die Versteigerungsphase
      */
     private void betPhase(Property property) {
@@ -467,6 +451,7 @@ public class GameController {
 //-----------------------------------------------------------------------------
 //----------- EINZELNE METHODEN------------------------------------------------
 //-----------------------------------------------------------------------------
+//----------- SPIELERMETHODEN -------------------------------------------------
     /**
      * das Wuerfeln. Ergebnisse werden lokal in rollResult und doubletCounter gespeichert
      */
@@ -527,25 +512,6 @@ public class GameController {
     }
 
     /**
-     *
-     * @param player Spieler der die Strasse kauft
-     * @param property Strasse die gekauft werden soll
-     * @param price Preis der Strasse
-     * @return ob die Strasse gekauft wurde
-     */
-    private boolean buyStreet(Player player, Property property, int price) {
-        if (checkLiquidity(player, price)) {
-            logger.log(Level.INFO, player.getName() + " kauft das Grundstück für " + price + CURRENCY_TYPE);
-            property.setOwner(player);
-            takeMoney(player, price);
-            return true;
-        } else {
-            logger.log(Level.INFO, player.getName() + " hat nicht genug Geld.");
-            return false;
-        }
-    }
-
-    /**
      * ueberpruft ob der uebergebene Spieler mindestens soviel Geld besitzt, wie die Methode uebergeben bekommt.
      *
      * @param player Spieler der auf Liquiditaet geprueft wird
@@ -588,6 +554,49 @@ public class GameController {
         player.setMoney(player.getMoney() + amount);
         logger.log(Level.INFO, player.getName() + " erhält " + amount + CURRENCY_TYPE + ".");
         logger.log(Level.INFO, "Der Kontostand von " + player.getName() + " beträgt nun: " + player.getMoney() + CURRENCY_TYPE + ".");
+    }
+
+    /**
+     * ermittelt anhand der Position des Spielers das Feld mit der ID auf dem GameBoard, welches der Variablen
+     * <code> Field currField </code> uebergeben wird. Gibt folgenden fieldSwitch Wert zurück: <br>
+     * 1 - Straße / Bahnhof / Werk (Property) <br>
+     * 2 - LOS <br>
+     * 3 - Frei-Parken <br>
+     * 4 - Gefaengnis <br>
+     * 5 - Steuer <br>
+     * 6 - Ereignis- / Gemeinschaftskartenfeld <br>
+     * 7 - Geh ins Gefaengnis
+     *
+     * @param player Spieler dessen Position ermittelt werden soll
+     * @return fieldSwitch Wert
+     */
+    private int locate(Player player) {
+
+        int fieldSwitch = 0;
+        // Da es keine Implementierung des Gefängnisfeldes
+        // und des Freiparkenfeldes gibt. Wurden die zwei
+        // if Abfragen zunächst über die Spielerposition realisiert
+        // Lösung ist korrekt so. GoToJail wurde hinzugefügt
+        currField = board.getFields()[player.getPosition()];
+
+        logger.log(Level.INFO, player.getName() + " befindet sich auf " + currField.getName() + ".");
+
+        if (currField instanceof Property) {
+            fieldSwitch = 1;
+        } else if (currField instanceof GoField) {
+            fieldSwitch = 2;
+        } else if (player.getPosition() == 20) {
+            fieldSwitch = 3;
+        } else if (player.getPosition() == 10) {
+            fieldSwitch = 4;
+        } else if (currField instanceof TaxField) {
+            fieldSwitch = 5;
+        } else if (currField instanceof CardField) {
+            fieldSwitch = 6;
+        } else if (player.getPosition() == 30) {
+            fieldSwitch = 7;
+        }
+        return fieldSwitch;
     }
 
     /**
@@ -638,48 +647,27 @@ public class GameController {
                 .filter(p -> !(p.isSpectator()))
                 .count();
     }
+//-----------------------------------------------------------------------------
+//------------ FELDMETHODEN ---------------------------------------------------
+//-----------------------------------------------------------------------------
 
     /**
-     * ermittelt anhand der Position des Spielers das Feld mit der ID auf dem GameBoard, welches der Variablen
-     * <code> Field currField </code> uebergeben wird. Gibt folgenden fieldSwitch Wert zurück: <br>
-     * 1 - Straße / Bahnhof / Werk (Property) <br>
-     * 2 - LOS <br>
-     * 3 - Frei-Parken <br>
-     * 4 - Gefaengnis <br>
-     * 5 - Steuer <br>
-     * 6 - Ereignis- / Gemeinschaftskartenfeld <br>
-     * 7 - Geh ins Gefaengnis
      *
-     * @param player Spieler dessen Position ermittelt werden soll
-     * @return fieldSwitch Wert
+     * @param player Spieler der die Strasse kauft
+     * @param property Strasse die gekauft werden soll
+     * @param price Preis der Strasse
+     * @return ob die Strasse gekauft wurde
      */
-    private int locate(Player player) {
-
-        int fieldSwitch = 0;
-        // Da es keine Implementierung des Gefängnisfeldes
-        // und des Freiparkenfeldes gibt. Wurden die zwei
-        // if Abfragen zunächst über die Spielerposition realisiert
-        // Lösung ist korrekt so. GoToJail wurde hinzugefügt
-        currField = board.getFields()[player.getPosition()];
-
-        logger.log(Level.INFO, player.getName() + " befindet sich auf " + currField.getName() + ".");
-
-        if (currField instanceof Property) {
-            fieldSwitch = 1;
-        } else if (currField instanceof GoField) {
-            fieldSwitch = 2;
-        } else if (player.getPosition() == 20) {
-            fieldSwitch = 3;
-        } else if (player.getPosition() == 10) {
-            fieldSwitch = 4;
-        } else if (currField instanceof TaxField) {
-            fieldSwitch = 5;
-        } else if (currField instanceof CardField) {
-            fieldSwitch = 6;
-        } else if (player.getPosition() == 30) {
-            fieldSwitch = 7;
+    private boolean buyStreet(Player player, Property property, int price) {
+        if (checkLiquidity(player, price)) {
+            logger.log(Level.INFO, player.getName() + " kauft das Grundstück für " + price + CURRENCY_TYPE);
+            property.setOwner(player);
+            takeMoney(player, price);
+            return true;
+        } else {
+            logger.log(Level.INFO, player.getName() + " hat nicht genug Geld.");
+            return false;
         }
-        return fieldSwitch;
     }
 
     /**
@@ -766,9 +754,9 @@ public class GameController {
         }
     }
 
-    //-------------------------------------------------------------------------
-    //------------ Karten Methoden --------------------------------------------
-    //-------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+//------------ Karten Methoden ------------------------------------------------
+//-----------------------------------------------------------------------------
     /**
      * Alle Gebaeude eines Spielers werden gezaehlt
      *
@@ -806,6 +794,11 @@ public class GameController {
     //-------------------------------------------------------------------------
     //------------ Console-Input Methoden -------------------------------------
     //-------------------------------------------------------------------------
+    /**
+     *
+     * @param max maximale Anzahl an Auswahlmoeglichkeiten
+     * @return int der Durch den Anwender gewaehlt wurde
+     */
     public int getUserInput(int max) {
 
         Scanner scanner = new Scanner(System.in);
@@ -826,6 +819,22 @@ public class GameController {
         } while (output < 1 || output > max);
 
         return output;
+    }
+
+    /**
+     * Methode zum Auswaehen einer Strasse die Bearbeitet werden soll in der actionPhase()
+     *
+     * @param player Spieler der eine Eingabe machen soll
+     * @return ein int Wert zu auswaehen einer Strasse
+     */
+    private int askForField(Player player) {
+        String mesg = player.getName() + "! Wähle ein Feld:\n";
+        Field[] fields = board.getFields();
+        for (int i = 0; i < fields.length; i++) {
+            mesg += String.format("[%d] - %s%n", i + 1, fields[i].getName());
+        }
+        logger.log(Level.INFO, mesg);
+        return getUserInput(39);
     }
 
 }

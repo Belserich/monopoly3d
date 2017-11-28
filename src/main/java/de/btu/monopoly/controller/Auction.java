@@ -21,12 +21,16 @@ public class Auction {
     /**
      *
      * @param property Die Strasse die versteigert werden soll
+     * @param players Spieler die an der Auktion teilnehmen
      */
     public Auction(Property property, Player[] players) {
         this.property = property;
         this.players = players;
     }
 
+    /**
+     * Startet die Auktion, ermittelt den Höchstbietenden und übergibt den Gewinner, sowie den Preis an deren Klassenvariablen
+     */
     public void startAuction() {
         /*
          * TODO hier findet die Auktion statt. Resultat der Auktion ist, dass ein Gewinner gefunden und anschliessend der Preis,
