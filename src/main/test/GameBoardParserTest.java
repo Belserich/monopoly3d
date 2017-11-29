@@ -2,7 +2,9 @@ import de.btu.monopoly.data.GameBoard;
 import de.btu.monopoly.data.field.Field;
 import de.btu.monopoly.data.field.Property;
 import de.btu.monopoly.data.parser.GameBoardParser;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 
 /**
@@ -12,9 +14,8 @@ public class GameBoardParserTest {
     
     private static final String BOARD_DATA_PATH = "data/field_data.config";
     
-    public static void main(String[] args) throws IOException {
-        GameBoardParser parser = new GameBoardParser();
-        GameBoard board = parser.parseGameBoard(BOARD_DATA_PATH);
+    public static void main(String[] args) throws IOException , SAXException, ParserConfigurationException {
+        GameBoard board = GameBoardParser.parse(BOARD_DATA_PATH);
         for (Field f : board.getFields())
         {
             if (f instanceof Property) {
@@ -22,5 +23,4 @@ public class GameBoardParserTest {
             }
         }
     }
-    
 }
