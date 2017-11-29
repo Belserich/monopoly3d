@@ -41,7 +41,9 @@ public class StreetField extends Property {
             int rent3,
             int rent4,
             int rent5,
-            int housePrice, int mortgage, int mortgageBack) {
+            int housePrice,
+            int mortgage,
+            int mortgageBack) {
         super(name, price, mortgage, mortgageBack);
 
         this.rents = new int[6];
@@ -102,5 +104,12 @@ public class StreetField extends Property {
             }
         }
         return true;
+    }
+    
+    @Override
+    public String toString() {
+        return String.format("[Straßenfeld] Name: %s, Preis: %s, Miete0: %s, Miete1: %s, Miete2: %s, Miete3: %s, Miete4: %s" +
+                        ", Miete5: %s, Hauspreis: %s, Hypothekswert: %s, Hypotheksrückwert: %s",
+                getName(), getPrice(), rents[0], rents[1], rents[2], rents[3], rents[4], rents[5], housePrice, getMortgageValue(), getMortgageBack());
     }
 }

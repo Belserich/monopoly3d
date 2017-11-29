@@ -28,4 +28,9 @@ public class TaxField extends Field {
     public int getTax() {
         return tax;
     }
+    
+    @Override
+    public String toString() {
+        return String.format("[Steuerfeld] Name: %s,  Steuerwert: %s", getName(), tax);
+    }
 }

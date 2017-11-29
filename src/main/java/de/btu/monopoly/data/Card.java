@@ -1,5 +1,7 @@
 package de.btu.monopoly.data;
 
+import java.util.Arrays;
+
 /**
  * @author Maximilian Bels (belsmaxi@b-tu.de)
  */
@@ -71,5 +73,10 @@ public class Card {
      */
     public int[] getArgs() {
         return args;
+    }
+    
+    @Override
+    public String toString() {
+        return String.format("[Karte] Name: \"%s\", Text: \"%s\", Aktionen: %s, Argumente: %s", name, text, Arrays.toString(actions), Arrays.toString(args));
     }
 }

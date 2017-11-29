@@ -1,9 +1,15 @@
 package de.btu.monopoly.controller;
 
+import de.btu.monopoly.data.CardStack;
 import de.btu.monopoly.data.GameBoard;
 import de.btu.monopoly.data.Player;
 import de.btu.monopoly.data.field.*;
 import de.btu.monopoly.data.parser.*;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
+
+import javax.swing.text.html.parser.Parser;
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Scanner;
@@ -63,48 +69,42 @@ public class GameController {
     public GameController(int playerCount) {
         this.players = new Player[playerCount];
     }
-
-    /**
-     * Spielinitialisierung
-     */
+    
     public void init() {
         logger.setLevel(Level.ALL);
         logger.log(Level.INFO, "Spiel wird initialisiert");
-
-        // TODO Maxi (Sprint 3) GameBoardParser überarbeiten
-        // Spielbrett
-        GameBoardParser parser = new GameBoardParser();
+        
         try {
-            this.board = parser.parseGameBoard("data/field_data.config");
-        } catch (IOException ex) {
-            logger.log(Level.WARNING, "field_data.config konnte nicht gelesen werden: {0}", ex);
+            CardStack stack = CardStackParser.parse("data/card_data.xml");
+            logger.finest(stack.toString());
+            GameBoardParser.setCardLoadout0(stack);
+            GameBoardParser.setCardLoadout1(stack);
+            board = GameBoardParser.parse("data/field_data.xml");
         }
-
+        catch (IOException | SAXException | ParserConfigurationException ex) {
+            logger.log(Level.WARNING, "Fehler beim initialisieren des Boards / der Karten.", ex);
+        }
+        
         assert board != null;
-
-        // Spieler @multiplayer
+        
         for (int i = 0; i < players.length; i++) {
-            players[i] = new Player("Mathias " + (i + 1), i, 1500); //@parser @rules
+            players[i] = new Player("Mathias " + (i + 1), i, 1500);
         }
-
     }
-
-    /**
-     * Spielstart
-     */
-    public void startGame() {
+    
+    public void start() {
         logger.log(Level.INFO, "Spiel beginnt.");
-
+        
         do {
             for (int i = 0; i < players.length; i++) {
-                Player currPlayer = players[i];		            // aktiven Spieler setzen
+                Player currPlayer = players[i];		        // momentanen Spieler setzen
                 if (!(currPlayer.isSpectator())) {	        // Spieler ist kein Beobachter
                     turnPhase(currPlayer);
                 }
             }
-        } while (!gameOver);
-
-        // suche letzten aktiven Spieler
+        }
+        while (!gameOver);
+        
         for (Player player : players) {
             if (!player.isSpectator()) {
                 logger.log(Level.INFO, player.getName() + " hat das Spiel gewonnen!");

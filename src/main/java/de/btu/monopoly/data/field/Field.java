@@ -27,4 +27,9 @@ public class Field {
     public String getName() {
         return name;
     }
+    
+    @Override
+    public String toString() {
+        return String.format("[Eckfeld] Name: %s", name);
+    }
 }

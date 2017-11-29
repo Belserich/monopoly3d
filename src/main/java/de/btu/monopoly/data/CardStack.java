@@ -62,4 +62,12 @@ public class CardStack {
             cardStack.add(jailCardsInGame.remove());
         }
     }
+    
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder("[Kartenstapel]\n");
+        cardStack.forEach(c -> builder.append("\t" + c + "\n"));
+        builder.append("\tGefängnis-Frei-Karten in Spielerhänden: " + jailCardsInGame.size());
+        return builder.toString();
+    }
 }

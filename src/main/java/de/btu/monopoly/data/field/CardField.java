@@ -16,5 +16,9 @@ public class CardField extends Field {
         super(name);
         this.cards = cards;
     }
-
+    
+    @Override
+    public String toString() {
+        return String.format("[Kartenfeld] Name: %s, Stapel: %s", getName(), cards);
+    }
 }

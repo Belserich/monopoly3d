@@ -2,6 +2,9 @@ package de.btu.monopoly.data;
 
 import de.btu.monopoly.data.field.Field;
 
+import java.util.Arrays;
+import java.util.stream.Stream;
+
 /**
  * @author Maximilian Bels (belsmaxi@b-tu.de)
  */
@@ -26,5 +29,14 @@ public class GameBoard
      */
     public Field[] getFields() {
         return fields;
+    }
+    
+    @Override
+    public String toString() {
+        String retObj = new String();
+        for (Field field : fields) {
+            retObj += field.toString() + "\n";
+        }
+        return retObj;
     }
 }
