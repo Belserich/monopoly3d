@@ -3,7 +3,6 @@ package de.btu.monopoly;
 import de.btu.monopoly.controller.GameController;
 import de.btu.monopoly.data.*;
 import de.btu.monopoly.data.field.*;
-import java.util.logging.Level;
 
 /**
  * In dieser Klasse werden saemtliche User-Storys einzeln getestet. Ist eine User-Story erfolgreich gestestet worden, wird ein
@@ -24,8 +23,7 @@ public class MainTest {
         Player[] players = gc.players;
 
         // Logger des GamControllers ausschalten:
-        GameController.logger.setLevel(Level.OFF);
-
+        //GameController.logger.setLevel(Level.OFF);
         //Testmethoden:
         testGameBoard(board, players);
         testRollMethod(gc, players[0]);
@@ -82,8 +80,8 @@ public class MainTest {
         // Test fuer Miete zahlen auf Werk (10 x Augenzahl)
         player.setPosition(12);
         gc.fieldPhase(player, rollResult);
-        assert player.getMoney() != 790 : "failed : falsche Werksmiete abgezogen!"; //TODO
-        assert owner.getMoney() != 1290 : "failed : falsche Werksmiete überwiesen!"; //TODO
+        assert player.getMoney() == 790 : "failed : falsche Werksmiete abgezogen!";
+        assert owner.getMoney() == 1210 : "failed : falsche Werksmiete überwiesen!";
 
         // Owner  alle Strassen wegnehmen (5, 6, 8, 9, 12)
         for (Field field : gc.board.getFields()) {
@@ -98,7 +96,7 @@ public class MainTest {
         for (int j = 0; j < 1000; j++) {
             int[] result = gc.roll(arg);
             for (int i : result) {
-                assert i > 0 && i < 7 : "Würfelergebnis ungültig!";
+                assert i > 0 && i < 7 : "failed : Würfelergebnis ungültig!";
             }
         }
         System.out.println("passed : Würfeln");
@@ -106,11 +104,11 @@ public class MainTest {
 
     private static void testGameBoard(GameBoard board, Player[] players) {
         //existiert das Board
-        assert board != null : "Gamboard nicht initialisiert!";
+        assert board != null : "failed : Gamboard nicht initialisiert!";
 
         //existieren die Felder
         for (Field field : board.getFields()) {
-            assert field != null : "Felder nicht initialisiert!";
+            assert field != null : "failed : Felder nicht initialisiert!";
         }
 
         //existieren die Spieler

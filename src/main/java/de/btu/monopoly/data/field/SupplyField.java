@@ -28,9 +28,9 @@ public class SupplyField extends Property {
     @Override
     public int getRent() {
         if (complete()) {
-            return mult1;
-        } else {
             return mult2;
+        } else {
+            return mult1;
         }
     }
 
@@ -41,7 +41,7 @@ public class SupplyField extends Property {
      */
     public boolean complete() {
         for (Property nei : super.getNeighbours()) {
-            if (!(nei.getOwner() == (super.getOwner()))) {
+            if (!(nei.getOwner().equals(super.getOwner()))) {
                 return false;
             }
         }
