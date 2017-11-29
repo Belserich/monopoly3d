@@ -3,6 +3,7 @@ package de.btu.monopoly;
 import de.btu.monopoly.controller.GameController;
 import de.btu.monopoly.data.*;
 import de.btu.monopoly.data.field.*;
+import java.util.logging.Level;
 
 /**
  * In dieser Klasse werden saemtliche User-Storys einzeln getestet. Ist eine User-Story erfolgreich gestestet worden, wird ein
@@ -17,27 +18,25 @@ public class MainTest {
 
         // Variablen:
         GameController gc = new GameController(2);
+        GameController.logger.setLevel(Level.ALL);  // Logger des GameControllers ausschalten
         gc.init();
 
         GameBoard board = gc.board;
         Player[] players = gc.players;
 
-        // Logger des GamControllers ausschalten:
-        //GameController.logger.setLevel(Level.OFF);
-        //Testmethoden:
+        // Testmethoden:
         testGameBoard(board, players);
         testRollMethod(gc, players[0]);
         // LOS Feld (movePlayer())
         // Eckfeld betreten (Außer GoToJail)
         // pleite gehen
         // Steuer auf TaxFeld bezahlen
-        // Grundstueck kaufen
+        testBuyStreet(gc, players[0]);
+        // Straße bebauen (Haus kaufen)
+        // Haus verkaufen
         testPayRent(gc, players);
         // Hypothek aufnehmen
         // Hypothek bezahlen
-        // Straße bebauen
-        // Haus kaufen
-        // Haus verkaufen
         // betreten des GoToJailFeldes
         // 3 Paesche ins Gefaengnis
         // aus dem Gefaengnis mit Freikarte
@@ -46,8 +45,19 @@ public class MainTest {
 
     }
 
+    private static void testBuyStreet(GameController gc, Player player) {
+        Property street = (Property) gc.board.getFields()[1];
+        player.setMoney(1000);
+        gc.buyStreet(player, street, street.getPrice());
+
+        assert player.getMoney() == 1000 - street.getPrice() : "failed : Geld bei Straßenkauf nicht Abgebucht";
+        assert street.getOwner() == player : "failed : Straßenbesitz wurde nicht geändert";
+
+        System.out.println("passed : Straße kaufen");
+    }
+
     /**
-     *
+     * @author Christian Prinz
      * @param gc
      * @param players
      */
@@ -73,15 +83,35 @@ public class MainTest {
 
         // Test fuer Miete zahlen auf Bahnhof (4fache Bahnhofsmiete abziehen)
         player.setPosition(5);
-        gc.fieldPhase(player, rollResult);
-        assert player.getMoney() == 900 : "failed : falsche Bahnhofsmiete abgezogen!";
-        assert owner.getMoney() == 1100 : "failed : falsche Bahnhofsmiete überwiesen!";
+        gc.fieldPhase(player, rollResult);                          // -100 = 900
+        Property bahnhof2 = (Property) gc.board.getFields()[15];    // owner einen Bahnhof wegnehmen
+        bahnhof2.setOwner(null);                                    // jetzt mit 3facher Miete
+        gc.fieldPhase(player, rollResult);                          // -75 = 825
+        assert player.getMoney() == 825 : "failed : falsche Bahnhofsmiete abgezogen!";
+        assert owner.getMoney() == 1175 : "failed : falsche Bahnhofsmiete überwiesen!";
 
         // Test fuer Miete zahlen auf Werk (10 x Augenzahl)
         player.setPosition(12);
-        gc.fieldPhase(player, rollResult);
-        assert player.getMoney() == 790 : "failed : falsche Werksmiete abgezogen!";
-        assert owner.getMoney() == 1210 : "failed : falsche Werksmiete überwiesen!";
+        gc.fieldPhase(player, rollResult);                          // -10*11 = 715
+        Property werk2 = (Property) gc.board.getFields()[28];       // owner ein Werk wegnehmen
+        werk2.setOwner(null);                                       // jetzt mit 4*Augenzahl
+        gc.fieldPhase(player, rollResult);                          // -4*11 = 671
+        assert player.getMoney() == 671 : "failed : falsche Werksmiete abgezogen!";
+        assert owner.getMoney() == 1329 : "failed : falsche Werksmiete überwiesen!";
+
+        // Test fuer Miete zahlen auf Strasse (alle Strassen im Besitz)
+        player.setPosition(1);
+        gc.fieldPhase(player, rollResult);                          // -4 = 667
+
+        assert player.getMoney() == 667 : "failed : falsche Strassenmiete abgezogen!";
+        assert owner.getMoney() == 1333 : "failed : falsche Strassenmiete überwiesen!";
+
+        StreetField strasse1 = (StreetField) gc.board.getFields()[1];
+        strasse1.setHouseCount(5);
+        gc.fieldPhase(player, rollResult);                          // - 250 = 412
+
+        assert player.getMoney() == 417 : "failed : falsche Strassenmiete abgezogen!";
+        assert owner.getMoney() == 1583 : "failed : falsche Strassenmiete überwiesen!";
 
         // Owner  alle Strassen wegnehmen (5, 6, 8, 9, 12)
         for (Field field : gc.board.getFields()) {
@@ -90,6 +120,12 @@ public class MainTest {
                 actual.setOwner(null);
             }
         }
+
+        // Spielergeld zurücksetzen
+        owner.setMoney(1500);
+        player.setMoney(1500);
+
+        System.out.println("passed : Miete zahlen auf allen Grundstücken!");
     }
 
     private static void testRollMethod(GameController gc, Player arg) {

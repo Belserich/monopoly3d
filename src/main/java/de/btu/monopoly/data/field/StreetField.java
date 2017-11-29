@@ -65,7 +65,7 @@ public class StreetField extends Property {
         if (!isMortgageTaken()) {
             if (complete()) {
                 if (houseCount == 0) {
-                    return rents[houseCount * 2];
+                    return rents[houseCount] * 2;
                 } else {
                     return rents[houseCount];
                 }
@@ -105,11 +105,11 @@ public class StreetField extends Property {
         }
         return true;
     }
-    
+
     @Override
     public String toString() {
-        return String.format("[Straßenfeld] Name: %s, Preis: %s, Miete0: %s, Miete1: %s, Miete2: %s, Miete3: %s, Miete4: %s" +
-                        ", Miete5: %s, Hauspreis: %s, Hypothekswert: %s, Hypotheksrückwert: %s",
+        return String.format("[Straßenfeld] Name: %s, Preis: %s, Miete0: %s, Miete1: %s, Miete2: %s, Miete3: %s, Miete4: %s"
+                + ", Miete5: %s, Hauspreis: %s, Hypothekswert: %s, Hypotheksrückwert: %s",
                 getName(), getPrice(), rents[0], rents[1], rents[2], rents[3], rents[4], rents[5], housePrice, getMortgageValue(), getMortgageBack());
     }
 }

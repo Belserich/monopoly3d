@@ -41,13 +41,13 @@ public class SupplyField extends Property {
      */
     public boolean complete() {
         for (Property nei : super.getNeighbours()) {
-            if (!(nei.getOwner().equals(super.getOwner()))) {
+            if (!(nei.getOwner() == (super.getOwner()))) {
                 return false;
             }
         }
         return true;
     }
-    
+
     @Override
     public String toString() {
         return String.format("[Versorgungswerk] Name: %s, Preis: %s, Multiplikator1: %s, Multiplikator2: %s, Hypothekswert: %s, Hypotheksrückwert: %s",
