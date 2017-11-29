@@ -69,7 +69,14 @@ public class MainTest {
 
         //Test auf korrekte Ueberweisung des Los - Geldes
         assert player1.getMoney() == 1000 : "failed : Los Geld falsch oder garnicht ueberwiesen!";
+        if (player1.getMoney() == 1000) {
+            System.out.println("passed : Spieler ist direkt auf Los und hat Geld erhalten!");
+        }
         assert player2.getMoney() == 1000 : "failed : Los Geld falsch oder garnicht ueberwiesen!";
+        if (player2.getMoney() == 1000) {
+            System.out.println("passed : Spieler ist ueber Los gelaufen und hat Geld erhalten!");
+        }
+
     }
 
     /**
@@ -88,6 +95,9 @@ public class MainTest {
         } while (gc.doubletCounter != 3);
 
         assert prisoner.isInJail() == true : "failed : Spieler ist nicht im Gefaengnis!";
+        if (prisoner.isInJail() == true) {
+            System.out.println("passed : 3*Pasch; Spieler im Gefaengnis");
+        }
 
         prisoner.setInJail(false);
         gc.doubletCounter = 0;
@@ -116,6 +126,9 @@ public class MainTest {
 //        System.out.println("Gebe eine 2 ein!"); //TODO Userinput automatisieren
 //        gc.jailPhase(prisoner2);
         assert prisoner1.isInJail() == false : "failed : Spieler ist noch im Gefaengniss!";
+        if (prisoner1.isInJail() == false) {
+            System.out.println("passed : frei gekauft aus Gefaengnis");
+        }
 
     }
 
