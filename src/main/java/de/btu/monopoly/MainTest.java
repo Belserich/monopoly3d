@@ -18,7 +18,7 @@ public class MainTest {
 
         // Variablen:
         GameController gc = new GameController(2);
-        GameController.logger.setLevel(Level.ALL);  // Logger des GameControllers ausschalten
+        GameController.logger.setLevel(Level.OFF);  // Logger des GameControllers ausschalten
         gc.init();
 
         GameBoard board = gc.board;
@@ -27,7 +27,7 @@ public class MainTest {
         // Testmethoden:
         testGameBoard(board, players);
         testRollMethod(gc, players[0]);
-        // LOS Feld (movePlayer())
+        testGoField(gc, players);
         // Eckfeld betreten (Außer GoToJail)
         // pleite gehen
         // Steuer auf TaxFeld bezahlen
@@ -43,6 +43,28 @@ public class MainTest {
         // aus dem Gefaengnis freiwuerfeln
         // aus dem Gefaengnis frei kaufen
 
+    }
+
+    private static void testGoField(GameController gc, Player[] players) {
+        //Spieler bestimmen
+        Player player1 = players[0];
+        Player player2 = players[1];
+
+        //Spielern Geld geben
+        player1.setMoney(800);
+        player2.setMoney(800);
+
+        //Spieler auf Start setzen
+        player1.setPosition(0);
+        player2.setPosition(0);
+
+        //Spieler bewegen (1 direkt auf Los, 2 ueber Los hinweg)
+        gc.movePlayer(player1, 40);
+        gc.movePlayer(player2, 50);
+
+        //Test auf korrekte Ueberweisung des Los - Geldes
+        assert player1.getMoney() == 1000 : "failed : Los Geld falsch oder garnicht ueberwiesen!";
+        assert player2.getMoney() == 1000 : "failed : Los Geld falsch oder garnicht ueberwiesen!";
     }
 
     private static void testBuyStreet(GameController gc, Player player) {
@@ -135,7 +157,7 @@ public class MainTest {
                 assert i > 0 && i < 7 : "failed : Würfelergebnis ungültig!";
             }
         }
-        System.out.println("passed : Würfeln");
+        System.out.println("passed : Wuerfeln");
     }
 
     private static void testGameBoard(GameBoard board, Player[] players) {
