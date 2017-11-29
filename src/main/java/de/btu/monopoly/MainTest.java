@@ -6,6 +6,9 @@ import de.btu.monopoly.data.field.*;
 import java.util.logging.Level;
 
 /**
+ * In dieser Klasse werden saemtliche User-Storys einzeln getestet. Ist eine User-Story erfolgreich gestestet worden, wird ein
+ * <code> System.out.println("passed : User-Story")</code> ausgegeben. Für jeden Testparameter wird im Falle eines
+ * fehlgeschlagenen Tests ein <code> assert [TEST] : "failed : Fehlerbeschreibung";</code> ausgegeben.
  *
  * @author Christian Prinz
  */
@@ -20,7 +23,7 @@ public class MainTest {
         GameBoard board = gc.board;
         Player[] players = gc.players;
 
-        // Logger des GamControllers ausschalten
+        // Logger des GamControllers ausschalten:
         GameController.logger.setLevel(Level.OFF);
 
         //Testmethoden:
@@ -45,6 +48,11 @@ public class MainTest {
 
     }
 
+    /**
+     *
+     * @param gc
+     * @param players
+     */
     private static void testPayRent(GameController gc, Player[] players) {
         // Spieler bestimmen
         Player player = players[0];
@@ -61,20 +69,21 @@ public class MainTest {
                 actual.setOwner(owner);
             }
         }
+
         // Wuerfelergebnis setzen (6 + 5 = 11)
         int[] rollResult = {6, 5};
 
         // Test fuer Miete zahlen auf Bahnhof (4fache Bahnhofsmiete abziehen)
         player.setPosition(5);
         gc.fieldPhase(player, rollResult);
-        assert player.getMoney() == 900 : "falsche Bahnhofsmiete abgezogen!";
-        assert owner.getMoney() == 1100 : "falsche Bahnhofsmiete überwiesen!";
+        assert player.getMoney() == 900 : "failed : falsche Bahnhofsmiete abgezogen!";
+        assert owner.getMoney() == 1100 : "failed : falsche Bahnhofsmiete überwiesen!";
 
         // Test fuer Miete zahlen auf Werk (10 x Augenzahl)
         player.setPosition(12);
         gc.fieldPhase(player, rollResult);
-        assert player.getMoney() != 790 : "falsche Werksmiete abgezogen!"; //TODO
-        assert owner.getMoney() != 1290 : "falsche Werksmiete überwiesen!"; //TODO
+        assert player.getMoney() != 790 : "failed : falsche Werksmiete abgezogen!"; //TODO
+        assert owner.getMoney() != 1290 : "failed : falsche Werksmiete überwiesen!"; //TODO
 
         // Owner  alle Strassen wegnehmen (5, 6, 8, 9, 12)
         for (Field field : gc.board.getFields()) {
@@ -92,6 +101,7 @@ public class MainTest {
                 assert i > 0 && i < 7 : "Würfelergebnis ungültig!";
             }
         }
+        System.out.println("passed : Würfeln");
     }
 
     private static void testGameBoard(GameBoard board, Player[] players) {
@@ -105,8 +115,9 @@ public class MainTest {
 
         //existieren die Spieler
         for (Player player : players) {
-            assert player != null : "Spieler nicht initialisiert!";
+            assert player != null : "failed : Spieler nicht initialisiert!";
         }
+        System.out.println("passed : Initialisierung");
     }
 
 }
