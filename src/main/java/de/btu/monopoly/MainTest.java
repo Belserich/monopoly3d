@@ -37,7 +37,7 @@ public class MainTest {
         testPayRent(gc, players);
         // Hypothek aufnehmen
         // Hypothek bezahlen
-        // betreten des GoToJailFeldes
+        testGoToJail(gc, players);
         testDoubletToJail(gc, players);
         // aus dem Gefaengnis mit Freikarte
         // aus dem Gefaengnis freiwuerfeln
@@ -69,12 +69,9 @@ public class MainTest {
 
         //Test auf korrekte Ueberweisung des Los - Geldes
         assert player1.getMoney() == 1000 : "failed : Los Geld falsch oder garnicht ueberwiesen!";
-        if (player1.getMoney() == 1000) {
-            System.out.println("passed : Spieler ist direkt auf Los und hat Geld erhalten!");
-        }
         assert player2.getMoney() == 1000 : "failed : Los Geld falsch oder garnicht ueberwiesen!";
-        if (player2.getMoney() == 1000) {
-            System.out.println("passed : Spieler ist ueber Los gelaufen und hat Geld erhalten!");
+        if (player1.getMoney() == 1000 && player2.getMoney() == 1000) {
+            System.out.println("passed : Spieler bekommt Geld durch Los Feld");
         }
 
     }
@@ -145,22 +142,40 @@ public class MainTest {
         //Gefaengnis Feld (zu Besuch)
         cornerPlayer.setPosition(10);
         assert cornerPlayer.isInJail() == false : "failed : Spieler ist im Gefaengnis!";
-        if (cornerPlayer.isInJail() == false) {
-            System.out.println("passed : Spieler ist nicht im Gefaengnis");
-        }
-
         //Freiparken
         cornerPlayer.setPosition(20);
         assert cornerPlayer.getPosition() == 20 : "failed : Spieler ist nicht auf Frei Parken!";
-        if (cornerPlayer.getPosition() == 20) {
-            System.out.println("passed : Spieler ist auf Frei Parken");
-        }
         //Los-Feld
         cornerPlayer.setPosition(0);
         assert cornerPlayer.getPosition() == 0 : "failed : Spieler ist nicht auf Los";
         if (cornerPlayer.getPosition() == 0) {
-            System.out.println("passed : Spieler ist auf Los");
+            System.out.println("passed : Eckfelder funktionieren");
         }
+    }
+
+    /**
+     * @author Patrick Kalweit
+     * @param gc
+     * @param players
+     */
+    private static void testGoToJail(GameController gc, Player[] players) {
+        //Spieler und Variablen initialisieren
+        Player prePrisoner = players[0];
+        prePrisoner.setPosition(30);
+        prePrisoner.setInJail(false);
+        int[] rollResult = {14, 16};
+
+        gc.fieldPhase(prePrisoner, rollResult);
+
+        assert prePrisoner.getPosition() == 10 : "failed : Spieler nicht auf Gefaengnis Feld!";
+        assert prePrisoner.isInJail() == true : "failed : Spieler ist nicht IM Gefaengnis!";
+        assert prePrisoner.getDaysInJail() == 0 : "failed : daysInJail sind nicht 0!";
+        if (prePrisoner.getPosition() == 10 && prePrisoner.isInJail() == true && prePrisoner.getDaysInJail() == 0) {
+            System.out.println("passed : durch GoToJail im Gefaengnis!");
+        }
+
+        prePrisoner.setInJail(false);
+
     }
 
     private static void testBuyStreet(GameController gc, Player player) {
