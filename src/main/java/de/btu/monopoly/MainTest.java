@@ -41,7 +41,7 @@ public class MainTest {
         testDoubletToJail(gc, players);
         // aus dem Gefaengnis mit Freikarte
         // aus dem Gefaengnis freiwuerfeln
-        // aus dem Gefaengnis frei kaufen
+        testPayPrisonDeposit(gc, players);
 
     }
 
@@ -78,16 +78,38 @@ public class MainTest {
      * @param players
      */
     private static void testDoubletToJail(GameController gc, Player[] players) {
-        //Spieler bestimmen
+        //Spieler und Variablen initialisieren
         Player prisoner = players[0];
-
         gc.doubletCounter = 2;
 
+        //auf den naechsten Pasch warten
         do {
             gc.rollPhase(prisoner);
         } while (gc.doubletCounter != 3);
 
         assert prisoner.isInJail() == true : "failed : Spieler ist nicht im Gefaengnis!";
+
+        prisoner.setInJail(false);
+        gc.doubletCounter = 0;
+
+    }
+
+    /**
+     * @author Patrick Kalweit
+     * @param gc
+     * @param players
+     */
+    private static void testPayPrisonDeposit(GameController gc, Player[] players) {
+        //Spieler und Variablen initialisieren
+        Player prisoner = players[0];
+        prisoner.setMoney(1500);
+        prisoner.setInJail(true);
+
+        //Frei kaufen
+        System.out.println("Gebe eine 2 ein!"); //TODO Userinput automatisieren
+        gc.jailPhase(prisoner);
+
+        assert prisoner.isInJail() == false : "failed : Spieler ist noch im Gefaengniss!";
 
     }
 
