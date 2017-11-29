@@ -38,13 +38,18 @@ public class MainTest {
         // Hypothek aufnehmen
         // Hypothek bezahlen
         // betreten des GoToJailFeldes
-        // 3 Paesche ins Gefaengnis
+        testDoubletToJail(gc, players);
         // aus dem Gefaengnis mit Freikarte
         // aus dem Gefaengnis freiwuerfeln
         // aus dem Gefaengnis frei kaufen
 
     }
 
+    /**
+     * @author Patrick Kalweit
+     * @param gc
+     * @param player
+     */
     private static void testGoField(GameController gc, Player[] players) {
         //Spieler bestimmen
         Player player1 = players[0];
@@ -67,13 +72,32 @@ public class MainTest {
         assert player2.getMoney() == 1000 : "failed : Los Geld falsch oder garnicht ueberwiesen!";
     }
 
+    /**
+     * @author Patrick Kalweit
+     * @param gc
+     * @param players
+     */
+    private static void testDoubletToJail(GameController gc, Player[] players) {
+        //Spieler bestimmen
+        Player prisoner = players[0];
+
+        gc.doubletCounter = 2;
+
+        do {
+            gc.rollPhase(prisoner);
+        } while (gc.doubletCounter != 3);
+
+        assert prisoner.isInJail() == true : "failed : Spieler ist nicht im Gefaengnis!";
+
+    }
+
     private static void testBuyStreet(GameController gc, Player player) {
         Property street = (Property) gc.board.getFields()[1];
         player.setMoney(1000);
         gc.buyStreet(player, street, street.getPrice());
 
         assert player.getMoney() == 1000 - street.getPrice() : "failed : Geld bei Straßenkauf nicht Abgebucht";
-        assert street.getOwner() == player : "failed : Straßenbesitz wurde nicht geändert";
+        assert street.getOwner() == player : "failed : Straßenbesitz wurde nicht geaendert";
 
         System.out.println("passed : Straße kaufen");
     }
@@ -147,14 +171,14 @@ public class MainTest {
         owner.setMoney(1500);
         player.setMoney(1500);
 
-        System.out.println("passed : Miete zahlen auf allen Grundstücken!");
+        System.out.println("passed : Miete zahlen auf allen Grundstuecken!");
     }
 
     private static void testRollMethod(GameController gc, Player arg) {
         for (int j = 0; j < 1000; j++) {
             int[] result = gc.roll(arg);
             for (int i : result) {
-                assert i > 0 && i < 7 : "failed : Würfelergebnis ungültig!";
+                assert i > 0 && i < 7 : "failed : Wuerfelergebnis ungueltig!";
             }
         }
         System.out.println("passed : Wuerfeln");
