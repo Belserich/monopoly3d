@@ -101,15 +101,21 @@ public class MainTest {
      */
     private static void testPayPrisonDeposit(GameController gc, Player[] players) {
         //Spieler und Variablen initialisieren
-        Player prisoner = players[0];
-        prisoner.setMoney(1500);
-        prisoner.setInJail(true);
+        Player prisoner1 = players[0];
+//        Player prisoner2 = players[1];
+        prisoner1.setMoney(1500);
+        prisoner1.setInJail(true);
+//        prisoner2.setMoney(49);
+//        prisoner2.setInJail(true);
 
         //Frei kaufen
         System.out.println("Gebe eine 2 ein!"); //TODO Userinput automatisieren
-        gc.jailPhase(prisoner);
+        gc.jailPhase(prisoner1);
 
-        assert prisoner.isInJail() == false : "failed : Spieler ist noch im Gefaengniss!";
+        //kommt mit 2 in endlos Schleife, also richtig!
+//        System.out.println("Gebe eine 2 ein!"); //TODO Userinput automatisieren
+//        gc.jailPhase(prisoner2);
+        assert prisoner1.isInJail() == false : "failed : Spieler ist noch im Gefaengniss!";
 
     }
 
