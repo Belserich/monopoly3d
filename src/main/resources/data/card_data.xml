@@ -1,66 +1,82 @@
 <?xml version="1.1" encoding="UTF-8"?>
 <cards>
+
     <card name="Gefaengnis Frei" text="Du kommst aus dem Gefaengnis frei." amount="2">
         <type>jail</type>
     </card>
+
     <card name="Strafzettel" text="Strafzettel! Zahle #1{$currency}.">
         <type>give_money</type>
         <arg>15</arg>
     </card>
+
     <card name="Bahnhof" text="Ruecke vor bis zum naechsten Bahnhof. Die zu zahlende Miete erhöht sich (x#1). Wenn der Bahnhof noch niemandem gehoert, kannst du ihn von der Bank kaufen." amount="2">
         <type>next_station</type>
         <type>rent_amp</type>
         <arg>2</arg>
     </card>
+
     <card name="Drei Felder zurueck" text="Gehe #1 Felder zurueck.">
         <type>move_player</type>
         <arg>-3</arg>
     </card>
+
     <card name="Bausparvertrag" text="Dein Bausparvertrag wird faellig. Du erhaelst #1{$currency}.">
         <type>pay_money</type>
         <arg>150</arg>
     </card>
+
     <card name="Seestrasse" text="Ruecke vor bis zur Seestrasse. Wenn du ueber LOS kommst, ziehe #1{$currency}.">
         <type>set_position</type>
         <type>give_money_if_go_passed</type>
         <arg>11</arg>
         <arg>200</arg>
     </card>
+
     <card name="LOS" text="Ruecke vor bis auf LOS. Ziehe #1{$currency}.">
         <type>give_money</type>
         <arg>200</arg>
     </card>
+
     <card name="Schlossallee" text="Ruecke vor bis zum Schossallee.">
         <type>set_position</type>
         <arg>39</arg>
     </card>
+
     <card name="Renovieren" text="Du laesst deine Haeuser renovieren. Zahle: #1{$currency} pro Haus, (x4 für Hotels).">
         <type>renovate</type>
         <arg>25</arg>
     </card>
+
     <card name="Vorstand" text="Du bist zum Vorstand gewählt worden. Zahle jedem Spieler #1{$currency}.">
         <type>pay_money</type>
         <type>give_money_if_go_passed</type>
         <arg>50</arg>
     </card>
+
     <card name="Dividende" text="Die Bank zahlt dir eine Dividende von #1{$currency}.">
         <type>give_money</type>
         <arg>50</arg>
     </card>
+
     <card name="Opernplatz" text="Ruecke vor bis zum Opernplatz. Wenn du ueber LOS kommst, ziehe #1{$currency}.">
         <type>set_position</type>
         <arg>24</arg>
     </card>
+
     <card name="Suedbahnhof" text="Mache einen Ausflug zum Suedbahnhof. Wenn du uber LOS kommst, ziehe #1{$currency}.">
         <type>set_position</type>
         <arg>200</arg>
     </card>
+
     <card name="Ins Gefaengnis" text="Gehe in das Gefaengnis. Begib dich direkt dorthin. Gehe nicht uber LOS. Ziehe keine #1{$currency}.">
         <type>go_jail</type>
         <type>null_income</type>
         <arg>200</arg>
     </card>
+
     <card name="Werk" text="Ruecke vor bis zum naechsten Werk.">
         <type>next_supply</type>
     </card>
+
 </cards>
