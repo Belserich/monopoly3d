@@ -1,14 +1,13 @@
 package de.btu.monopoly.controller;
 
+import de.btu.monopoly.data.Card;
 import de.btu.monopoly.data.CardStack;
 import de.btu.monopoly.data.GameBoard;
 import de.btu.monopoly.data.Player;
 import de.btu.monopoly.data.field.*;
 import de.btu.monopoly.data.parser.*;
 import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
 
-import javax.swing.text.html.parser.Parser;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.util.Arrays;
@@ -29,7 +28,7 @@ public class GameController {
     /**
      * Logger
      */
-    public static final Logger logger = Logger.getLogger(GameController.class.getPackage().getName());
+    public static final Logger logger = Logger.getLogger(GameController.class.getCanonicalName());
 
     /**
      * das Spielbrett
@@ -71,12 +70,11 @@ public class GameController {
     }
     
     public void init() {
-        logger.setLevel(Level.ALL);
         logger.log(Level.INFO, "Spiel wird initialisiert");
         
         try {
             CardStack stack = CardStackParser.parse("data/card_data.xml");
-            logger.finest(stack.toString());
+            logger.log(Level.FINEST, stack.toString());
             GameBoardParser.setCardLoadout0(stack);
             GameBoardParser.setCardLoadout1(stack);
             board = GameBoardParser.parse("data/field_data.xml");
@@ -231,7 +229,7 @@ public class GameController {
             }
         }
         if (!(player.isInJail())) { //kann sich nach wuerfeln aendern
-            movePlayer(player, rollResult);
+            movePlayer(player, rollResult[0] + rollResult[1]);
         }
         return rollResult;
     }
@@ -242,112 +240,129 @@ public class GameController {
      * @param player Spieler in der Feldphase
      */
     public void fieldPhase(Player player, int[] rollResult) {
-
-        switch (locate(player)) { //@optimize
-            case 1: // Strasse / Bahnhof / Werk
-                if (currField instanceof Property) {
-                    Property actualProperty = (Property) currField;
-                    // wenn das Feld in eigenem Besitz ist
-                    if (actualProperty.getOwner() == player) {
-                        logger.log(Level.INFO, player.getName() + " steht auf seinem eigenen Grundstück.");
-                        break;
-                    } else if (actualProperty.getOwner() == null) { //wenn frei
-                        logger.log(Level.INFO, player.getName() + " steht auf einem freien Grundstück und kann es: \n1. Kaufen \n2. nicht Kaufen");
-                        switch (getUserInput(2)) { //@GUI
-                            case 1: //Kaufen
-                                /*
-                                 * kauft die Strasse, wenn nicht moeglich, findet Aution statt
-                                 */
-                                if (!buyStreet(player, actualProperty, actualProperty.getPrice())) {
-                                    betPhase(actualProperty);
-                                }
-                                break;
-                            case 2: //Auktion - NOCH DEAKTIVIERT @multiplayer
-                                logger.log(Level.INFO, "Auktionsphase noch nicht abschließend implementert. "
-                                        + "Straße wird dem ersten Spieler für 0" + CURRENCY_TYPE + " verkauft!!!");
-                                betPhase(actualProperty);
-                                break;
-                            default:
-                                logger.log(Level.WARNING, "FEHLER: SteetBuySwitch überlaufen.");
-                                break;
-                        }
-                    } else { // wenn nicht in eigenem Besitz
-                        logger.log(Level.INFO, player.getName() + " steht auf dem Grundstück von " + actualProperty.getOwner().getName());
-                        int rent = actualProperty.getRent();
-                        // wenn es sich um ein Werk handelt:
-                        if (actualProperty instanceof SupplyField) {
-                            rent = rent * (rollResult[0] + rollResult[1]);
-                        }
-
-                        if (checkLiquidity(player, rent)) {
-                            logger.log(Level.INFO, player.getName() + " zahlt Miete:");
-                            takeMoney(player, rent);
-                            giveMoney(actualProperty.getOwner(), rent);
-                        } else {
-                            logger.log(Level.INFO, player.getName() + " kann die Miete nicht zahlen!");
-                            bankrupt(player);
-                        }
-                    }
-                } else { // kann nicht auftreten
-                    logger.log(Level.WARNING, "FEHLER: Field falsch ermittelt! (Property)");
-                }
+        GameBoard.FieldType type = GameBoard.FIELD_STRUCTURE[player.getPosition()];
+        switch (type) {
+            case STREET:
+                // siehe case SUPPLY
+                
+            case STATION:
+                // siehe case SUPPLY
+                
+            case SUPPLY: // Strasse / Bahnhof / Werk
+                processPlayerOnPropertyField(player, (Property) currField, rollResult);
+                break;
+                
+            case TAX: // Steuerfeld
+                processPlayerOnTaxField(player, (TaxField) currField);
+                break;
+                
+            case CARD: // Kartenfeld
+                processPlayerOnCardField(player, (CardField) currField);
                 break;
 
-            case 2: // LOS
-                // LOS abfrage erfolgt in der Methode movePlayer()
-                // ansonsten passiert hier nicht @rules
-                break;
-
-            case 3: // Frei-Parken
-                // hier passier normalerweise nichts @rules
-                break;
-
-            case 4: // Gefaengnis
-                // hier passier in jedem Fall nichts
-                break;
-
-            case 5: // Steuerfeld
-                logger.log(Level.INFO, player.getName() + " muss Steuern zahlen.");
-                if (currField instanceof TaxField) {
-                    TaxField taxField = (TaxField) currField;
-                    if (checkLiquidity(player, taxField.getTax())) {
-                        takeMoney(player, taxField.getTax());
-                    } else {
-                        logger.log(Level.INFO, player.getName() + " hat nicht genug Geld für die Steuern");
-                        bankrupt(player);
-                    }
-                    // spaeter kommt hier evtl. der Steuertopf zum Zuge @rules
-                } else { // kann nicht auftreten
-                    logger.log(Level.WARNING, "FEHLER: FieldSwitch überlaufen! (Steuerfeld)");
-                }
-                break;
-
-            case 6: // Kartenfeld
-                if (currField instanceof CardField) {
-                    logger.log(Level.INFO, player.getName() + " ist auf einem Kartenfeld gelandet. "
-                            + "Die Karten liegen aber noch in der Druckerei. Nichts passiert.");
-                    // CardField cardField = (CardField) currField;
-                    /*
-                     * TODO @cards - Karten auslesen und co, wenn man hier auf ein anderes Feld gesetzt wird, muss in der
-                     * Kartenmethode die Feldphase nochmal aufgerufen werden, oder ein in der Karte vorgegebener alternativer
-                     * Feldphasenabruf stattfinden. FeldPhase muss so nicht "geschleift" werden.
-                     */
-                } else { // kann nicht auftreten
-                    logger.log(Level.WARNING, "FEHLER: FieldSwitch überlaufen (Cardfield)");
-                }
-
-                break;
-
-            case 7: // GehInsGefaengnis-Feld
+            case GO_JAIL: // "Gehen Sie Ins Gefaengnis"-Feld
                 logger.log(Level.INFO, player.getName() + " muss ins Gefaengnis!");
                 moveToJail(player);
                 break;
 
-            default: // kann nicht auftreten!
-                logger.log(Level.WARNING, "FEHLER: FieldSwitch überlaufen.");
-                break;
+            default: break; // "Los"-Feld
         }
-
+    }
+    
+    private void processPlayerOnCardField(Player player, CardField field) {
+        logger.fine(String.format("%s steht auf einem Kartenfeld (%s).", player.getName(), currField.getName()));
+        Card nextCard = field.getCardStack().nextCard();
+        Card.Action[] actions = nextCard.getActions();
+        
+        assert actions.length > 0;
+    
+        switch (actions[0]) {
+            case JAIL:
+                player.addJailCard();
+                break;
+            case GIVE_MONEY:
+                giveMoney(player, nextCard.getArgs()[0]); // TODO check args
+                break;
+            case GO_JAIL:
+                moveToJail(player);
+                break;
+            case PAY_MONEY:
+                takeMoney(player, nextCard.getArgs()[0]);
+                break;
+            case MOVE_PLAYER:
+                movePlayer(player, nextCard.getArgs()[0]);
+                break;
+            case SET_POSITION:
+                movePlayer(player, nextCard.getArgs()[0] - player.getPosition());
+                break;
+            case PAY_MONEY_ALL:
+                int amount = nextCard.getArgs()[0];
+                takeMoney(player, amount * players.length);
+                for (Player other : players)
+                    giveMoney(other, amount);
+                break;
+            case NEXT_SUPPLY:
+                int fields = 0;
+                while (GameBoard.FIELD_STRUCTURE[player.getPosition() + (++fields)] != GameBoard.FieldType.SUPPLY);
+                movePlayer(player, fields);
+            case NEXT_STATION_RENT_AMP:
+                fields = 0;
+                while (GameBoard.FIELD_STRUCTURE[player.getPosition() + (++fields)] != GameBoard.FieldType.STATION);
+                movePlayer(player, fields); // TODO Amplifier
+            case BIRTHDAY: // TODO
+            case RENOVATE: // TODO
+        }
+    }
+    
+    private void processPlayerOnTaxField(Player player, TaxField field) {
+        logger.log(Level.FINE, player.getName() + " steht auf einem Steuerfeld.");
+        if (checkLiquidity(player, field.getTax())) {
+            takeMoney(player, field.getTax());
+        } else {
+            logger.log(Level.INFO, player.getName() + " kann seine Steuern nicht abzahlen!");
+            bankrupt(player);
+        }
+    }
+    
+    private void processPlayerOnPropertyField(Player player, Property field, int[] rollResult) {
+        // prüft den Besitzer
+        Player other = field.getOwner();
+        if (other == null) { // Feld frei
+            logger.log(Level.INFO, player.getName() + " steht auf einem freien Grundstück und kann es: \n[1] Kaufen \n[2] Nicht Kaufen");
+            switch (getUserInput(2)) { //@GUI
+                case 1: //Kaufen
+                    logger.info(player.getName() + " >> " + field.getName());
+                    if (!buyStreet(player, field, field.getPrice())) {
+                        logger.info(player.getName() + "hat nicht genug Geld! " + field.getName() + " wird nun zwangsversteigert.");
+                        betPhase(field);
+                    }
+                    break;
+                case 2: //Auktion @multiplayer
+                    logger.info(player.getName() + "hat sich gegen den Kauf entschieden, die Straße wird nun versteigert.");
+                    betPhase(field);
+                    break;
+                default:
+                    logger.log(Level.WARNING, "getUserInput() hat index außerhalb des zurückgegeben.");
+                    break;
+            }
+        } else if (other != null) { // Property nicht im eigenen Besitz
+            logger.log(Level.FINE, player.getName() + " steht auf dem Grundstück von " + other.getName() + ".");
+            
+            int rent = field.getRent();
+            if (field instanceof SupplyField) {
+                rent = rent * (rollResult[0] + rollResult[1]);
+            }
+        
+            if (checkLiquidity(player, rent)) {
+                logger.log(Level.INFO, player.getName() + " zahlt " + rent + CURRENCY_TYPE + " Miete.");
+                takeMoney(player, rent);
+                giveMoney(field.getOwner(), rent);
+            } else {
+                logger.log(Level.INFO, player.getName() + " kann die geforderte Miete nicht zahlen!");
+                bankrupt(player);
+            }
+        }
+        else logger.log(Level.FINE, player.getName() + " steht auf seinem eigenen Grundstück.");
     }
 
     /**
@@ -478,24 +493,15 @@ public class GameController {
      *
      * @param player Spieler der bewegt wird
      */
-    public void movePlayer(Player player, int[] rollResult) {
-        /*
-         * TODO brauchen wird noch eine Methode um den Spieler FREI zu bewegen? falls die Zahl 39 ueberschritten wird und damit
-         * das Spielfeld dann geht der Spieler ueber Los (bekommt 200) und wird auf die Position aktuelles Feld + Wuerfelanzahl
-         * minus der Gesamtfeldanzahl falls nicht dann geht der Spieler nicht ueber Los und wird einfach auf das aktuelle Feld
-         * plus der Anzahl der Wuerfelanzahl gesetzt
-         */
-        if ((player.getPosition() + (rollResult[0] + rollResult[1])) > 39) {
-
-            logger.log(Level.INFO, player.getName() + " ist ueber Los gegangen und erhaelt " + ((GoField) board.getFields()[0]).getAmount()
-                    + " " + CURRENCY_TYPE + ".");
-
+    public void movePlayer(Player player, int fields) {
+        if (player.getPosition() + fields > 39) {
+            logger.log(Level.FINE, player.getName() + " hat das \"LOS\"-Feld passiert und erhaelt " +
+                    ((GoField) board.getFields()[0]).getAmount() + " " + CURRENCY_TYPE + ".");
             giveMoney(player, ((GoField) board.getFields()[0]).getAmount());
 
-            player.setPosition((player.getPosition() + (rollResult[0] + rollResult[1])) - 39);
-        } else {
-            player.setPosition(player.getPosition() + (rollResult[0] + rollResult[1]));
+            player.setPosition(player.getPosition() + fields - 39);
         }
+        else player.setPosition(player.getPosition() + fields);
     }
 
     /**
@@ -560,51 +566,7 @@ public class GameController {
     }
 
     /**
-     * ermittelt anhand der Position des Spielers das Feld mit der ID auf dem GameBoard, welches der Variablen
-     * <code> Field currField </code> uebergeben wird. Gibt folgenden fieldSwitch Wert zurück: <br>
-     * 1 - Straße / Bahnhof / Werk (Property) <br>
-     * 2 - LOS <br>
-     * 3 - Frei-Parken <br>
-     * 4 - Gefaengnis <br>
-     * 5 - Steuer <br>
-     * 6 - Ereignis- / Gemeinschaftskartenfeld <br>
-     * 7 - Geh ins Gefaengnis
-     *
-     * @param player Spieler dessen Position ermittelt werden soll
-     * @return fieldSwitch Wert
-     */
-    public int locate(Player player) {
-
-        int fieldSwitch = 0;
-        // Da es keine Implementierung des Gefängnisfeldes
-        // und des Freiparkenfeldes gibt. Wurden die zwei
-        // if Abfragen zunächst über die Spielerposition realisiert
-        // Lösung ist korrekt so. GoToJail wurde hinzugefügt
-        currField = board.getFields()[player.getPosition()];
-        System.out.println(player + " " + currField);
-        logger.log(Level.INFO, player.getName() + " befindet sich auf " + currField.getName() + ".");
-
-        if (currField instanceof Property) {
-            fieldSwitch = 1;
-        } else if (currField instanceof GoField) {
-            fieldSwitch = 2;
-        } else if (player.getPosition() == 20) {
-            fieldSwitch = 3;
-        } else if (player.getPosition() == 10) {
-            fieldSwitch = 4;
-        } else if (currField instanceof TaxField) {
-            fieldSwitch = 5;
-        } else if (currField instanceof CardField) {
-            fieldSwitch = 6;
-        } else if (player.getPosition() == 30) {
-            fieldSwitch = 7;
-        }
-        return fieldSwitch;
-    }
-
-    /**
      * Macht einen Spieler zum Beobachter und entfernt all seinen Besitz!
-     *
      *
      * @param player Spieler der bankrott gegangen ist
      */
@@ -650,6 +612,7 @@ public class GameController {
                 .filter(p -> !(p.isSpectator()))
                 .count();
     }
+    
 //-----------------------------------------------------------------------------
 //------------ FELDMETHODEN ---------------------------------------------------
 //-----------------------------------------------------------------------------
@@ -766,8 +729,8 @@ public class GameController {
      * Die Preise fuer Renovierung werden von dem entsprechenden Karte bekannt und dies wird mit der Anzahl von Haeuser/Hotels
      * multipliziert und am Ende addiert = Summe
      *
-     * @param house_price
-     * @param hotel_price
+     * @param housePrice Hauspreis
+     * @param hotelPrice Hotelpreis
      */
     public void sumRenovation(Player player, int housePrice, int hotelPrice) {
         //TODO spaeter, wenn Kartenstapel gedruckt wurde

@@ -13,6 +13,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
@@ -53,6 +55,15 @@ public class Launcher extends Application {
     }
     
     private static void configLoggers() {
+        try {
+            LogManager.getLogManager().readConfiguration(Launcher.class.getClassLoader().getResourceAsStream("data/config/logging.properties"));
+        }
+        catch (IOException ex) {
+            System.err.println("Couldn't configure loggers!");
+            ex.printStackTrace();
+        }
+        
         Logger.getLogger(GameBoardParser.class.getCanonicalName()).setLevel(Level.OFF);
+        Logger.getLogger(GameController.class.getCanonicalName()).setLevel(Level.OFF);
     }
 }

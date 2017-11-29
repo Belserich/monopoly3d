@@ -17,30 +17,10 @@ import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static de.btu.monopoly.data.parser.GameBoardParser.FieldType.*;
-
 /**
  * @author Maximilian Bels (belsmaxi@b-tu.de)
  */
 public class GameBoardParser {
-    
-    /**
-     * Aufzählung der verschiedenen Feldtypen
-     */
-    enum FieldType {
-        GO, CORNER, STREET, CARD, TAX, STATION, SUPPLY
-    }
-    
-    /**
-     * Die Feldstruktur ordnet den ids 0-39 die entsprechenden Feldtypen zu. Fängt beim LOS-Feld an und geht im Uhrzeigersinn
-     * weiter. Für mehr Infos siehe *\src\resources\data\game_board_de.png
-     */
-    private static final FieldType[] FIELD_STRUCTURE = {
-            GO, STREET, CARD, STREET, TAX, STATION, STREET, CARD, STREET, STREET,
-            CORNER, STREET, SUPPLY, STREET, STREET, STATION, STREET, CARD, STREET, STREET,
-            CORNER, STREET, CARD, STREET, STREET, STATION, STREET, STREET, SUPPLY, STREET,
-            CORNER, STREET, STREET, CARD, STREET, STATION, CARD, STREET, TAX, STREET
-    };
     
     /**
      * Sammlung aller Nachbar-Ids in aufsteigender Reihenfolge. Der Erste beider Indizes steht immer für eine eigene Property
@@ -66,23 +46,23 @@ public class GameBoardParser {
     private static CardStack CARD_LOADOUT_1 = null;
     
     public static GameBoard parse(String path) throws ParserConfigurationException, IOException, SAXException {
-        Field[] fields = new Field[FIELD_STRUCTURE.length];
-        
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder builder = null;
-        builder = factory.newDocumentBuilder();
-        
-        File file = new File(CardStackParser.class.getClassLoader().getResource(path).getFile());
-        Document doc = builder.parse(file);
-        LOGGER.info("Dokument erfolgreich ausgelesen!");
+        Field[] fields = new Field[GameBoard.FIELD_STRUCTURE.length];
     
-        NodeList nList;
+        DocumentBuilder builder;
         Element elem;
         int id;
         
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        builder = factory.newDocumentBuilder();
+        
+        File file = new File(CardStackParser.class.getClassLoader().getResource(path).getFile());
+        
+        Document doc = builder.parse(file);
+        LOGGER.info("Dokument erfolgreich ausgelesen!");
+        
         NodeList fieldList = doc.getElementsByTagName("field");
         
-        if (fieldList.getLength() != FIELD_STRUCTURE.length) {
+        if (fieldList.getLength() != GameBoard.FIELD_STRUCTURE.length) {
             LOGGER.warning("Anzahl Felder in " + path + " ungleich dem erwarteten Wert.");
             throw new IOException(IO_EXCEPTION_MESSAGE);
         }
@@ -92,10 +72,12 @@ public class GameBoardParser {
             id = parseId(elem);
             
             Field field;
-            switch (FIELD_STRUCTURE[id]) {
+            switch (GameBoard.FIELD_STRUCTURE[id]) {
                 case GO:
                     field = parseGoField(elem);
                     break;
+                case GO_JAIL:
+                    // siehe case CORNER
                 case CORNER:
                     field = parseCornerField(elem);
                     break;
@@ -187,9 +169,7 @@ public class GameBoardParser {
         catch (NumberFormatException ex) {
             LOGGER.log(Level.WARNING, "", ex);
         }
-        finally {
-            return retObj;
-        }
+        return retObj;
     }
     
     private static StationField parseStationField(Element elem) {
@@ -219,9 +199,7 @@ public class GameBoardParser {
         catch (NumberFormatException ex) {
             LOGGER.log(Level.WARNING, "", ex); // TODO Exception im Logging-Formatter integrieren.
         }
-        finally {
-            return retObj;
-        }
+        return retObj;
     }
     
     private static SupplyField parseSupplyField(Element elem) {
@@ -246,9 +224,7 @@ public class GameBoardParser {
         catch (NumberFormatException ex) {
             LOGGER.log(Level.WARNING, "", ex);
         }
-        finally {
-            return retObj;
-        }
+        return retObj;
     }
     
     private static TaxField parseTaxField(Element elem) {
@@ -262,9 +238,7 @@ public class GameBoardParser {
         catch (NumberFormatException ex) {
             LOGGER.log(Level.WARNING, "", ex);
         }
-        finally {
-            return retObj;
-        }
+        return retObj;
     }
     
     private static CardField parseCardField(Element elem) {

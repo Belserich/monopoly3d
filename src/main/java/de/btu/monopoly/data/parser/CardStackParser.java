@@ -68,7 +68,7 @@ public class CardStackParser {
             name = elem.getAttribute("name");
             text = elem.getAttribute("text");
 
-            types = convertNodesToStream(elem.getElementsByTagName("type"))
+            types = convertNodesToStream(elem.getElementsByTagName("action"))
                     .map(Node::getTextContent)
                     .map(s -> Card.Action.valueOf(s.toUpperCase()))
                     .toArray(Card.Action[]::new);

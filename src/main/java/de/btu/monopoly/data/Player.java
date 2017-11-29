@@ -113,7 +113,7 @@ public class Player {
     /**
      * Erhöht die Anzahl der Gefaengnis-frei-Karten um 1.
      */
-    public void addJailCardAmount() {
+    public void addJailCard() {
         this.jailCardAmount++;
     }
 

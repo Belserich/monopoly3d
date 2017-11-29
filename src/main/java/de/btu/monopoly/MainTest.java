@@ -6,6 +6,7 @@ import de.btu.monopoly.data.field.*;
 
 import java.util.logging.Handler;
 import java.util.logging.Level;
+import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 /**
@@ -15,9 +16,8 @@ import java.util.logging.Logger;
 public class MainTest {
 
     public static void main(String[] args) throws Exception {
-        
         // Schaltet das Logging für die Tests aus
-        GameController.logger.setLevel(Level.OFF);
+        LogManager.getLogManager().reset();
         
         // Variablen:
         GameController gc = new GameController(2);
