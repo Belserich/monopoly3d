@@ -36,10 +36,10 @@ public class StationField extends Property {
     public int ownedStations() {
         int numberOfStationsOwned = 1;
         for (Property nei : super.getNeighbours()) {
-            if (nei.getOwner().equals(super.getOwner())) {
+            if (nei.getOwner() == (super.getOwner())) {
                 numberOfStationsOwned++;
             }
         }
-        return numberOfStationsOwned;
+        return numberOfStationsOwned - 1;
     }
 }
