@@ -8,12 +8,12 @@ public class Player {
     /**
      * Name des Spielers
      */
-    private final String name;
+    private String name;
 
     /**
      * ID des Spielers
      */
-    private final int id;
+    private int id;
 
     /**
      * Kapital
@@ -61,6 +61,11 @@ public class Player {
         this.daysInJail = 0;
         this.position = 0;
     }
+    
+    /**
+     * Für die Kryonet-Serialisierung
+     */
+    public Player() {}
 
     /**
      * @return Name

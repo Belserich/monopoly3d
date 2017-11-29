@@ -3,7 +3,10 @@ package de.btu.monopoly;
 import de.btu.monopoly.controller.GameController;
 import de.btu.monopoly.data.*;
 import de.btu.monopoly.data.field.*;
+
+import java.util.logging.Handler;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -12,8 +15,10 @@ import java.util.logging.Level;
 public class MainTest {
 
     public static void main(String[] args) throws Exception {
+        
+        // Schaltet das Logging für die Tests aus
         GameController.logger.setLevel(Level.OFF);
-
+        
         // Variablen:
         GameController gc = new GameController(2);
         gc.init();
@@ -27,7 +32,7 @@ public class MainTest {
     }
 
     private static void testRollMethod(GameController gc, Player arg) throws Exception {
-        for (int j = 0; j < 1000; j++) {
+        for (int j = 0; j < 1; j++) {
             int[] result = gc.roll(arg);
             for (int i : result) {
                 assert i > 0 && i < 7 : "LOL";
