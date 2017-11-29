@@ -14,7 +14,7 @@ public class SupplyField extends Property {
      * @param mult1 1. Multiplikator
      * @param mult2 2. Multipliaktor
      */
-    public SupplyField(String name, int price, int mortgage, int mortgageBack, int mult1, int mult2) {
+    public SupplyField(String name, int price, int mult1, int mult2, int mortgage, int mortgageBack) {
         super(name, price, mortgage, mortgageBack);
         this.mult1 = mult1;
         this.mult2 = mult2;
@@ -46,5 +46,11 @@ public class SupplyField extends Property {
             }
         }
         return true;
+    }
+    
+    @Override
+    public String toString() {
+        return String.format("[Versorgungswerk] Name: %s, Preis: %s, Multiplikator1: %s, Multiplikator2: %s, Hypothekswert: %s, Hypotheksrückwert: %s",
+                getName(), getPrice(), mult1, mult2, getMortgageValue(), getMortgageBack());
     }
 }

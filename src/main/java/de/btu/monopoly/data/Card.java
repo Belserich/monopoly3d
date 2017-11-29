@@ -1,13 +1,15 @@
 package de.btu.monopoly.data;
 
+import java.util.Arrays;
+
 /**
  * @author Maximilian Bels (belsmaxi@b-tu.de)
  */
 public class Card {
     
     public enum Action {
-        JAIL, GO_JAIL, GIVE_MONEY, NEXT_STATION, RENT_AMP, MOVE_PLAYER, PAY_MONEY, SET_POSITION,
-        GIVE_MONEY_IF_GO_PASSED, RENOVATE, NULL_INCOME, NEXT_SUPPLY, BIRTHDAY;
+        JAIL, GO_JAIL, GIVE_MONEY, NEXT_STATION_RENT_AMP, MOVE_PLAYER, PAY_MONEY,
+        SET_POSITION, RENOVATE, NEXT_SUPPLY, BIRTHDAY, PAY_MONEY_ALL;
     }
     
     /**
@@ -71,5 +73,10 @@ public class Card {
      */
     public int[] getArgs() {
         return args;
+    }
+    
+    @Override
+    public String toString() {
+        return String.format("[Karte] Name: \"%s\", Text: \"%s\", Aktionen: %s, Argumente: %s", name, text, Arrays.toString(actions), Arrays.toString(args));
     }
 }

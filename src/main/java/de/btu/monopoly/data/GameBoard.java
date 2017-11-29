@@ -2,11 +2,34 @@ package de.btu.monopoly.data;
 
 import de.btu.monopoly.data.field.Field;
 
+import java.util.Arrays;
+import java.util.stream.Stream;
+
+import static de.btu.monopoly.data.GameBoard.FieldType.*;
+
 /**
  * @author Maximilian Bels (belsmaxi@b-tu.de)
  */
 public class GameBoard
 {
+    /**
+     * Aufzählung der verschiedenen Feldtypen
+     */
+    public enum FieldType {
+        GO, CORNER, STREET, CARD, TAX, STATION, SUPPLY, GO_JAIL;
+    }
+    
+    /**
+     * Die Feldstruktur ordnet den ids 0-39 die entsprechenden Feldtypen zu. Fängt beim LOS-Feld an und geht im Uhrzeigersinn
+     * weiter. Für mehr Infos siehe *\src\resources\data\game_board_de.png
+     */
+    public static final FieldType[] FIELD_STRUCTURE = {
+            GO, STREET, CARD, STREET, TAX, STATION, STREET, CARD, STREET, STREET,
+            CORNER, STREET, SUPPLY, STREET, STREET, STATION, STREET, CARD, STREET, STREET,
+            CORNER, STREET, CARD, STREET, STREET, STATION, STREET, STREET, SUPPLY, STREET,
+            GO_JAIL, STREET, STREET, CARD, STREET, STATION, CARD, STREET, TAX, STREET
+    };
+    
     /**
      * Felder des Spielbretts
      */
@@ -26,5 +49,14 @@ public class GameBoard
      */
     public Field[] getFields() {
         return fields;
+    }
+    
+    @Override
+    public String toString() {
+        String retObj = new String();
+        for (Field field : fields) {
+            retObj += field.toString() + "\n";
+        }
+        return retObj;
     }
 }

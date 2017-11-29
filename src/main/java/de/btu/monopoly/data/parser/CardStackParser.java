@@ -31,7 +31,7 @@ public class CardStackParser {
      * @throws IOException Die Datei konnte nicht gefunden werden.
      * @throws SAXException wenn das Dokument nicht gelesen werden konnte, also eine beschädigte Grobstruktur vorliegt
      */
-    public static final CardStack parse(String path) throws ParserConfigurationException, IOException, SAXException {
+    public static CardStack parse(String path) throws ParserConfigurationException, IOException, SAXException {
         Card[] cards;
 
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -68,7 +68,7 @@ public class CardStackParser {
             name = elem.getAttribute("name");
             text = elem.getAttribute("text");
 
-            types = convertNodesToStream(elem.getElementsByTagName("type"))
+            types = convertNodesToStream(elem.getElementsByTagName("action"))
                     .map(Node::getTextContent)
                     .map(s -> Card.Action.valueOf(s.toUpperCase()))
                     .toArray(Card.Action[]::new);
@@ -88,12 +88,6 @@ public class CardStackParser {
         if (aList != null && aList.item(0) != null) {
             amount = Integer.parseInt(aList.item(0).getTextContent());
         }
-
-        System.out.print(name + " " + text);
-        Stream.of(types).forEach(t -> System.out.print(t + " "));
-        IntStream.of(args).forEach(arg -> System.out.println(arg + " "));
-        System.out.println(amount);
-
         return new Card(name, text, types, args);
     }
 

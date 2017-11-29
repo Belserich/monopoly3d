@@ -26,4 +26,8 @@ public class GoField extends Field {
         return amount;
     }
 
+    @Override
+    public String toString() {
+        return String.format("[\"LOS\"-Feld] Name: %s, Betrag: %s", getName(), amount);
+    }
 }

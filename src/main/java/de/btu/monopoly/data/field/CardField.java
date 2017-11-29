@@ -15,6 +15,15 @@ public class CardField extends Field {
     public CardField(String name, CardStack cards) {
         super(name);
         this.cards = cards;
+        cards.shuffle();
     }
-
+    
+    public CardStack getCardStack() {
+        return cards;
+    }
+    
+    @Override
+    public String toString() {
+        return String.format("[Kartenfeld] Name: %s, Stapel: %s", getName(), cards);
+    }
 }

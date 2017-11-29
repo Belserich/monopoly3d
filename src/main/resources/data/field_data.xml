@@ -1,228 +1,84 @@
 <?xml version="1.1" encoding="UTF-8"?>
 <fields>
 
-    <field name="LOS" id="0">
-        <money>200</money>
-    </field>
+    <field id="0" name="LOS" amount="200" />
 
-    <field name="Badstrasse" id="1">
-        <price>60</price>
-        <rents>2, 10, 30, 90, 160, 250</rents>
-        <house_price>100</house_price>
-        <mortgage>30, 33</mortgage>
-    </field>
+    <field id="10" name="Im Gefaengnis" />
 
-    <field name="Gemeinschaftsfeld" id="2">
-        <type>0</type>
-    </field>
+    <field id="20" name="Frei Parken" />
 
-    <field name="Turmstrasse" id="3">
-        <price>60</price>
-        <rents>4, 20, 60, 180, 320, 450</rents>
-        <house_price>100</house_price>
-        <mortgage>30, 33</mortgage>
-    </field>
+    <field id="30" name="Gehen Sie in das Gefaengnis" />
 
-    <field name="Einkommenssteuer" id="4">
-        <tax>50</tax>
-    </field>
+    <field id="1" name="Badstrasse" price="60" rent0="2" rent1="10" rent2="30" rent3="90" rent4="160" rent5="250" house_price="100" mortgage="30" mortgage_back="33" />
 
-    <field name="Zusatzsteuer" id="38">
-        <tax>50</tax>
-    </field>
+    <field id="3" name="Turmstrasse" price="60" rent0="4" rent1="20" rent2="60" rent3="180" rent4="320" rent5="450" house_price="100" mortgage="30" mortgage_back="33" />
 
-    <field name="Suedbahnhof" id="5">
-        <price>200</price>
-        <rents>25, 50, 75, 100</rents>
-        <mortgage>100, 110</mortgage>
-    </field>
+    <field id="6" name="Chausseestrasse" price="100" rent0="6" rent1="30" rent2="90" rent3="270" rent4="400" rent5="550" house_price="100" mortgage="50" mortgage_back="55"/>
 
-    <field name="Chausseestrasse" id="6">
-        <price>100</price>
-        <rents>6, 30, 90, 270, 400, 550</rents>
-        <house_price>100</house_price>
-        <mortgage>50, 55</mortgage>
-    </field>
+    <field id="8" name="Elisenstrasse" price="100" rent0="6" rent1="30" rent2="90" rent3="270" rent4="400" rent5="550" house_price="100" mortgage="50" mortgage_back="55"/>
 
-    <field name="Elisenstrasse" id="8">
-        <price>100</price>
-        <rents>6, 30, 90, 270, 400, 550</rents>
-        <housePrice>100</housePrice>
-        <mortgage>50, 55</mortgage>
-    </field>
+    <field id="9" name="Poststrasse" price="120" rent0="8" rent1="40" rent2="100" rent3="300" rent4="450" rent5="600" house_price="100" mortgage="60" mortgage_back="66"/>
 
-    <field name="Poststrasse" id="9">
-        <price>120</price>
-        <rents>8, 40, 100, 300, 450, 600</rents>
-        <housePrice>100</housePrice>
-        <mortgage>60, 66</mortgage>
-    </field>
+    <field id="11" name="Seestrasse" price="140" rent0="10" rent1="50" rent2="150" rent3="450" rent4="625" rent5="750" house_price="100" mortgage="70" mortgage_back="77"/>
 
-    <field name="Seestrasse" id="11">
-        <price>140</price>
-        <rents>10, 50, 150, 450, 625, 750</rents>
-        <housePrice>100</housePrice>
-        <mortgage>70, 77</mortgage>
-    </field>
+    <field id="13" name="Hafenstrasse" price="140" rent0="10" rent1="50" rent2="150" rent3="450" rent4="625" rent5="750" house_price="100" mortgage="70" mortgage_back="77"/>
 
-    <field name="Hafenstrasse" id="13">
-        <price>140</price>
-        <rents>10, 50, 150, 450, 625, 750</rents>
-        <housePrice>100</housePrice>
-        <mortgage>70, 77</mortgage>
-    </field>
+    <field id="14" name="Neue Strasse" price="160" rent0="12" rent1="60" rent2="180" rent3="500" rent4="700" rent5="900" house_price="100" mortgage="80" mortgage_back="90"/>
 
-    <field name="Neue Strasse" id="14">
-        <price>160</price>
-        <rents>12, 60, 180, 500, 700, 900</rents>
-        <housePrice>100</housePrice>
-        <mortgage>80, 90</mortgage>
-    </field>
+    <field id="16" name="Muenchener Strasse" price="180" rent0="14" rent1="70" rent2="200" rent3="550" rent4="750" rent5="950" house_price="100" mortgage="90" mortgage_back="110"/>
 
-    <field name="Muenchener Strasse" id="16">
-        <price>180</price>
-        <rents>14, 70, 200, 550, 750, 950</rents>
-        <housePrice>100</housePrice>
-        <mortgage>90, 110</mortgage>
-    </field>
+    <field id="18" name="Wiener Strasse" price="180" rent0="14" rent1="70" rent2="200" rent3="550" rent4="750" rent5="950" house_price="100" mortgage="90" mortgage_back="110"/>
 
-    <field name="Wiener Strasse" id="18">
-        <price>180</price>
-        <rents>14, 70, 200, 550, 750, 950</rents>
-        <housePrice>100</housePrice>
-        <mortgage>90, 110</mortgage>
-    </field>
+    <field id="19" name="Berliner Strasse" price="200" rent0="16" rent1="80" rent2="220" rent3="600" rent4="800" rent5="1000" house_price="100" mortgage="100" mortgage_back="120"/>
 
-    <field name="Berliner Strasse" id="19">
-        <price>200</price>
-        <rents>16, 80, 220, 600, 800, 1000</rents>
-        <housePrice>100</housePrice>
-        <mortgage>100, 120</mortgage>
-    </field>
+    <field id="21" name="Theaterstrasse" price="220" rent0="18" rent1="90" rent2="250" rent3="700" rent4="875" rent5="1050" house_price="100" mortgage="110" mortgage_back="121"/>
 
-    <field name="Theaterstrasse" id="21">
-        <price>220</price>
-        <rents>18, 90, 250, 700, 875, 1050</rents>
-        <housePrice>100</housePrice>
-        <mortgage>110, 121</mortgage>
-    </field>
+    <field id="23" name="Museumstrasse" price="220" rent0="18" rent1="90" rent2="250" rent3="700" rent4="875" rent5="1050" house_price="100" mortgage="110" mortgage_back="121"/>
 
-    <field name="Museumstrasse" id="23">
-        <price>220</price>
-        <rents>18, 90, 250, 700, 875, 1050</rents>
-        <housePrice>100</housePrice>
-        <mortgage>110, 121</mortgage>
-    </field>
+    <field id="24" name="Opernplatz" price="240" rent0="20" rent1="100" rent2="300" rent3="750" rent4="925" rent5="1100" house_price="100" mortgage="120" mortgage_back="132"/>
 
-    <field name="Opernplatz" id="24">
-        <price>240</price>
-        <rents>20, 100, 300, 750, 925, 1100</rents>
-        <housePrice>100</housePrice>
-        <mortgage>120, 132</mortgage>
-    </field>
+    <field id="26" name="Lessingstrasse" price="260" rent0="22" rent1="110" rent2="330" rent3="800" rent4="975" rent5="1150" house_price="100" mortgage="130" mortgage_back="156"/>
 
-    <field name="Lessingstrasse" id="26">
-        <price>260</price>
-        <rents>22, 110, 330, 800, 975, 1150</rents>
-        <housePrice>100</housePrice>
-        <mortgage>130, 156</mortgage>
-    </field>
+    <field id="27" name="Schillerstrasse" price="260" rent0="22" rent1="110" rent2="330" rent3="800" rent4="975" rent5="1150" house_price="100" mortgage="130" mortgage_back="156"/>
 
-    <field name="Schillerstrasse" id="27">
-        <price>260</price>
-        <rents>22, 110, 330, 800, 975, 1150</rents>
-        <housePrice>100</housePrice>
-        <mortgage>130, 156</mortgage>
-    </field>
+    <field id="29" name="Goethestrasse" price="280" rent0="24" rent1="120" rent2="360" rent3="850" rent4="1025" rent5="1200" house_price="100" mortgage="140" mortgage_back="168"/>
 
-    <field name="Goethestrasse" id="29">
-        <price>280</price>
-        <rents>24, 120, 360, 850, 1025, 1200</rents>
-        <housePrice>100</housePrice>
-        <mortgage>140, 168</mortgage>
-    </field>
+    <field id="31" name="Rathausplatz" price="300" rent0="26" rent1="130" rent2="390" rent3="900" rent4="110" rent5="1275" house_price="100" mortgage="150" mortgage_back="180"/>
 
-    <field name="Rathausplatz" id="31">
-        <price>300</price>
-        <rents>26, 130, 390, 900, 110, 1275</rents>
-        <housePrice>100</housePrice>
-        <mortgage>150, 180</mortgage>
-    </field>
+    <field id="32" name="Hauptstrasse" price="300" rent0="26" rent1="130" rent2="390" rent3="900" rent4="1100" rent5="1275" house_price="100" mortgage="150" mortgage_back="180"/>
 
-    <field name="Hauptstrasse" id="32">
-        <price>300</price>
-        <rents>26, 130, 390, 900, 1100, 1275</rents>
-        <housePrice>100</housePrice>
-        <mortgage>150, 180</mortgage>
-    </field>
+    <field id="34" name="Bahnhofstrasse" price="320" rent0="35" rent1="150" rent2="450" rent3="1000" rent4="1200" rent5="1400" house_price="100" mortgage="160" mortgage_back="192"/>
 
-    <field name="Bahnhofstrasse" id="34">
-        <price>320</price>
-        <rents>28, 150, 450, 1000, 1200, 1400</rents>
-        <housePrice>100</housePrice>
-        <mortgage>160, 192</mortgage>
-    </field>
+    <field id="37" name="Parkstrasse" price="350" rent0="35" rent1="175" rent2="500" rent3="1100" rent4="1300" rent5="1500" house_price="100" mortgage="175" mortgage_back="210"/>
 
-    <field name="Parkstrasse" id="37">
-        <price>350</price>
-        <rents>35, 175, 500, 1100, 1300, 1500</rents>
-        <housePrice>100</housePrice>
-        <mortgage>175, 210</mortgage>
-    </field>
+    <field id="39" name="Schlossallee" price="400" rent0="50" rent1="200" rent2="600" rent3="1400" rent4="1700" rent5="2000" house_price="100" mortgage="200" mortgage_back="240"/>
 
-    <field name="Schlossallee" id="39">
-        <price>400</price>
-        <rents>50, 200, 600, 1400, 1700, 2000</rents>
-        <housePrice>100</housePrice>
-        <mortgage>200, 240</mortgage>
-    </field>
+    <field id="4" name="Einkommenssteuer" tax="50" />
 
-    <field name="Elektrizitaetswerk" id="12">
-        <price>150</price>
-        <mults>4, 10</mults>
-        <mortgage>75, 90</mortgage>
-    </field>
+    <field id="38" name="Zusatzsteuer" tax="50" />
 
-    <field name="Wasserwerk" id="28">
-        <price>150</price>
-        <mults>4, 10</mults>
-        <mortgage>75, 90</mortgage>
-    </field>
+    <field id="5" name="Suedbahnhof" price="200" rent0="25" rent1="50" rent2="75" rent3="100" mortgage="100" mortgage_back="110"/>
 
-    <field name="Ereignisfeld" id="7">
-        <type>1</type>
-    </field>
+    <field id="15" name="Westbahnhof" price="200" rent0="25" rent1="50" rent2="75" rent3="100" mortgage="100" mortgage_back="120"/>
 
-    <field name="Ereignisfeld" id="36">
-        <type>1</type>
-    </field>
+    <field id="25" name="Nordbahnhof" price="200" rent0="25" rent1="50" rent2="75" rent3="100" mortgage="100" mortgage_back="120"/>
 
-    <field name="Ereignisfeld" id="22">
-        <type>1</type>
-    </field>
+    <field id="35" name="Hauptbahnhof" price="200" rent0="25" rent1="50" rent2="75" rent3="100" mortgage="100" mortgage_back="110"/>
 
-    <field name="Westbahnhof" id="15">
-        <price>200</price>
-        <rents>25, 50, 75, 100</rents>
-        <mortgage>100, 120</mortgage>
-    </field>
+    <field id="12" name="Elektrizitaetswerk" price="150" mult1="4" mult2="10" mortgage="75" mortgage_back="90"/>
 
-    <field name="Nordbahnhof" id="25">
-        <price>200</price>
-        <rents>25, 50, 75, 100</rents>
-        <mortgage>100, 120</mortgage>
-    </field>
+    <field id="28" name="Wasserwerk" price="150" mult1="4" mult2="10" mortgage="75" mortgage_back="90"/>
 
-    <field name="Hauptbahnhof" id="35">
-        <price>200</price>
-        <rents>25, 50, 75, 100</rents>
-        <mortgage>100, 110</mortgage>
-    </field>
+    <field id="2" name="Gemeinschaftsfeld" type="0" />
 
-    <field name="Im Gefaengnis" id="10"></field>
+    <field id="17" name="Gemeinschaftsfeld" type="0" />
 
-    <field name="Frei Parken" id="20"></field>
+    <field id="33" name="Gemeinschaftsfeld" type="0" />
 
-    <field name="Gehen Sie in das Gefaengnis" id="30"></field>
+    <field id="7" name="Ereignisfeld" type="1" />
+
+    <field id="36" name="Ereignisfeld" type="1" />
+
+    <field id="22" name="Ereignisfeld" type="1" />
 
 </fields>

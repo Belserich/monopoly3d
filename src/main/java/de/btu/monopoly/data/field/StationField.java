@@ -42,4 +42,10 @@ public class StationField extends Property {
         }
         return numberOfStationsOwned - 1;
     }
+    
+    @Override
+    public String toString() {
+        return String.format("[Bahnhof] Name: %s, Preis: %s, Miete0: %s, Miete1: %s, Miete2: %s, Miete3: %s, Hypothekswert: %s, Hypotheksrückwert: %s",
+                getName(), getPrice(), rents[0], rents[1], rents[2], rents[3], getMortgageValue(), getMortgageBack());
+    }
 }
