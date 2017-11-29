@@ -28,7 +28,7 @@ public class MainTest {
         testGameBoard(board, players);
         testRollMethod(gc, players[0]);
         testGoField(gc, players);
-        // Eckfeld betreten (Außer GoToJail)
+        testCornerFields(gc, players);
         // pleite gehen
         // Steuer auf TaxFeld bezahlen
         testBuyStreet(gc, players[0]);
@@ -125,11 +125,42 @@ public class MainTest {
         //kommt mit 2 in endlos Schleife, also richtig!
 //        System.out.println("Gebe eine 2 ein!"); //TODO Userinput automatisieren
 //        gc.jailPhase(prisoner2);
-        assert prisoner1.isInJail() == false : "failed : Spieler ist noch im Gefaengniss!";
+        assert prisoner1.isInJail() == false : "failed : Spieler ist noch im Gefaengnis!";
         if (prisoner1.isInJail() == false) {
             System.out.println("passed : frei gekauft aus Gefaengnis");
         }
 
+    }
+
+    /**
+     * @author Patrick Kalweit
+     * @param gc
+     * @param players
+     */
+    private static void testCornerFields(GameController gc, Player[] players) {
+        //Spieler und Variablen initialisieren
+        Player cornerPlayer = players[0];
+        cornerPlayer.setInJail(false);
+
+        //Gefaengnis Feld (zu Besuch)
+        cornerPlayer.setPosition(10);
+        assert cornerPlayer.isInJail() == false : "failed : Spieler ist im Gefaengnis!";
+        if (cornerPlayer.isInJail() == false) {
+            System.out.println("passed : Spieler ist nicht im Gefaengnis");
+        }
+
+        //Freiparken
+        cornerPlayer.setPosition(20);
+        assert cornerPlayer.getPosition() == 20 : "failed : Spieler ist nicht auf Frei Parken!";
+        if (cornerPlayer.getPosition() == 20) {
+            System.out.println("passed : Spieler ist auf Frei Parken");
+        }
+        //Los-Feld
+        cornerPlayer.setPosition(0);
+        assert cornerPlayer.getPosition() == 0 : "failed : Spieler ist nicht auf Los";
+        if (cornerPlayer.getPosition() == 0) {
+            System.out.println("passed : Spieler ist auf Los");
+        }
     }
 
     private static void testBuyStreet(GameController gc, Player player) {
