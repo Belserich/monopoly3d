@@ -72,7 +72,7 @@ public class GameController {
         logger.log(Level.INFO, "Spiel wird initialisiert");
 
         try {
-            CardStack stack = CardStackParser.parse("data/card_data.xml");
+            CardStack stack = CardStackParser.parse("/data/card_data.xml");
             logger.log(Level.FINEST, stack.toString());
             GameBoardParser.setCardLoadout0(stack);
             GameBoardParser.setCardLoadout1(stack);

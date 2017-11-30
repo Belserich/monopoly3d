@@ -7,17 +7,15 @@ package de.btu.monopoly;
 
 import de.btu.monopoly.controller.GameController;
 import de.btu.monopoly.data.parser.GameBoardParser;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
-import java.io.IOException;
-import java.util.logging.Handler;
-import java.util.logging.Level;
-import java.util.logging.LogManager;
-import java.util.logging.Logger;
 
 /**
  *
@@ -48,21 +46,20 @@ public class Launcher extends Application {
         initGame();
         launch(args);
     }
-    
+
     private static void initGame() {
         GameController controller = new GameController(2);
         controller.init();
     }
-    
+
     private static void configLoggers() {
         try {
-            LogManager.getLogManager().readConfiguration(Launcher.class.getClassLoader().getResourceAsStream("data/config/logging.properties"));
-        }
-        catch (IOException ex) {
+            LogManager.getLogManager().readConfiguration(Launcher.class.getResourceAsStream("/data/config/logging.properties"));
+        } catch (IOException ex) {
             System.err.println("Couldn't configure loggers!");
             ex.printStackTrace();
         }
-        
+
         Logger.getLogger(GameBoardParser.class.getCanonicalName()).setLevel(Level.OFF);
         Logger.getLogger(GameController.class.getCanonicalName()).setLevel(Level.OFF);
     }

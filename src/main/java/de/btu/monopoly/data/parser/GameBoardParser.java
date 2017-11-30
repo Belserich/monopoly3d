@@ -53,7 +53,6 @@ public class GameBoardParser {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         builder = factory.newDocumentBuilder();
 
-//        File file = new File(CardStackParser.class.getClassLoader().getResource(path).getFile());
         Document doc = builder.parse(CardStackParser.class.getResourceAsStream(path));
         LOGGER.info("Dokument erfolgreich ausgelesen!");
 

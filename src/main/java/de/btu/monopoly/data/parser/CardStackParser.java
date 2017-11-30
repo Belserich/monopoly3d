@@ -5,7 +5,6 @@ import de.btu.monopoly.data.CardStack;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Logger;
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -37,7 +36,7 @@ public class CardStackParser {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
 
-        File file = new File(CardStackParser.class.getClassLoader().getResource(path).getFile());
+        File file = new File(CardStackParser.class.getResource(path).getFile());
         Document doc = builder.parse(file);
 
         NodeList nList = doc.getElementsByTagName("card");
