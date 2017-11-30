@@ -29,7 +29,6 @@ public class MainTest {
         testRollMethod(gc, players[0]);
         testGoField(gc, players);
         testCornerFields(gc, players);
-        // pleite gehen
         // Steuer auf TaxFeld bezahlen
         testBuyStreet(gc, players[0]);
         // Straße bebauen (Haus kaufen)
@@ -37,11 +36,50 @@ public class MainTest {
         testPayRent(gc, players);
         // Hypothek aufnehmen
         // Hypothek bezahlen
+        testBankrupt(gc, players);
         testGoToJail(gc, players);
         testDoubletToJail(gc, players);
         // aus dem Gefaengnis mit Freikarte
         // aus dem Gefaengnis freiwuerfeln
         testPayPrisonDeposit(gc, players);
+
+    }
+
+    /**
+     * @author Christian Prinz
+     * @param gc
+     * @param player
+     */
+    private static void testBankrupt(GameController gc, Player[] players) {
+        Player player = players[0];
+        Player notSpectator = players[1];
+
+        // Attribute setzen
+        notSpectator.setSpectator(false);
+        player.setSpectator(false);
+        StreetField street1 = (StreetField) gc.board.getFields()[1];
+        street1.setOwner(player);                                   // Eine Strasse geben
+        StreetField street2 = (StreetField) gc.board.getFields()[3];
+        street2.setOwner(player);                                   // Zweite Strasse geben
+        Property station = (Property) gc.board.getFields()[5];
+        station.setOwner(player);                                   // Eine Property geben
+
+        street1.setHouseCount(3);                                   // Strasse 1 bebauen
+        street2.setMortgageTaken(true);                             // Strasse 2 Hypothek aufnehmen
+
+        // Methode aufrufen
+        gc.bankrupt(player);
+
+        //Attribute prüfen
+        assert player.isSpectator() : "failed : Spieler nicht als Zuschauer gesetzt.";
+        assert station.getOwner() == null : "failed : Bahnhof nicht zur Bank zurückgesetzt.";
+        assert street1.getOwner() == null : "failed : Strasse nicht zur Bank zurückgesetzt.";
+        assert street2.getOwner() == null : "failed : Strasse nicht zur Bank zurückgesetzt.";
+        boolean isMortgageReset = !street2.isMortgageTaken();
+        assert isMortgageReset : "failed : Hypothek nicht zurückgesetzt.";
+        assert street1.getHouseCount() == 0 : "failed : Häuser nicht zurückgesetzt.";
+
+        System.out.println("passed : Spieler geht bankrupt");
 
     }
 
@@ -93,7 +131,7 @@ public class MainTest {
 
         assert prisoner.isInJail() == true : "failed : Spieler ist nicht im Gefaengnis!";
         if (prisoner.isInJail() == true) {
-            System.out.println("passed : 3*Pasch; Spieler im Gefaengnis");
+            System.out.println("passed : durch 3 Päsche ins Gefaengnis");
         }
 
         prisoner.setInJail(false);
@@ -124,7 +162,7 @@ public class MainTest {
 //        gc.jailPhase(prisoner2);
         assert prisoner1.isInJail() == false : "failed : Spieler ist noch im Gefaengnis!";
         if (prisoner1.isInJail() == false) {
-            System.out.println("passed : frei gekauft aus Gefaengnis");
+            System.out.println("passed : freigekauft aus Gefaengnis");
         }
 
     }
@@ -149,7 +187,7 @@ public class MainTest {
         cornerPlayer.setPosition(0);
         assert cornerPlayer.getPosition() == 0 : "failed : Spieler ist nicht auf Los";
         if (cornerPlayer.getPosition() == 0) {
-            System.out.println("passed : Eckfelder funktionieren");
+            System.out.println("passed : Eckfelder betreten");
         }
     }
 
@@ -171,13 +209,18 @@ public class MainTest {
         assert prePrisoner.isInJail() == true : "failed : Spieler ist nicht IM Gefaengnis!";
         assert prePrisoner.getDaysInJail() == 0 : "failed : daysInJail sind nicht 0!";
         if (prePrisoner.getPosition() == 10 && prePrisoner.isInJail() == true && prePrisoner.getDaysInJail() == 0) {
-            System.out.println("passed : durch GoToJail im Gefaengnis!");
+            System.out.println("passed : durch GoToJail ins Gefaengnis!");
         }
 
         prePrisoner.setInJail(false);
 
     }
 
+    /**
+     * @author Christian Prinz
+     * @param gc
+     * @param player
+     */
     private static void testBuyStreet(GameController gc, Player player) {
         Property street = (Property) gc.board.getFields()[1];
         player.setMoney(1000);
@@ -261,6 +304,11 @@ public class MainTest {
         System.out.println("passed : Miete zahlen auf allen Grundstuecken!");
     }
 
+    /**
+     * @author Christian Prinz
+     * @param gc
+     * @param arg
+     */
     private static void testRollMethod(GameController gc, Player arg) {
         for (int j = 0; j < 1000; j++) {
             int[] result = gc.roll(arg);
@@ -271,6 +319,11 @@ public class MainTest {
         System.out.println("passed : Wuerfeln");
     }
 
+    /**
+     * @author Christian Prinz
+     * @param board
+     * @param players
+     */
     private static void testGameBoard(GameBoard board, Player[] players) {
         //existiert das Board
         assert board != null : "failed : Gamboard nicht initialisiert!";

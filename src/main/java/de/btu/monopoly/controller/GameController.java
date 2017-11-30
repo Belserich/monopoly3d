@@ -591,9 +591,11 @@ public class GameController {
             Field field = fields[i];
 
             // Löschen der Hypothek und des Eigentums
-            if (field instanceof Property || (((Property) field).getOwner() == player)) {
-                ((Property) field).setOwner(null);
-                ((Property) field).setMortgageTaken(false);
+            if (field instanceof Property) {
+                if (((Property) field).getOwner() == player) {
+                    ((Property) field).setOwner(null);
+                    ((Property) field).setMortgageTaken(false);
+                }
 
                 // Löschen der Anzahl an Häusern
                 if (field instanceof StreetField) {
