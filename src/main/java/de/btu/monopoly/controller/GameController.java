@@ -47,8 +47,7 @@ public class GameController {
     /**
      * Anzahl Pasches
      */
-    public int doubletCounter;
-
+    //public int doubletCounter;
     /**
      * Array mit beiden Wuerfelergebnissen
      */
@@ -56,8 +55,7 @@ public class GameController {
     /**
      * Feld, auf dem sich der Spieler befindet
      */
-    public Field currField;
-
+    //public Field currField;
     /**
      * Die zentrale Manager-Klasse für alles was das Spiel betrifft.
      *
@@ -93,9 +91,9 @@ public class GameController {
 
         do {
             for (int i = 0; i < players.length; i++) {
-                Player currPlayer = players[i];		        // momentanen Spieler setzen
-                if (!(currPlayer.isSpectator())) {	        // Spieler ist kein Beobachter
-                    turnPhase(currPlayer);
+                Player activePlayer = players[i];		        // momentanen Spieler setzen
+                if (!(activePlayer.isSpectator())) {	        // Spieler ist kein Beobachter
+                    turnPhase(activePlayer);
                 }
             }
         } while (!gameOver);
@@ -112,19 +110,20 @@ public class GameController {
      */
     public void turnPhase(Player player) {
         logger.log(Level.INFO, player.getName() + " ist dran!");
+        int[] result;
+        int doubletCounter = 0; 	        // Paschzaehler zuruecksetzen
 
-        doubletCounter = 0; 	        // Paschzaehler zuruecksetzen
         if (player.isInJail()) {
             jailPhase(player);
         }
-        int[] result;
         do {		                    // bei Pasch wiederholen
-            result = rollPhase(player);
+            result = rollPhase(player, doubletCounter);
             fieldPhase(player, result);
-            if (player.isInJail() && (player.getDaysInJail() == 0)) {
-                break;                  // actionPhase() entfaellt, wenn der Spieler grade ins Gefaengnis kam
+
+            // actionPhase() entfaellt, wenn der Spieler grade erst ins Gefaengnis kam
+            if (!player.isInJail() || (player.getDaysInJail() > 0)) {
+                actionPhase(player);
             }
-            actionPhase(player);
         } while (result[0] == result[1]);
 
         //Wuerfelergebnis zuruecksetzen
@@ -215,12 +214,13 @@ public class GameController {
      *
      * @param player Spieler in der Wurfphase
      */
-    public int[] rollPhase(Player player) {
+    public int[] rollPhase(Player player, int doubletCounter) {
         int[] rollResult = null;
         logger.log(Level.INFO, player.getName() + " ist dran mit würfeln.");
         if (!(player.isInJail())) { //Gefaengnis hat eigenes Wuerfeln
             rollResult = roll(player);
-            if (doubletCounter == 3) {
+            doubletCounter += (rollResult[0] == rollResult[1]) ? 1 : 0;
+            if (doubletCounter >= 3) {
                 logger.log(Level.INFO, player.getName() + " hat seinen 3. Pasch und geht nicht über LOS, direkt ins Gefängnis!");
                 moveToJail(player);
             }
@@ -381,7 +381,7 @@ public class GameController {
 
             choice = getUserInput(5);
             if (choice != 1) {
-                currField = board.getFields()[askForField(player) - 1]; // Wahl der Strasse
+                Field currField = board.getFields()[askForField(player) - 1]; // Wahl der Strasse
 
                 if (currField instanceof Property) {
                     Property property = (Property) currField;
@@ -477,11 +477,6 @@ public class GameController {
         // Erzeugen der Zufallszahl
         rollResult[0] = ((int) (Math.random() * 6)) + 1;
         rollResult[1] = ((int) (Math.random() * 6)) + 1;
-
-        // Bei Pasch, erhöhe doubletCounter
-        if (rollResult[0] == rollResult[1]) {
-            doubletCounter++;
-        }
 
         logger.log(Level.INFO, player.getName() + " würfelt " + rollResult[0] + " + " + rollResult[1]
                 + " = " + (rollResult[0] + rollResult[1]));

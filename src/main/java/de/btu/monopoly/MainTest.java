@@ -122,12 +122,9 @@ public class MainTest {
     private static void testDoubletToJail(GameController gc, Player[] players) {
         //Spieler und Variablen initialisieren
         Player prisoner = players[0];
-        gc.doubletCounter = 2;
 
-        //auf den naechsten Pasch warten
-        do {
-            gc.rollPhase(prisoner);
-        } while (gc.doubletCounter != 3);
+        // WurfPhase mit 3 Paeschen starten
+        gc.rollPhase(prisoner, 3);
 
         assert prisoner.isInJail() == true : "failed : Spieler ist nicht im Gefaengnis!";
         if (prisoner.isInJail() == true) {
@@ -135,7 +132,6 @@ public class MainTest {
         }
 
         prisoner.setInJail(false);
-        gc.doubletCounter = 0;
 
     }
 
