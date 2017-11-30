@@ -18,7 +18,7 @@ public class MainTest {
 
         // Variablen:
         GameController gc = new GameController(2);
-        GameController.logger.setLevel(Level.OFF);  // Logger des GameControllers ausschalten
+        GameController.logger.setLevel(Level.WARNING);  // Logger des GameControllers ausschalten
         gc.init();
 
         GameBoard board = gc.board;
