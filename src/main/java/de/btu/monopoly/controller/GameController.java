@@ -76,7 +76,7 @@ public class GameController {
             logger.log(Level.FINEST, stack.toString());
             GameBoardParser.setCardLoadout0(stack);
             GameBoardParser.setCardLoadout1(stack);
-            board = GameBoardParser.parse("data/field_data.xml");
+            board = GameBoardParser.parse("/data/field_data.xml");
         } catch (IOException | SAXException | ParserConfigurationException ex) {
             logger.log(Level.WARNING, "Fehler beim initialisieren des Boards / der Karten.", ex);
         }
