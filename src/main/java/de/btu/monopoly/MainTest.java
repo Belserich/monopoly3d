@@ -31,10 +31,10 @@ public class MainTest {
         testCornerFields(gc, players);
         // Steuer auf TaxFeld bezahlen
         testBuyStreet(gc, players[0]);
-        testBuyBuilding(gc, players);// Straße bebauen (Haus kaufen)
-        testSellBuilding(gc, players);// Haus verkaufen
+        testBuyBuilding(gc, players);
+        testSellBuilding(gc, players);
         testPayRent(gc, players);
-        // Hypothek aufnehmen
+        testTakeMortgage(gc, players);
         // Hypothek bezahlen
         testBankrupt(gc, players);
         testGoToJail(gc, players);
@@ -414,5 +414,72 @@ public class MainTest {
         assert schlossAllee.getRent() == 1400 : "failed: Rent bei 3 Haeuser nicht richtig gerechnen";
 
         System.out.println("passed : Haus verkauft");
+    }
+
+    /**
+     * @author Eleonora Kostova
+     * @param gc
+     * @param players
+     */
+    private static void testTakeMortgage(GameController gc, Player[] players) {
+        //Variablen initialisieren
+        Player player = players[0];
+        StationField suedbahnhof = (StationField) gc.board.getFields()[5];
+        StationField nordbahnhof = (StationField) gc.board.getFields()[25];
+
+        StreetField theaterStrasse = (StreetField) gc.board.getFields()[21];
+        StreetField badStrasse = (StreetField) gc.board.getFields()[1];
+        StreetField turmStrasse = (StreetField) gc.board.getFields()[3];
+
+        player.setMoney(600);
+        suedbahnhof.setOwner(player);
+        nordbahnhof.setOwner(player);
+        theaterStrasse.setOwner(player);
+        badStrasse.setOwner(player);
+        turmStrasse.setOwner(player);
+        badStrasse.setHouseCount(1);
+        turmStrasse.setHouseCount(1);
+
+        //BAHNHOF======================================================
+        gc.takeMortgage(player, suedbahnhof);
+
+        //getMortgageValue + giveMoney() + getMoney()
+        assert player.getMoney() == 700 : "failed: Hypothek nicht aufgenommen"; // 600 + 100
+
+        //setMortgageTaken() + getRent()
+        //TODO
+        // assert suedbahnhof.getRent() == 0 : "failed: Grundstueck hat noch Rent";
+        //assert nordbahnhof.getRent() == 25 : "failed: Rent ist nicht doppelt so wenig";
+        //NICHT KOMPLETTE STRASSE=======================================
+        gc.takeMortgage(player, theaterStrasse);
+
+        //getMortgageValue() + getMoney()+giveMoney()
+        assert player.getMoney() == 810 : "failed: Hypothek nicht aufgenommen"; // 700 + 110
+
+        //getRent()+setMortgagaeTaken()
+        assert theaterStrasse.getRent() == 0 : "failed: Grundstueck hat noch Rent";
+
+        //KOMPLETTE STRASSE=============================================
+        gc.takeMortgage(player, turmStrasse);
+
+        //getHousCount()
+        assert badStrasse.getHouseCount() == 0 : "failed: Haus nicht verkauft";
+        assert turmStrasse.getHouseCount() == 0 : "failed: Haus nicht verkauft";
+
+        //getMortgageValue()
+        assert turmStrasse.getMortgageValue() == 30 : "failed: HypothekValue falsch";
+
+        assert turmStrasse.getHousePrice() == 50 : "failed: HausPrice falsch";
+
+        //getMoney() +giveMoney()
+        assert player.getMoney() == 940 : "failed: Problem bei Verkauf von Haeuser"; //810 + 2x50(Haus)+30(Hypothek)
+        assert turmStrasse.getRent() == 0 : "failed: Grundstueck hat kein Rent";
+        //setMortgageTaken()
+        turmStrasse.setMortgageTaken(true);
+
+        //getRent()
+        assert turmStrasse.getRent() == 0 : "failed: Grundstueck hat nocht Rent";
+
+        System.out.println("passed : Hypothek aufgenommen");
     }
 }
