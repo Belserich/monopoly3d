@@ -45,18 +45,6 @@ public class GameController {
     public boolean gameOver;
 
     /**
-     * Anzahl Pasches
-     */
-    //public int doubletCounter;
-    /**
-     * Array mit beiden Wuerfelergebnissen
-     */
-    //public int[] rollResult = new int[2];
-    /**
-     * Feld, auf dem sich der Spieler befindet
-     */
-    //public Field currField;
-    /**
      * Die zentrale Manager-Klasse für alles was das Spiel betrifft.
      *
      * @param playerCount Anzahl Spieler
@@ -87,6 +75,7 @@ public class GameController {
     }
 
     public void start() {
+        logger.setLevel(Level.INFO);
         logger.log(Level.INFO, "Spiel beginnt.");
 
         do {

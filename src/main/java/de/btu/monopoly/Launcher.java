@@ -50,6 +50,7 @@ public class Launcher extends Application {
     private static void initGame() {
         GameController controller = new GameController(2);
         controller.init();
+        controller.start();
     }
 
     private static void configLoggers() {
