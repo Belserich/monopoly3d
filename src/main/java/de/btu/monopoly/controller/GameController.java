@@ -665,6 +665,7 @@ public class GameController {
      * @param buyIntend gibt an, ob der Spieler ein Haus <b>kaufen</b> möchte
      */
     public boolean checkBalance(StreetField field, boolean buyIntend) {
+
         for (Property nei : field.getNeighbours()) {  // Liste der Nachbarn durchgehen
 
             int housesHere = field.getHouseCount();      // Haueser auf der aktuellen Strasse
@@ -685,7 +686,23 @@ public class GameController {
      * @param player Spieler, dem das Grundstueck gehoert
      */
     public void takeMortgage(Player player, Property field) { //TODO Abfrage ob noch Haeuser drauf sind
-        giveMoney(player, field.getMortgageValue());
+        //TODO Station- und SuplyField
+        if (field instanceof StationField || field instanceof SupplyField) {
+            giveMoney(player, field.getMortgageValue());
+            field.setMortgageTaken(true);
+        }
+        if (field instanceof StreetField) {
+            for (Property nei : ((StreetField) field).getNeighbours()) {
+                if (((StreetField) nei).getHouseCount() > 0) {
+                    sellBuilding(player, (StreetField) nei);
+
+                }
+            }
+            if (((StreetField) field).getHouseCount() > 0) {
+                sellBuilding(player, (StreetField) field);
+            }
+            giveMoney(player, field.getMortgageValue());
+        }
         field.setMortgageTaken(true);
         logger.log(Level.INFO, "Hypothek wurde aufgenommen!");
     }

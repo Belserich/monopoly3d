@@ -53,7 +53,7 @@ public class GameBoardParser {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         builder = factory.newDocumentBuilder();
 
-        Document doc = builder.parse(CardStackParser.class.getResourceAsStream(path));
+        Document doc = builder.parse(CardStackParser.class.getResourceAsStream(path.replaceAll("%20", " ")));
         LOGGER.info("Dokument erfolgreich ausgelesen!");
 
         NodeList fieldList = doc.getElementsByTagName("field");
