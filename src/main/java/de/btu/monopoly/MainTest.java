@@ -35,7 +35,7 @@ public class MainTest {
         testSellBuilding(gc, players);
         testPayRent(gc, players);
         testTakeMortgage(gc, players);
-        // Hypothek bezahlen
+        testPayMortgage(gc, players);
         testBankrupt(gc, players);
         testGoToJail(gc, players);
         testDoubletToJail(gc, players);
@@ -481,5 +481,46 @@ public class MainTest {
         assert turmStrasse.getRent() == 0 : "failed: Grundstueck hat nocht Rent";
 
         System.out.println("passed : Hypothek aufgenommen");
+    }
+
+    /**
+     * @author Eleonora Kostova
+     * @param gc
+     * @param players
+     */
+    private static void testPayMortgage(GameController gc, Player[] players) {
+        //Variablen initialisieren
+        Property suedbahnhof = (Property) gc.board.getFields()[5];
+        Property nordbahnhof = (Property) gc.board.getFields()[25];
+        Player player = players[0];
+
+        player.setMoney(800);
+        suedbahnhof.setOwner(player);
+        nordbahnhof.setOwner(player);
+
+        //setMortgageTaken()
+        suedbahnhof.setMortgageTaken(true);
+
+        //getRent()
+        //TODO assert nordbahnhof.getRent() == 25 : "failed: Rent ist falsch";
+        gc.payMortgage(player, suedbahnhof);
+
+        //checkLiquidity()
+        assert gc.checkLiquidity(player, suedbahnhof.getMortgageValue()) == true : "faild: Spieler hat kein Geld";
+
+        //getMortgageValue()
+        assert suedbahnhof.getMortgageBack() == 110 : "failed: HypothekValueBack falsch";
+
+        //takeMoney() + getMoney()
+        assert player.getMoney() == 690 : "failed: Hypothek nicht zurueck gezahlt"; //800-110
+
+        //setMortgagetaken()
+        suedbahnhof.setMortgageTaken(false);
+
+        //getRent()
+        assert suedbahnhof.getRent() == 50 : "failed: grundstueck hat kein Rent";
+
+        System.out.println("passed : Hypothek zurueck gezahlt");
+
     }
 }
