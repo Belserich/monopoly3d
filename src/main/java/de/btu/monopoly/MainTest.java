@@ -32,7 +32,7 @@ public class MainTest {
         // Steuer auf TaxFeld bezahlen
         testBuyStreet(gc, players[0]);
         testBuyBuilding(gc, players);// Straße bebauen (Haus kaufen)
-        // Haus verkaufen
+        testSellBuilding(gc, players);// Haus verkaufen
         testPayRent(gc, players);
         // Hypothek aufnehmen
         // Hypothek bezahlen
@@ -380,5 +380,39 @@ public class MainTest {
         assert seeStrasse.getRent() == 50 : "failed: Haus wurde trotzdem gebaut";
 
         System.out.println("passed : Haus wurde gebaut");
+    }
+
+    /**
+     * @author Eleonora Kostova
+     * @param gc
+     * @param players
+     */
+    private static void testSellBuilding(GameController gc, Player[] players) {
+        //Variablen initialisieren
+        StreetField parkStrasse = (StreetField) gc.board.getFields()[37];
+        StreetField schlossAllee = (StreetField) gc.board.getFields()[39];
+        Player player = players[0];
+
+        player.setMoney(300);
+        parkStrasse.setOwner(player);
+        schlossAllee.setOwner(player);
+        parkStrasse.setHouseCount(3);
+        schlossAllee.setHouseCount(4);
+
+        gc.sellBuilding(player, schlossAllee);
+
+        //checkBalance()
+        assert gc.checkBalance(schlossAllee, true) == true : "failed: Hause konnte nicht verkauft werden";
+
+        //getHousePrice()
+        assert schlossAllee.getHousePrice() == 200 : "failed: Haus kostet nicht 200";
+
+        //giveMoney() + getMoney()
+        assert player.getMoney() == 500 : "failed:  Geld nicht ueberwiesen";
+
+        //getRent()
+        assert schlossAllee.getRent() == 1400 : "failed: Rent bei 3 Haeuser nicht richtig gerechnen";
+
+        System.out.println("passed : Haus verkauft");
     }
 }
