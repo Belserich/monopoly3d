@@ -107,6 +107,7 @@ public class GameController {
         }
         do {		                    // bei Pasch wiederholen
             result = rollPhase(player, doubletCounter);
+            doubletCounter += (result[0] == result[1]) ? 1 : 0;
             fieldPhase(player, result);
 
             // actionPhase() entfaellt, wenn der Spieler grade erst ins Gefaengnis kam
@@ -203,13 +204,14 @@ public class GameController {
      *
      * @param player Spieler in der Wurfphase
      */
-    public int[] rollPhase(Player player, int doubletCounter) {
+    public int[] rollPhase(Player player, int doubletCount) {
+
         int[] rollResult = null;
         logger.log(Level.INFO, player.getName() + " ist dran mit würfeln.");
         if (!(player.isInJail())) { //Gefaengnis hat eigenes Wuerfeln
             rollResult = roll(player);
-            doubletCounter += (rollResult[0] == rollResult[1]) ? 1 : 0;
-            if (doubletCounter >= 3) {
+            doubletCount += (rollResult[0] == rollResult[1]) ? 1 : 0;
+            if (doubletCount >= 3) {
                 logger.log(Level.INFO, player.getName() + " hat seinen 3. Pasch und geht nicht über LOS, direkt ins Gefängnis!");
                 moveToJail(player);
             }
@@ -334,7 +336,9 @@ public class GameController {
                     logger.log(Level.WARNING, "getUserInput() hat index außerhalb des zurückgegeben.");
                     break;
             }
-        } else if (other != null) { // Property nicht im eigenen Besitz
+        } else if (other == player) { // Property im eigenen Besitz
+            logger.log(Level.FINE, player.getName() + " steht auf seinem eigenen Grundstück.");
+        } else {                      // Property nicht in eigenem Besitz
             logger.log(Level.INFO, player.getName() + " steht auf dem Grundstück von " + other.getName() + ".");
 
             int rent = field.getRent();
@@ -350,8 +354,6 @@ public class GameController {
                 logger.log(Level.INFO, player.getName() + " kann die geforderte Miete nicht zahlen!");
                 bankrupt(player);
             }
-        } else {
-            logger.log(Level.FINE, player.getName() + " steht auf seinem eigenen Grundstück.");
         }
     }
 
