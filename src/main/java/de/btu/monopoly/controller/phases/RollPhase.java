@@ -15,13 +15,14 @@ import java.util.logging.Level;
  */
 public class RollPhase {
 
+    Player[] players;
     Player player;
     PlayerManager pm;
     //int doubletCounter;
     //int[] rollResult;
 
-    public RollPhase(Player player, PlayerManager pm) {
-        this.player = player;
+    public RollPhase(Player[] players, PlayerManager pm) {
+        this.players = players;
         this.pm = pm;
     }
 
@@ -30,7 +31,8 @@ public class RollPhase {
      *
      * @param player Spieler in der Wurfphase
      */
-    public int[] compute(int doubletCount) {
+    public int[] compute(int playerIndex, int doubletCount) {
+        this.player = players[playerIndex];
 
         int[] rollResult = null;
         logger.log(Level.INFO, player.getName() + " ist dran mit würfeln.");
