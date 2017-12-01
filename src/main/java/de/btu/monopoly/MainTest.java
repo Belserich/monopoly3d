@@ -427,30 +427,37 @@ public class MainTest {
         StreetField badStrasse = (StreetField) gc.board.getFields()[1];
         StreetField turmStrasse = (StreetField) gc.board.getFields()[3];
 
+        SupplyField elWerk = (SupplyField) gc.board.getFields()[12];
+        SupplyField wasserWerk = (SupplyField) gc.board.getFields()[28];
+
         player.setMoney(600);
         suedbahnhof.setOwner(player);
         nordbahnhof.setOwner(player);
         theaterStrasse.setOwner(player);
         badStrasse.setOwner(player);
         turmStrasse.setOwner(player);
+        elWerk.setOwner(player);
+        wasserWerk.setOwner(player);
         badStrasse.setHouseCount(1);
         turmStrasse.setHouseCount(1);
 
-        //BAHNHOF======================================================
+        //BAHNHOF UND WERKE======================================================
         gc.takeMortgage(player, suedbahnhof);
+        gc.takeMortgage(player, elWerk);
 
         //getMortgageValue + giveMoney() + getMoney()
-        assert player.getMoney() == 700 : "failed: Hypothek nicht aufgenommen"; // 600 + 100
+        assert player.getMoney() == 775 : "failed: Hypothek nicht aufgenommen"; // 600 + 100 +75
 
         //setMortgageTaken() + getRent()
-        //TODO
-        // assert suedbahnhof.getRent() == 0 : "failed: Grundstueck hat noch Rent";
-        //assert nordbahnhof.getRent() == 25 : "failed: Rent ist nicht doppelt so wenig";
+        assert suedbahnhof.getRent() == 0 : "failed: Grundstueck hat noch Rent";
+        assert nordbahnhof.getRent() == 25 : "failed: Rent ist nicht doppelt so wenig";
+        assert elWerk.getRent() == 0 : "failed: Werk hat noch Rent";
+
         //NICHT KOMPLETTE STRASSE=======================================
         gc.takeMortgage(player, theaterStrasse);
 
         //getMortgageValue() + getMoney()+giveMoney()
-        assert player.getMoney() == 810 : "failed: Hypothek nicht aufgenommen"; // 700 + 110
+        assert player.getMoney() == 885 : "failed: Hypothek nicht aufgenommen"; // 775 + 110
 
         //getRent()+setMortgagaeTaken()
         assert theaterStrasse.getRent() == 0 : "failed: Grundstueck hat noch Rent";
@@ -468,7 +475,7 @@ public class MainTest {
         assert turmStrasse.getHousePrice() == 50 : "failed: HausPrice falsch";
 
         //getMoney() +giveMoney()
-        assert player.getMoney() == 940 : "failed: Problem bei Verkauf von Haeuser"; //810 + 2x50(Haus)+30(Hypothek)
+        assert player.getMoney() == 1015 : "failed: Problem bei Verkauf von Haeuser"; //885 + 2x50(Haus)+30(Hypothek)
         assert turmStrasse.getRent() == 0 : "failed: Grundstueck hat kein Rent";
         //setMortgageTaken()
         turmStrasse.setMortgageTaken(true);
@@ -498,7 +505,7 @@ public class MainTest {
         suedbahnhof.setMortgageTaken(true);
 
         //getRent()
-        //TODO assert nordbahnhof.getRent() == 25 : "failed: Rent ist falsch";
+        assert nordbahnhof.getRent() == 25 : "failed: Rent ist falsch";
         gc.payMortgage(player, suedbahnhof);
 
         //checkLiquidity()
