@@ -23,9 +23,9 @@ public class ActionPhase {
     Player[] players;
     Player player;
     FieldManager fm;
-    InputManager im;
+    InputHandler im;
 
-    public ActionPhase(GameBoard board, Player[] players, FieldManager fm, InputManager im) {
+    public ActionPhase(GameBoard board, Player[] players, FieldManager fm, InputHandler im) {
         this.board = board;
         this.players = players;
         this.fm = fm;

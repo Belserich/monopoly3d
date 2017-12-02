@@ -27,10 +27,10 @@ public class FieldPhase {
     Player player;
     PlayerManager pm;
     FieldManager fm;
-    InputManager im;
+    InputHandler im;
     //int[] rollResult;
 
-    public FieldPhase(GameBoard board, Player[] players, PlayerManager pm, FieldManager fm, InputManager im) {
+    public FieldPhase(GameBoard board, Player[] players, PlayerManager pm, FieldManager fm, InputHandler im) {
         this.board = board;
         this.players = players;
         this.pm = pm;

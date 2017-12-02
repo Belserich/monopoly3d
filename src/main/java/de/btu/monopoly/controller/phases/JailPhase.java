@@ -19,9 +19,9 @@ public class JailPhase {
     Player[] players;
     Player player;
     PlayerManager pm;
-    InputManager im;
+    InputHandler im;
 
-    public JailPhase(Player[] players, PlayerManager pm, InputManager im) {
+    public JailPhase(Player[] players, PlayerManager pm, InputHandler im) {
         this.players = players;
         this.pm = pm;
         this.im = im;
