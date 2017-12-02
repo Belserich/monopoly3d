@@ -5,7 +5,7 @@
  */
 package de.btu.monopoly.controller.phases;
 
-import static de.btu.monopoly.controller.GameController.logger;
+import static de.btu.monopoly.controller.GameController.LOGGER;
 import de.btu.monopoly.data.GameBoard;
 import de.btu.monopoly.data.Player;
 import de.btu.monopoly.data.field.Field;
@@ -36,15 +36,15 @@ public class InputManager {
 
         // Solange nicht der richtige Wertebereich eingegeben wird, wird die Eingabe wiederholt.
         do {
-            logger.log(Level.INFO, "Eingabe: ");
+            LOGGER.log(Level.INFO, "Eingabe: ");
             try {
                 output = Integer.parseInt(scanner.nextLine());
             } catch (NumberFormatException ex) {
-                logger.log(Level.WARNING, "FEHLER: falsche Eingabe!");
+                LOGGER.log(Level.WARNING, "FEHLER: falsche Eingabe!");
             }
 
             if (output < 1 || output > max) {
-                logger.log(Level.INFO, "Deine Eingabe liegt nicht im Wertebereich! Bitte erneut versuchen:");
+                LOGGER.log(Level.INFO, "Deine Eingabe liegt nicht im Wertebereich! Bitte erneut versuchen:");
             }
         } while (output < 1 || output > max);
 
@@ -63,7 +63,7 @@ public class InputManager {
         for (int i = 0; i < fields.length; i++) {
             mesg += String.format("[%d] - %s%n", i + 1, fields[i].getName());
         }
-        logger.log(Level.INFO, mesg);
+        LOGGER.log(Level.INFO, mesg);
         return getUserInput(39);
     }
 }

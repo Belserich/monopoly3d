@@ -27,7 +27,7 @@ public class GameController {
     /**
      * Logger
      */
-    public static final Logger logger = Logger.getLogger(GameController.class.getCanonicalName());
+    public static final Logger LOGGER = Logger.getLogger(GameController.class.getCanonicalName());
 
     /**
      * das Spielbrett
@@ -55,16 +55,16 @@ public class GameController {
     }
 
     public void init() {
-        logger.log(Level.INFO, "Spiel wird initialisiert");
+        LOGGER.log(Level.INFO, "Spiel wird initialisiert");
 
         try {
             CardStack stack = CardStackParser.parse("/data/card_data.xml");
-            logger.log(Level.FINEST, stack.toString());
+            LOGGER.log(Level.FINEST, stack.toString());
             GameBoardParser.setCardLoadout0(stack);
             GameBoardParser.setCardLoadout1(stack);
             board = GameBoardParser.parse("/data/field_data.xml");
         } catch (IOException | SAXException | ParserConfigurationException ex) {
-            logger.log(Level.WARNING, "Fehler beim initialisieren des Boards / der Karten.", ex);
+            LOGGER.log(Level.WARNING, "Fehler beim initialisieren des Boards / der Karten.", ex);
         }
 
         assert board != null;
@@ -75,21 +75,21 @@ public class GameController {
     }
 
     public void start() {
-        logger.setLevel(Level.INFO);
-        logger.log(Level.INFO, "Spiel beginnt.");
+        LOGGER.setLevel(Level.INFO);
+        LOGGER.log(Level.INFO, "Spiel beginnt.");
 
         do {
             for (int i = 0; i < players.length; i++) {
                 Player activePlayer = players[i];		        // momentanen Spieler setzen
-                if (!(activePlayer.isSpectator())) {	        // Spieler ist kein Beobachter
+                if (!(activePlayer.isBankrupt())) {	        // Spieler ist kein Beobachter
                     turnPhase(activePlayer);
                 }
             }
         } while (!gameOver);
 
         for (Player player : players) {
-            if (!player.isSpectator()) {
-                logger.log(Level.INFO, player.getName() + " hat das Spiel gewonnen!");
+            if (!player.isBankrupt()) {
+                LOGGER.log(Level.INFO, player.getName() + " hat das Spiel gewonnen!");
             }
         }
     }
@@ -98,7 +98,7 @@ public class GameController {
      * Rundenphase eines Spielers
      */
     public void turnPhase(Player player) {
-        logger.log(Level.INFO, player.getName() + " ist dran!");
+        LOGGER.log(Level.INFO, player.getName() + " ist dran!");
         int[] result;
         int doubletCounter = 0; 	        // Paschzaehler zuruecksetzen
 
@@ -133,7 +133,7 @@ public class GameController {
         boolean repeat;
         do {
             repeat = false;
-            logger.log(Level.INFO, player.getName() + "ist im Gefängnis und kann: \n1. 3 mal Würfeln, um mit einem Pasch freizukommen "
+            LOGGER.log(Level.INFO, player.getName() + "ist im Gefängnis und kann: \n1. 3 mal Würfeln, um mit einem Pasch freizukommen "
                     + "\n2. Bezahlen (50€) \n3. Gefängnis-Frei-Karte benutzen");
 
             switch (getUserInput(3)) { // @GUI
@@ -141,23 +141,23 @@ public class GameController {
                 case 1:
                     int[] result = roll(player);                 // wuerfeln
                     if (!(result[0] == result[1])) {       // kein Pasch -> im Gefaengnis bleiben
-                        logger.log(Level.INFO, player.getName() + " hat keinen Pasch und bleibt im Gefängnis.");
+                        LOGGER.log(Level.INFO, player.getName() + " hat keinen Pasch und bleibt im Gefängnis.");
                         player.addDayInJail();
                     } else {                        // sonst frei
-                        logger.log(Level.INFO, player.getName() + " hat einen Pasch und ist frei.");
+                        LOGGER.log(Level.INFO, player.getName() + " hat einen Pasch und ist frei.");
                         player.setInJail(false);
                         player.setDaysInJail(0);
                     }
                     // Wenn drei mal kein Pasch dann bezahlen
                     if (player.getDaysInJail() == 3) {
                         if (checkLiquidity(player, 50)) {
-                            logger.log(Level.INFO, player.getName() + "hat schon 3 mal keinen Pasch und muss nun 50"
+                            LOGGER.log(Level.INFO, player.getName() + "hat schon 3 mal keinen Pasch und muss nun 50"
                                     + CURRENCY_TYPE + " zahlen!");
                             takeMoney(player, 50);
                             player.setInJail(false);
                             player.setDaysInJail(0);
                         } else {        //wenn pleite game over
-                            logger.log(Level.INFO, player.getName() + " hat schon 3 mal gewürfelt und kann nicht zahlen.");
+                            LOGGER.log(Level.INFO, player.getName() + " hat schon 3 mal gewürfelt und kann nicht zahlen.");
                             bankrupt(player);
                         }
                     }
@@ -166,12 +166,12 @@ public class GameController {
                 //OPTION 2: Bezahlen
                 case 2:
                     if (checkLiquidity(player, 50)) {
-                        logger.log(Level.INFO, player.getName() + " hat 50" + CURRENCY_TYPE + " gezahlt und ist frei!");
+                        LOGGER.log(Level.INFO, player.getName() + " hat 50" + CURRENCY_TYPE + " gezahlt und ist frei!");
                         takeMoney(player, 50);
                         player.setInJail(false);
                         player.setDaysInJail(0);
                     } else { // muss in der GUI deaktiviert sein!!!
-                        logger.log(Level.INFO, player.getName() + " hat kein Geld um sich freizukaufen.");
+                        LOGGER.log(Level.INFO, player.getName() + " hat kein Geld um sich freizukaufen.");
                         repeat = true;
                     }
                     break;
@@ -179,18 +179,18 @@ public class GameController {
                 //OPTION 3: Freikarte ausspielen
                 case 3:
                     if (player.getJailCardAmount() > 0) {
-                        logger.log(Level.INFO, player.getName() + " hat eine Gefängnis-Frei-Karte benutzt.");
+                        LOGGER.log(Level.INFO, player.getName() + " hat eine Gefängnis-Frei-Karte benutzt.");
                         player.removeJailCard(); // TODO jail-card
                         player.setInJail(false);
                         player.setDaysInJail(0);
                     } else { // muss in der GUI deaktiviert sein!!!
-                        logger.log(Level.INFO, player.getName() + " hat keine Gefängnis-Frei-Karten mehr.");
+                        LOGGER.log(Level.INFO, player.getName() + " hat keine Gefängnis-Frei-Karten mehr.");
                         repeat = true;
                     }
                     break;
 
                 default:
-                    logger.log(Level.WARNING, "FEHLER: Gefängnis-Switch überschritten");
+                    LOGGER.log(Level.WARNING, "FEHLER: Gefängnis-Switch überschritten");
                     repeat = true;
                     break;
 
@@ -207,12 +207,12 @@ public class GameController {
     public int[] rollPhase(Player player, int doubletCount) {
 
         int[] rollResult = null;
-        logger.log(Level.INFO, player.getName() + " ist dran mit würfeln.");
+        LOGGER.log(Level.INFO, player.getName() + " ist dran mit würfeln.");
         if (!(player.isInJail())) { //Gefaengnis hat eigenes Wuerfeln
             rollResult = roll(player);
             doubletCount += (rollResult[0] == rollResult[1]) ? 1 : 0;
             if (doubletCount >= 3) {
-                logger.log(Level.INFO, player.getName() + " hat seinen 3. Pasch und geht nicht über LOS, direkt ins Gefängnis!");
+                LOGGER.log(Level.INFO, player.getName() + " hat seinen 3. Pasch und geht nicht über LOS, direkt ins Gefängnis!");
                 moveToJail(player);
             }
         }
@@ -249,7 +249,7 @@ public class GameController {
                 break;
 
             case GO_JAIL: // "Gehen Sie Ins Gefaengnis"-Feld
-                logger.log(Level.INFO, player.getName() + " muss ins Gefaengnis!");
+                LOGGER.log(Level.INFO, player.getName() + " muss ins Gefaengnis!");
                 moveToJail(player);
                 break;
 
@@ -259,7 +259,7 @@ public class GameController {
     }
 
     private void processPlayerOnCardField(Player player, CardField field) {
-        logger.fine(String.format("%s steht auf einem Kartenfeld (%s).", player.getName(),
+        LOGGER.fine(String.format("%s steht auf einem Kartenfeld (%s).", player.getName(),
                 board.getFields()[player.getPosition()].getName()));
         Card nextCard = field.getCardStack().nextCard();
         Card.Action[] actions = nextCard.getActions();
@@ -306,11 +306,11 @@ public class GameController {
     }
 
     private void processPlayerOnTaxField(Player player, TaxField field) {
-        logger.log(Level.FINE, player.getName() + " steht auf einem Steuerfeld.");
+        LOGGER.log(Level.FINE, player.getName() + " steht auf einem Steuerfeld.");
         if (checkLiquidity(player, field.getTax())) {
             takeMoney(player, field.getTax());
         } else {
-            logger.log(Level.INFO, player.getName() + " kann seine Steuern nicht abzahlen!");
+            LOGGER.log(Level.INFO, player.getName() + " kann seine Steuern nicht abzahlen!");
             bankrupt(player);
         }
     }
@@ -319,27 +319,27 @@ public class GameController {
         // prüft den Besitzer
         Player other = field.getOwner();
         if (other == null) { // Feld frei
-            logger.log(Level.INFO, player.getName() + " steht auf einem freien Grundstück und kann es: \n[1] Kaufen \n[2] Nicht Kaufen");
+            LOGGER.log(Level.INFO, player.getName() + " steht auf einem freien Grundstück und kann es: \n[1] Kaufen \n[2] Nicht Kaufen");
             switch (getUserInput(2)) { //@GUI
                 case 1: //Kaufen
-                    logger.info(player.getName() + " >> " + field.getName());
+                    LOGGER.info(player.getName() + " >> " + field.getName());
                     if (!buyStreet(player, field, field.getPrice())) {
-                        logger.info(player.getName() + "hat nicht genug Geld! " + field.getName() + " wird nun zwangsversteigert.");
+                        LOGGER.info(player.getName() + "hat nicht genug Geld! " + field.getName() + " wird nun zwangsversteigert.");
                         betPhase(field);
                     }
                     break;
                 case 2: //Auktion @multiplayer
-                    logger.info(player.getName() + "hat sich gegen den Kauf entschieden, die Straße wird nun versteigert.");
+                    LOGGER.info(player.getName() + "hat sich gegen den Kauf entschieden, die Straße wird nun versteigert.");
                     betPhase(field);
                     break;
                 default:
-                    logger.log(Level.WARNING, "getUserInput() hat index außerhalb des zurückgegeben.");
+                    LOGGER.log(Level.WARNING, "getUserInput() hat index außerhalb des zurückgegeben.");
                     break;
             }
         } else if (other == player) { // Property im eigenen Besitz
-            logger.log(Level.FINE, player.getName() + " steht auf seinem eigenen Grundstück.");
+            LOGGER.log(Level.FINE, player.getName() + " steht auf seinem eigenen Grundstück.");
         } else {                      // Property nicht in eigenem Besitz
-            logger.log(Level.INFO, player.getName() + " steht auf dem Grundstück von " + other.getName() + ".");
+            LOGGER.log(Level.INFO, player.getName() + " steht auf dem Grundstück von " + other.getName() + ".");
 
             int rent = field.getRent();
             if (field instanceof SupplyField) {
@@ -347,11 +347,11 @@ public class GameController {
             }
 
             if (checkLiquidity(player, rent)) {
-                logger.log(Level.INFO, player.getName() + " zahlt " + rent + CURRENCY_TYPE + " Miete.");
+                LOGGER.log(Level.INFO, player.getName() + " zahlt " + rent + CURRENCY_TYPE + " Miete.");
                 takeMoney(player, rent);
                 giveMoney(field.getOwner(), rent);
             } else {
-                logger.log(Level.INFO, player.getName() + " kann die geforderte Miete nicht zahlen!");
+                LOGGER.log(Level.INFO, player.getName() + " kann die geforderte Miete nicht zahlen!");
                 bankrupt(player);
             }
         }
@@ -367,7 +367,7 @@ public class GameController {
         // TODO hier muss später noch der Handel implementiert werden
         int choice;
         do {
-            logger.log(Level.INFO, player.getName() + "! Waehle eine Aktion:\n[1] - Nichts\n[2] - Haus kaufen\n[3] - Haus verkaufen\n[4] - "
+            LOGGER.log(Level.INFO, player.getName() + "! Waehle eine Aktion:\n[1] - Nichts\n[2] - Haus kaufen\n[3] - Haus verkaufen\n[4] - "
                     + "Hypothek aufnehmen\n[5] - Hypothek abbezahlen");
 
             choice = getUserInput(5);
@@ -381,7 +381,7 @@ public class GameController {
                          * Haus kaufen
                          */ {
                             if (!(currField instanceof StreetField)) {
-                                logger.log(Level.INFO, "Gewähltes Feld ist keine Straße!");
+                                LOGGER.log(Level.INFO, "Gewähltes Feld ist keine Straße!");
                                 break;
                             }
                             StreetField streetField = (StreetField) property;
@@ -389,7 +389,7 @@ public class GameController {
                                 // wenn im Besitz und nicht vollgebaut
                                 buyBuilding(player, streetField);
                             } else {
-                                logger.log(Level.INFO, "Diese Straße gehört dir nicht, oder ist voll bebaut.");
+                                LOGGER.log(Level.INFO, "Diese Straße gehört dir nicht, oder ist voll bebaut.");
                             }
                             break;
                         }
@@ -397,7 +397,7 @@ public class GameController {
                          * Haus verkaufen
                          */ {
                             if (!(currField instanceof StreetField)) {
-                                logger.log(Level.INFO, "Gewähltes Feld ist keine Straße!");
+                                LOGGER.log(Level.INFO, "Gewähltes Feld ist keine Straße!");
                                 break;
                             }
                             StreetField streetField = (StreetField) property;
@@ -405,7 +405,7 @@ public class GameController {
                                 // wenn im Besitz und nicht 'hauslos'
                                 sellBuilding(player, streetField);
                             } else {
-                                logger.log(Level.INFO, "Diese Straße gehört dir nicht, oder hat keine Häuser zum verkaufen.");
+                                LOGGER.log(Level.INFO, "Diese Straße gehört dir nicht, oder hat keine Häuser zum verkaufen.");
                             }
                             break;
                         }
@@ -415,9 +415,9 @@ public class GameController {
                             // wenn im Besitz und noch keine Hypothek aufgenommen
                             if (property.getOwner() == player && (!(property.isMortgageTaken()))) {
                                 takeMortgage(player, property);
-                                logger.log(Level.INFO, "Hypothek aufgenommen.");
+                                LOGGER.log(Level.INFO, "Hypothek aufgenommen.");
                             } else {
-                                logger.log(Level.INFO, "Diese Straße gehört dir nicht, oder hat schon eine Hypothek.");
+                                LOGGER.log(Level.INFO, "Diese Straße gehört dir nicht, oder hat schon eine Hypothek.");
                             }
                             break;
                         }
@@ -427,14 +427,14 @@ public class GameController {
                             // wenn im Besitz und Hypothek aufgenommen
                             if (property.getOwner() == player && (property.isMortgageTaken())) {
                                 payMortgage(player, property);
-                                logger.log(Level.INFO, "Hypothek abgezahlt.");
+                                LOGGER.log(Level.INFO, "Hypothek abgezahlt.");
                             } else {
-                                logger.log(Level.INFO, "Diese Straße gehört dir nicht, oder hat keine Hypothek zum abzahlen.");
+                                LOGGER.log(Level.INFO, "Diese Straße gehört dir nicht, oder hat keine Hypothek zum abzahlen.");
                             }
                             break;
                         }
                         default:
-                            logger.log(Level.WARNING, "FEHLER: StreetFieldSwitch überlaufen.");
+                            LOGGER.log(Level.WARNING, "FEHLER: StreetFieldSwitch überlaufen.");
                             break;
                     }
                 }
@@ -469,7 +469,7 @@ public class GameController {
         rollResult[0] = ((int) (Math.random() * 6)) + 1;
         rollResult[1] = ((int) (Math.random() * 6)) + 1;
 
-        logger.log(Level.INFO, player.getName() + " würfelt " + rollResult[0] + " + " + rollResult[1]
+        LOGGER.log(Level.INFO, player.getName() + " würfelt " + rollResult[0] + " + " + rollResult[1]
                 + " = " + (rollResult[0] + rollResult[1]));
 
         return rollResult;
@@ -482,7 +482,7 @@ public class GameController {
      */
     public void movePlayer(Player player, int fields) {
         if (player.getPosition() + fields > 39) {
-            logger.log(Level.FINE, player.getName() + " hat das \"LOS\"-Feld passiert und erhaelt "
+            LOGGER.log(Level.FINE, player.getName() + " hat das \"LOS\"-Feld passiert und erhaelt "
                     + ((GoField) board.getFields()[0]).getAmount() + " " + CURRENCY_TYPE + ".");
             giveMoney(player, ((GoField) board.getFields()[0]).getAmount());
 
@@ -505,7 +505,7 @@ public class GameController {
         player.setPosition(10);
         player.setInJail(true);
         player.setDaysInJail(0);
-        logger.log(Level.INFO, player.getName() + " ist jetzt im Gefaengnis.");
+        LOGGER.log(Level.INFO, player.getName() + " ist jetzt im Gefaengnis.");
     }
 
     /**
@@ -516,7 +516,7 @@ public class GameController {
      */
     public boolean checkLiquidity(Player player, int amount) {
 
-        logger.log(Level.INFO, "Es wird geprüft, ob " + player.getName() + " genug Geld hat für die Transaktion.");
+        LOGGER.log(Level.INFO, "Es wird geprüft, ob " + player.getName() + " genug Geld hat für die Transaktion.");
         return (player.getMoney() - amount) > 0;
 
     }
@@ -530,13 +530,13 @@ public class GameController {
     public void takeMoney(Player player, int amount) {
 
         player.setMoney(player.getMoney() - amount);
-        logger.log(Level.INFO, player.getName() + " werden " + amount + CURRENCY_TYPE + " abgezogen.");
+        LOGGER.log(Level.INFO, player.getName() + " werden " + amount + CURRENCY_TYPE + " abgezogen.");
 
         if (amount < 0) {
             bankrupt(player);
         }
 
-        logger.log(Level.INFO, "Der Kontostand von " + player.getName() + " beträgt nun: " + player.getMoney() + CURRENCY_TYPE + ".");
+        LOGGER.log(Level.INFO, "Der Kontostand von " + player.getName() + " beträgt nun: " + player.getMoney() + CURRENCY_TYPE + ".");
 
     }
 
@@ -549,8 +549,8 @@ public class GameController {
     public void giveMoney(Player player, int amount) {
 
         player.setMoney(player.getMoney() + amount);
-        logger.log(Level.INFO, player.getName() + " erhält " + amount + CURRENCY_TYPE + ".");
-        logger.log(Level.INFO, "Der Kontostand von " + player.getName() + " beträgt nun: " + player.getMoney() + CURRENCY_TYPE + ".");
+        LOGGER.log(Level.INFO, player.getName() + " erhält " + amount + CURRENCY_TYPE + ".");
+        LOGGER.log(Level.INFO, "Der Kontostand von " + player.getName() + " beträgt nun: " + player.getMoney() + CURRENCY_TYPE + ".");
     }
 
     /**
@@ -559,10 +559,10 @@ public class GameController {
      * @param player Spieler der bankrott gegangen ist
      */
     public void bankrupt(Player player) {
-        logger.log(Level.INFO, player.getName() + " ist Bankrott und ab jetzt nur noch Zuschauer. All sein Besitz geht zurück an die Bank.");
+        LOGGER.log(Level.INFO, player.getName() + " ist Bankrott und ab jetzt nur noch Zuschauer. All sein Besitz geht zurück an die Bank.");
 
         // Spieler als Zuschauer festlegen
-        player.setSpectator(true);
+        player.setBankrupt(true);
 
         // Temporär das Feldarray zum Durchgehen zwischenspeichern
         Field[] fields = board.getFields();
@@ -599,7 +599,7 @@ public class GameController {
      */
     public int countActivePlayers() {
         return (int) Arrays.stream(players)
-                .filter(p -> !(p.isSpectator()))
+                .filter(p -> !(p.isBankrupt()))
                 .count();
     }
 
@@ -615,12 +615,12 @@ public class GameController {
      */
     public boolean buyStreet(Player player, Property property, int price) {
         if (checkLiquidity(player, price)) {
-            logger.log(Level.INFO, player.getName() + " kauft das Grundstück für " + price + CURRENCY_TYPE);
+            LOGGER.log(Level.INFO, player.getName() + " kauft das Grundstück für " + price + CURRENCY_TYPE);
             property.setOwner(player);
             takeMoney(player, price);
             return true;
         } else {
-            logger.log(Level.INFO, player.getName() + " hat nicht genug Geld.");
+            LOGGER.log(Level.INFO, player.getName() + " hat nicht genug Geld.");
             return false;
         }
     }
@@ -634,13 +634,13 @@ public class GameController {
     public void buyBuilding(Player player, StreetField field) {
         //@Eli, added Hausbau hinzugefuegt. TODO Spectator unmöglich
 
-        if (!(player.isSpectator()) && checkLiquidity(player, field.getHousePrice())) {
+        if (!(player.isBankrupt()) && checkLiquidity(player, field.getHousePrice())) {
             if (field.complete() && checkBalance(field, true)) {
                 takeMoney(player, field.getHousePrice());
                 field.setHouseCount(field.getHouseCount() + 1); //Haus bauen
-                logger.log(Level.INFO, "Haus wurde gekauft!");
+                LOGGER.log(Level.INFO, "Haus wurde gekauft!");
             } else {
-                logger.log(Level.INFO, "Straßenzug nicht komplett, oder unausgeglichen!");
+                LOGGER.log(Level.INFO, "Straßenzug nicht komplett, oder unausgeglichen!");
             }
         }
     }
@@ -652,12 +652,12 @@ public class GameController {
      * @param player Spieler dem die Strasse gehoert
      */
     public void sellBuilding(Player player, StreetField field) {
-        if (!(player.isSpectator()) && checkBalance(field, false)) {
+        if (!(player.isBankrupt()) && checkBalance(field, false)) {
             giveMoney(player, field.getHousePrice()); //@rules MAXI du moegest bitte pruefen!
             field.setHouseCount(field.getHouseCount() - 1); // Haus abbauen
-            logger.log(Level.INFO, "Haus wurde verkauft!");
+            LOGGER.log(Level.INFO, "Haus wurde verkauft!");
         } else {
-            logger.log(Level.INFO, "Straßenzug würde unausgeglichen sein");
+            LOGGER.log(Level.INFO, "Straßenzug würde unausgeglichen sein");
         }
     }
 
@@ -706,7 +706,7 @@ public class GameController {
             giveMoney(player, field.getMortgageValue());
         }
         field.setMortgageTaken(true);
-        logger.log(Level.INFO, "Hypothek wurde aufgenommen!");
+        LOGGER.log(Level.INFO, "Hypothek wurde aufgenommen!");
     }
 
     /**
@@ -720,9 +720,9 @@ public class GameController {
         if (checkLiquidity(player, mortgageBack)) {
             takeMoney(player, field.getMortgageBack());
             field.setMortgageTaken(false);
-            logger.log(Level.INFO, "Hypothek wurde zurueckgezahlt!");
+            LOGGER.log(Level.INFO, "Hypothek wurde zurueckgezahlt!");
         } else {
-            logger.log(Level.INFO, "Hypothek kann nicht zurückgezahlt werden! (Nicht genug Geld)");
+            LOGGER.log(Level.INFO, "Hypothek kann nicht zurückgezahlt werden! (Nicht genug Geld)");
         }
     }
 
@@ -778,15 +778,15 @@ public class GameController {
 
         // Solange nicht der richtige Wertebereich eingegeben wird, wird die Eingabe wiederholt.
         do {
-            logger.log(Level.INFO, "Eingabe: ");
+            LOGGER.log(Level.INFO, "Eingabe: ");
             try {
                 output = Integer.parseInt(scanner.nextLine());
             } catch (NumberFormatException ex) {
-                logger.log(Level.WARNING, "FEHLER: falsche Eingabe!");
+                LOGGER.log(Level.WARNING, "FEHLER: falsche Eingabe!");
             }
 
             if (output < 1 || output > max) {
-                logger.log(Level.INFO, "Deine Eingabe liegt nicht im Wertebereich! Bitte erneut versuchen:");
+                LOGGER.log(Level.INFO, "Deine Eingabe liegt nicht im Wertebereich! Bitte erneut versuchen:");
             }
         } while (output < 1 || output > max);
 
@@ -805,7 +805,7 @@ public class GameController {
         for (int i = 0; i < fields.length; i++) {
             mesg += String.format("[%d] - %s%n", i + 1, fields[i].getName());
         }
-        logger.log(Level.INFO, mesg);
+        LOGGER.log(Level.INFO, mesg);
         return getUserInput(39);
     }
 

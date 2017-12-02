@@ -5,7 +5,7 @@
  */
 package de.btu.monopoly.controller.phases;
 
-import static de.btu.monopoly.controller.GameController.logger;
+import static de.btu.monopoly.controller.GameController.LOGGER;
 import de.btu.monopoly.data.GameBoard;
 import de.btu.monopoly.data.Player;
 import de.btu.monopoly.data.field.Field;
@@ -39,7 +39,7 @@ public class ActionPhase {
         // TODO hier muss später noch der Handel implementiert werden
         int choice;
         do {
-            logger.log(Level.INFO, player.getName() + "! Waehle eine Aktion:\n[1] - Nichts\n[2] - Haus kaufen\n[3] - Haus verkaufen\n[4] - "
+            LOGGER.log(Level.INFO, player.getName() + "! Waehle eine Aktion:\n[1] - Nichts\n[2] - Haus kaufen\n[3] - Haus verkaufen\n[4] - "
                     + "Hypothek aufnehmen\n[5] - Hypothek abbezahlen");
 
             choice = im.getUserInput(5);
@@ -53,7 +53,7 @@ public class ActionPhase {
                          * Haus kaufen
                          */ {
                             if (!(currField instanceof StreetField)) {
-                                logger.log(Level.INFO, "Gewähltes Feld ist keine Straße!");
+                                LOGGER.log(Level.INFO, "Gewähltes Feld ist keine Straße!");
                                 break;
                             }
                             StreetField streetField = (StreetField) property;
@@ -61,7 +61,7 @@ public class ActionPhase {
                                 // wenn im Besitz und nicht vollgebaut
                                 fm.buyBuilding(player, streetField);
                             } else {
-                                logger.log(Level.INFO, "Diese Straße gehört dir nicht, oder ist voll bebaut.");
+                                LOGGER.log(Level.INFO, "Diese Straße gehört dir nicht, oder ist voll bebaut.");
                             }
                             break;
                         }
@@ -69,15 +69,15 @@ public class ActionPhase {
                          * Haus verkaufen
                          */ {
                             if (!(currField instanceof StreetField)) {
-                                logger.log(Level.INFO, "Gewähltes Feld ist keine Straße!");
+                                LOGGER.log(Level.INFO, "Gewähltes Feld ist keine Straße!");
                                 break;
                             }
                             StreetField streetField = (StreetField) property;
                             if ((streetField.getOwner() == player) && (streetField.getHouseCount() > 0)) {
                                 // wenn im Besitz und nicht 'hauslos'
-                                fm.sellBuilding(player, streetField);
+                                fm.sellHouse(player, streetField);
                             } else {
-                                logger.log(Level.INFO, "Diese Straße gehört dir nicht, oder hat keine Häuser zum verkaufen.");
+                                LOGGER.log(Level.INFO, "Diese Straße gehört dir nicht, oder hat keine Häuser zum verkaufen.");
                             }
                             break;
                         }
@@ -87,9 +87,9 @@ public class ActionPhase {
                             // wenn im Besitz und noch keine Hypothek aufgenommen
                             if (property.getOwner() == player && (!(property.isMortgageTaken()))) {
                                 fm.takeMortgage(player, property);
-                                logger.log(Level.INFO, "Hypothek aufgenommen.");
+                                LOGGER.log(Level.INFO, "Hypothek aufgenommen.");
                             } else {
-                                logger.log(Level.INFO, "Diese Straße gehört dir nicht, oder hat schon eine Hypothek.");
+                                LOGGER.log(Level.INFO, "Diese Straße gehört dir nicht, oder hat schon eine Hypothek.");
                             }
                             break;
                         }
@@ -99,14 +99,14 @@ public class ActionPhase {
                             // wenn im Besitz und Hypothek aufgenommen
                             if (property.getOwner() == player && (property.isMortgageTaken())) {
                                 fm.payMortgage(player, property);
-                                logger.log(Level.INFO, "Hypothek abgezahlt.");
+                                LOGGER.log(Level.INFO, "Hypothek abgezahlt.");
                             } else {
-                                logger.log(Level.INFO, "Diese Straße gehört dir nicht, oder hat keine Hypothek zum abzahlen.");
+                                LOGGER.log(Level.INFO, "Diese Straße gehört dir nicht, oder hat keine Hypothek zum abzahlen.");
                             }
                             break;
                         }
                         default:
-                            logger.log(Level.WARNING, "FEHLER: StreetFieldSwitch überlaufen.");
+                            LOGGER.log(Level.WARNING, "FEHLER: StreetFieldSwitch überlaufen.");
                             break;
                     }
                 }

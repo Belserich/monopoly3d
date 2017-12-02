@@ -5,7 +5,7 @@
  */
 package de.btu.monopoly.controller.phases;
 
-import static de.btu.monopoly.controller.GameController.logger;
+import static de.btu.monopoly.controller.GameController.LOGGER;
 import de.btu.monopoly.data.Player;
 import java.util.logging.Level;
 
@@ -33,17 +33,17 @@ public class RollPhase {
     public int[] compute(int doubletCount) {
 
         int[] rollResult = null;
-        logger.log(Level.INFO, player.getName() + " ist dran mit würfeln.");
+        LOGGER.log(Level.INFO, player.getName() + " ist dran mit würfeln.");
         if (!(player.isInJail())) { //Gefaengnis hat eigenes Wuerfeln
             rollResult = pm.roll(player);
             doubletCount += (rollResult[0] == rollResult[1]) ? 1 : 0;
             if (doubletCount >= 3) {
-                logger.log(Level.INFO, player.getName() + " hat seinen 3. Pasch und geht nicht über LOS, direkt ins Gefängnis!");
+                LOGGER.log(Level.INFO, player.getName() + " hat seinen 3. Pasch und geht nicht über LOS, direkt ins Gefängnis!");
                 pm.moveToJail(player);
             }
         }
         if (!(player.isInJail())) { //kann sich nach wuerfeln aendern
-            pm.movePlayer(player, rollResult[0] + rollResult[1]);
+            pm.move(player, rollResult[0] + rollResult[1]);
         }
         return rollResult;
     }

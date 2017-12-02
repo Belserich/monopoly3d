@@ -6,7 +6,7 @@
 package de.btu.monopoly.controller.phases;
 
 import static de.btu.monopoly.controller.GameController.CURRENCY_TYPE;
-import static de.btu.monopoly.controller.GameController.logger;
+import static de.btu.monopoly.controller.GameController.LOGGER;
 import de.btu.monopoly.data.Player;
 import java.util.logging.Level;
 
@@ -35,7 +35,7 @@ public class JailPhase {
         boolean repeat;
         do {
             repeat = false;
-            logger.log(Level.INFO, player.getName() + "ist im Gefängnis und kann: \n1. 3 mal Würfeln, um mit einem Pasch freizukommen "
+            LOGGER.log(Level.INFO, player.getName() + "ist im Gefängnis und kann: \n1. 3 mal Würfeln, um mit einem Pasch freizukommen "
                     + "\n2. Bezahlen (50€) \n3. Gefängnis-Frei-Karte benutzen");
 
             switch (im.getUserInput(3)) { // @GUI
@@ -43,23 +43,23 @@ public class JailPhase {
                 case 1:
                     int[] result = pm.roll(player);                 // wuerfeln
                     if (!(result[0] == result[1])) {       // kein Pasch -> im Gefaengnis bleiben
-                        logger.log(Level.INFO, player.getName() + " hat keinen Pasch und bleibt im Gefängnis.");
+                        LOGGER.log(Level.INFO, player.getName() + " hat keinen Pasch und bleibt im Gefängnis.");
                         player.addDayInJail();
                     } else {                        // sonst frei
-                        logger.log(Level.INFO, player.getName() + " hat einen Pasch und ist frei.");
+                        LOGGER.log(Level.INFO, player.getName() + " hat einen Pasch und ist frei.");
                         player.setInJail(false);
                         player.setDaysInJail(0);
                     }
                     // Wenn drei mal kein Pasch dann bezahlen
                     if (player.getDaysInJail() == 3) {
                         if (pm.checkLiquidity(player, 50)) {
-                            logger.log(Level.INFO, player.getName() + "hat schon 3 mal keinen Pasch und muss nun 50"
+                            LOGGER.log(Level.INFO, player.getName() + "hat schon 3 mal keinen Pasch und muss nun 50"
                                     + CURRENCY_TYPE + " zahlen!");
-                            pm.takeMoney(player, 50);
+                            pm.takeMoneyUnchecked(player, 50);
                             player.setInJail(false);
                             player.setDaysInJail(0);
                         } else {        //wenn pleite game over
-                            logger.log(Level.INFO, player.getName() + " hat schon 3 mal gewürfelt und kann nicht zahlen.");
+                            LOGGER.log(Level.INFO, player.getName() + " hat schon 3 mal gewürfelt und kann nicht zahlen.");
                             pm.bankrupt(player);
                         }
                     }
@@ -68,12 +68,12 @@ public class JailPhase {
                 //OPTION 2: Bezahlen
                 case 2:
                     if (pm.checkLiquidity(player, 50)) {
-                        logger.log(Level.INFO, player.getName() + " hat 50" + CURRENCY_TYPE + " gezahlt und ist frei!");
-                        pm.takeMoney(player, 50);
+                        LOGGER.log(Level.INFO, player.getName() + " hat 50" + CURRENCY_TYPE + " gezahlt und ist frei!");
+                        pm.takeMoneyUnchecked(player, 50);
                         player.setInJail(false);
                         player.setDaysInJail(0);
                     } else { // muss in der GUI deaktiviert sein!!!
-                        logger.log(Level.INFO, player.getName() + " hat kein Geld um sich freizukaufen.");
+                        LOGGER.log(Level.INFO, player.getName() + " hat kein Geld um sich freizukaufen.");
                         repeat = true;
                     }
                     break;
@@ -81,18 +81,18 @@ public class JailPhase {
                 //OPTION 3: Freikarte ausspielen
                 case 3:
                     if (player.getJailCardAmount() > 0) {
-                        logger.log(Level.INFO, player.getName() + " hat eine Gefängnis-Frei-Karte benutzt.");
+                        LOGGER.log(Level.INFO, player.getName() + " hat eine Gefängnis-Frei-Karte benutzt.");
                         player.removeJailCard(); // TODO jail-card
                         player.setInJail(false);
                         player.setDaysInJail(0);
                     } else { // muss in der GUI deaktiviert sein!!!
-                        logger.log(Level.INFO, player.getName() + " hat keine Gefängnis-Frei-Karten mehr.");
+                        LOGGER.log(Level.INFO, player.getName() + " hat keine Gefängnis-Frei-Karten mehr.");
                         repeat = true;
                     }
                     break;
 
                 default:
-                    logger.log(Level.WARNING, "FEHLER: Gefängnis-Switch überschritten");
+                    LOGGER.log(Level.WARNING, "FEHLER: Gefängnis-Switch überschritten");
                     repeat = true;
                     break;
 

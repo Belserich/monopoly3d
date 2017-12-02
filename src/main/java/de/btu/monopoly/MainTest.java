@@ -18,7 +18,7 @@ public class MainTest {
 
         // Variablen:
         GameController gc = new GameController(2);
-        GameController.logger.setLevel(Level.WARNING);  // Logger des GameControllers ausschalten
+        GameController.LOGGER.setLevel(Level.WARNING);  // Logger des GameControllers ausschalten
         gc.init();
 
         GameBoard board = gc.board;
@@ -55,8 +55,8 @@ public class MainTest {
         Player notSpectator = players[1];
 
         // Attribute setzen
-        notSpectator.setSpectator(false);
-        player.setSpectator(false);
+        notSpectator.setBankrupt(false);
+        player.setBankrupt(false);
         StreetField street1 = (StreetField) gc.board.getFields()[1];
         street1.setOwner(player);                                   // Eine Strasse geben
         StreetField street2 = (StreetField) gc.board.getFields()[3];
@@ -71,7 +71,7 @@ public class MainTest {
         gc.bankrupt(player);
 
         //Attribute prüfen
-        assert player.isSpectator() : "failed : Spieler nicht als Zuschauer gesetzt.";
+        assert player.isBankrupt() : "failed : Spieler nicht als Zuschauer gesetzt.";
         assert station.getOwner() == null : "failed : Bahnhof nicht zur Bank zurückgesetzt.";
         assert street1.getOwner() == null : "failed : Strasse nicht zur Bank zurückgesetzt.";
         assert street2.getOwner() == null : "failed : Strasse nicht zur Bank zurückgesetzt.";
@@ -507,7 +507,7 @@ public class MainTest {
         //getMortgageValue()
         assert suedbahnhof.getMortgageBack() == 110 : "failed: HypothekValueBack falsch";
 
-        //takeMoney() + getMoney()
+        //takeMoneyUnchecked() + getMoney()
         assert player.getMoney() == 690 : "failed: Hypothek nicht zurueck gezahlt"; //800-110
 
         //setMortgagetaken()

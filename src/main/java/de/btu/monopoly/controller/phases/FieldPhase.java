@@ -6,7 +6,7 @@
 package de.btu.monopoly.controller.phases;
 
 import static de.btu.monopoly.controller.GameController.CURRENCY_TYPE;
-import static de.btu.monopoly.controller.GameController.logger;
+import static de.btu.monopoly.controller.GameController.LOGGER;
 import de.btu.monopoly.data.Card;
 import de.btu.monopoly.data.GameBoard;
 import de.btu.monopoly.data.Player;
@@ -64,7 +64,7 @@ public class FieldPhase {
                 break;
 
             case GO_JAIL: // "Gehen Sie Ins Gefaengnis"-Feld
-                logger.log(Level.INFO, player.getName() + " muss ins Gefaengnis!");
+                LOGGER.log(Level.INFO, player.getName() + " muss ins Gefaengnis!");
                 pm.moveToJail(player);
                 break;
 
@@ -74,7 +74,7 @@ public class FieldPhase {
     }
 
     private void processPlayerOnCardField(Player player, CardField field) {
-        logger.fine(String.format("%s steht auf einem Kartenfeld (%s).", player.getName(),
+        LOGGER.fine(String.format("%s steht auf einem Kartenfeld (%s).", player.getName(),
                 board.getFields()[player.getPosition()].getName()));
         Card nextCard = field.getCardStack().nextCard();
         Card.Action[] actions = nextCard.getActions();
@@ -92,17 +92,17 @@ public class FieldPhase {
                 pm.moveToJail(player);
                 break;
             case PAY_MONEY:
-                pm.takeMoney(player, nextCard.getArgs()[0]);
+                pm.takeMoneyUnchecked(player, nextCard.getArgs()[0]);
                 break;
             case MOVE_PLAYER:
-                pm.movePlayer(player, nextCard.getArgs()[0]);
+                pm.move(player, nextCard.getArgs()[0]);
                 break;
             case SET_POSITION:
-                pm.movePlayer(player, nextCard.getArgs()[0] - player.getPosition());
+                pm.move(player, nextCard.getArgs()[0] - player.getPosition());
                 break;
             case PAY_MONEY_ALL:
                 int amount = nextCard.getArgs()[0];
-                pm.takeMoney(player, amount * players.length);
+                pm.takeMoneyUnchecked(player, amount * players.length);
                 for (Player other : players) {
                     pm.giveMoney(other, amount);
                 }
@@ -110,22 +110,22 @@ public class FieldPhase {
             case NEXT_SUPPLY:
                 int fields = 0;
                 while (GameBoard.FIELD_STRUCTURE[player.getPosition() + (++fields)] != GameBoard.FieldType.SUPPLY);
-                pm.movePlayer(player, fields);
+                pm.move(player, fields);
             case NEXT_STATION_RENT_AMP:
                 fields = 0;
                 while (GameBoard.FIELD_STRUCTURE[player.getPosition() + (++fields)] != GameBoard.FieldType.STATION);
-                pm.movePlayer(player, fields); // TODO Amplifier
+                pm.move(player, fields); // TODO Amplifier
             case BIRTHDAY: // TODO
             case RENOVATE: // TODO
         }
     }
 
     private void processPlayerOnTaxField(Player player, TaxField field) {
-        logger.log(Level.FINE, player.getName() + " steht auf einem Steuerfeld.");
+        LOGGER.log(Level.FINE, player.getName() + " steht auf einem Steuerfeld.");
         if (pm.checkLiquidity(player, field.getTax())) {
-            pm.takeMoney(player, field.getTax());
+            pm.takeMoneyUnchecked(player, field.getTax());
         } else {
-            logger.log(Level.INFO, player.getName() + " kann seine Steuern nicht abzahlen!");
+            LOGGER.log(Level.INFO, player.getName() + " kann seine Steuern nicht abzahlen!");
             pm.bankrupt(player);
         }
     }
@@ -134,27 +134,27 @@ public class FieldPhase {
         // prüft den Besitzer
         Player other = field.getOwner();
         if (other == null) { // Feld frei
-            logger.log(Level.INFO, player.getName() + " steht auf einem freien Grundstück und kann es: \n[1] Kaufen \n[2] Nicht Kaufen");
+            LOGGER.log(Level.INFO, player.getName() + " steht auf einem freien Grundstück und kann es: \n[1] Kaufen \n[2] Nicht Kaufen");
             switch (im.getUserInput(2)) { //@GUI
                 case 1: //Kaufen
-                    logger.info(player.getName() + " >> " + field.getName());
+                    LOGGER.info(player.getName() + " >> " + field.getName());
                     if (!fm.buyStreet(player, field, field.getPrice())) {
-                        logger.info(player.getName() + "hat nicht genug Geld! " + field.getName() + " wird nun zwangsversteigert.");
+                        LOGGER.info(player.getName() + "hat nicht genug Geld! " + field.getName() + " wird nun zwangsversteigert.");
                         //TODO betPhase(field);
                     }
                     break;
                 case 2: //Auktion @multiplayer
-                    logger.info(player.getName() + "hat sich gegen den Kauf entschieden, die Straße wird nun versteigert.");
+                    LOGGER.info(player.getName() + "hat sich gegen den Kauf entschieden, die Straße wird nun versteigert.");
                     //TODO betPhase(field);
                     break;
                 default:
-                    logger.log(Level.WARNING, "getUserInput() hat index außerhalb des zurückgegeben.");
+                    LOGGER.log(Level.WARNING, "getUserInput() hat index außerhalb des zurückgegeben.");
                     break;
             }
         } else if (other == player) { // Property im eigenen Besitz
-            logger.log(Level.FINE, player.getName() + " steht auf seinem eigenen Grundstück.");
+            LOGGER.log(Level.FINE, player.getName() + " steht auf seinem eigenen Grundstück.");
         } else {                      // Property nicht in eigenem Besitz
-            logger.log(Level.INFO, player.getName() + " steht auf dem Grundstück von " + other.getName() + ".");
+            LOGGER.log(Level.INFO, player.getName() + " steht auf dem Grundstück von " + other.getName() + ".");
 
             int rent = field.getRent();
             if (field instanceof SupplyField) {
@@ -162,11 +162,11 @@ public class FieldPhase {
             }
 
             if (pm.checkLiquidity(player, rent)) {
-                logger.log(Level.INFO, player.getName() + " zahlt " + rent + CURRENCY_TYPE + " Miete.");
-                pm.takeMoney(player, rent);
+                LOGGER.log(Level.INFO, player.getName() + " zahlt " + rent + CURRENCY_TYPE + " Miete.");
+                pm.takeMoneyUnchecked(player, rent);
                 pm.giveMoney(field.getOwner(), rent);
             } else {
-                logger.log(Level.INFO, player.getName() + " kann die geforderte Miete nicht zahlen!");
+                LOGGER.log(Level.INFO, player.getName() + " kann die geforderte Miete nicht zahlen!");
                 pm.bankrupt(player);
             }
         }
