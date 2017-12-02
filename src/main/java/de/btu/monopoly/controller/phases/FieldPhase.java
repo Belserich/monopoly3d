@@ -24,6 +24,7 @@ public class FieldPhase {
 
     GameBoard board;
     Player[] players;
+    Player player;
     PlayerManager pm;
     FieldManager fm;
     InputManager im;
@@ -42,7 +43,9 @@ public class FieldPhase {
      *
      * @param player Spieler in der Feldphase
      */
-    public void compute(Player player, int[] rollResult) {
+    public void compute(int playerIndex, int[] rollResult) {
+        this.player = players[playerIndex];
+
         GameBoard.FieldType type = GameBoard.FIELD_STRUCTURE[player.getPosition()];
         switch (type) {
             case STREET:

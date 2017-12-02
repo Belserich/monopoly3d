@@ -16,12 +16,13 @@ import java.util.logging.Level;
  */
 public class JailPhase {
 
+    Player[] players;
     Player player;
     PlayerManager pm;
     InputManager im;
 
-    public JailPhase(Player player, PlayerManager pm, InputManager im) {
-        this.player = player;
+    public JailPhase(Player[] players, PlayerManager pm, InputManager im) {
+        this.players = players;
         this.pm = pm;
         this.im = im;
     }
@@ -29,9 +30,10 @@ public class JailPhase {
     /**
      * Gefängnisphase
      *
-     * @param player Spieler in der Gefaengnisphase
+     * @param playerIndex index des aktiven Spielers
      */
-    public void compute() {
+    public void compute(int playerIndex) {
+        this.player = players[playerIndex];
         boolean repeat;
         do {
             repeat = false;

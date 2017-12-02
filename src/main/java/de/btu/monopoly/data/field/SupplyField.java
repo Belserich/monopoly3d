@@ -27,6 +27,9 @@ public class SupplyField extends Property {
      */
     @Override
     public int getRent() {
+        if (isMortgageTaken()) {
+            return 0;
+        }
         if (complete()) {
             return mult2;
         } else {

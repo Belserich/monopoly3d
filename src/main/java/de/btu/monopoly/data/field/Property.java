@@ -40,10 +40,9 @@ public abstract class Property extends Field {
     List<Property> neighbours = new ArrayList<>();
 
     /**
-     * Die abstrakte Oberklasse aller Felder, die kaufbar und mit Mietspreisen
-     * belegt sind. Man soll diese Felder außerdem mit einer Hypothek belasten
-     * können und diese auch für {@code (Hypothekswert + 10% des Kaufpreises)}
-     * Einheiten der gewählten Währung zurückzahlen können.
+     * Die abstrakte Oberklasse aller Felder, die kaufbar und mit Mietspreisen belegt sind. Man soll diese Felder außerdem mit
+     * einer Hypothek belasten können und diese auch für {@code (Hypothekswert + 10% des Kaufpreises)} Einheiten der gewählten
+     * Währung zurückzahlen können.
      *
      * @param price Kaufpreis des Grundstuecks
      * @param mortgage Hypothekswert
@@ -83,14 +82,14 @@ public abstract class Property extends Field {
     public boolean isMortgageTaken() {
         return mortgageTaken;
     }
-    
+
     /**
      * @return Hypotheksrückwert
      */
     public int getMortgageBack() {
         return mortgageBack;
     }
-    
+
     /**
      * @param player Besitzer des Grundstuecks
      */
@@ -106,8 +105,7 @@ public abstract class Property extends Field {
     }
 
     /**
-     * Gibt die Miete des Grundstuecks zurueck. Im Falle eines Werkes entspricht
-     * die Miete dem Multiplikator fuer die Augenzahl.
+     * Gibt die Miete des Grundstuecks zurueck. Im Falle eines Werkes entspricht die Miete dem Multiplikator fuer die Augenzahl.
      */
     public int getRent() {
         return 0;

@@ -20,11 +20,14 @@ import java.util.logging.Level;
 public class ActionPhase {
 
     GameBoard board;
+    Player[] players;
+    Player player;
     FieldManager fm;
     InputManager im;
 
-    public ActionPhase(GameBoard board, FieldManager fm, InputManager im) {
+    public ActionPhase(GameBoard board, Player[] players, FieldManager fm, InputManager im) {
         this.board = board;
+        this.players = players;
         this.fm = fm;
         this.im = im;
     }
@@ -35,8 +38,10 @@ public class ActionPhase {
      *
      * @param player Spieler in der Aktionsphase
      */
-    public void actionPhase(Player player) { //@optimize switches vereinfachen
+    public void actionPhase(int playerIndex) { //@optimize switches vereinfachen
         // TODO hier muss später noch der Handel implementiert werden
+        this.player = players[playerIndex];
+
         int choice;
         do {
             LOGGER.log(Level.INFO, player.getName() + "! Waehle eine Aktion:\n[1] - Nichts\n[2] - Haus kaufen\n[3] - Haus verkaufen\n[4] - "
