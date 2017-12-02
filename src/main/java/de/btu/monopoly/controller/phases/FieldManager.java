@@ -185,6 +185,18 @@ public class FieldManager {
         return true;
     }
 
+    public boolean isComplete(int fieldId) {
+        Property prop = getPropertyField(fieldId);
+        Player owner = prop.getOwner();
+        int[] neighbourIds = NEIGHBOUR_IDS[getPropertyId(prop)];
+        for (Integer neigh : neighbourIds) {
+            if (getPropertyField(neigh).getOwner() != owner) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     /**
      * siehe {@code NEIGHBOUR_IDS}
      *
@@ -300,4 +312,6 @@ public class FieldManager {
         prop.setMortgageTaken(false);
         LOGGER.info(String.format("Hypothek fuer %s wurde zurueckgezahlt!", prop.getName()));
     }
+
+
 }
