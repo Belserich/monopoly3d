@@ -1,71 +1,41 @@
 package de.btu.monopoly.data;
 
+import de.btu.monopoly.controller.phases.BankAccount;
+
 /**
  * @author Maximilian Bels (belsmaxi@b-tu.de)
  */
 public class Player {
 
-    /**
-     * Name des Spielers
-     */
     private String name;
-
-    /**
-     * ID des Spielers
-     */
     private int id;
 
-    /**
-     * Kapital
-     */
-    private int money;
-
-    /**
-     * Gibt an, ob der Spieler im Gefängnis ist.
-     */
-    private boolean inJail;
-
-    /**
-     * Anzahl Gefaengnis-Frei-Karten
-     */
-    private int jailCardAmount;
-
-    /**
-     * Tage im Gefaengnis
-     */
-    private int daysInJail;
-
-    /**
-     * Position des Spielers
-     */
     private int position;
 
-    /**
-     * ob der Spieler ein Zuschauer (ausgeschieden) ist
-     */
-    private boolean isSpectator;
+    private BankAccount bank;
+    private boolean isBankrupt;
+
+    private boolean isInJail;
+    private int daysInJail;
+    private int jailCardAmount;
 
     /**
      * Erstellt eine neue Spielerinstanz.
      *
      * @param name Spielername
      * @param id Spieler-ID
-     * @param money Kapital des Spielers
+     * @param startMoney Kapital des Spielers
      */
-    public Player(String name, int id, int money) {
+    public Player(String name, int id, int startMoney) {
         this.name = name;
         this.id = id;
-        this.money = money;
-        this.inJail = false;
-        this.jailCardAmount = 0;
-        this.daysInJail = 0;
-        this.position = 0;
+        this.bank = new BankAccount(startMoney);
+
+        isInJail = false;
+        jailCardAmount = 0;
+        daysInJail = 0;
+        position = 0;
     }
-    
-    /**
-     * Für die Kryonet-Serialisierung
-     */
-    public Player() {}
 
     /**
      * @return Name
@@ -85,7 +55,11 @@ public class Player {
      * @return Kapital
      */
     public int getMoney() {
-        return money;
+        return bank.balance();
+    }
+
+    public BankAccount getBankAccount() {
+        return bank;
     }
 
     /**
@@ -93,7 +67,7 @@ public class Player {
      * @return ob der Spieler im Gefängnis ist
      */
     public boolean isInJail() {
-        return inJail;
+        return isInJail;
     }
 
     /**
@@ -139,13 +113,6 @@ public class Player {
     }
 
     /**
-     * @param money neues Kapital
-     */
-    public void setMoney(int money) {
-        this.money = money;
-    }
-
-    /**
      * *
      * @param pos neue Position
      */
@@ -164,22 +131,22 @@ public class Player {
      *
      * @return ob Spieler ausgeschieden (Zuschauer) ist
      */
-    public boolean isSpectator() {
-        return isSpectator;
+    public boolean isBankrupt() {
+        return isBankrupt;
     }
 
     /**
-     * @param isSpectator neuer Zuschauerstatus
+     * @param isBankrupt neuer Zuschauerstatus
      */
-    public void setSpectator(boolean isSpectator) {
-        this.isSpectator = isSpectator;
+    public void setBankrupt(boolean isBankrupt) {
+        this.isBankrupt = isBankrupt;
     }
 
     /**
      * @param inJail ob Spieler im Gefaengnis ist
      */
     public void setInJail(boolean inJail) {
-        this.inJail = inJail;
+        this.isInJail = inJail;
     }
 
 }
