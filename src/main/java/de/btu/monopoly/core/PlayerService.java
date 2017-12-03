@@ -15,7 +15,7 @@ import java.util.logging.Logger;
  */
 public class PlayerService {
 
-    private static final Logger LOGGER = Logger.getLogger(PlayerService.class.getCanonicalName());
+    private static final Logger LOGGER = Logger.getLogger(de.btu.monopoly.core.Game.class.getCanonicalName());
 
     /**
      * Setzt alle nötigen Attribute, wenn der Spieler ins Gefängnis kommt. Bitte {@code FieldManager.toJail()} benutzen.

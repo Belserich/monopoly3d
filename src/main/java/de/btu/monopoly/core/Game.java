@@ -61,7 +61,7 @@ public class Game {
     }
 
     public void start() {
-        LOGGER.setLevel(Level.INFO);
+        LOGGER.setLevel(Level.ALL);
         LOGGER.log(Level.INFO, "Spiel beginnt.");
 
         do {
@@ -192,6 +192,9 @@ public class Game {
             case GO_JAIL: // "Gehen Sie Ins Gefaengnis"-Feld
                 LOGGER.log(Level.INFO, player.getName() + " muss ins Gefaengnis!");
                 fieldManager.toJail(player);
+                break;
+
+            case CORNER:
                 break;
 
             default:
