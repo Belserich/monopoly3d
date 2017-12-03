@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.btu.monopoly.controller.phases;
+package de.btu.monopoly.core;
 
-import static de.btu.monopoly.controller.GameController.LOGGER;
+import static de.btu.monopoly.core.Game.LOGGER;
 import de.btu.monopoly.data.GameBoard;
 import de.btu.monopoly.data.Player;
 import de.btu.monopoly.data.field.Field;
@@ -18,18 +18,13 @@ import java.util.logging.Level;
  */
 public class InputHandler {
 
-    GameBoard board;
-
-    public InputHandler(GameBoard board) {
-        this.board = board;
-    }
-
     /**
+     * Nimmt Spielereingaben entgegen.
      *
      * @param max maximale Anzahl an Auswahlmoeglichkeiten
      * @return int der Durch den Anwender gewaehlt wurde
      */
-    public int getUserInput(int max) {
+    public static int getUserInput(int max) {
 
         Scanner scanner = new Scanner(System.in);
         int output = -1;
@@ -57,7 +52,7 @@ public class InputHandler {
      * @param player Spieler der eine Eingabe machen soll
      * @return ein int Wert zu auswaehen einer Strasse
      */
-    public int askForField(Player player) {
+    public static int askForField(Player player, GameBoard board) {
         String mesg = player.getName() + "! Wähle ein Feld:\n";
         Field[] fields = board.getFields();
         for (int i = 0; i < fields.length; i++) {

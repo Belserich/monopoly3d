@@ -1,12 +1,12 @@
-package de.btu.monopoly.controller.phases;
+package de.btu.monopoly.data;
 
 import java.util.logging.Logger;
 
-public class BankAccount {
+public class Bank {
 
     private int balance;
 
-    public BankAccount(int startMoney) {
+    public Bank(int startMoney) {
         this.balance = startMoney;
     }
 

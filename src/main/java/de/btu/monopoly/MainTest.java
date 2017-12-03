@@ -1,6 +1,6 @@
 package de.btu.monopoly;
 
-import de.btu.monopoly.controller.GameController;
+import de.btu.monopoly.core.Game;
 import de.btu.monopoly.data.*;
 import de.btu.monopoly.data.field.*;
 import java.util.logging.Level;
@@ -17,8 +17,8 @@ public class MainTest {
     public static void main(String[] args) throws Exception {
 
         // Variablen:
-        GameController gc = new GameController(2);
-        GameController.LOGGER.setLevel(Level.WARNING);  // Logger des GameControllers ausschalten
+        Game gc = new Game(2);
+        Game.LOGGER.setLevel(Level.WARNING);  // Logger des GameControllers ausschalten
         gc.init();
 
         GameBoard board = gc.board;
@@ -50,7 +50,7 @@ public class MainTest {
      * @param gc
      * @param player
      */
-    private static void testBankrupt(GameController gc, Player[] players) {
+    private static void testBankrupt(Game gc, Player[] players) {
         Player player = players[0];
         Player notSpectator = players[1];
 
@@ -88,7 +88,7 @@ public class MainTest {
      * @param gc
      * @param player
      */
-    private static void testGoField(GameController gc, Player[] players) {
+    private static void testGoField(Game gc, Player[] players) {
         //Spieler bestimmen
         Player player1 = players[0];
         Player player2 = players[1];
@@ -119,7 +119,7 @@ public class MainTest {
      * @param gc
      * @param players
      */
-    private static void testDoubletToJail(GameController gc, Player[] players) {
+    private static void testDoubletToJail(Game gc, Player[] players) {
         //Spieler und Variablen initialisieren
         Player prisoner = players[0];
 
@@ -140,7 +140,7 @@ public class MainTest {
      * @param gc
      * @param players
      */
-    private static void testPayPrisonDeposit(GameController gc, Player[] players) {
+    private static void testPayPrisonDeposit(Game gc, Player[] players) {
         //Spieler und Variablen initialisieren
         Player prisoner1 = players[0];
 //        Player prisoner2 = players[1];
@@ -168,7 +168,7 @@ public class MainTest {
      * @param gc
      * @param players
      */
-    private static void testCornerFields(GameController gc, Player[] players) {
+    private static void testCornerFields(Game gc, Player[] players) {
         //Spieler und Variablen initialisieren
         Player cornerPlayer = players[0];
         cornerPlayer.setInJail(false);
@@ -192,7 +192,7 @@ public class MainTest {
      * @param gc
      * @param players
      */
-    private static void testGoToJail(GameController gc, Player[] players) {
+    private static void testGoToJail(Game gc, Player[] players) {
         //Spieler und Variablen initialisieren
         Player prePrisoner = players[0];
         prePrisoner.setPosition(30);
@@ -217,7 +217,7 @@ public class MainTest {
      * @param gc
      * @param player
      */
-    private static void testBuyStreet(GameController gc, Player player) {
+    private static void testBuyStreet(Game gc, Player player) {
         Property street = (Property) gc.board.getFields()[1];
         player.setMoney(1000);
         gc.buyStreet(player, street, street.getPrice());
@@ -233,7 +233,7 @@ public class MainTest {
      * @param gc
      * @param players
      */
-    private static void testPayRent(GameController gc, Player[] players) {
+    private static void testPayRent(Game gc, Player[] players) {
         // Spieler bestimmen
         Player player = players[0];
         Player owner = players[1];
@@ -305,7 +305,7 @@ public class MainTest {
      * @param gc
      * @param arg
      */
-    private static void testRollMethod(GameController gc, Player arg) {
+    private static void testRollMethod(Game gc, Player arg) {
         for (int j = 0; j < 1000; j++) {
             int[] result = gc.roll(arg);
             for (int i : result) {
@@ -341,7 +341,7 @@ public class MainTest {
      * @param gc
      * @param players
      */
-    private static void testBuyBuilding(GameController gc, Player[] players) {
+    private static void testBuyBuilding(Game gc, Player[] players) {
         //Variablen initialisieren
         StreetField seeStrasse = (StreetField) gc.board.getFields()[11];
         StreetField hafenStrasse = (StreetField) gc.board.getFields()[13];
@@ -383,7 +383,7 @@ public class MainTest {
      * @param gc
      * @param players
      */
-    private static void testSellBuilding(GameController gc, Player[] players) {
+    private static void testSellBuilding(Game gc, Player[] players) {
         //Variablen initialisieren
         StreetField parkStrasse = (StreetField) gc.board.getFields()[37];
         StreetField schlossAllee = (StreetField) gc.board.getFields()[39];
@@ -417,7 +417,7 @@ public class MainTest {
      * @param gc
      * @param players
      */
-    private static void testTakeMortgage(GameController gc, Player[] players) {
+    private static void testTakeMortgage(Game gc, Player[] players) {
         //Variablen initialisieren
         Player player = players[0];
         StationField suedbahnhof = (StationField) gc.board.getFields()[5];
@@ -491,7 +491,7 @@ public class MainTest {
      * @param gc
      * @param players
      */
-    private static void testPayMortgage(GameController gc, Player[] players) {
+    private static void testPayMortgage(Game gc, Player[] players) {
         //Variablen initialisieren
         Property suedbahnhof = (Property) gc.board.getFields()[5];
         Property nordbahnhof = (Property) gc.board.getFields()[25];

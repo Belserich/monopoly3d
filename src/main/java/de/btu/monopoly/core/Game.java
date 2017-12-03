@@ -1,0 +1,474 @@
+package de.btu.monopoly.core;
+
+import de.btu.monopoly.data.Card;
+import de.btu.monopoly.data.CardStack;
+import de.btu.monopoly.data.GameBoard;
+import de.btu.monopoly.data.Player;
+import de.btu.monopoly.data.field.*;
+import de.btu.monopoly.data.parser.*;
+import java.io.IOException;
+import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.xml.parsers.ParserConfigurationException;
+import org.xml.sax.SAXException;
+
+/**
+ * @author Christian Prinz
+ */
+public class Game {
+
+    public static final Logger LOGGER = Logger.getLogger(Game.class.getCanonicalName());
+    private FieldManager fieldManager;
+    public GameBoard board;
+    public final Player[] players;
+    public boolean gameOver;
+
+    /**
+     * Die zentrale Manager-Klasse für alles was das Spiel betrifft.
+     *
+     * @param playerCount Anzahl Spieler
+     *
+     */
+    public Game(int playerCount) {
+        this.players = new Player[playerCount];
+    }
+
+    public void init() {
+        LOGGER.log(Level.INFO, "Spiel wird initialisiert");
+
+        fieldManager = new FieldManager(board.getFields());
+
+        try {
+            CardStack stack = CardStackParser.parse("/data/card_data.xml");
+            LOGGER.log(Level.FINEST, stack.toString());
+            GameBoardParser.setCardLoadout0(stack);
+            GameBoardParser.setCardLoadout1(stack);
+            board = GameBoardParser.parse("/data/field_data.xml");
+        } catch (IOException | SAXException | ParserConfigurationException ex) {
+            LOGGER.log(Level.WARNING, "Fehler beim initialisieren des Boards / der Karten.", ex);
+        }
+
+        assert board != null;
+
+        for (int i = 0; i < players.length; i++) {
+            players[i] = new Player("Mathias " + (i + 1), i, 1500);
+        }
+    }
+
+    public void start() {
+        LOGGER.setLevel(Level.INFO);
+        LOGGER.log(Level.INFO, "Spiel beginnt.");
+
+        do {
+            for (int i = 0; i < players.length; i++) {
+                Player activePlayer = players[i];
+                if (!(activePlayer.isBankrupt())) {
+                    turn(activePlayer);
+                }
+            }
+        } while (!gameOver);
+
+        for (Player player : players) {
+            if (!player.isBankrupt()) {
+                LOGGER.log(Level.INFO, player.getName() + " hat das Spiel gewonnen!");
+            }
+        }
+    }
+
+    public void turn(Player player) {
+        int[] rollResult;
+        int doubletCounter = 0;
+
+        LOGGER.info(String.format("%s ist an der Reihe", player.getName()));
+        if (player.isInJail()) {
+            jailPhase(player);
+        }
+
+        if (!player.isInJail()) {
+            do {
+                rollResult = rollPhase(player, doubletCounter);
+                doubletCounter = rollResult[0] + rollResult[1];
+
+                if (doubletCounter >= 3) {
+                    fieldPhase(player, rollResult);
+                }
+                actionPhase(player);
+            }
+            while (rollResult[0] == rollResult[1] && doubletCounter < 3);
+        }
+    }
+
+    public void jailPhase(Player player) {
+        int choice;
+        do {
+            LOGGER.info(String.format(" %s ist im Gefängnis und kann: %n1. 3 mal Würfeln, um mit einem Pasch freizukommen "
+                    + "%n2. Bezahlen (50€) %n3. Gefängnis-Frei-Karte benutzen", player.getName()));
+
+            choice = InputHandler.getUserInput(3);
+            switch (choice) {
+                case 1:
+                    processJailRollOption(player);
+                    break;
+                case 2: // Freikaufen
+                    processJailPayOption(player);
+                    break;
+                case 3: // Freikarte ausspielen
+                    processJailCardOption(player);
+                    break;
+                default:
+                    LOGGER.log(Level.WARNING, "Fehler: Gefängnis-Switch überschritten!");
+                    break;
+            }
+        }
+        while (player.isInJail() && choice != 1);
+    }
+
+    private void processJailRollOption(Player player) {
+        int[] result = roll(player);
+        if (result[0] == result[1]) {
+            PlayerService.freeFromJail(player);
+        }
+        else {
+            player.addDayInJail();
+            if (player.getDaysInJail() >= 3) {
+                LOGGER.info("Drei Runden ohne Pasch, Spieler muss zahlen.");
+                PlayerService.takeMoneyUnchecked(player, 50);
+                PlayerService.freeFromJail(player);
+            }
+        }
+    }
+
+    private void processJailPayOption(Player player) {
+        if (PlayerService.takeMoney(player, 50)) {
+            LOGGER.info(String.format("%s hat 50 gezahlt und ist frei!", player.getName()));
+            PlayerService.freeFromJail(player);
+        }
+        else LOGGER.info(String.format("%s hat kein Geld um sich freizukaufen.", player.getName()));
+    }
+
+    private void processJailCardOption(Player player) {
+        if (player.getJailCardAmount() > 0) {
+            LOGGER.info(String.format("%s hat eine Gefängnis-Frei-Karte benutzt.", player.getName()));
+            player.removeJailCard();
+            PlayerService.freeFromJail(player);
+        }
+        else LOGGER.info(String.format("%s hat keine Gefängnis-Frei-Karten mehr.", player.getName()));
+    }
+
+    public int[] rollPhase(Player player, int doubletCounter) {
+        int[] rollResult;
+
+        LOGGER.info(String.format("%s ist dran mit würfeln.", player.getName()));
+        rollResult = roll(player);
+        doubletCounter += (rollResult[0] == rollResult[1]) ? 1 : 0;
+
+        if (doubletCounter >= 3) {
+            LOGGER.info(String.format("%s hat seinen 3. Pasch und geht nicht über LOS, direkt ins Gefängnis!", player.getName()));
+            fieldManager.toJail(player);
+        }
+        else {
+            fieldManager.movePlayer(player, rollResult[0] + rollResult[1]);
+        }
+        return rollResult;
+    }
+
+    public void fieldPhase(Player player, int[] rollResult) {
+        GameBoard.FieldType type = GameBoard.FIELD_STRUCTURE[player.getPosition()];
+        switch (type) {
+            case GO:
+                break;
+
+            case TAX: // Steuerfeld
+                processPlayerOnTaxField(player, (TaxField) board.getFields()[player.getPosition()]);
+                break;
+
+            case CARD: // Kartenfeld
+                processPlayerOnCardField(player, (CardField) board.getFields()[player.getPosition()]);
+                break;
+
+            case GO_JAIL: // "Gehen Sie Ins Gefaengnis"-Feld
+                LOGGER.log(Level.INFO, player.getName() + " muss ins Gefaengnis!");
+                fieldManager.toJail(player);
+                break;
+
+            default:
+                processPlayerOnPropertyField(player, ((Property) board.getFields()[player.getPosition()]), rollResult);
+                break;
+        }
+    }
+
+    private void processPlayerOnCardField(Player player, CardField field) {
+        LOGGER.fine(String.format("%s steht auf einem Kartenfeld (%s).", player.getName(),
+                board.getFields()[player.getPosition()].getName()));
+        Card nextCard = field.getCardStack().nextCard();
+        Card.Action[] actions = nextCard.getActions();
+
+        assert actions.length > 0;
+
+        switch (actions[0]) {
+            case JAIL:
+                player.addJailCard();
+                break;
+            case GIVE_MONEY:
+                PlayerService.giveMoney(player, nextCard.getArgs()[0]); // TODO check args
+                break;
+            case GO_JAIL:
+                fieldManager.toJail(player);
+                break;
+            case PAY_MONEY:
+                PlayerService.takeMoney(player, nextCard.getArgs()[0]);
+                break;
+            case MOVE_PLAYER:
+                fieldManager.movePlayer(player, nextCard.getArgs()[0]);
+                break;
+            case SET_POSITION:
+                fieldManager.movePlayer(player, nextCard.getArgs()[0] - player.getPosition());
+                break;
+            case PAY_MONEY_ALL:
+                int amount = nextCard.getArgs()[0];
+                PlayerService.takeMoney(player, amount * players.length);
+                for (Player other : players) {
+                    PlayerService.giveMoney(other, amount);
+                }
+                break;
+            case NEXT_SUPPLY:
+                int fields = 0;
+                while (GameBoard.FIELD_STRUCTURE[player.getPosition() + (++fields)] != GameBoard.FieldType.SUPPLY);
+                fieldManager.movePlayer(player, fields);
+            case NEXT_STATION_RENT_AMP:
+                fields = 0;
+                while (GameBoard.FIELD_STRUCTURE[player.getPosition() + fields] != GameBoard.FieldType.STATION) {
+                    fields++;
+                }
+                fieldManager.movePlayer(player, fields); // TODO Amplifier
+            case BIRTHDAY: // TODO
+            case RENOVATE: // TODO
+        }
+    }
+
+    private void processPlayerOnTaxField(Player player, TaxField field) {
+        LOGGER.fine(String.format("%s steht auf einem Steuerfeld.", player.getName()));
+        if (PlayerService.checkLiquidity(player, field.getTax())) {
+            PlayerService.takeMoney(player, field.getTax());
+        } else {
+            LOGGER.info(String.format("%s kann seine Steuern nicht abzahlen!", player.getName()));
+            bankrupt(player);
+        }
+    }
+
+    private void processPlayerOnPropertyField(Player player, Property field, int[] rollResult) {
+        Player other = field.getOwner();
+        if (other == null) { // Feld frei
+            LOGGER.info(String.format("%s steht auf einem freien Grundstück und kann es: %n[1] Kaufen %n[2] Nicht Kaufen",
+                    player.getName()));
+            switch (getUserInput(2)) {
+                case 1: //Kaufen
+                    LOGGER.info(player.getName() + " >> " + field.getName());
+                    if (!fieldManager.buyProperty(player, field)) {
+                        LOGGER.info(player.getName() + "hat nicht genug Geld! " + field.getName() + " wird nun zwangsversteigert.");
+                        betPhase(field);
+                    }
+                    break;
+                case 2: //Auktion @multiplayer
+                    LOGGER.info(player.getName() + "hat sich gegen den Kauf entschieden, die Straße wird nun versteigert.");
+                    betPhase(field);
+                    break;
+                default:
+                    LOGGER.log(Level.WARNING, "getUserInput() hat index außerhalb des zurückgegeben.");
+                    break;
+            }
+        } else if (other == player) { // Property im eigenen Besitz
+            LOGGER.log(Level.FINE, player.getName() + " steht auf seinem eigenen Grundstück.");
+        } else {                      // Property nicht in eigenem Besitz
+            LOGGER.log(Level.INFO, player.getName() + " steht auf dem Grundstück von " + other.getName() + ".");
+
+            int rent = field.getRent();
+            if (field instanceof SupplyField) {
+                rent = rent * (rollResult[0] + rollResult[1]);
+            }
+
+            if (PlayerService.checkLiquidity(player, rent)) {
+                LOGGER.info(String.format("%s zahlt %d Miete.", player.getName(), rent));
+                PlayerService.takeMoney(player, rent);
+                PlayerService.giveMoney(field.getOwner(), rent);
+            } else {
+                LOGGER.info(String.format("%s kann die geforderte Miete nicht zahlen!", player.getName()));
+                bankrupt(player); // TODO
+            }
+        }
+    }
+
+    public void actionPhase(Player player) {
+        int choice;
+
+        do {
+            LOGGER.log(Level.INFO, player.getName() + "! Waehle eine Aktion:\n[1] - Nichts\n[2] - Haus kaufen\n[3] - Haus verkaufen\n[4] - "
+                    + "Hypothek aufnehmen\n[5] - Hypothek abbezahlen");
+
+            choice = getUserInput(5);
+            if (choice != 1) {
+                Field currField = board.getFields()[InputHandler.askForField(player, board) - 1]; // Wahl der Strasse
+                if (currField instanceof Property) {
+                    Property property = (Property) currField;
+                    switch (choice) {
+                        case 2: // Haus kaufen
+                            if (!(currField instanceof StreetField)) {
+                                LOGGER.info("Gewähltes Feld ist keine Straße!");
+                                break;
+                            }
+                            StreetField streetField = (StreetField) property;
+                            if (streetField.getOwner() != player) {
+                                LOGGER.info("Diese Straße gehört dir nicht.");
+                                break;
+                            }
+                            fieldManager.buyHouse(streetField);
+                            break;
+                        case 3: //Haus verkaufen
+                            if (!(currField instanceof StreetField)) {
+                                LOGGER.info("Gewähltes Feld ist keine Straße!");
+                                break;
+                            }
+                            streetField = (StreetField) property;
+                            if (streetField.getOwner() != player) {
+                                LOGGER.info("Diese Straße gehört dir nicht, oder hat keine Häuser zum verkaufen.");
+                                break;
+                            }
+                            fieldManager.sellHouse(streetField);
+                            break;
+                        case 4: // Hypothek aufnehmen
+                            if (property.getOwner() == player && (!(property.isMortgageTaken()))) {
+                                fieldManager.takeMortgage(property);
+                            }
+                            else LOGGER.info("Diese Straße gehört dir nicht, oder hat schon eine Hypothek.");
+                            break;
+                        case 5: // Hypothek zurückzahlen {
+                            if (property.getOwner() != player) {
+                                LOGGER.log(Level.INFO, "Diese Straße gehört dir nicht, oder hat keine Hypothek zum abzahlen.");
+                            }
+                            fieldManager.payMortgage(property);
+                            LOGGER.log(Level.INFO, "Hypothek abgezahlt.");
+                            break;
+                        default:
+                            LOGGER.log(Level.WARNING, "Fehler: StreetFieldSwitch überlaufen.");
+                            break;
+                    }
+                }
+            }
+        }
+        while (choice != 1);
+    }
+
+    public void betPhase(Property property) { // TODO
+        Auction auc = new Auction(property, players);
+        auc.startAuction();
+    }
+
+    public int[] roll(Player player) {
+        int[] result = new int[2];
+
+        result[0] = ((int) (Math.random() * 6)) + 1;
+        result[1] = ((int) (Math.random() * 6)) + 1;
+
+        LOGGER.info(String.format("Würfelergebnis: %d %d", result[0], result[1]));
+        return result;
+    }
+
+    /**
+     * Macht einen Spieler zum Beobachter und entfernt all seinen Besitz!
+     *
+     * @param player Spieler der bankrott gegangen ist
+     */
+    public void bankrupt(Player player) {
+        LOGGER.info(String.format("%s ist Bankrott und ab jetzt nur noch Zuschauer. All sein Besitz geht zurück an die Bank.",
+                player.getName()));
+        player.setBankrupt(true);
+        Field[] fields = board.getFields(); // TODO
+        if (PlayerService.countActive(players) <= 1) {
+            gameOver = true;
+        }
+
+        for (int i = 0; i < fields.length; i++) {
+            Field field = fields[i];
+
+            // Löschen der Hypothek und des Eigentums
+            if (field instanceof Property) {
+                if (((Property) field).getOwner() == player) {
+                    ((Property) field).setOwner(null);
+                    ((Property) field).setMortgageTaken(false);
+                }
+
+                // Löschen der Anzahl an Häusern
+                if (field instanceof StreetField) {
+                    ((StreetField) fields[i]).setHouseCount(0);
+
+                }
+            }
+        }
+        // TODO @cards - Gefängnisfreikarten müssen zurück in den Stapel
+    }
+
+    /**
+     * Alle Gebaeude eines Spielers werden gezaehlt
+     *
+     * Die Preise fuer Renovierung werden von dem entsprechenden Karte bekannt und dies wird mit der Anzahl von Haeuser/Hotels
+     * multipliziert und am Ende addiert = Summe
+     *
+     * @param housePrice Hauspreis
+     * @param hotelPrice Hotelpreis
+     */
+    public void sumRenovation(Player player, int housePrice, int hotelPrice) {
+        //TODO spaeter, wenn Kartenstapel gedruckt wurde
+
+        int renovationHotel = 0;
+        int renovationHouse = 0;
+        for (Field field : board.getFields()) {
+            if (field instanceof StreetField) {
+                int houses = ((StreetField) field).getHouseCount();
+                if (houses < 5) {
+                    renovationHouse += (housePrice * houses);
+
+                } else {
+                    renovationHotel += hotelPrice;
+
+                }
+            }
+        }
+        int sum = renovationHouse + renovationHotel;
+        if (PlayerService.checkLiquidity(player, sum)) {
+            PlayerService.takeMoney(player, sum);
+        } else {
+            bankrupt(player);
+        }
+    }
+
+    //-------------------------------------------------------------------------
+    //------------ Console-Input Methoden -------------------------------------
+    //-------------------------------------------------------------------------
+    /**
+     *
+     * @param max maximale Anzahl an Auswahlmoeglichkeiten
+     * @return int der Durch den Anwender gewaehlt wurde
+     */
+    public int getUserInput(int max) {
+
+        Scanner scanner = new Scanner(System.in);
+        int output = -1;
+
+        // Solange nicht der richtige Wertebereich eingegeben wird, wird die Eingabe wiederholt.
+        do {
+            LOGGER.log(Level.INFO, "Eingabe: ");
+            try {
+                output = Integer.parseInt(scanner.nextLine());
+            } catch (NumberFormatException ex) {
+                LOGGER.log(Level.WARNING, "FEHLER: falsche Eingabe!");
+            }
+
+            if (output < 1 || output > max) {
+                LOGGER.log(Level.INFO, "Deine Eingabe liegt nicht im Wertebereich! Bitte erneut versuchen:");
+            }
+        } while (output < 1 || output > max);
+
+        return output;
+    }
+}

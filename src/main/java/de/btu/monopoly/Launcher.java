@@ -5,7 +5,7 @@
  */
 package de.btu.monopoly;
 
-import de.btu.monopoly.controller.GameController;
+import de.btu.monopoly.core.Game;
 import de.btu.monopoly.data.parser.GameBoardParser;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -48,7 +48,7 @@ public class Launcher extends Application {
     }
 
     private static void initGame() {
-        GameController controller = new GameController(2);
+        Game controller = new Game(2);
         controller.init();
         controller.start();
     }
@@ -62,6 +62,6 @@ public class Launcher extends Application {
         }
 
         Logger.getLogger(GameBoardParser.class.getCanonicalName()).setLevel(Level.OFF);
-        Logger.getLogger(GameController.class.getCanonicalName()).setLevel(Level.OFF);
+        Logger.getLogger(Game.class.getCanonicalName()).setLevel(Level.OFF);
     }
 }

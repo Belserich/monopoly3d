@@ -1,7 +1,5 @@
 package de.btu.monopoly.data;
 
-import de.btu.monopoly.controller.phases.BankAccount;
-
 /**
  * @author Maximilian Bels (belsmaxi@b-tu.de)
  */
@@ -12,7 +10,7 @@ public class Player {
 
     private int position;
 
-    private BankAccount bank;
+    private Bank bank;
     private boolean isBankrupt;
 
     private boolean isInJail;
@@ -29,7 +27,7 @@ public class Player {
     public Player(String name, int id, int startMoney) {
         this.name = name;
         this.id = id;
-        this.bank = new BankAccount(startMoney);
+        this.bank = new Bank(startMoney);
 
         isInJail = false;
         jailCardAmount = 0;
@@ -58,7 +56,7 @@ public class Player {
         return bank.balance();
     }
 
-    public BankAccount getBankAccount() {
+    public Bank getBank() {
         return bank;
     }
 
