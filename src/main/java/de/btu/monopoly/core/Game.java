@@ -94,8 +94,7 @@ public class Game {
                     fieldPhase(player, rollResult);
                 }
                 actionPhase(player);
-            }
-            while (rollResult[0] == rollResult[1] && doubletCounter < 3);
+            } while (rollResult[0] == rollResult[1] && doubletCounter < 3);
         }
     }
 
@@ -120,16 +119,14 @@ public class Game {
                     LOGGER.log(Level.WARNING, "Fehler: Gefängnis-Switch überschritten!");
                     break;
             }
-        }
-        while (player.isInJail() && choice != 1);
+        } while (player.isInJail() && choice != 1);
     }
 
     private void processJailRollOption(Player player) {
-        int[] result = roll(player);
+        int[] result = PlayerService.roll(player);
         if (result[0] == result[1]) {
             PlayerService.freeFromJail(player);
-        }
-        else {
+        } else {
             player.addDayInJail();
             if (player.getDaysInJail() >= 3) {
                 LOGGER.info("Drei Runden ohne Pasch, Spieler muss zahlen.");
@@ -143,8 +140,9 @@ public class Game {
         if (PlayerService.takeMoney(player, 50)) {
             LOGGER.info(String.format("%s hat 50 gezahlt und ist frei!", player.getName()));
             PlayerService.freeFromJail(player);
+        } else {
+            LOGGER.info(String.format("%s hat kein Geld um sich freizukaufen.", player.getName()));
         }
-        else LOGGER.info(String.format("%s hat kein Geld um sich freizukaufen.", player.getName()));
     }
 
     private void processJailCardOption(Player player) {
@@ -152,22 +150,22 @@ public class Game {
             LOGGER.info(String.format("%s hat eine Gefängnis-Frei-Karte benutzt.", player.getName()));
             player.removeJailCard();
             PlayerService.freeFromJail(player);
+        } else {
+            LOGGER.info(String.format("%s hat keine Gefängnis-Frei-Karten mehr.", player.getName()));
         }
-        else LOGGER.info(String.format("%s hat keine Gefängnis-Frei-Karten mehr.", player.getName()));
     }
 
     public int[] rollPhase(Player player, int doubletCounter) {
         int[] rollResult;
 
         LOGGER.info(String.format("%s ist dran mit würfeln.", player.getName()));
-        rollResult = roll(player);
+        rollResult = PlayerService.roll(player);
         doubletCounter += (rollResult[0] == rollResult[1]) ? 1 : 0;
 
         if (doubletCounter >= 3) {
             LOGGER.info(String.format("%s hat seinen 3. Pasch und geht nicht über LOS, direkt ins Gefängnis!", player.getName()));
             fieldManager.toJail(player);
-        }
-        else {
+        } else {
             fieldManager.movePlayer(player, rollResult[0] + rollResult[1]);
         }
         return rollResult;
@@ -253,7 +251,7 @@ public class Game {
             PlayerService.takeMoney(player, field.getTax());
         } else {
             LOGGER.info(String.format("%s kann seine Steuern nicht abzahlen!", player.getName()));
-            bankrupt(player);
+            this.gameOver = PlayerService.bankrupt(player, board, players);
         }
     }
 
@@ -294,7 +292,7 @@ public class Game {
                 PlayerService.giveMoney(field.getOwner(), rent);
             } else {
                 LOGGER.info(String.format("%s kann die geforderte Miete nicht zahlen!", player.getName()));
-                bankrupt(player); // TODO
+                this.gameOver = PlayerService.bankrupt(player, board, players); // TODO
             }
         }
     }
@@ -339,8 +337,9 @@ public class Game {
                         case 4: // Hypothek aufnehmen
                             if (property.getOwner() == player && (!(property.isMortgageTaken()))) {
                                 fieldManager.takeMortgage(property);
+                            } else {
+                                LOGGER.info("Diese Straße gehört dir nicht, oder hat schon eine Hypothek.");
                             }
-                            else LOGGER.info("Diese Straße gehört dir nicht, oder hat schon eine Hypothek.");
                             break;
                         case 5: // Hypothek zurückzahlen {
                             if (property.getOwner() != player) {
@@ -355,91 +354,12 @@ public class Game {
                     }
                 }
             }
-        }
-        while (choice != 1);
+        } while (choice != 1);
     }
 
     public void betPhase(Property property) { // TODO
         Auction auc = new Auction(property, players);
         auc.startAuction();
-    }
-
-    public int[] roll(Player player) {
-        int[] result = new int[2];
-
-        result[0] = ((int) (Math.random() * 6)) + 1;
-        result[1] = ((int) (Math.random() * 6)) + 1;
-
-        LOGGER.info(String.format("Würfelergebnis: %d %d", result[0], result[1]));
-        return result;
-    }
-
-    /**
-     * Macht einen Spieler zum Beobachter und entfernt all seinen Besitz!
-     *
-     * @param player Spieler der bankrott gegangen ist
-     */
-    public void bankrupt(Player player) {
-        LOGGER.info(String.format("%s ist Bankrott und ab jetzt nur noch Zuschauer. All sein Besitz geht zurück an die Bank.",
-                player.getName()));
-        player.setBankrupt(true);
-        Field[] fields = board.getFields(); // TODO
-        if (PlayerService.countActive(players) <= 1) {
-            gameOver = true;
-        }
-
-        for (int i = 0; i < fields.length; i++) {
-            Field field = fields[i];
-
-            // Löschen der Hypothek und des Eigentums
-            if (field instanceof Property) {
-                if (((Property) field).getOwner() == player) {
-                    ((Property) field).setOwner(null);
-                    ((Property) field).setMortgageTaken(false);
-                }
-
-                // Löschen der Anzahl an Häusern
-                if (field instanceof StreetField) {
-                    ((StreetField) fields[i]).setHouseCount(0);
-
-                }
-            }
-        }
-        // TODO @cards - Gefängnisfreikarten müssen zurück in den Stapel
-    }
-
-    /**
-     * Alle Gebaeude eines Spielers werden gezaehlt
-     *
-     * Die Preise fuer Renovierung werden von dem entsprechenden Karte bekannt und dies wird mit der Anzahl von Haeuser/Hotels
-     * multipliziert und am Ende addiert = Summe
-     *
-     * @param housePrice Hauspreis
-     * @param hotelPrice Hotelpreis
-     */
-    public void sumRenovation(Player player, int housePrice, int hotelPrice) {
-        //TODO spaeter, wenn Kartenstapel gedruckt wurde
-
-        int renovationHotel = 0;
-        int renovationHouse = 0;
-        for (Field field : board.getFields()) {
-            if (field instanceof StreetField) {
-                int houses = ((StreetField) field).getHouseCount();
-                if (houses < 5) {
-                    renovationHouse += (housePrice * houses);
-
-                } else {
-                    renovationHotel += hotelPrice;
-
-                }
-            }
-        }
-        int sum = renovationHouse + renovationHotel;
-        if (PlayerService.checkLiquidity(player, sum)) {
-            PlayerService.takeMoney(player, sum);
-        } else {
-            bankrupt(player);
-        }
     }
 
     //-------------------------------------------------------------------------

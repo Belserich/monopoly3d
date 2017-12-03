@@ -1,8 +1,11 @@
 package de.btu.monopoly.core;
 
 import de.btu.monopoly.data.Bank;
+import de.btu.monopoly.data.GameBoard;
 import de.btu.monopoly.data.Player;
-
+import de.btu.monopoly.data.field.Field;
+import de.btu.monopoly.data.field.Property;
+import de.btu.monopoly.data.field.StreetField;
 import java.util.Arrays;
 import java.util.logging.Logger;
 
@@ -60,8 +63,7 @@ public class PlayerService {
         if (bank.checkLiquidity(amount)) {
             LOGGER.fine("Spielerkonto auf Liquidität geprüft. Er besitzt genug Geld.");
             return true;
-        }
-        else {
+        } else {
             LOGGER.warning("Spielerkonto auf Liquidität geprüft. Er besitzt nicht genug Geld!");
             return false;
         }
@@ -109,5 +111,87 @@ public class PlayerService {
         return (int) Arrays.stream(players)
                 .filter(p -> !(p.isBankrupt()))
                 .count();
+    }
+
+    /**
+     *
+     * @return int[] mit den beiden Wuerfelergebnissen
+     */
+    public static int[] roll(Player player) {
+        int[] result = new int[2];
+
+        result[0] = ((int) (Math.random() * 6)) + 1;
+        result[1] = ((int) (Math.random() * 6)) + 1;
+
+        LOGGER.info(String.format("Würfelergebnis: %d %d", result[0], result[1]));
+        return result;
+    }
+
+    /**
+     *
+     * @param player zu pruefender Spieler
+     * @param board das Spielbrett (zum Besitz wegnehmen)
+     * @param players alle Mitspieler (zum Game-Over-Check)
+     * @return boolean, ob das Spiel gameOver ist
+     */
+    public static boolean bankrupt(Player player, GameBoard board, Player[] players) {
+        boolean gameOver = false;
+        LOGGER.info(String.format("%s ist Bankrott und ab jetzt nur noch Zuschauer. All sein Besitz geht zurück an die Bank.",
+                player.getName()));
+        player.setBankrupt(true);
+        Field[] fields = board.getFields(); // TODO
+        if (PlayerService.countActive(players) <= 1) {
+            gameOver = true;
+        }
+
+        for (int i = 0; i < fields.length; i++) {
+            Field field = fields[i];
+
+            // Löschen der Hypothek und des Eigentums
+            if (field instanceof Property) {
+                if (((Property) field).getOwner() == player) {
+                    ((Property) field).setOwner(null);
+                    ((Property) field).setMortgageTaken(false);
+                }
+
+                // Löschen der Anzahl an Häusern
+                if (field instanceof StreetField) {
+                    ((StreetField) fields[i]).setHouseCount(0);
+
+                }
+            }
+        }
+        return gameOver;
+        // TODO @cards - Gefängnisfreikarten müssen zurück in den Stapel
+    }
+
+    /**
+     *
+     * @param player Spieler dessen Hauser/Hotels gezaehlt werden
+     * @param housePrice Preis fuer ein Haus
+     * @param hotelPrice Preis fuer ein Hotel
+     * @param board GameBoard
+     * @return Summe der Renovierungskosten
+     */
+    public static int sumRenovation(Player player, int housePrice, int hotelPrice, GameBoard board) {
+        //TODO spaeter, wenn Kartenstapel gedruckt wurde
+
+        int renovationHotel = 0;
+        int renovationHouse = 0;
+        for (Field field : board.getFields()) {
+            if (field instanceof StreetField) {
+                if (((StreetField) field).getOwner() == player) {
+                    int houses = ((StreetField) field).getHouseCount();
+                    if (houses < 5) {
+                        renovationHouse += (housePrice * houses);
+
+                    } else {
+                        renovationHotel += hotelPrice;
+
+                    }
+                }
+            }
+        }
+        return renovationHouse + renovationHotel;
     }
 }
