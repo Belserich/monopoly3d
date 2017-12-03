@@ -1,7 +1,6 @@
 package de.btu.monopoly.core;
 
 import static de.btu.monopoly.core.Game.LOGGER;
-
 import de.btu.monopoly.data.Player;
 import de.btu.monopoly.data.field.*;
 
@@ -13,15 +12,15 @@ public class FieldManager {
 
     /**
      * Sammlung aller Nachbar-Ids in aufsteigender Reihenfolge. Der Erste beider Indizes steht immer für eine eigene Property
-     * (Bahnhof, Werk oder Straße). Die Zuordnung ist <bold>nicht</bold> 1:1 zu {@code GameBoard.FIELD_STRUCTURE}, d.h. die
-     * IDs an der Stelle {@code i} stehen hier nicht für die Nachbarn des Feldes mit dem Index {@code i}, sondern für
-     * das {@code i}-te Property Feld. Die Aufzählung beginnt bei der Ersten Straße und schreitet dann im Uhrzeigersinn fort.
+     * (Bahnhof, Werk oder Straße). Die Zuordnung ist <bold>nicht</bold> 1:1 zu {@code GameBoard.FIELD_STRUCTURE}, d.h. die IDs an
+     * der Stelle {@code i} stehen hier nicht für die Nachbarn des Feldes mit dem Index {@code i}, sondern für das {@code i}-te
+     * Property Feld. Die Aufzählung beginnt bei der Ersten Straße und schreitet dann im Uhrzeigersinn fort.
      */
     private static final int[][] NEIGHBOUR_IDS = {
-            {3}, {1}, {15, 25, 35}, {8, 9}, {6, 9}, {6, 8}, // Erste Reihe
-            {13, 14}, {28}, {11, 14}, {11, 13}, {5, 25, 35}, {18, 19}, {16, 19}, {16, 18}, // Zweite Reihe
-            {23, 24}, {21, 24}, {23, 21}, {5, 15, 35}, {27, 29}, {26, 29}, {12}, {26, 27}, // Dritte Reihe
-            {32, 34}, {31, 34}, {32, 31}, {5, 15, 25}, {39}, {37} // Vierte Reihe
+        {3}, {1}, {15, 25, 35}, {8, 9}, {6, 9}, {6, 8}, // Erste Reihe
+        {13, 14}, {28}, {11, 14}, {11, 13}, {5, 25, 35}, {18, 19}, {16, 19}, {16, 18}, // Zweite Reihe
+        {23, 24}, {21, 24}, {23, 21}, {5, 15, 35}, {27, 29}, {26, 29}, {12}, {26, 27}, // Dritte Reihe
+        {32, 34}, {31, 34}, {32, 31}, {5, 15, 25}, {39}, {37} // Vierte Reihe
     };
 
     /**
@@ -48,33 +47,31 @@ public class FieldManager {
      *
      * @param player Spieler
      * @param amount Anzahl Felder
-     * @return ob der Spieler über LOS gekommen ist
+     * @param goFieldAmount Geld welches beim Ueberqueren des LOS Feldes bekommen wird
      */
-    public boolean movePlayer(Player player, int amount) {
+    public void movePlayer(Player player, int amount, int goFieldAmount) {
         int newPos = PlayerService.movePlayer(player, amount);
-        if (newPos >= fields.length) {
+        if (newPos > fields.length) {
             player.setPosition(newPos % fields.length);
-            return true;
+            PlayerService.giveMoney(player, goFieldAmount);
         }
-        return false;
     }
 
     /**
      * Kauft ein Grundstück, sofern der Spieler zahlungsfähig ist.
      *
      * @param player Käufer
+     * @param price des Grundstueckes (der sich bei einer Auktion aendern kann)
      * @return true, wenn das Feld gekauft wurde, false sonst
      */
-    public boolean buyProperty(Player player, Property prop) {
-        int price = prop.getPrice();
+    public boolean buyProperty(Player player, Property prop, int price) {
 
         if (PlayerService.checkLiquidity(player, price)) {
             LOGGER.info(String.format("%s kauft das Grundstück %s", player.getName(), prop.getName()));
             prop.setOwner(player);
             PlayerService.takeMoneyUnchecked(player, price);
             return true;
-        }
-        else {
+        } else {
             LOGGER.warning(String.format("%s hat nicht genug Geld, um %s zu kaufen!", player.getName(), prop.getName()));
             return false;
         }
@@ -94,8 +91,7 @@ public class FieldManager {
             if (street.getHouseCount() < 5) {
                 buyHouseUnchecked(street);
                 return true;
-            }
-            else {
+            } else {
                 LOGGER.warning(String.format("Auf %s steht bereits die maximale Anzahl an Haeusern.", street.getName()));
             }
         }
@@ -112,12 +108,12 @@ public class FieldManager {
         PlayerService.takeMoneyUnchecked(player, street.getHousePrice());
         street.setHouseCount(street.getHouseCount() + 1);
     }
+
     /**
      * Verkauft ein Haus auf dem gewählten Feld, sofern es ein Straßenfeld ist und bereits bebaut wurde.
      *
      * @return true, wenn der Verkauf erfolgreich war, false sonst
      */
-
     public boolean sellHouse(StreetField street) {
         Player player = street.getOwner();
 
@@ -126,8 +122,7 @@ public class FieldManager {
             if (street.getHouseCount() > 0) {
                 sellHouseUnchecked(street);
                 return true;
-            }
-            else {
+            } else {
                 LOGGER.warning(String.format("Auf %s stehen keine Haeuser.", street.getName()));
             }
         }
@@ -171,7 +166,7 @@ public class FieldManager {
         Player owner = prop.getOwner();
         int[] neighbourIds = NEIGHBOUR_IDS[getPropertyId(prop)];
         for (Integer neigh : neighbourIds) {
-            if (((Property)fields[neigh]).getOwner() != owner) {
+            if (((Property) fields[neigh]).getOwner() != owner) {
                 return false;
             }
         }
@@ -214,8 +209,8 @@ public class FieldManager {
             if (street.getHouseCount() != 0) {
                 LOGGER.warning(String.format("Auf %s stehen Haeuser! Hypothek kann nicht aufgenommen werden.", street.getName()));
                 return false;
-            }
-            else if (!balanceCheck(street, 0, 0)) /* Hier gilt houseCount = 0 */ {
+            } else if (!balanceCheck(street, 0, 0)) // Hier gilt houseCount = 0
+            {
                 LOGGER.warning(String.format("Auf dem Straßenzug von %s stehen Haeuser! Hypothek kann nicht aufgenommen werden.",
                         street.getName()));
                 return false;
@@ -249,12 +244,10 @@ public class FieldManager {
         if (prop.isMortgageTaken()) {
             if (PlayerService.checkLiquidity(player, prop.getMortgageBack())) {
                 payMortgageUnchecked(prop);
-            }
-            else {
+            } else {
                 LOGGER.warning(String.format("Hypothek fuer %s wurde nicht zurueckgezahlt.", prop.getName()));
             }
-        }
-        else {
+        } else {
             LOGGER.fine(String.format("Auf dem Feld %s lastet keine Hypothek.", prop.getName()));
         }
     }
@@ -270,6 +263,5 @@ public class FieldManager {
         prop.setMortgageTaken(false);
         LOGGER.info(String.format("Hypothek fuer %s wurde zurueckgezahlt!", prop.getName()));
     }
-
 
 }

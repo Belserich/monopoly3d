@@ -39,7 +39,7 @@ public class PlayerService {
      *
      * @param player Spieler
      * @param amount Anzahl der zu laufenden Felder
-     * @return Die neue Position des Spielers auf dem Feld.
+     * @return Die neue Position des Spielers auf dem Feld( und darueber hinaus).
      */
     static int movePlayer(Player player, int amount) {
         int pos = player.getPosition();

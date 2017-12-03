@@ -24,6 +24,10 @@ public class Game {
     public final Player[] players;
     public boolean gameOver;
 
+    public FieldManager getFieldManager() {
+        return this.fieldManager;
+    }
+
     /**
      * Die zentrale Manager-Klasse für alles was das Spiel betrifft.
      *
@@ -37,8 +41,6 @@ public class Game {
     public void init() {
         LOGGER.log(Level.INFO, "Spiel wird initialisiert");
 
-        fieldManager = new FieldManager(board.getFields());
-
         try {
             CardStack stack = CardStackParser.parse("/data/card_data.xml");
             LOGGER.log(Level.FINEST, stack.toString());
@@ -50,6 +52,8 @@ public class Game {
         }
 
         assert board != null;
+
+        fieldManager = new FieldManager(board.getFields());
 
         for (int i = 0; i < players.length; i++) {
             players[i] = new Player("Mathias " + (i + 1), i, 1500);
@@ -166,7 +170,7 @@ public class Game {
             LOGGER.info(String.format("%s hat seinen 3. Pasch und geht nicht über LOS, direkt ins Gefängnis!", player.getName()));
             fieldManager.toJail(player);
         } else {
-            fieldManager.movePlayer(player, rollResult[0] + rollResult[1]);
+            fieldManager.movePlayer(player, rollResult[0] + rollResult[1], ((GoField) board.getFields()[0]).getAmount());
         }
         return rollResult;
     }
@@ -218,10 +222,11 @@ public class Game {
                 PlayerService.takeMoney(player, nextCard.getArgs()[0]);
                 break;
             case MOVE_PLAYER:
-                fieldManager.movePlayer(player, nextCard.getArgs()[0]);
+                fieldManager.movePlayer(player, nextCard.getArgs()[0], ((GoField) board.getFields()[0]).getAmount());
                 break;
             case SET_POSITION:
-                fieldManager.movePlayer(player, nextCard.getArgs()[0] - player.getPosition());
+                fieldManager.movePlayer(player, nextCard.getArgs()[0] - player.getPosition(),
+                        ((GoField) board.getFields()[0]).getAmount());
                 break;
             case PAY_MONEY_ALL:
                 int amount = nextCard.getArgs()[0];
@@ -233,13 +238,13 @@ public class Game {
             case NEXT_SUPPLY:
                 int fields = 0;
                 while (GameBoard.FIELD_STRUCTURE[player.getPosition() + (++fields)] != GameBoard.FieldType.SUPPLY);
-                fieldManager.movePlayer(player, fields);
+                fieldManager.movePlayer(player, fields, ((GoField) board.getFields()[0]).getAmount());
             case NEXT_STATION_RENT_AMP:
                 fields = 0;
                 while (GameBoard.FIELD_STRUCTURE[player.getPosition() + fields] != GameBoard.FieldType.STATION) {
                     fields++;
                 }
-                fieldManager.movePlayer(player, fields); // TODO Amplifier
+                fieldManager.movePlayer(player, fields, ((GoField) board.getFields()[0]).getAmount()); // TODO Amplifier
             case BIRTHDAY: // TODO
             case RENOVATE: // TODO
         }
@@ -263,7 +268,7 @@ public class Game {
             switch (getUserInput(2)) {
                 case 1: //Kaufen
                     LOGGER.info(player.getName() + " >> " + field.getName());
-                    if (!fieldManager.buyProperty(player, field)) {
+                    if (!fieldManager.buyProperty(player, field, field.getPrice())) {
                         LOGGER.info(player.getName() + "hat nicht genug Geld! " + field.getName() + " wird nun zwangsversteigert.");
                         betPhase(field);
                     }

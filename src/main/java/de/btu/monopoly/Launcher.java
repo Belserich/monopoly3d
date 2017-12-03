@@ -6,11 +6,8 @@
 package de.btu.monopoly;
 
 import de.btu.monopoly.core.Game;
-import de.btu.monopoly.data.parser.GameBoardParser;
 import java.io.IOException;
-import java.util.logging.Level;
 import java.util.logging.LogManager;
-import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -61,7 +58,7 @@ public class Launcher extends Application {
             ex.printStackTrace();
         }
 
-        Logger.getLogger(GameBoardParser.class.getCanonicalName()).setLevel(Level.OFF);
-        Logger.getLogger(Game.class.getCanonicalName()).setLevel(Level.OFF);
+//        Logger.getLogger(GameBoardParser.class.getCanonicalName()).setLevel(Level.OFF);
+//        Logger.getLogger(Game.class.getCanonicalName()).setLevel(Level.OFF);
     }
 }
