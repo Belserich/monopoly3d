@@ -3,7 +3,6 @@ package de.btu.monopoly.data;
 import de.btu.monopoly.data.field.Field;
 
 import java.util.Arrays;
-import java.util.stream.Stream;
 
 import static de.btu.monopoly.data.GameBoard.FieldType.*;
 
@@ -52,7 +51,7 @@ public class GameBoard
     /**
      * Legt die, am Spiel beteiligten aktiven Spielerinstanzen fest.
      *
-     * @param activePlayers
+     * @param activePlayers aktive Spielerinstanzen
      */
     public void setActivePlayers(Player[] activePlayers) {
         this.activePlayers = activePlayers;
@@ -83,10 +82,11 @@ public class GameBoard
     
     @Override
     public String toString() {
-        String retObj = new String();
+        StringBuilder builder = new StringBuilder();
         for (Field field : fields) {
-            retObj += field.toString() + "\n";
+            builder.append(field.toString());
+            builder.append("\n");
         }
-        return retObj;
+        return builder.toString();
     }
 }
