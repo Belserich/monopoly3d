@@ -51,7 +51,7 @@ public class FieldManager {
      */
     public void movePlayer(Player player, int amount, int goFieldAmount) {
         int newPos = PlayerService.movePlayer(player, amount);
-        if (newPos > fields.length) {
+        if (newPos >= fields.length) {
             player.setPosition(newPos % fields.length);
             PlayerService.giveMoney(player, goFieldAmount);
         }

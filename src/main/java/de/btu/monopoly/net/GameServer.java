@@ -27,6 +27,8 @@ public class GameServer {
         this.udpPort = udp;
 
         server = new Server();
+        kryo = server.getKryo();
+        registerClasses();
     }
 
     public void startServer() {
@@ -42,6 +44,10 @@ public class GameServer {
 
     public void stopServer() {
         server.stop();
+    }
+
+    private void registerClasses() {
+        //hier kommt zum Beispiel: kryo.register(InputRequest.class);
     }
 
 }
