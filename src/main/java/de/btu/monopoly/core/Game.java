@@ -7,7 +7,6 @@ import de.btu.monopoly.data.Player;
 import de.btu.monopoly.data.field.*;
 import de.btu.monopoly.data.parser.*;
 import java.io.IOException;
-import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;
@@ -70,7 +69,7 @@ public class Game {
                     turn(activePlayer);
                 }
             }
-        } while (!gameOver());
+        } while (!isGameOver());
 
         for (Player player : players) {
             if (!player.isBankrupt()) {
@@ -267,7 +266,7 @@ public class Game {
         if (other == null) { // Feld frei
             LOGGER.info(String.format("%s steht auf einem freien Grundstück und kann es: %n[1] Kaufen %n[2] Nicht Kaufen",
                     player.getName()));
-            switch (getUserInput(2)) {
+            switch (InputHandler.getUserInput(2)) {
                 case 1: //Kaufen
                     LOGGER.info(player.getName() + " >> " + field.getName());
                     if (!fieldManager.buyProperty(player, field, field.getPrice())) {
@@ -311,7 +310,7 @@ public class Game {
             LOGGER.log(Level.INFO, player.getName() + "! Waehle eine Aktion:\n[1] - Nichts\n[2] - Haus kaufen\n[3] - Haus verkaufen\n[4] - "
                     + "Hypothek aufnehmen\n[5] - Hypothek abbezahlen");
 
-            choice = getUserInput(5);
+            choice = InputHandler.getUserInput(5);
             if (choice != 1) {
                 Field currField = board.getFields()[InputHandler.askForField(player, board) - 1]; // Wahl der Strasse
                 if (currField instanceof Property) {
@@ -369,41 +368,10 @@ public class Game {
         auc.startAuction();
     }
 
-    //-------------------------------------------------------------------------
-    //------------ Console-Input Methoden -------------------------------------
-    //-------------------------------------------------------------------------
     /**
-     *
-     * @param max maximale Anzahl an Auswahlmoeglichkeiten
-     * @return int der Durch den Anwender gewaehlt wurde
-     */
-    public int getUserInput(int max) {
-
-        Scanner scanner = new Scanner(System.in);
-        int output = -1;
-
-        // Solange nicht der richtige Wertebereich eingegeben wird, wird die Eingabe wiederholt.
-        do {
-            LOGGER.log(Level.INFO, "Eingabe: ");
-            try {
-                output = Integer.parseInt(scanner.nextLine());
-            } catch (NumberFormatException ex) {
-                LOGGER.log(Level.WARNING, "FEHLER: falsche Eingabe!");
-            }
-
-            if (output < 1 || output > max) {
-                LOGGER.log(Level.INFO, "Deine Eingabe liegt nicht im Wertebereich! Bitte erneut versuchen:");
-            }
-        } while (output < 1 || output > max);
-
-        return output;
-    }
-
-    /**
-     *
      * @return ob weniger als 2 Spieler am Spiel teilnehmen
      */
-    private boolean gameOver() {
+    private boolean isGameOver() {
         boolean gameOver = false;
         int count = 0;
         for (Player player : players) {
