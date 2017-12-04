@@ -83,8 +83,8 @@ public class GameBoard
      * @return die aktiven Spielerinstanzen
      */
     @NotNull
-    public Player[] getActivePlayers() {
-        return activePlayers.toArray(new Player[activePlayers.size()]);
+    public List<Player> getActivePlayers() {
+        return activePlayers;
     }
     
     /**

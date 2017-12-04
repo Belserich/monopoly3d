@@ -1,8 +1,14 @@
 package de.btu.monopoly.core;
 
 import static de.btu.monopoly.core.Game.LOGGER;
+
+import com.sun.istack.internal.NotNull;
+import com.sun.istack.internal.Nullable;
 import de.btu.monopoly.data.Player;
 import de.btu.monopoly.data.field.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -27,11 +33,30 @@ public class FieldManager {
      * Die Felder des Spielbretts
      */
     private final Field[] fields;
+    
+    /**
+     * Ordnet Spielern die Property-Felder in ihrem Besitz zu.
+     */
+    private Map<Player, Integer[]> houseCounters;
 
     public FieldManager(Field[] fields) {
         this.fields = fields;
+        houseCounters = new HashMap<>();
     }
-
+    
+    @NotNull
+    public Field[] getFields() {
+        return fields;
+    }
+    
+    public int getHouseCount(Player player) {
+        return houseCounters.getOrDefault(player, new Integer[1])[0];
+    }
+    
+    public int getHotelCount(Player player) {
+        return houseCounters.getOrDefault(player, new Integer[2])[1];
+    }
+    
     /**
      * Setzt die Spielerposition auf die des Gefängnisfelds und führt {@code PlayerService.toJail()} aus.
      *
@@ -47,14 +72,33 @@ public class FieldManager {
      *
      * @param player Spieler
      * @param amount Anzahl Felder
-     * @param goFieldAmount Geld welches beim Ueberqueren des LOS Feldes bekommen wird
      */
-    public void movePlayer(Player player, int amount, int goFieldAmount) {
-        int newPos = PlayerService.movePlayer(player, amount);
-        if (newPos > fields.length) {
-            player.setPosition(newPos % fields.length);
-            PlayerService.giveMoney(player, goFieldAmount);
+    @NotNull
+    public Field movePlayer(Player player, int amount) {
+        int pos = PlayerService.movePlayer(player, amount);
+        if (pos > fields.length) {
+            pos %= fields.length;
+            player.setPosition(pos);
+            PlayerService.giveMoney(player, ((GoField) fields[0]).getAmount()); // TODO
         }
+        return fields[pos];
+    }
+    
+    /**
+     * Bewegt den Spieler zum nächsten Feld des angegebenen Typs.
+     *
+     * @param player Spieler
+     * @param nextFieldType Feldtyp
+     * @return das neue Feld auf dem sich der Spieler befindet
+     */
+    @NotNull
+    public Field movePlayer(Player player, GameBoard.FieldType nextFieldType) {
+        int pos = player.getPosition();
+        int fields = 0;
+        while (GameBoard.FIELD_STRUCTURE[pos + fields] != nextFieldType) {
+            fields++;
+        }
+        return movePlayer(player, fields);
     }
 
     /**
@@ -65,15 +109,46 @@ public class FieldManager {
      * @return true, wenn das Feld gekauft wurde, false sonst
      */
     public boolean buyProperty(Player player, Property prop, int price) {
-
-        if (PlayerService.checkLiquidity(player, price)) {
+        if (PlayerService.takeMoney(player, price)) {
             LOGGER.info(String.format("%s kauft das Grundstück %s", player.getName(), prop.getName()));
             prop.setOwner(player);
-            PlayerService.takeMoneyUnchecked(player, price);
             return true;
         } else {
             LOGGER.warning(String.format("%s hat nicht genug Geld, um %s zu kaufen!", player.getName(), prop.getName()));
             return false;
+        }
+    }
+    
+    public int getRent(Property prop, @Nullable int[] rollResult, int amplifier) {
+        int rent = prop.getRent();
+        if (prop instanceof SupplyField && rollResult != null) {
+            rent = rent * (rollResult[0] + rollResult[1]);
+        }
+        return rent * amplifier;
+    }
+    
+    public int getRent(Property prop, @Nullable int[] rollResult) {
+        return getRent(prop, rollResult, 1);
+    }
+    
+    /**
+     * Zieht dem Konto des Spielers Geld in Höhe des Mietswertes des angegebenen Property-Felds
+     * ab und gibt das Geld an den Besitzer des Feldes weiter.
+     *
+     * @param player Spieler
+     * @param prop Feld
+     * @return ob die Transaktion erfolgreich war, also ob das angegebene Feld einen Besitzer hat
+     */
+    public boolean payRent(Player player, Property prop, @Nullable int[] rollResult, int amplifier) {
+        Player owner = prop.getOwner();
+        if (owner == null || owner == player) {
+            return false;
+        }
+        else {
+            int rent = getRent(prop, rollResult, amplifier);
+            PlayerService.takeAndGiveMoneyUnchecked(player, owner, rent);
+            LOGGER.info(String.format("%s zahlt %d Miete an %s.", player.getName(), rent, owner.getName()));
+            return true;
         }
     }
 
@@ -103,10 +178,17 @@ public class FieldManager {
      *
      * @param street Straßenfeld
      */
-    public void buyHouseUnchecked(StreetField street) {
+    private void buyHouseUnchecked(StreetField street) {
         Player player = street.getOwner();
         PlayerService.takeMoneyUnchecked(player, street.getHousePrice());
-        street.setHouseCount(street.getHouseCount() + 1);
+        
+        int newNumHouses = street.getHouseCount() + 1;
+        street.setHouseCount(newNumHouses);
+        
+        Integer[] houseCounter = houseCounters.getOrDefault(player, new Integer[2]);
+        houseCounter[0] += (newNumHouses == 5) ? -5 : 1;
+        houseCounter[1] += (newNumHouses == 5) ? 1 : 0;
+        houseCounters.put(player, houseCounter);
     }
 
     /**
@@ -134,10 +216,17 @@ public class FieldManager {
      *
      * @param street Die betroffene Straße
      */
-    public void sellHouseUnchecked(StreetField street) {
+    private void sellHouseUnchecked(StreetField street) {
         Player player = street.getOwner();
         PlayerService.giveMoney(player, street.getHousePrice());
-        street.setHouseCount(street.getHouseCount() - 1);
+        
+        int newNumHouses = street.getHouseCount() - 1;
+        street.setHouseCount(newNumHouses);
+    
+        Integer[] houseCounter = houseCounters.get(player);
+        houseCounter[0] += (newNumHouses == 4) ? 4 : -1;
+        houseCounter[1] += (newNumHouses == 4) ? -1 : 0;
+        houseCounters.put(player, houseCounter);
     }
 
     /**

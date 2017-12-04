@@ -1,7 +1,8 @@
 package de.btu.monopoly.core;
 
 import de.btu.monopoly.data.Bank;
-import de.btu.monopoly.data.GameBoard;
+import de.btu.monopoly.data.Card;
+import de.btu.monopoly.data.CardStack;
 import de.btu.monopoly.data.Player;
 import de.btu.monopoly.data.field.Field;
 import de.btu.monopoly.data.field.Property;
@@ -15,7 +16,7 @@ import java.util.logging.Logger;
 public class PlayerService {
 
     private static final Logger LOGGER = Logger.getLogger(de.btu.monopoly.core.Game.class.getCanonicalName());
-
+    
     /**
      * Setzt alle nötigen Attribute, wenn der Spieler ins Gefängnis kommt. Bitte {@code FieldManager.toJail()} benutzen.
      *
@@ -89,6 +90,11 @@ public class PlayerService {
         if (!bank.isLiquid()) {
             LOGGER.info(String.format("%s hat sich verschuldet!", player.getName()));
         }
+    }
+    
+    public static void takeAndGiveMoneyUnchecked(Player from, Player to, int amount) {
+        takeMoneyUnchecked(from, amount);
+        giveMoney(to, amount);
     }
 
     /**

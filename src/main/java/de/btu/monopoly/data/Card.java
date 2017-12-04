@@ -1,6 +1,8 @@
 package de.btu.monopoly.data;
 
 import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @author Maximilian Bels (belsmaxi@b-tu.de)
@@ -30,7 +32,7 @@ public class Card {
     /**
      * Kartentypen
      */
-    private final Action[] actions;
+    private final List<Action> actions;
 
     /**
      * Kartenargumente
@@ -46,10 +48,12 @@ public class Card {
      * @param args Zusatzargumente
      */
     public Card(String name, String text, Action[] actions, int[] args) {
-        this.actions = actions;
         this.name = name;
         this.text = text;
         this.args = args;
+        
+        this.actions = new LinkedList<>();
+        this.actions.addAll(Arrays.asList(actions));
     }
     
     /**
@@ -69,7 +73,7 @@ public class Card {
     /**
      * @return Typen der Karte
      */
-    public Action[] getActions() {
+    public List<Action> getActions() {
         return actions;
     }
 
@@ -85,19 +89,20 @@ public class Card {
      *
      * @param stack Kartenstapel
      */
-    public void setStack(CardStack stack) {
+    public void setCardStack(CardStack stack) {
         this.stack = stack;
     }
     
     /**
      * @return der zugehörige Kartenstapel
      */
-    public CardStack getStack() {
+    public CardStack getCardStack() {
         return stack;
     }
     
     @Override
     public String toString() {
-        return String.format("[Karte] Name: \"%s\", Text: \"%s\", Aktionen: %s, Argumente: %s", name, text, Arrays.toString(actions), Arrays.toString(args));
+        return String.format("[Karte] Name: \"%s\", Text: \"%s\", Aktionen: %s, Argumente: %s",
+                name, text, Arrays.toString(actions.toArray()), Arrays.toString(args));
     }
 }

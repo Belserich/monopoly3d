@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;
+
+import de.btu.monopoly.input.InputHandler;
 import org.xml.sax.SAXException;
 
 /**
@@ -145,9 +147,11 @@ public class Game {
     }
 
     private void processJailCardOption(Player player) {
-        if (player.getJailCardAmount() > 0) {
+        CardStack stack = player.getCardStack();
+        if (stack.countCardsOfAction(Card.Action.JAIL) > 0) {
             LOGGER.info(String.format("%s hat eine Gefängnis-Frei-Karte benutzt.", player.getName()));
-            player.removeJailCard();
+            Card jailCard = stack.removeCardOfAction(Card.Action.JAIL);
+            jailCard.getCardStack().addCard(jailCard);
             PlayerService.freeFromJail(player);
         } else {
             LOGGER.info(String.format("%s hat keine Gefängnis-Frei-Karten mehr.", player.getName()));
@@ -165,7 +169,7 @@ public class Game {
             LOGGER.info(String.format("%s hat seinen 3. Pasch und geht nicht über LOS, direkt ins Gefängnis!", player.getName()));
             fieldManager.toJail(player);
         } else {
-            fieldManager.movePlayer(player, rollResult[0] + rollResult[1], ((GoField) board.getFields()[0]).getAmount());
+            fieldManager.movePlayer(player, rollResult[0] + rollResult[1]);
         }
         return rollResult;
     }
@@ -201,51 +205,7 @@ public class Game {
     private void processPlayerOnCardField(Player player, CardField field) {
         LOGGER.fine(String.format("%s steht auf einem Kartenfeld (%s).", player.getName(),
                 board.getFields()[player.getPosition()].getName()));
-        Card nextCard = field.getCardStack().nextCard();
-        Card.Action[] actions = nextCard.getActions();
-
-        assert actions.length > 0;
-
-        switch (actions[0]) {
-            case JAIL:
-                player.addJailCard();
-                break;
-            case GIVE_MONEY:
-                PlayerService.giveMoney(player, nextCard.getArgs()[0]); // TODO check args
-                break;
-            case GO_JAIL:
-                fieldManager.toJail(player);
-                break;
-            case PAY_MONEY:
-                PlayerService.takeMoney(player, nextCard.getArgs()[0]);
-                break;
-            case MOVE_PLAYER:
-                fieldManager.movePlayer(player, nextCard.getArgs()[0], ((GoField) board.getFields()[0]).getAmount());
-                break;
-            case SET_POSITION:
-                fieldManager.movePlayer(player, nextCard.getArgs()[0] - player.getPosition(),
-                        ((GoField) board.getFields()[0]).getAmount());
-                break;
-            case PAY_MONEY_ALL:
-                int amount = nextCard.getArgs()[0];
-                PlayerService.takeMoney(player, amount * players.length);
-                for (Player other : players) {
-                    PlayerService.giveMoney(other, amount);
-                }
-                break;
-            case NEXT_SUPPLY:
-                int fields = 0;
-                while (GameBoard.FIELD_STRUCTURE[player.getPosition() + (++fields)] != GameBoard.FieldType.SUPPLY);
-                fieldManager.movePlayer(player, fields, ((GoField) board.getFields()[0]).getAmount());
-            case NEXT_STATION_RENT_AMP:
-                fields = 0;
-                while (GameBoard.FIELD_STRUCTURE[player.getPosition() + fields] != GameBoard.FieldType.STATION) {
-                    fields++;
-                }
-                fieldManager.movePlayer(player, fields, ((GoField) board.getFields()[0]).getAmount()); // TODO Amplifier
-            case BIRTHDAY: // TODO
-            case RENOVATE: // TODO
-        }
+        board.getCardManager().processPlayerOnCardField(player);
     }
 
     private void processPlayerOnTaxField(Player player, TaxField field) {
@@ -258,22 +218,22 @@ public class Game {
         }
     }
 
-    private void processPlayerOnPropertyField(Player player, Property field, int[] rollResult) {
-        Player other = field.getOwner();
+    private void processPlayerOnPropertyField(Player player, Property prop, int[] rollResult) {
+        Player other = prop.getOwner();
         if (other == null) { // Feld frei
             LOGGER.info(String.format("%s steht auf einem freien Grundstück und kann es: %n[1] Kaufen %n[2] Nicht Kaufen",
                     player.getName()));
             switch (InputHandler.getUserInput(2)) {
                 case 1: //Kaufen
-                    LOGGER.info(player.getName() + " >> " + field.getName());
-                    if (!fieldManager.buyProperty(player, field, field.getPrice())) {
-                        LOGGER.info(player.getName() + "hat nicht genug Geld! " + field.getName() + " wird nun zwangsversteigert.");
-                        betPhase(field);
+                    LOGGER.info(player.getName() + " >> " + prop.getName());
+                    if (!fieldManager.buyProperty(player, prop, prop.getPrice())) {
+                        LOGGER.info(player.getName() + "hat nicht genug Geld! " + prop.getName() + " wird nun zwangsversteigert.");
+                        betPhase(prop);
                     }
                     break;
                 case 2: //Auktion @multiplayer
                     LOGGER.info(player.getName() + "hat sich gegen den Kauf entschieden, die Straße wird nun versteigert.");
-                    betPhase(field);
+                    betPhase(prop);
                     break;
                 default:
                     LOGGER.log(Level.WARNING, "getUserInput() hat index außerhalb des zurückgegeben.");
@@ -283,20 +243,7 @@ public class Game {
             LOGGER.log(Level.FINE, player.getName() + " steht auf seinem eigenen Grundstück.");
         } else {                      // Property nicht in eigenem Besitz
             LOGGER.log(Level.INFO, player.getName() + " steht auf dem Grundstück von " + other.getName() + ".");
-
-            int rent = field.getRent();
-            if (field instanceof SupplyField) {
-                rent = rent * (rollResult[0] + rollResult[1]);
-            }
-
-            if (PlayerService.checkLiquidity(player, rent)) {
-                LOGGER.info(String.format("%s zahlt %d Miete.", player.getName(), rent));
-                PlayerService.takeMoney(player, rent);
-                PlayerService.giveMoney(field.getOwner(), rent);
-            } else {
-                LOGGER.info(String.format("%s kann die geforderte Miete nicht zahlen!", player.getName()));
-                PlayerService.bankrupt(player, board, players); // TODO
-            }
+            PlayerService.takeAndGiveMoneyUnchecked(player, other, fieldManager.getRent(prop, rollResult));
         }
     }
 
