@@ -349,27 +349,33 @@ public class MonopolyUnitTest {
                 + badStrasse.getRent(), 2 == badStrasse.getRent()); //TODO
     }
 
-    //@Test
+    @Test
     public void testTaxField() {
-        System.out.println("TaxField");
-        gc = new Game(1);
+        //initialisierung
+        gc = new Game(2);
         gc.init();
-        board = gc.board;
+        Field[] fields = gc.board.getFields();
         players = gc.players;
         fm = gc.getFieldManager();
         Player player = players[0];
-        TaxField einSteuer = (TaxField) gc.board.getFields()[4];
-        TaxField zusatzSteuer = (TaxField) gc.board.getFields()[38];
+        Player player2 = players[1];
+        int[] rollResult = {8, 3};
+        TaxField einSteuer = (TaxField) fields[4];
+        TaxField zusatzSteuer = (TaxField) fields[38];
 
-        int expMoney1 = player.getMoney() - einSteuer.getTax();
-//        gc.processPlayerOnTaxField(player, einSteuer);
-        player.setPosition(4);
-        Assert.assertEquals(expMoney1, player.getMoney());
-
+        int expMoney1 = player2.getMoney() - einSteuer.getTax();
         int expMoney2 = player.getMoney() - zusatzSteuer.getTax();
-//        gc.processPlayerOnTaxField(player, zusatzSteuer);
+
+        //Position setzen
         player.setPosition(38);
-        Assert.assertEquals(expMoney2, player.getMoney());
+        player2.setPosition(4);
+        
+        //act und assert
+        gc.fieldPhase(player, rollResult);
+        gc.fieldPhase(player2, rollResult);
+
+        Assert.assertTrue("Geld wurde nicht abgebucht!", expMoney1 == player2.getMoney());
+        Assert.assertTrue("Geld wurde nicht abgebucht!", expMoney2 == player.getMoney());
     }
 
     @Test
