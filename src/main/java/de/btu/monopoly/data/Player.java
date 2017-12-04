@@ -4,18 +4,18 @@ package de.btu.monopoly.data;
  * @author Maximilian Bels (belsmaxi@b-tu.de)
  */
 public class Player {
-
+    
+    private final int id;
+    private final Bank bank;
+    private final CardStack stack;
+    
     private String name;
-    private int id;
-
     private int position;
-
-    private Bank bank;
-    private boolean isBankrupt;
 
     private boolean isInJail;
     private int daysInJail;
-    private int jailCardAmount;
+    
+    private boolean isBankrupt;
 
     /**
      * Erstellt eine neue Spielerinstanz.
@@ -25,14 +25,16 @@ public class Player {
      * @param startMoney Kapital des Spielers
      */
     public Player(String name, int id, int startMoney) {
-        this.name = name;
         this.id = id;
         this.bank = new Bank(startMoney);
-
-        isInJail = false;
-        jailCardAmount = 0;
-        daysInJail = 0;
+        
+        this.name = name;
         position = 0;
+
+        stack = new CardStack();
+        
+        isInJail = false;
+        daysInJail = 0;
     }
 
     /**
@@ -69,31 +71,10 @@ public class Player {
     }
 
     /**
-     * @return Anzahl Gefaengnis-Frei-Karten
-     */
-    public int getJailCardAmount() {
-        return jailCardAmount;
-    }
-
-    /**
      * @return Tage im Gefaengnis
      */
     public int getDaysInJail() {
         return daysInJail;
-    }
-
-    /**
-     * Erhöht die Anzahl der Gefaengnis-frei-Karten um 1.
-     */
-    public void addJailCard() {
-        this.jailCardAmount++;
-    }
-
-    /**
-     * Senkt die Anzahl der Gefaengnis-frei-Karten um 1.
-     */
-    public void removeJailCard() {
-        this.jailCardAmount--;
     }
 
     /**
@@ -146,5 +127,8 @@ public class Player {
     public void setInJail(boolean inJail) {
         this.isInJail = inJail;
     }
-
+    
+    public CardStack getStack() {
+        return stack;
+    }
 }
