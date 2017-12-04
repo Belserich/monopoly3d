@@ -63,20 +63,8 @@ public class GameBoard
      *
      * @param player Spieler
      */
-    public void addActivePlayer(@NotNull Player player) {
-        player.setBankrupt(false);
+    public void addPlayer(@NotNull Player player) {
         activePlayers.add(player);
-    }
-    
-    /**
-     * Entfernt einen Spieler vom Spielbrett. Setzt ihn bankrott.
-     *
-     * @param player Spieler
-     * @return ob Spieler in Spielerliste enthalten war
-     */
-    public boolean removeActivePlayer(@NotNull Player player) {
-        player.setBankrupt(true);
-        return activePlayers.remove(player);
     }
     
     /**
@@ -84,13 +72,14 @@ public class GameBoard
      */
     @NotNull
     public List<Player> getActivePlayers() {
+        sortOutInactivePlayers();
         return activePlayers;
     }
-    
+
     /**
      * Sortiert alle Spieler die bankrott gegangen sind aus.
      */
-    public void sortOutInactivePlayers() {
+    private void sortOutInactivePlayers() {
         activePlayers.removeIf(Player::isBankrupt);
     }
     

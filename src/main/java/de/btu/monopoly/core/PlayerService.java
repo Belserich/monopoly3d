@@ -124,65 +124,15 @@ public class PlayerService {
     }
 
     /**
-     *
-     * @param player zu pruefender Spieler
-     * @param board das Spielbrett (zum Besitz wegnehmen)
-     * @param players alle Mitspieler (zum Game-Over-Check)
-     * @return boolean, ob das Spiel gameOver ist
+     * @param player betroffener Spieler
+     * @param board Spielbrett-Instanz
      */
-    public static void bankrupt(Player player, GameBoard board, Player[] players) {
+    public static void bankrupt(Player player, GameBoard board) {
         LOGGER.info(String.format("%s ist Bankrott und ab jetzt nur noch Zuschauer. All sein Besitz geht zurück an die Bank.",
                 player.getName()));
+        
         player.setBankrupt(true);
-        Field[] fields = board.getFields(); // TODO
-
-        for (int i = 0; i < fields.length; i++) {
-            Field field = fields[i];
-
-            // Löschen der Hypothek und des Eigentums
-            if (field instanceof Property) {
-                if (((Property) field).getOwner() == player) {
-                    ((Property) field).setOwner(null);
-                    ((Property) field).setMortgageTaken(false);
-                }
-
-                // Löschen der Anzahl an Häusern
-                if (field instanceof StreetField) {
-                    ((StreetField) fields[i]).setHouseCount(0);
-
-                }
-            }
-        }
-        // TODO @cards - Gefängnisfreikarten müssen zurück in den Stapel
-    }
-
-    /**
-     *
-     * @param player Spieler dessen Hauser/Hotels gezaehlt werden
-     * @param housePrice Preis fuer ein Haus
-     * @param hotelPrice Preis fuer ein Hotel
-     * @param board GameBoard
-     * @return Summe der Renovierungskosten
-     */
-    public static int sumRenovation(Player player, int housePrice, int hotelPrice, GameBoard board) {
-        //TODO spaeter, wenn Kartenstapel gedruckt wurde
-
-        int renovationHotel = 0;
-        int renovationHouse = 0;
-        for (Field field : board.getFields()) {
-            if (field instanceof StreetField) {
-                if (((StreetField) field).getOwner() == player) {
-                    int houses = ((StreetField) field).getHouseCount();
-                    if (houses < 5) {
-                        renovationHouse += (housePrice * houses);
-
-                    } else {
-                        renovationHotel += hotelPrice;
-
-                    }
-                }
-            }
-        }
-        return renovationHouse + renovationHotel;
+        board.getFieldManager().bankrupt(player);
+        board.getCardManager().bankrupt(player);
     }
 }
