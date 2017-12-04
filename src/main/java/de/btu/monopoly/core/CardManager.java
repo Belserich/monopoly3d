@@ -45,7 +45,7 @@ public class CardManager {
                     break;
         
                 case GO_JAIL:
-                    board.getFieldManager().toJail(player);
+                    FieldService.toJail(player);
                     break;
         
                 case PAY_MONEY:
@@ -75,7 +75,7 @@ public class CardManager {
                 case NEXT_STATION_RENT_AMP:
                     FieldManager fm = board.getFieldManager();
                     Property prop = (Property) fm.movePlayer(player, GameBoard.FieldType.STATION);
-                    fm.payRent(player, prop, null, args[0]);
+                    FieldService.payRent(player, prop, null, args[0]);
                     break;
         
                 case BIRTHDAY:
