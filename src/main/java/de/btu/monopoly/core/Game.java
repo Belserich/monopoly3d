@@ -22,7 +22,6 @@ public class Game {
     private FieldManager fieldManager;
     public GameBoard board;
     public final Player[] players;
-    public boolean gameOver;
 
     public FieldManager getFieldManager() {
         return this.fieldManager;
@@ -71,7 +70,7 @@ public class Game {
                     turn(activePlayer);
                 }
             }
-        } while (!gameOver);
+        } while (!gameOver());
 
         for (Player player : players) {
             if (!player.isBankrupt()) {
@@ -259,7 +258,7 @@ public class Game {
             PlayerService.takeMoney(player, field.getTax());
         } else {
             LOGGER.info(String.format("%s kann seine Steuern nicht abzahlen!", player.getName()));
-            this.gameOver = PlayerService.bankrupt(player, board, players);
+            PlayerService.bankrupt(player, board, players);
         }
     }
 
@@ -300,7 +299,7 @@ public class Game {
                 PlayerService.giveMoney(field.getOwner(), rent);
             } else {
                 LOGGER.info(String.format("%s kann die geforderte Miete nicht zahlen!", player.getName()));
-                this.gameOver = PlayerService.bankrupt(player, board, players); // TODO
+                PlayerService.bankrupt(player, board, players); // TODO
             }
         }
     }
@@ -398,5 +397,23 @@ public class Game {
         } while (output < 1 || output > max);
 
         return output;
+    }
+
+    /**
+     *
+     * @return ob weniger als 2 Spieler am Spiel teilnehmen
+     */
+    private boolean gameOver() {
+        boolean gameOver = false;
+        int count = 0;
+        for (Player player : players) {
+            if (player.isBankrupt()) {
+                count++;
+            }
+        }
+        if (count < 2) {
+            gameOver = true;
+        }
+        return gameOver;
     }
 }

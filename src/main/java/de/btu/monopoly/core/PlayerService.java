@@ -6,7 +6,6 @@ import de.btu.monopoly.data.Player;
 import de.btu.monopoly.data.field.Field;
 import de.btu.monopoly.data.field.Property;
 import de.btu.monopoly.data.field.StreetField;
-import java.util.Arrays;
 import java.util.logging.Logger;
 
 /**
@@ -105,15 +104,6 @@ public class PlayerService {
     }
 
     /**
-     * @return Anzahl der Spieler die nicht Pleite sind
-     */
-    public static int countActive(Player[] players) {
-        return (int) Arrays.stream(players)
-                .filter(p -> !(p.isBankrupt()))
-                .count();
-    }
-
-    /**
      *
      * @return int[] mit den beiden Wuerfelergebnissen
      */
@@ -134,15 +124,11 @@ public class PlayerService {
      * @param players alle Mitspieler (zum Game-Over-Check)
      * @return boolean, ob das Spiel gameOver ist
      */
-    public static boolean bankrupt(Player player, GameBoard board, Player[] players) {
-        boolean gameOver = false;
+    public static void bankrupt(Player player, GameBoard board, Player[] players) {
         LOGGER.info(String.format("%s ist Bankrott und ab jetzt nur noch Zuschauer. All sein Besitz geht zurück an die Bank.",
                 player.getName()));
         player.setBankrupt(true);
         Field[] fields = board.getFields(); // TODO
-        if (PlayerService.countActive(players) <= 1) {
-            gameOver = true;
-        }
 
         for (int i = 0; i < fields.length; i++) {
             Field field = fields[i];
@@ -161,7 +147,6 @@ public class PlayerService {
                 }
             }
         }
-        return gameOver;
         // TODO @cards - Gefängnisfreikarten müssen zurück in den Stapel
     }
 
