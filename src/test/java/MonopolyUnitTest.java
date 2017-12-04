@@ -132,4 +132,212 @@ public class MonopolyUnitTest {
 
     }
 
+    @Test
+    public void testBuyHouse() {
+
+        gc = new Game(1);
+        gc.init();
+        board = gc.board;
+        players = gc.players;
+        fm = gc.getFieldManager();
+        Player player = players[0];
+        StreetField street = (StreetField) board.getFields()[11];
+        StreetField street2 = (StreetField) board.getFields()[13];
+        StreetField street3 = (StreetField) board.getFields()[14];
+
+        street.setOwner(player);
+        street2.setOwner(player);
+        street3.setOwner(player);
+        street.setHouseCount(0);
+        street2.setHouseCount(1);
+        street3.setHouseCount(1);
+
+        //act
+        fm.buyHouse(street);
+        int expResult = 1;
+        int expHousPrice = 100;
+        int expMoney = 1500 - street.getHousePrice();
+        int result = street.getHouseCount();
+        System.out.println(result);
+        Assert.assertEquals(expResult, result);
+        Assert.assertEquals(expHousPrice, street.getHousePrice());
+        Assert.assertEquals(expMoney, player.getMoney());
+
+    }
+
+    @Test
+    public void testSellHouse() {
+
+        gc = new Game(1);
+        gc.init();
+        board = gc.board;
+        players = gc.players;
+        fm = gc.getFieldManager();
+        Player player = players[0];
+        StreetField street = (StreetField) board.getFields()[11];
+        StreetField street2 = (StreetField) board.getFields()[13];
+        StreetField street3 = (StreetField) board.getFields()[14];
+
+        street.setOwner(player);
+        street2.setOwner(player);
+        street3.setOwner(player);
+        street.setHouseCount(1);
+        street2.setHouseCount(2);
+        street3.setHouseCount(1);
+
+        fm.sellHouse(street);
+        int expHouses = 1;
+        int expMoney = 1500;
+        Assert.assertEquals(expMoney, player.getMoney());
+        Assert.assertEquals(expHouses, street.getHouseCount());
+
+        fm.sellHouse(street2);
+        Assert.assertEquals(1, street2.getHouseCount());
+        Assert.assertEquals(1600, player.getMoney());
+    }
+
+    @Test
+    public void testIsComplete() {
+
+        gc = new Game(1);
+        gc.init();
+        board = gc.board;
+        players = gc.players;
+        fm = gc.getFieldManager();
+        Player player = players[0];
+        StreetField street = (StreetField) board.getFields()[11];
+        StreetField street2 = (StreetField) board.getFields()[13];
+        StreetField street3 = (StreetField) board.getFields()[14];
+
+        street.setOwner(player);
+        street2.setOwner(player);
+        street3.setOwner(player);
+
+        Assert.assertEquals(true, fm.isComplete(street));
+
+    }
+
+    @Test
+    public void testTakeMortgage() {
+
+        gc = new Game(1);
+        gc.init();
+        board = gc.board;
+        players = gc.players;
+        fm = gc.getFieldManager();
+        Player player = players[0];
+        StationField suedbahnhof = (StationField) gc.board.getFields()[5];
+        StationField nordbahnhof = (StationField) gc.board.getFields()[25];
+
+        StreetField theaterStrasse = (StreetField) gc.board.getFields()[21];
+        StreetField badStrasse = (StreetField) gc.board.getFields()[1];
+        StreetField turmStrasse = (StreetField) gc.board.getFields()[3];
+
+        SupplyField elWerk = (SupplyField) gc.board.getFields()[12];
+        SupplyField wasserWerk = (SupplyField) gc.board.getFields()[28];
+
+        suedbahnhof.setOwner(player);
+        nordbahnhof.setOwner(player);
+        theaterStrasse.setOwner(player);
+        badStrasse.setOwner(player);
+        turmStrasse.setOwner(player);
+        elWerk.setOwner(player);
+        wasserWerk.setOwner(player);
+        badStrasse.setHouseCount(1);
+        turmStrasse.setHouseCount(1);
+
+        //BAHNHOF UND WERKE======================================================
+        int expMoneyBahn = player.getMoney() + suedbahnhof.getMortgageValue();
+        fm.takeMortgage(suedbahnhof);
+
+        //getMortgageValue + giveMoney() + getMoney()
+        Assert.assertEquals(expMoneyBahn, player.getMoney());
+
+        int expMoneyWerk = player.getMoney() + elWerk.getMortgageValue();
+        fm.takeMortgage(elWerk);
+        Assert.assertEquals(expMoneyWerk, player.getMoney());
+
+        //setMortgageTaken() + getRent()
+        Assert.assertEquals(0, suedbahnhof.getRent());
+        Assert.assertEquals(25, nordbahnhof.getRent());
+        Assert.assertEquals(0, elWerk.getRent());
+
+        //NICHT KOMPLETTE STRASSE=======================================
+        int expMoneyTheater = player.getMoney() + theaterStrasse.getMortgageValue();
+        fm.takeMortgage(theaterStrasse);
+
+        //getMortgageValue() + getMoney()+giveMoney()
+        Assert.assertEquals(expMoneyTheater, player.getMoney());
+
+        //getRent()+setMortgagaeTaken()
+        Assert.assertEquals(0, theaterStrasse.getRent());
+
+        //KOMPLETTE STRASSE=============================================
+        int expMoneyTurmStrasse = player.getMoney();
+        fm.takeMortgage(turmStrasse);
+        //false : Hypothek kann nicht aufgenommen werden, da Haeuser auf dem Feld
+
+        //getMoney() +giveMoney()
+        Assert.assertEquals(expMoneyTurmStrasse, player.getMoney());
+        Assert.assertEquals(20, turmStrasse.getRent());
+
+    }
+
+    @Test
+    public void testPayMortgage() {
+
+        gc = new Game(1);
+        gc.init();
+        board = gc.board;
+        players = gc.players;
+        fm = gc.getFieldManager();
+        Player player = players[0];
+        Property suedbahnhof = (Property) gc.board.getFields()[5];
+        Property nordbahnhof = (Property) gc.board.getFields()[25];
+        StreetField badStrasse = (StreetField) gc.board.getFields()[1];
+
+        suedbahnhof.setOwner(player);
+        nordbahnhof.setOwner(player);
+        badStrasse.setOwner(player);
+
+        suedbahnhof.setMortgageTaken(true);
+        //getRent()
+        PlayerService pc = new PlayerService();
+        pc.takeMoney(player, 1400);
+
+        fm.payMortgage(suedbahnhof);
+        Assert.assertEquals(true, suedbahnhof.isMortgageTaken());
+        Assert.assertEquals(100, player.getMoney());
+        Assert.assertEquals(0, suedbahnhof.getRent());
+
+        badStrasse.setMortgageTaken(true);
+        int expMoney = player.getMoney() - badStrasse.getMortgageBack();
+        fm.payMortgage(badStrasse);
+        Assert.assertEquals(expMoney, player.getMoney());
+        Assert.assertEquals(2, badStrasse.getRent()); //TODO
+    }
+
+    @Test
+    public void testTaxField() {
+        System.out.println("TaxField");
+        gc = new Game(1);
+        gc.init();
+        board = gc.board;
+        players = gc.players;
+        fm = gc.getFieldManager();
+        Player player = players[0];
+        TaxField einSteuer = (TaxField) gc.board.getFields()[4];
+        TaxField zusatzSteuer = (TaxField) gc.board.getFields()[38];
+
+        int expMoney1 = player.getMoney() - einSteuer.getTax();
+        //gc.processPlayerOnTaxField(player, einSteuer);
+        player.setPosition(4);
+        Assert.assertEquals(expMoney1, player.getMoney());
+
+        int expMoney2 = player.getMoney() - zusatzSteuer.getTax();
+        //gc.processPlayerOnTaxField(player, zusatzSteuer);
+        player.setPosition(38);
+        Assert.assertEquals(expMoney2, player.getMoney());
+    }
+
 }
