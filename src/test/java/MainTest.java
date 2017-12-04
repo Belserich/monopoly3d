@@ -1,4 +1,4 @@
-package de.btu.monopoly;
+
 
 import de.btu.monopoly.core.FieldManager;
 import de.btu.monopoly.core.Game;

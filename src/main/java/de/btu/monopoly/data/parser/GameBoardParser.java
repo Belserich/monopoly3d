@@ -21,19 +21,6 @@ import org.xml.sax.SAXException;
 public class GameBoardParser {
 
     /**
-     * Sammlung aller Nachbar-Ids in aufsteigender Reihenfolge. Der Erste beider Indizes steht immer für eine eigene Property
-     * (Bahnhof, Werk oder Straße). Die Zuordnung ist <bold>nicht</bold> 1:1 zu {@code FIELD_STRUCTURE}, d.h. die IDs an der
-     * Stelle {@code i} stehen hier nicht für die Nachbarn des Feldes mit dem Index {@code i}, sondern für das {@code i}-te
-     * Property Feld. Die Aufzählung beginnt bei der Ersten Straße und schreitet dann im Uhrzeigersinn fort.
-     */
-    private static final int[][] NEIGHBOUR_IDS = {
-        {3}, {1}, {15, 25, 35}, {8, 9}, {6, 9}, {6, 8}, // Erste Reihe
-        {13, 14}, {28}, {11, 14}, {11, 13}, {5, 25, 35}, {18, 19}, {16, 19}, {16, 18}, // Zweite Reihe
-        {23, 24}, {21, 24}, {23, 21}, {5, 15, 35}, {27, 29}, {26, 29}, {12}, {26, 27}, // Dritte Reihe
-        {32, 34}, {31, 34}, {32, 31}, {5, 15, 25}, {39}, {37} // Vierte Reihe
-    };
-
-    /**
      * Die allgemeine Exception-Nachricht für diese Klasse
      */
     private static final String IO_EXCEPTION_MESSAGE = "Exception while reading game board data. Corrupted file data!";
@@ -103,16 +90,6 @@ public class GameBoardParser {
             fields[id] = field;
         }
         LOGGER.info("Alle Feldinstanzen erfolgreich erstellt.");
-
-        int propertyCounter = 0;
-        for (Field field : fields) {
-            if (field instanceof Property) {
-                Property prop = (Property) field;
-                Arrays.stream(NEIGHBOUR_IDS[propertyCounter++])
-                        .forEach(i -> prop.addNeighbour((Property) fields[i]));
-            }
-        }
-        LOGGER.info("Alle Nachbarn erfolgreich hinzugefügt.");
 
         return new GameBoard(fields);
     }
