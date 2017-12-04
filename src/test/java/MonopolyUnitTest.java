@@ -152,7 +152,7 @@ public class MonopolyUnitTest {
         street.setOwner(player);
         street2.setOwner(player);
         street3.setOwner(player);
-        
+
         //Haeuseranzahl setzen
         street.setHouseCount(0);
         street2.setHouseCount(1);
@@ -163,29 +163,30 @@ public class MonopolyUnitTest {
         int expResult = 1;
         int expHousPrice = 100;
         int expMoney = 1500 - street.getHousePrice();
-        
+
         Assert.assertTrue("Hause wurde nicht bebaut! expected: "
-                +expResult+" but was: "+street.getHouseCount(),expResult == street.getHouseCount());
+                + expResult + " but was: " + street.getHouseCount(), expResult == street.getHouseCount());
         Assert.assertTrue("Preis vom Haus ist falsch! expected: "
-                +expHousPrice+" but was: "+street.getHousePrice(),expHousPrice == street.getHousePrice());
+                + expHousPrice + " but was: " + street.getHousePrice(), expHousPrice == street.getHousePrice());
         Assert.assertTrue("`Geld wurde nicht abgebucht! expected: "
-                +expMoney+" but was: "+player.getMoney(),expMoney == player.getMoney());
+                + expMoney + " but was: " + player.getMoney(), expMoney == player.getMoney());
 
     }
 
     @Test
     public void testSellHouse() {
-
+        //initialisierung
         gc = new Game(1);
         gc.init();
-        board = gc.board;
+        Field[] fields = gc.board.getFields();
         players = gc.players;
         fm = gc.getFieldManager();
         Player player = players[0];
-        StreetField street = (StreetField) board.getFields()[11];
-        StreetField street2 = (StreetField) board.getFields()[13];
-        StreetField street3 = (StreetField) board.getFields()[14];
+        StreetField street = (StreetField) fields[11];
+        StreetField street2 = (StreetField) fields[13];
+        StreetField street3 = (StreetField) fields[14];
 
+        //Streassenbesitzer geben
         street.setOwner(player);
         street2.setOwner(player);
         street3.setOwner(player);
@@ -193,15 +194,20 @@ public class MonopolyUnitTest {
         street2.setHouseCount(2);
         street3.setHouseCount(1);
 
+        //act und assert
         fm.sellHouse(street);
         int expHouses = 1;
         int expMoney = 1500;
-        Assert.assertEquals(expMoney, player.getMoney());
-        Assert.assertEquals(expHouses, street.getHouseCount());
+        Assert.assertTrue("Geld wurde ueberwiesen! expected: " + expMoney
+                + " but was: " + player.getMoney(), expMoney == player.getMoney());
+        Assert.assertTrue("Haus wurde verkauft! expected: " + expHouses
+                + " but was: " + street.getHouseCount(), expHouses == street.getHouseCount());
 
         fm.sellHouse(street2);
-        Assert.assertEquals(1, street2.getHouseCount());
-        Assert.assertEquals(1600, player.getMoney());
+        Assert.assertTrue("Haus wurde nicht verkauft! expected: " + 1
+                + " but was: " + street2.getHouseCount(), 1 == street2.getHouseCount());
+        Assert.assertTrue("Geld wurde nicht ueberwiesen! expected: " + 1600
+                + " but was: " + player.getMoney(), 1600 == player.getMoney());
     }
 
     @Test
