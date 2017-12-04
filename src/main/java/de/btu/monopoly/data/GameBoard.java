@@ -2,9 +2,6 @@ package de.btu.monopoly.data;
 
 import de.btu.monopoly.data.field.Field;
 
-import java.util.Arrays;
-import java.util.stream.Stream;
-
 import static de.btu.monopoly.data.GameBoard.FieldType.*;
 
 /**
@@ -33,7 +30,12 @@ public class GameBoard
     /**
      * Felder des Spielbretts
      */
-    private Field[] fields;
+    private final Field[] fields;
+    
+    /**
+     * Spieler am Spielbrett
+     */
+    private Player[] activePlayers;
     
     /**
      * Erstellt eine neue Spielbrett-Instanz.
@@ -42,6 +44,22 @@ public class GameBoard
      */
     public GameBoard(Field[] fields) {
         this.fields = fields;
+    }
+    
+    /**
+     * Legt die, am Spiel beteiligten aktiven Spielerinstanzen fest.
+     *
+     * @param activePlayers
+     */
+    public void setActivePlayers(Player[] activePlayers) {
+        this.activePlayers = activePlayers;
+    }
+    
+    /**
+     * @return die aktiven Spielerinstanzen
+     */
+    public Player[] getActivePlayer() {
+        return activePlayers;
     }
     
     /**
