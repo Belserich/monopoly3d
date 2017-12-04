@@ -227,32 +227,31 @@ public class MonopolyUnitTest {
         street.setOwner(player);
         street2.setOwner(player);
         street3.setOwner(player);
-        
+
         //act und assert
-        Assert.assertTrue("Strasse ist nicht komplett!",true == fm.isComplete(street));
+        Assert.assertTrue("Strasse ist nicht komplett!", true == fm.isComplete(street));
 
     }
-
 
     @Test
     public void testTakeMortgage() {
 
+        //initialisierung
         gc = new Game(1);
         gc.init();
-        board = gc.board;
+        Field[] fields = gc.board.getFields();
         players = gc.players;
         fm = gc.getFieldManager();
         Player player = players[0];
-        StationField suedbahnhof = (StationField) gc.board.getFields()[5];
-        StationField nordbahnhof = (StationField) gc.board.getFields()[25];
+        StationField suedbahnhof = (StationField) fields[5];
+        StationField nordbahnhof = (StationField) fields[25];
+        StreetField theaterStrasse = (StreetField) fields[21];
+        StreetField badStrasse = (StreetField) fields[1];
+        StreetField turmStrasse = (StreetField) fields[3];
+        SupplyField elWerk = (SupplyField) fields[12];
+        SupplyField wasserWerk = (SupplyField) fields[28];
 
-        StreetField theaterStrasse = (StreetField) gc.board.getFields()[21];
-        StreetField badStrasse = (StreetField) gc.board.getFields()[1];
-        StreetField turmStrasse = (StreetField) gc.board.getFields()[3];
-
-        SupplyField elWerk = (SupplyField) gc.board.getFields()[12];
-        SupplyField wasserWerk = (SupplyField) gc.board.getFields()[28];
-
+        //Strassenbesitzer geben
         suedbahnhof.setOwner(player);
         nordbahnhof.setOwner(player);
         theaterStrasse.setOwner(player);
@@ -260,43 +259,52 @@ public class MonopolyUnitTest {
         turmStrasse.setOwner(player);
         elWerk.setOwner(player);
         wasserWerk.setOwner(player);
+
+        //Haeuseranzahl geben
         badStrasse.setHouseCount(1);
         turmStrasse.setHouseCount(1);
 
+        //act und assert
         //BAHNHOF UND WERKE======================================================
         int expMoneyBahn = player.getMoney() + suedbahnhof.getMortgageValue();
         fm.takeMortgage(suedbahnhof);
 
         //getMortgageValue + giveMoney() + getMoney()
-        Assert.assertEquals(expMoneyBahn, player.getMoney());
+        Assert.assertTrue("Geld nicht richtig ueberwiesen! expected: "
+                + expMoneyBahn + " but was: " + player.getMoney(), expMoneyBahn == player.getMoney());
 
         int expMoneyWerk = player.getMoney() + elWerk.getMortgageValue();
         fm.takeMortgage(elWerk);
-        Assert.assertEquals(expMoneyWerk, player.getMoney());
+        Assert.assertTrue("Geld nicht richtig ueberwiesen! expected: "
+                + expMoneyWerk + " but was: " + player.getMoney(), expMoneyWerk == player.getMoney());
 
         //setMortgageTaken() + getRent()
-        Assert.assertEquals(0, suedbahnhof.getRent());
-        Assert.assertEquals(25, nordbahnhof.getRent());
-        Assert.assertEquals(0, elWerk.getRent());
+        Assert.assertTrue("Rent falsch! expected: " + 0 + " but was: "
+                + suedbahnhof.getRent(), 0 == suedbahnhof.getRent());
+        Assert.assertTrue("Rent falsch! expected: " + 25 + " but was: "
+                + nordbahnhof.getRent(), 25 == nordbahnhof.getRent());
+        Assert.assertTrue("Rent falsch! expected: " + 0 + " but was: "
+                + elWerk.getRent(), 0 == elWerk.getRent());
 
         //NICHT KOMPLETTE STRASSE=======================================
         int expMoneyTheater = player.getMoney() + theaterStrasse.getMortgageValue();
         fm.takeMortgage(theaterStrasse);
 
-        //getMortgageValue() + getMoney()+giveMoney()
-        Assert.assertEquals(expMoneyTheater, player.getMoney());
+        Assert.assertTrue("Hypothek nicht aufgenommen! expected: "
+                + expMoneyTheater + " but was: " + player.getMoney(), expMoneyTheater == player.getMoney());
 
         //getRent()+setMortgagaeTaken()
-        Assert.assertEquals(0, theaterStrasse.getRent());
+        Assert.assertTrue("Rent falsch! expected: " + 0 + " but was: "
+                + theaterStrasse.getRent(), 0 == theaterStrasse.getRent());
 
         //KOMPLETTE STRASSE=============================================
         int expMoneyTurmStrasse = player.getMoney();
         fm.takeMortgage(turmStrasse);
         //false : Hypothek kann nicht aufgenommen werden, da Haeuser auf dem Feld
 
-        //getMoney() +giveMoney()
-        Assert.assertEquals(expMoneyTurmStrasse, player.getMoney());
-        Assert.assertEquals(20, turmStrasse.getRent());
+        Assert.assertTrue("Hypothek wurde aufgenommen! ", expMoneyTurmStrasse == player.getMoney());
+        Assert.assertTrue("Rent falsch! expected: " + 20 + " but was: "
+                + theaterStrasse.getRent(), 20 == turmStrasse.getRent());
 
     }
 
