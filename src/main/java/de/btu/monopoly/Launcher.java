@@ -7,7 +7,9 @@ package de.btu.monopoly;
 
 import de.btu.monopoly.core.Game;
 import java.io.IOException;
+import java.util.logging.Level;
 import java.util.logging.LogManager;
+import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -19,6 +21,8 @@ import javafx.stage.Stage;
  * @author Markus Uhlig (markus.uhlig@b-tu.de)
  */
 public class Launcher extends Application {
+
+    public static final Logger LOGGER = Logger.getLogger(Launcher.class.getCanonicalName());
 
     public void start(Stage stage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/Scene.fxml"));
@@ -54,8 +58,7 @@ public class Launcher extends Application {
         try {
             LogManager.getLogManager().readConfiguration(Launcher.class.getResourceAsStream("/data/config/logging.properties"));
         } catch (IOException ex) {
-            System.err.println("Couldn't configure loggers!");
-            ex.printStackTrace();
+            LOGGER.log(Level.WARNING, "unable to configure loggers{0}", ex);
         }
 
 //        Logger.getLogger(GameBoardParser.class.getCanonicalName()).setLevel(Level.OFF);
