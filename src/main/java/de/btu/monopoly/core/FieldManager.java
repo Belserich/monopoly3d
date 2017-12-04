@@ -3,7 +3,6 @@ package de.btu.monopoly.core;
 import static de.btu.monopoly.core.Game.LOGGER;
 
 import com.sun.istack.internal.NotNull;
-import com.sun.istack.internal.Nullable;
 import de.btu.monopoly.data.Player;
 import de.btu.monopoly.data.field.*;
 
@@ -17,54 +16,58 @@ import java.util.Map;
 public class FieldManager {
 
     /**
-     * Sammlung aller Nachbar-Ids in aufsteigender Reihenfolge. Der Erste beider Indizes steht immer für eine eigene Property
-     * (Bahnhof, Werk oder Straße). Die Zuordnung ist <bold>nicht</bold> 1:1 zu {@code GameBoard.FIELD_STRUCTURE}, d.h. die IDs an
-     * der Stelle {@code i} stehen hier nicht für die Nachbarn des Feldes mit dem Index {@code i}, sondern für das {@code i}-te
-     * Property Feld. Die Aufzählung beginnt bei der Ersten Straße und schreitet dann im Uhrzeigersinn fort.
-     */
-    private static final int[][] NEIGHBOUR_IDS = {
-        {3}, {1}, {15, 25, 35}, {8, 9}, {6, 9}, {6, 8}, // Erste Reihe
-        {13, 14}, {28}, {11, 14}, {11, 13}, {5, 25, 35}, {18, 19}, {16, 19}, {16, 18}, // Zweite Reihe
-        {23, 24}, {21, 24}, {23, 21}, {5, 15, 35}, {27, 29}, {26, 29}, {12}, {26, 27}, // Dritte Reihe
-        {32, 34}, {31, 34}, {32, 31}, {5, 15, 25}, {39}, {37} // Vierte Reihe
-    };
-
-    /**
      * Die Felder des Spielbretts
      */
     private final Field[] fields;
     
     /**
-     * Ordnet Spielern die Property-Felder in ihrem Besitz zu.
+     * Ordnet Spielern die Property-Felder in ihrem Besitz zu. Vereinfacht die Logik mancher Karten
      */
     private Map<Player, Integer[]> houseCounters;
-
+    
+    /**
+     * Diese Manager-Klasse verwaltet das Feld-Array eines Spielbretts
+     *
+     * @param fields Feld-Array
+     */
     public FieldManager(Field[] fields) {
         this.fields = fields;
         houseCounters = new HashMap<>();
     }
     
+    /**
+     * @return Feld-Array
+     */
     @NotNull
     public Field[] getFields() {
         return fields;
     }
     
+    /**
+     * @return das "LOS"-Feld
+     */
+    public GoField getGoField() {
+        return (GoField) fields[FieldService.GO_FIELD_ID];
+    }
+    
+    /**
+     * Gibt die Gesamtanzahl der Häuser im Spielerbesitz zurück.
+     *
+     * @param player Spieler
+     * @return Gesamtanzahl der Häuser im Spielerbesitz
+     */
     public int getHouseCount(Player player) {
         return houseCounters.getOrDefault(player, new Integer[1])[0];
     }
     
+    /**
+     * Gibt die Gesamtanzahl der Hotels im Spielerbesitz zurück.
+     *
+     * @param player Spieler
+     * @return Gesamtanzahl der Hotels im Spielerbesitz
+     */
     public int getHotelCount(Player player) {
         return houseCounters.getOrDefault(player, new Integer[2])[1];
-    }
-    
-    /**
-     * Setzt die Spielerposition auf die des Gefängnisfelds und führt {@code PlayerService.toJail()} aus.
-     *
-     * @param player
-     */
-    public void toJail(Player player) {
-        player.setPosition(10);
-        PlayerService.toJail(player);
     }
 
     /**
@@ -79,13 +82,13 @@ public class FieldManager {
         if (pos > fields.length) {
             pos %= fields.length;
             player.setPosition(pos);
-            PlayerService.giveMoney(player, ((GoField) fields[0]).getAmount()); // TODO
+            PlayerService.giveMoney(player, getGoField().getAmount());
         }
         return fields[pos];
     }
     
     /**
-     * Bewegt den Spieler zum nächsten Feld des angegebenen Typs.
+     * Bewegt den Spieler zum nächsten Feld des angegebenen Typs. Wird für einige Karten benötigt.
      *
      * @param player Spieler
      * @param nextFieldType Feldtyp
@@ -99,57 +102,6 @@ public class FieldManager {
             fields++;
         }
         return movePlayer(player, fields);
-    }
-
-    /**
-     * Kauft ein Grundstück, sofern der Spieler zahlungsfähig ist.
-     *
-     * @param player Käufer
-     * @param price des Grundstueckes (der sich bei einer Auktion aendern kann)
-     * @return true, wenn das Feld gekauft wurde, false sonst
-     */
-    public boolean buyProperty(Player player, Property prop, int price) {
-        if (PlayerService.takeMoney(player, price)) {
-            LOGGER.info(String.format("%s kauft das Grundstück %s", player.getName(), prop.getName()));
-            prop.setOwner(player);
-            return true;
-        } else {
-            LOGGER.warning(String.format("%s hat nicht genug Geld, um %s zu kaufen!", player.getName(), prop.getName()));
-            return false;
-        }
-    }
-    
-    public int getRent(Property prop, @Nullable int[] rollResult, int amplifier) {
-        int rent = prop.getRent();
-        if (prop instanceof SupplyField && rollResult != null) {
-            rent = rent * (rollResult[0] + rollResult[1]);
-        }
-        return rent * amplifier;
-    }
-    
-    public int getRent(Property prop, @Nullable int[] rollResult) {
-        return getRent(prop, rollResult, 1);
-    }
-    
-    /**
-     * Zieht dem Konto des Spielers Geld in Höhe des Mietswertes des angegebenen Property-Felds
-     * ab und gibt das Geld an den Besitzer des Feldes weiter.
-     *
-     * @param player Spieler
-     * @param prop Feld
-     * @return ob die Transaktion erfolgreich war, also ob das angegebene Feld einen Besitzer hat
-     */
-    public boolean payRent(Player player, Property prop, @Nullable int[] rollResult, int amplifier) {
-        Player owner = prop.getOwner();
-        if (owner == null || owner == player) {
-            return false;
-        }
-        else {
-            int rent = getRent(prop, rollResult, amplifier);
-            PlayerService.takeAndGiveMoneyUnchecked(player, owner, rent);
-            LOGGER.info(String.format("%s zahlt %d Miete an %s.", player.getName(), rent, owner.getName()));
-            return true;
-        }
     }
 
     /**
@@ -239,7 +191,7 @@ public class FieldManager {
      */
     private boolean balanceCheck(StreetField street, int posTolerance, int negTolerance) {
         int hc = street.getHouseCount();
-        int[] neighbours = NEIGHBOUR_IDS[getPropertyId(street)];
+        int[] neighbours = FieldService.NEIGHBOUR_IDS[getPropertyId(street)];
         for (Integer neigh : neighbours) {
             int otherHc = ((StreetField) fields[neigh]).getHouseCount();
             if (hc + posTolerance < otherHc || hc - negTolerance > otherHc) {
@@ -250,10 +202,16 @@ public class FieldManager {
         LOGGER.fine(String.format("Balancetest für Straßenzug %s erfolgreich!", street.getName()));
         return true;
     }
-
+    
+    /**
+     * Prüft ob alle Straßen des betroffenen Straßenzugs demselben Spieler gehören.
+     *
+     * @param prop betroffenes Grundstück
+     * @return ob alle Straßen des betroffenen Straßenzugs demselben Spieler gehören
+     */
     public boolean isComplete(Property prop) {
         Player owner = prop.getOwner();
-        int[] neighbourIds = NEIGHBOUR_IDS[getPropertyId(prop)];
+        int[] neighbourIds = FieldService.NEIGHBOUR_IDS[getPropertyId(prop)];
         for (Integer neigh : neighbourIds) {
             if (((Property) fields[neigh]).getOwner() != owner) {
                 return false;
@@ -278,18 +236,43 @@ public class FieldManager {
                 }
             }
         }
-        if (propertyId > 0 && propertyId < NEIGHBOUR_IDS.length) {
+        if (propertyId > 0 && propertyId < FieldService.NEIGHBOUR_IDS.length) {
             throw new IllegalArgumentException("Given property is not a field of the current board.");
         }
         return propertyId;
     }
-
+    
+    /**
+     * Setzt alle gekauften Gebäude des Spielers zurück
+     *
+     * @param player betroffener Spieler
+     */
+    public void bankrupt(Player player) {
+        for (Field field : fields) {
+            
+            if (field instanceof Property) {
+                Property prop = (Property) field;
+                
+                if (prop.getOwner() == player) {
+                    prop.setOwner(null);
+                    prop.setMortgageTaken(false);
+                    
+                    if (prop instanceof StreetField) {
+                        StreetField street = (StreetField) prop;
+                        street.setHouseCount(0);
+                        houseCounters.remove(player);
+                    }
+                }
+            }
+        }
+    }
+    
     /**
      * Nimmt eine Hypothek auf das gewählte Propery-Feld auf, soweit möglich.
      *
-     * @return true, bei Erfolg, sonst false
+     * @param prop betroffenes Grundstück
      */
-    public boolean takeMortgage(Property prop) {
+    public void takeMortgage(Property prop) {
         Player player = prop.getOwner();
 
         LOGGER.info(String.format("%s versucht eine Hypothek fuer %s aufzunehmen.", player.getName(), prop.getName()));
@@ -297,30 +280,27 @@ public class FieldManager {
             StreetField street = (StreetField) prop;
             if (street.getHouseCount() != 0) {
                 LOGGER.warning(String.format("Auf %s stehen Haeuser! Hypothek kann nicht aufgenommen werden.", street.getName()));
-                return false;
             } else if (!balanceCheck(street, 0, 0)) // Hier gilt houseCount = 0
             {
                 LOGGER.warning(String.format("Auf dem Straßenzug von %s stehen Haeuser! Hypothek kann nicht aufgenommen werden.",
                         street.getName()));
-                return false;
             }
         }
         takeMortgageUnchecked(prop);
-        return true;
     }
-
+    
     /**
      * Nimmt eine Hypothek fürs betroffene Feld auf, ohne auf den Hypotheksstatus zu prüfen.
      *
      * @param prop betroffenes Feld
      */
-    public void takeMortgageUnchecked(Property prop) {
+    private void takeMortgageUnchecked(Property prop) {
         Player player = prop.getOwner();
         PlayerService.giveMoney(player, prop.getMortgageValue());
         prop.setMortgageTaken(true);
         LOGGER.info(String.format("Hypothek für %s wurde aufgenommen!", player.getName()));
     }
-
+    
     /**
      * Zahlt eine Hypothek auf das gewählte Propery-Feld ab, soweit möglich.
      *
@@ -328,7 +308,7 @@ public class FieldManager {
      */
     public void payMortgage(Property prop) {
         Player player = prop.getOwner();
-
+        
         LOGGER.info(String.format("%s versucht, eine Hypthek auf %s abzuzahlen", player.getName(), prop.getName()));
         if (prop.isMortgageTaken()) {
             if (PlayerService.checkLiquidity(player, prop.getMortgageBack())) {
@@ -340,17 +320,16 @@ public class FieldManager {
             LOGGER.fine(String.format("Auf dem Feld %s lastet keine Hypothek.", prop.getName()));
         }
     }
-
+    
     /**
      * Zahlt die Hypothek auf einem Feld ab, ohne auf Zahlungsfähigkeit zu prüfen.
      *
      * @param prop betroffenes Feld
      */
-    public void payMortgageUnchecked(Property prop) {
+    private void payMortgageUnchecked(Property prop) {
         Player player = prop.getOwner();
         PlayerService.takeMoneyUnchecked(player, prop.getMortgageBack());
         prop.setMortgageTaken(false);
         LOGGER.info(String.format("Hypothek fuer %s wurde zurueckgezahlt!", prop.getName()));
     }
-
 }

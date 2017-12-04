@@ -136,7 +136,7 @@ public class Player {
     }
 
     /**
-     * @return ob der Spieler Pleite ist
+     * @return ob Spieler Pleite ist
      */
     public boolean isBankrupt() {
         return isBankrupt;

@@ -123,6 +123,10 @@ public class CardStack {
         return counter;
     }
     
+    public void removeAll() {
+        stack.clear();
+    }
+    
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder("[Kartenstapel]\n");
