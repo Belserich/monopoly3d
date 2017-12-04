@@ -340,4 +340,130 @@ public class MonopolyUnitTest {
         Assert.assertEquals(expMoney2, player.getMoney());
     }
 
+    @Test
+    public void testBankrupt() {
+
+        //initialisierung
+        gc = new Game(1);
+        gc.init();
+        board = gc.board;
+        players = gc.players;
+        fm = gc.getFieldManager();
+        Player patrick = players[0];
+        StationField suedbahnhof = (StationField) gc.board.getFields()[5];
+        StationField nordbahnhof = (StationField) gc.board.getFields()[25];
+        StreetField badStrasse = (StreetField) gc.board.getFields()[1];
+
+        suedbahnhof.setOwner(patrick);
+        nordbahnhof.setOwner(patrick);
+        badStrasse.setOwner(patrick);
+        badStrasse.setHouseCount(3);
+        nordbahnhof.setMortgageTaken(true);
+
+        //bankrupt und testen
+        PlayerService.bankrupt(patrick, board, players);
+
+        Assert.assertTrue("Property noch im Besitz", suedbahnhof.getOwner() != patrick);
+        Assert.assertTrue("Property noch im Besitz", nordbahnhof.getOwner() != patrick);
+        Assert.assertTrue("Property noch im Besitz", badStrasse.getOwner() != patrick);
+        Assert.assertTrue("Property hat noch Hypothek", nordbahnhof.isMortgageTaken() == false);
+        Assert.assertTrue("Property hat noch Haueser", badStrasse.getHouseCount() == 0);
+        Assert.assertTrue("Spieler ist kein Spectator", patrick.isBankrupt() == true);
+    }
+
+    @Test
+    public void testPayRent() {
+
+        //initialisierung
+        gc = new Game(2);
+        gc.init();
+        board = gc.board;
+        players = gc.players;
+        fm = gc.getFieldManager();
+        Player patrick = players[0];
+        Player chris = players[1];
+        StreetField badStrasse = (StreetField) gc.board.getFields()[1];
+        StreetField turmStrasse = (StreetField) gc.board.getFields()[3];
+        SupplyField wasserWerk = (SupplyField) gc.board.getFields()[28];
+        StationField suedbahnhof = (StationField) gc.board.getFields()[5];
+        StationField westbahnhof = (StationField) gc.board.getFields()[15];
+        StationField nordbahnhof = (StationField) gc.board.getFields()[25];
+        StationField hauptbahnhof = (StationField) gc.board.getFields()[35];
+
+        PlayerService.giveMoney(patrick, 1000);
+        PlayerService.giveMoney(chris, 1000);
+        badStrasse.setOwner(patrick);
+        turmStrasse.setOwner(patrick);
+        wasserWerk.setOwner(patrick);
+        suedbahnhof.setOwner(patrick);
+        westbahnhof.setOwner(patrick);
+        nordbahnhof.setOwner(patrick);
+        hauptbahnhof.setOwner(patrick);
+
+        //Miete zahlen und testen
+        //4 Bahnhoefe
+        chris.setPosition(5);
+        PlayerService.takeMoney(chris, suedbahnhof.getRent());
+        PlayerService.giveMoney(patrick, suedbahnhof.getRent());
+        Assert.assertTrue("Geld nicht korrekt abgebucht", chris.getMoney() == 1000 - suedbahnhof.getRent());
+        Assert.assertTrue("Geld nicht korrekt gebucht", patrick.getMoney() == 1000 + suedbahnhof.getRent());
+        PlayerService.giveMoney(patrick, 1000);
+        PlayerService.giveMoney(chris, 1000);
+        //3 Bahnhoefe
+        hauptbahnhof.setOwner(null);
+        PlayerService.takeMoney(chris, suedbahnhof.getRent());
+        PlayerService.giveMoney(patrick, suedbahnhof.getRent());
+        Assert.assertTrue("Geld nicht korrekt abgebucht", chris.getMoney() == 1000 - suedbahnhof.getRent());
+        Assert.assertTrue("Geld nicht korrekt gebucht", patrick.getMoney() == 1000 + suedbahnhof.getRent());
+        PlayerService.giveMoney(patrick, 1000);
+        PlayerService.giveMoney(chris, 1000);
+        //Werk
+        chris.setPosition(28);
+        PlayerService.takeMoney(chris, wasserWerk.getRent());
+        PlayerService.giveMoney(patrick, wasserWerk.getRent());
+        Assert.assertTrue("Geld nicht korrekt abgebucht", chris.getMoney() == 1000 - wasserWerk.getRent()); //TODO kann keine rollResutl uebergeben
+        Assert.assertTrue("Geld nicht korrekt gebucht", patrick.getMoney() == 1000 + wasserWerk.getRent());
+        PlayerService.giveMoney(patrick, 1000);
+        PlayerService.giveMoney(chris, 1000);
+        //kompletter Strassenzug
+        chris.setPosition(1);
+        PlayerService.takeMoney(chris, badStrasse.getRent());
+        PlayerService.giveMoney(patrick, badStrasse.getRent());
+        Assert.assertTrue("Geld nicht korrekt abgebucht", chris.getMoney() == 1000 - badStrasse.getRent());
+        Assert.assertTrue("Geld nicht korrekt gebucht", patrick.getMoney() == 1000 + badStrasse.getRent());
+        PlayerService.giveMoney(patrick, 1000);
+        PlayerService.giveMoney(chris, 1000);
+        //einzelne Strasse
+        turmStrasse.setOwner(null);
+        PlayerService.takeMoney(chris, badStrasse.getRent());
+        PlayerService.giveMoney(patrick, badStrasse.getRent());
+        Assert.assertTrue("Geld nicht korrekt abgebucht", chris.getMoney() == 1000 - badStrasse.getRent());
+        Assert.assertTrue("Geld nicht korrekt gebucht", patrick.getMoney() == 1000 + badStrasse.getRent());
+        PlayerService.giveMoney(patrick, 1000);
+        PlayerService.giveMoney(chris, 1000);
+
+    }
+
+    //@Test TODO Kann nicht testen ohne extra Eingaben
+    public void testGoToJail() {
+
+        //initialisierung
+        gc = new Game(1);
+        gc.init();
+        board = gc.board;
+        players = gc.players;
+        fm = gc.getFieldManager();
+        Player patrick = players[0];
+        patrick.setPosition(39);
+        int[] rollResult = {14, 16};
+
+        //GoToJailField und test
+        gc.fieldPhase(patrick, rollResult);
+
+        Assert.assertTrue("Spieler nicht im Gefaengnis", patrick.isInJail() == true);
+        Assert.assertTrue("Tage im Gefaengnis sind nicht 0", patrick.getDaysInJail() == 0);
+        Assert.assertTrue("Position ist nicht im Gefaengnis", patrick.getPosition() == 10);
+
+    }
+
 }
