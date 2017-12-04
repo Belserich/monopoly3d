@@ -2,6 +2,9 @@ package de.btu.monopoly.data;
 
 import de.btu.monopoly.data.field.Field;
 
+import java.util.Arrays;
+import java.util.stream.Stream;
+
 import static de.btu.monopoly.data.GameBoard.FieldType.*;
 
 /**
@@ -60,6 +63,15 @@ public class GameBoard
      */
     public Player[] getActivePlayer() {
         return activePlayers;
+    }
+    
+    /**
+     * Sortiert alle Spieler die bankrott gegangen sind aus.
+     */
+    public void sortOutInactivePlayers() {
+        activePlayers = Arrays.stream(activePlayers)
+                .filter(p -> !p.isBankrupt())
+                .toArray(Player[]::new);
     }
     
     /**
