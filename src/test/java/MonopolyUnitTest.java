@@ -79,13 +79,17 @@ public class MonopolyUnitTest {
         //Spieler auf Start setzen
         patrick.setPosition(0);
         john.setPosition(0);
-
         //Spieler bewegen
         fm.movePlayer(patrick, 40, ((GoField) board.getFields()[0]).getAmount());
         fm.movePlayer(patrick, 50, ((GoField) board.getFields()[0]).getAmount());
-
-        Assert.assertTrue("Los Geld falsch oder garnicht berechnet", patrick.getMoney() == 1000 + ((GoField) board.getFields()[0]).getAmount());
-        Assert.assertTrue("Los Geld falsch oder garnicht berechnet", john.getMoney() == 1000 + ((GoField) board.getFields()[0]).getAmount());
+        
+        System.out.println(john.getMoney());
+        System.out.println(patrick.getMoney());
+        
+        Assert.assertTrue("Los Geld falsch oder garnicht berechnet", 
+                patrick.getMoney() == 2500 + ((GoField) board.getFields()[0]).getAmount());
+        Assert.assertTrue("Los Geld falsch oder garnicht berechnet", 
+                john.getMoney() == 2500 + ((GoField) board.getFields()[0]).getAmount());
     }
 
     @Test
@@ -122,13 +126,12 @@ public class MonopolyUnitTest {
         players = gc.players;
         fm = gc.getFieldManager();
         Player patrick = players[0];
-        PlayerService.giveMoney(patrick, 1000);
         Property street = (Property) gc.board.getFields()[1];
 
         //Kauf der Strasse und testen
         fm.buyProperty(patrick, street, street.getPrice());
         Assert.assertTrue("Strasse nicht gekauft", street.getOwner() == patrick);
-        Assert.assertTrue("Geld nicht abgezogen", patrick.getMoney() == 1000 - street.getPrice());
+        Assert.assertTrue("Geld nicht abgezogen", patrick.getMoney() == 1500 - street.getPrice());
 
     }
 
@@ -330,12 +333,12 @@ public class MonopolyUnitTest {
         TaxField zusatzSteuer = (TaxField) gc.board.getFields()[38];
 
         int expMoney1 = player.getMoney() - einSteuer.getTax();
-        //gc.processPlayerOnTaxField(player, einSteuer);
+        gc.processPlayerOnTaxField(player, einSteuer);
         player.setPosition(4);
         Assert.assertEquals(expMoney1, player.getMoney());
 
         int expMoney2 = player.getMoney() - zusatzSteuer.getTax();
-        //gc.processPlayerOnTaxField(player, zusatzSteuer);
+        gc.processPlayerOnTaxField(player, zusatzSteuer);
         player.setPosition(38);
         Assert.assertEquals(expMoney2, player.getMoney());
     }
