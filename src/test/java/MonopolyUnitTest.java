@@ -2,6 +2,7 @@
 
 import de.btu.monopoly.core.*;
 import de.btu.monopoly.data.*;
+import de.btu.monopoly.core.GameBoard;
 import de.btu.monopoly.data.field.*;
 import org.junit.Assert;
 import org.junit.Test;

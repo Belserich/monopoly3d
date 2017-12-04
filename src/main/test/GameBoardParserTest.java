@@ -1,4 +1,4 @@
-import de.btu.monopoly.data.GameBoard;
+import de.btu.monopoly.core.GameBoard;
 import de.btu.monopoly.data.field.Field;
 import de.btu.monopoly.data.field.Property;
 import de.btu.monopoly.data.parser.GameBoardParser;

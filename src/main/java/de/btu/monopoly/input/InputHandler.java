@@ -3,10 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.btu.monopoly.core;
+package de.btu.monopoly.input;
 
 import static de.btu.monopoly.core.Game.LOGGER;
-import de.btu.monopoly.data.GameBoard;
+
+import de.btu.monopoly.core.GameBoard;
 import de.btu.monopoly.data.Player;
 import de.btu.monopoly.data.field.Field;
 import java.util.Scanner;
