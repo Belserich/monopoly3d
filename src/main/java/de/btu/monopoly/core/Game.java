@@ -148,9 +148,9 @@ public class Game {
 
     private void processJailCardOption(Player player) {
         CardStack stack = player.getCardStack();
-        if (stack.countCardsOfAction(Card.Action.JAIL) > 0) {
+        if (stack.countCardsOfAction(CardAction.JAIL) > 0) {
             LOGGER.info(String.format("%s hat eine Gefängnis-Frei-Karte benutzt.", player.getName()));
-            Card jailCard = stack.removeCardOfAction(Card.Action.JAIL);
+            Card jailCard = stack.removeCardOfAction(CardAction.JAIL);
             jailCard.getCardStack().addCard(jailCard);
             PlayerService.freeFromJail(player);
         } else {

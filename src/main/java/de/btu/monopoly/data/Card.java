@@ -1,5 +1,7 @@
 package de.btu.monopoly.data;
 
+import de.btu.monopoly.data.parser.CardAction;
+
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -8,11 +10,6 @@ import java.util.List;
  * @author Maximilian Bels (belsmaxi@b-tu.de)
  */
 public class Card {
-    
-    public enum Action {
-        JAIL, GO_JAIL, GIVE_MONEY, NEXT_STATION_RENT_AMP, MOVE_PLAYER, PAY_MONEY,
-        SET_POSITION, RENOVATE, NEXT_SUPPLY, BIRTHDAY, PAY_MONEY_ALL
-    }
     
     /**
      * zugehöriger Kartenstapel
@@ -32,7 +29,7 @@ public class Card {
     /**
      * Kartentypen
      */
-    private final List<Action> actions;
+    private final List<CardAction> actions;
 
     /**
      * Kartenargumente
@@ -47,7 +44,7 @@ public class Card {
      * @param text Kartentext
      * @param args Zusatzargumente
      */
-    public Card(String name, String text, Action[] actions, int[] args) {
+    public Card(String name, String text, CardAction[] actions, int[] args) {
         this.name = name;
         this.text = text;
         this.args = args;
@@ -73,7 +70,7 @@ public class Card {
     /**
      * @return Typen der Karte
      */
-    public List<Action> getActions() {
+    public List<CardAction> getActions() {
         return actions;
     }
 
