@@ -87,7 +87,7 @@ public class CardManager {
                     break;
                     
                 case RENOVATE:
-                    renovate(player, args);
+                    processRenovateAction(player, args);
                     break;
                     
                 default: throw new RuntimeException("Unknown card action-type!");
@@ -95,9 +95,32 @@ public class CardManager {
         }
     }
     
-    private void renovate(Player player, int[] args) {
+    public boolean useJailCard(Player player) {
+        CardStack stack = player.getCardStack();
+        if (stack.countCardsOfAction(CardAction.JAIL) > 0) {
+            Card jailCard = stack.removeCardOfAction(CardAction.JAIL);
+            jailCard.getCardStack().addCard(jailCard);
+            PlayerService.freeFromJail(player);
+            return true;
+        }
+        else return false;
+    }
+    
+    private void processRenovateAction(Player player, int[] args) {
         FieldManager fm = board.getFieldManager();
         PlayerService.takeMoneyUnchecked(player, fm.getHouseCount(player) * args[0]);
         PlayerService.takeMoneyUnchecked(player, fm.getHotelCount(player) * args[1]);
+    }
+    
+    private void putBackOnStack(Card card) {
+        card.getCardStack().addCard(card);
+    }
+    
+    public void bankrupt(Player player) {
+        CardStack stack = player.getCardStack();
+        for (int i = 0; i < stack.countCardsOfAction(CardAction.JAIL); i++) {
+            putBackOnStack(stack.removeCardOfAction(CardAction.JAIL));
+        }
+        stack.removeAll();
     }
 }
