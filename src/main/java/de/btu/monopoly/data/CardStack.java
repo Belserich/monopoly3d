@@ -12,23 +12,27 @@ import java.util.*;
  * @author Christian Prinz
  */
 public class CardStack {
-
+    
+    /**
+     * Die Kartenliste
+     */
+    LinkedList<Card> stack;
+    
     /**
      * Ein Kartenstapel.
      */
-    LinkedList<Card> cardStack;
-
+    public CardStack() {
+        stack = new LinkedList<Card>();
+    }
+    
     /**
-     * Liste alle Gefaengnis-Frei-Karten in Spielerhaenden.
+     * Ein Kartenstapel mit vorinitialisierten Karten.
      */
-    LinkedList<Card> jailCardsInGame;
-
     public CardStack(Card[] cards) {
-        this.cardStack = new LinkedList<Card>();
-        this.jailCardsInGame = new LinkedList<Card>();
-
-        for (Card c : cards) {
-            cardStack.add(c);
+        this();
+        
+        for (Card card : cards) {
+            stack.add(card);
         }
     }
 
@@ -36,38 +40,35 @@ public class CardStack {
      * Mischt den Kartenstapel.
      */
     public void shuffle() {
-        Collections.shuffle(cardStack);
+        Collections.shuffle(stack);
     }
 
     /**
-     * Nimmt die nächste Karte vom Stapel. Prüft, ob es eine Gefaengnis-Frei Karte ist.
+     * Gibt die nächste Karte vom Stapel zurück und legt sie wieder ans "Ende".
      */
     public Card nextCard() {
-        Card retObj = cardStack.remove();
-        for (Card.Action action : retObj.getActions()) {
-            if (action == Card.Action.JAIL) {
-                jailCardsInGame.add(retObj);
-                return retObj;
-            }
-        }
-        cardStack.add(retObj);
+        Card retObj = stack.remove();
+        stack.add(retObj);
         return retObj;
     }
-
+    
     /**
-     * Legt eine Gefaengnis-Frei-Karte zurueck auf de Stapel.
+     * Fügt die angegebene Karte ans Ende des Stapels.
+     *
+     * @param card
      */
-    public void returnJailCard() {
-        if (!jailCardsInGame.isEmpty()) {
-            cardStack.add(jailCardsInGame.remove());
-        }
+    public void addCard(Card card) {
+        stack.add(card);
+    }
+    
+    public boolean removeCard(Card card) {
+        return stack.remove(card);
     }
     
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder("[Kartenstapel]\n");
-        cardStack.forEach(c -> builder.append("\t" + c + "\n"));
-        builder.append("\tGefängnis-Frei-Karten in Spielerhänden: " + jailCardsInGame.size());
+        stack.forEach(c -> builder.append("\t" + c + "\n"));
         return builder.toString();
     }
 }
