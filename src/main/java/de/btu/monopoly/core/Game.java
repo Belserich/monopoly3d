@@ -303,7 +303,7 @@ public class Game {
         }
     }
 
-    public void actionPhase(Player player) {
+    private void actionPhase(Player player) {
         int choice;
 
         do {
@@ -363,7 +363,7 @@ public class Game {
         } while (choice != 1);
     }
 
-    public void betPhase(Property property) { // TODO
+    private void betPhase(Property property) {
         Auction auc = new Auction(property, players);
         auc.startAuction();
     }
