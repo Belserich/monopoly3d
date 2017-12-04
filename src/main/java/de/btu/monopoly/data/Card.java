@@ -9,8 +9,13 @@ public class Card {
     
     public enum Action {
         JAIL, GO_JAIL, GIVE_MONEY, NEXT_STATION_RENT_AMP, MOVE_PLAYER, PAY_MONEY,
-        SET_POSITION, RENOVATE, NEXT_SUPPLY, BIRTHDAY, PAY_MONEY_ALL;
+        SET_POSITION, RENOVATE, NEXT_SUPPLY, BIRTHDAY, PAY_MONEY_ALL
     }
+    
+    /**
+     * zugehöriger Kartenstapel
+     */
+    private CardStack stack;
     
     /**
      * Kartentitel
@@ -73,6 +78,22 @@ public class Card {
      */
     public int[] getArgs() {
         return args;
+    }
+    
+    /**
+     * Setzt den derzeitigen zugehörigen Kartenstapel
+     *
+     * @param stack Kartenstapel
+     */
+    public void setStack(CardStack stack) {
+        this.stack = stack;
+    }
+    
+    /**
+     * @return der zugehörige Kartenstapel
+     */
+    public CardStack getStack() {
+        return stack;
     }
     
     @Override
