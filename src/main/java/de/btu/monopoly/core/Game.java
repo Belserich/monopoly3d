@@ -160,12 +160,13 @@ public class Game {
 
     public int[] rollPhase(Player player, int doubletCounter) {
         int[] rollResult;
+        int doubletCount = doubletCounter;
 
         LOGGER.info(String.format("%s ist dran mit würfeln.", player.getName()));
         rollResult = PlayerService.roll(player);
-        doubletCounter += (rollResult[0] == rollResult[1]) ? 1 : 0;
+        doubletCount += (rollResult[0] == rollResult[1]) ? 1 : 0;
 
-        if (doubletCounter >= 3) {
+        if (doubletCount >= 3) {
             LOGGER.info(String.format("%s hat seinen 3. Pasch und geht nicht über LOS, direkt ins Gefängnis!", player.getName()));
             fieldManager.toJail(player);
         } else {
@@ -241,12 +242,14 @@ public class Game {
                 int fields = 0;
                 while (GameBoard.FIELD_STRUCTURE[player.getPosition() + (++fields)] != GameBoard.FieldType.SUPPLY);
                 fieldManager.movePlayer(player, fields, ((GoField) board.getFields()[0]).getAmount());
+                break;
             case NEXT_STATION_RENT_AMP:
                 fields = 0;
                 while (GameBoard.FIELD_STRUCTURE[player.getPosition() + fields] != GameBoard.FieldType.STATION) {
                     fields++;
                 }
                 fieldManager.movePlayer(player, fields, ((GoField) board.getFields()[0]).getAmount()); // TODO Amplifier
+                break;
             case BIRTHDAY: // TODO
             case RENOVATE: // TODO
         }
