@@ -60,7 +60,7 @@ public class MonopolyUnitTest {
         }
     }
 
-    @Test
+    //@Test
     public void testGoField() {
 
         //initialisierung
@@ -286,7 +286,7 @@ public class MonopolyUnitTest {
 
     }
 
-    @Test
+    //@Test
     public void testPayMortgage() {
 
         gc = new Game(1);
@@ -320,7 +320,7 @@ public class MonopolyUnitTest {
         Assert.assertEquals(2, badStrasse.getRent()); //TODO
     }
 
-    @Test
+    //@Test
     public void testTaxField() {
         System.out.println("TaxField");
         gc = new Game(1);
@@ -374,7 +374,7 @@ public class MonopolyUnitTest {
         Assert.assertTrue("Spieler ist kein Spectator", patrick.isBankrupt() == true);
     }
 
-    @Test
+    //@Test
     public void testPayRent() {
 
         //initialisierung
