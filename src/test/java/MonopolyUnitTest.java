@@ -308,28 +308,33 @@ public class MonopolyUnitTest {
 
     }
 
-    //@Test
+    @Test
     public void testPayMortgage() {
 
+        //initialisierung
         gc = new Game(1);
         gc.init();
-        board = gc.board;
+        Field[] fields = gc.board.getFields();
         players = gc.players;
         fm = gc.getFieldManager();
         Player player = players[0];
-        Property suedbahnhof = (Property) gc.board.getFields()[5];
-        Property nordbahnhof = (Property) gc.board.getFields()[25];
-        StreetField badStrasse = (StreetField) gc.board.getFields()[1];
-
+        Property suedbahnhof = (Property) fields[5];
+        Property nordbahnhof = (Property) fields[25];
+        StreetField badStrasse = (StreetField) fields[1];
+        
+        //Strassenbesitzer geben
         suedbahnhof.setOwner(player);
         nordbahnhof.setOwner(player);
         badStrasse.setOwner(player);
-
+        
+        //setze Hypothek ist aufgenommen
         suedbahnhof.setMortgageTaken(true);
-        //getRent()
         PlayerService pc = new PlayerService();
+        
+        //Geld von Spieler abziehe, damit er nicht genug hat
         pc.takeMoney(player, 1400);
 
+        //act und assert
         fm.payMortgage(suedbahnhof);
         Assert.assertEquals(true, suedbahnhof.isMortgageTaken());
         Assert.assertEquals(100, player.getMoney());
@@ -338,8 +343,10 @@ public class MonopolyUnitTest {
         badStrasse.setMortgageTaken(true);
         int expMoney = player.getMoney() - badStrasse.getMortgageBack();
         fm.payMortgage(badStrasse);
-        Assert.assertEquals(expMoney, player.getMoney());
-        Assert.assertEquals(2, badStrasse.getRent()); //TODO
+        Assert.assertTrue("Geld nicht richtig abgebucht! expected: " + expMoney + "but: "
+                + player.getMoney(), expMoney == player.getMoney());
+        Assert.assertTrue("Geld nicht richtig abgebucht! expected: " + 2 + " but: "
+                + badStrasse.getRent(), 2 == badStrasse.getRent()); //TODO
     }
 
     //@Test
