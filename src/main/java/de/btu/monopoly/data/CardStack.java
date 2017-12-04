@@ -16,13 +16,13 @@ public class CardStack {
     /**
      * Die Kartenliste
      */
-    LinkedList<Card> stack;
+    private LinkedList<Card> stack;
     
     /**
      * Ein Kartenstapel.
      */
     public CardStack() {
-        stack = new LinkedList<Card>();
+        stack = new LinkedList<>();
     }
     
     /**
@@ -30,10 +30,7 @@ public class CardStack {
      */
     public CardStack(Card[] cards) {
         this();
-        
-        for (Card card : cards) {
-            stack.add(card);
-        }
+        stack.addAll(Arrays.asList(cards));
     }
 
     /**
@@ -55,12 +52,18 @@ public class CardStack {
     /**
      * Fügt die angegebene Karte ans Ende des Stapels.
      *
-     * @param card
+     * @param card Karte
      */
     public void addCard(Card card) {
         stack.add(card);
     }
     
+    /**
+     * Entfernt eine Karte aus dem Stapel.
+     *
+     * @param card Karte
+     * @return ob die Karte im Stapel enthalten war
+     */
     public boolean removeCard(Card card) {
         return stack.remove(card);
     }
@@ -68,7 +71,7 @@ public class CardStack {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder("[Kartenstapel]\n");
-        stack.forEach(c -> builder.append("\t" + c + "\n"));
+        stack.forEach(c -> { builder.append("\t"); builder.append(c); builder.append("\n"); } );
         return builder.toString();
     }
 }
