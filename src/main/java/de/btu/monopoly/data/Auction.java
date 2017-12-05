@@ -1,6 +1,6 @@
 package de.btu.monopoly.data;
 
-import de.btu.monopoly.data.Player;
+import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.data.field.Property;
 
 /**

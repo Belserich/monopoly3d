@@ -1,4 +1,4 @@
-package de.btu.monopoly.data;
+package de.btu.monopoly.data.player;
 
 import de.btu.monopoly.data.card.CardStack;
 

@@ -6,8 +6,7 @@ import com.sun.istack.internal.NotNull;
 import de.btu.monopoly.core.GameBoard;
 import de.btu.monopoly.core.service.FieldService;
 import de.btu.monopoly.core.service.PlayerService;
-import de.btu.monopoly.data.Player;
-import de.btu.monopoly.data.field.*;
+import de.btu.monopoly.data.player.Player;
 
 import java.util.HashMap;
 import java.util.Map;

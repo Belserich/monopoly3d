@@ -11,6 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;
 
+import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.input.InputHandler;
 import org.xml.sax.SAXException;
 

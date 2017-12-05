@@ -4,7 +4,7 @@ import de.btu.monopoly.data.field.FieldManager;
 import de.btu.monopoly.core.service.FieldService;
 import de.btu.monopoly.core.GameBoard;
 import de.btu.monopoly.core.service.PlayerService;
-import de.btu.monopoly.data.Player;
+import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.data.field.CardField;
 import de.btu.monopoly.data.field.Field;
 import de.btu.monopoly.data.field.Property;

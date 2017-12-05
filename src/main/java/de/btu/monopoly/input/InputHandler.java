@@ -8,7 +8,7 @@ package de.btu.monopoly.input;
 import static de.btu.monopoly.core.Game.LOGGER;
 
 import de.btu.monopoly.core.GameBoard;
-import de.btu.monopoly.data.Player;
+import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.data.field.Field;
 import java.util.Scanner;
 import java.util.logging.Level;

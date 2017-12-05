@@ -1,8 +1,8 @@
 package de.btu.monopoly.core.service;
 
 import de.btu.monopoly.core.GameBoard;
-import de.btu.monopoly.data.Bank;
-import de.btu.monopoly.data.Player;
+import de.btu.monopoly.data.player.Bank;
+import de.btu.monopoly.data.player.Player;
 
 import java.util.logging.Logger;
 
