@@ -103,7 +103,7 @@ public class Game {
                 }
                 actionPhase(player);
             }
-            while (rollResult[0] == rollResult[1] && doubletCounter < 3);
+            while (rollResult[0] == rollResult[1]);
         }
     }
 
@@ -255,8 +255,8 @@ public class Game {
         int choice;
 
         do {
-            LOGGER.log(Level.INFO, player.getName() + "! Waehle eine Aktion:\n[1] - Nichts\n[2] - Haus kaufen\n[3] - Haus verkaufen\n[4] - "
-                    + "Hypothek aufnehmen\n[5] - Hypothek abbezahlen");
+            LOGGER.info(String.format("%s ist an der Reihe! Waehle eine Aktion:%n[1] - Nichts%n[2] - Haus kaufen%n[3] - Haus verkaufen%n[4] - " +
+                    "Hypothek aufnehmen%n[5] - Hypothek abbezahlen", player.getName()));
 
             choice = InputHandler.getUserInput(5);
             if (choice != 1) {
