@@ -21,7 +21,7 @@ public class CardManager {
         this.board = board;
     }
     
-    public void processPlayerOnCardField(Player player) {
+    public void playerOnCardField(Player player) {
         Field field = board.getFields()[player.getPosition()];
         
         if (!(field instanceof CardField)) {

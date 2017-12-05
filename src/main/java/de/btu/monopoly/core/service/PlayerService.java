@@ -19,7 +19,7 @@ public class PlayerService {
      *
      * @param player Spieler
      */
-    public static void toJail(Player player) {
+    static void toJail(Player player) {
         player.setInJail(true);
         player.setDaysInJail(0);
         LOGGER.info(String.format("%s ist jetzt im Gefaengnis.", player.getName()));
