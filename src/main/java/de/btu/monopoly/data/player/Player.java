@@ -1,21 +1,51 @@
-package de.btu.monopoly.data;
+package de.btu.monopoly.data.player;
+
+import de.btu.monopoly.data.card.CardStack;
 
 /**
  * @author Maximilian Bels (belsmaxi@b-tu.de)
  */
 public class Player {
-
+    
+    /**
+     * Spieler-ID
+     */
+    private final int id;
+    
+    /**
+     * Bank-Instanz
+     */
+    private final Bank bank;
+    
+    /**
+     * Karten in Spielerhaenden
+     */
+    private final CardStack stack;
+    
+    /**
+     * Spielername
+     */
     private String name;
-    private int id;
-
+    
+    /**
+     * Position als ganzzahlige Feld-ID
+     */
     private int position;
-
-    private Bank bank;
-    private boolean isBankrupt;
-
+    
+    /**
+     * ob der Spieler im Gefaengnis ist
+     */
     private boolean isInJail;
+    
+    /**
+     * Anzahl Tage im Gefaengnis
+     */
     private int daysInJail;
-    private int jailCardAmount;
+    
+    /**
+     * ob der Spieler Pleite ist
+     */
+    private boolean isBankrupt;
 
     /**
      * Erstellt eine neue Spielerinstanz.
@@ -25,54 +55,51 @@ public class Player {
      * @param startMoney Kapital des Spielers
      */
     public Player(String name, int id, int startMoney) {
-        this.name = name;
         this.id = id;
         this.bank = new Bank(startMoney);
-
-        isInJail = false;
-        jailCardAmount = 0;
-        daysInJail = 0;
+        
+        this.name = name;
         position = 0;
+
+        stack = new CardStack();
+        
+        isInJail = false;
+        daysInJail = 0;
     }
 
     /**
-     * @return Name
+     * @return Spielername
      */
     public String getName() {
         return name;
     }
 
     /**
-     * @return ID
+     * @return Spieler-ID
      */
     public int getId() {
         return id;
     }
 
     /**
-     * @return Kapital
+     * @return Kapital des Spielers (kurz für {@code player.getBank().balance()})
      */
     public int getMoney() {
         return bank.balance();
     }
-
+    
+    /**
+     * @return Bank-Instanz des Spielers
+     */
     public Bank getBank() {
         return bank;
     }
 
     /**
-     *
      * @return ob der Spieler im Gefängnis ist
      */
     public boolean isInJail() {
         return isInJail;
-    }
-
-    /**
-     * @return Anzahl Gefaengnis-Frei-Karten
-     */
-    public int getJailCardAmount() {
-        return jailCardAmount;
     }
 
     /**
@@ -83,20 +110,6 @@ public class Player {
     }
 
     /**
-     * Erhöht die Anzahl der Gefaengnis-frei-Karten um 1.
-     */
-    public void addJailCard() {
-        this.jailCardAmount++;
-    }
-
-    /**
-     * Senkt die Anzahl der Gefaengnis-frei-Karten um 1.
-     */
-    public void removeJailCard() {
-        this.jailCardAmount--;
-    }
-
-    /**
      * @param days Tage im Gefaengnis
      */
     public void setDaysInJail(int days) {
@@ -104,37 +117,35 @@ public class Player {
     }
 
     /**
-     * Erhöht die Anzahl der Tage im Gefaengnis um 1.
+     * Erhöht die Anzahl der Tage im Gefaengnis um eins.
      */
     public void addDayInJail() {
         this.daysInJail++;
     }
 
     /**
-     * *
-     * @param pos neue Position
+     * @param pos neue Position (ganzzahlige Feld-ID)
      */
     public void setPosition(int pos) {
         this.position = pos;
     }
 
     /**
-     * @return Position
+     * @return Position des Spielers als ganzzahlige Feld-ID
      */
     public int getPosition() {
         return this.position;
     }
 
     /**
-     *
-     * @return ob Spieler ausgeschieden (Zuschauer) ist
+     * @return ob Spieler Pleite ist
      */
     public boolean isBankrupt() {
         return isBankrupt;
     }
 
     /**
-     * @param isBankrupt neuer Zuschauerstatus
+     * @param isBankrupt Bankstatus
      */
     public void setBankrupt(boolean isBankrupt) {
         this.isBankrupt = isBankrupt;
@@ -146,5 +157,11 @@ public class Player {
     public void setInJail(boolean inJail) {
         this.isInJail = inJail;
     }
-
+    
+    /**
+     * @return Karten in Spielerhand
+     */
+    public CardStack getCardStack() {
+        return stack;
+    }
 }

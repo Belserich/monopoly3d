@@ -1,10 +1,9 @@
 package de.btu.monopoly.data.parser;
 
-import de.btu.monopoly.data.CardStack;
-import de.btu.monopoly.data.GameBoard;
+import de.btu.monopoly.data.card.CardStack;
+import de.btu.monopoly.core.GameBoard;
 import de.btu.monopoly.data.field.*;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;

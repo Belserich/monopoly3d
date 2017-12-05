@@ -3,20 +3,23 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.btu.monopoly.core;
+package de.btu.monopoly.input;
 
-import static de.btu.monopoly.core.Game.LOGGER;
-import de.btu.monopoly.data.GameBoard;
-import de.btu.monopoly.data.Player;
+import de.btu.monopoly.core.GameBoard;
+import de.btu.monopoly.core.service.FieldService;
+import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.data.field.Field;
 import java.util.Scanner;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author Christian Prinz
  */
 public class InputHandler {
+    
+    private static final Logger LOGGER = Logger.getLogger(FieldService.class.getCanonicalName());
 
     /**
      * Nimmt Spielereingaben entgegen.
@@ -39,7 +42,7 @@ public class InputHandler {
             }
 
             if (output < 1 || output > max) {
-                LOGGER.log(Level.INFO, "Deine Eingabe liegt nicht im Wertebereich! Bitte erneut versuchen:");
+                LOGGER.log(Level.INFO, "Deine Eingabe liegt nicht im Wertebereich! Bitte erneut versuchen.");
             }
         } while (output < 1 || output > max);
 
