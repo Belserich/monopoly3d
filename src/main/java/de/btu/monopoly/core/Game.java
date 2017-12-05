@@ -20,17 +20,17 @@ import org.xml.sax.SAXException;
  */
 public class Game {
 
-    public static final Logger LOGGER = Logger.getLogger(Game.class.getCanonicalName());
+    private static final Logger LOGGER = Logger.getLogger(Game.class.getCanonicalName());
     
     /**
      * Spielbrett
      */
-    public GameBoard board;
+    private GameBoard board;
     
     /**
      * Spieler (Zuschauer und aktive Spieler)
      */
-    public final Player[] players;
+    private final Player[] players;
 
     /**
      * Die fachliche Komponente des Spiels als Einheit, bestehend aus einem Spielbrett, den Spielern sowie Zuschauern.
@@ -178,7 +178,7 @@ public class Game {
         return rollResult;
     }
 
-    private void fieldPhase(Player player, int[] rollResult) {
+    public void fieldPhase(Player player, int[] rollResult) {
         GameBoard.FieldType type = GameBoard.FIELD_STRUCTURE[player.getPosition()];
         switch (type) {
             case TAX: // Steuerfeld
@@ -311,5 +311,13 @@ public class Game {
     private void betPhase(PropertyField property) {
         Auction auc = new Auction(property, players);
         auc.startAuction();
+    }
+    
+    public GameBoard getBoard() {
+        return board;
+    }
+    
+    public Player[] getPlayers() {
+        return players;
     }
 }

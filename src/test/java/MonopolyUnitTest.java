@@ -1,9 +1,11 @@
 //Imports
 
 import de.btu.monopoly.core.*;
-import de.btu.monopoly.data.*;
+import de.btu.monopoly.core.service.FieldService;
+import de.btu.monopoly.core.service.PlayerService;
 import de.btu.monopoly.core.GameBoard;
 import de.btu.monopoly.data.field.*;
+import de.btu.monopoly.data.player.Player;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -13,7 +15,7 @@ import org.junit.Test;
  */
 public class MonopolyUnitTest {
 
-    private static Game gc;
+    private static Game game;
     private static GameBoard board;
     private static Player[] players;
     private static FieldManager fm;
@@ -22,14 +24,14 @@ public class MonopolyUnitTest {
     public void testGameBoard() {
 
         //initialisierung
-        gc = new Game(2);
-        gc.init();
-        board = gc.board;
-        players = gc.players;
-        fm = gc.getFieldManager();
-
+        game = new Game(2);
+        game.init();
+        board = game.getBoard();
+        players = game.getPlayers();
+        fm = board.getFieldManager();
+        
         //existiert das Gameboard
-        Assert.assertTrue("Gameboard nicht initialisiert", gc.board != null);
+        Assert.assertTrue("Gameboard nicht initialisiert", board != null);
 
         //existieren die Felder
         for (Field field : board.getFields()) {
@@ -46,11 +48,11 @@ public class MonopolyUnitTest {
     public void testRoll() {
 
         //initialisierung
-        gc = new Game(1);
-        gc.init();
-        board = gc.board;
-        players = gc.players;
-        fm = gc.getFieldManager();
+        game = new Game(1);
+        game.init();
+        board = game.getBoard();
+        players = game.getPlayers();
+        fm = board.getFieldManager();
         Player patrick = players[0];
 
         for (int j = 0; j < 1000; j++) {
@@ -65,11 +67,11 @@ public class MonopolyUnitTest {
     public void testGoField() {
 
         //initialisierung
-        gc = new Game(2);
-        gc.init();
-        board = gc.board;
-        players = gc.players;
-        fm = gc.getFieldManager();
+        game = new Game(2);
+        game.init();
+        board = game.getBoard();
+        players = game.getPlayers();
+        fm = board.getFieldManager();
         Player patrick = players[0];
         Player john = players[1];
 
@@ -81,8 +83,8 @@ public class MonopolyUnitTest {
         patrick.setPosition(0);
         john.setPosition(0);
         //Spieler bewegen
-        fm.movePlayer(patrick, 40, ((GoField) board.getFields()[0]).getAmount());
-        fm.movePlayer(patrick, 50, ((GoField) board.getFields()[0]).getAmount());
+        fm.movePlayer(patrick, 40);
+        fm.movePlayer(patrick, 50);
 
         System.out.println(john.getMoney());
         System.out.println(patrick.getMoney());
@@ -97,11 +99,11 @@ public class MonopolyUnitTest {
     public void testCornerField() {
 
         //initialisierung
-        gc = new Game(1);
-        gc.init();
-        board = gc.board;
-        players = gc.players;
-        fm = gc.getFieldManager();
+        game = new Game(1);
+        game.init();
+        board = game.getBoard();
+        players = game.getPlayers();
+        fm = board.getFieldManager();
         Player patrick = players[0];
         patrick.setInJail(false);
 
@@ -121,16 +123,16 @@ public class MonopolyUnitTest {
     public void testBuyStreet() {
 
         //initialisierung
-        gc = new Game(1);
-        gc.init();
-        board = gc.board;
-        players = gc.players;
-        fm = gc.getFieldManager();
+        game = new Game(1);
+        game.init();
+        board = game.getBoard();
+        players = game.getPlayers();
+        fm = board.getFieldManager();
         Player patrick = players[0];
-        Property street = (Property) gc.board.getFields()[1];
+        PropertyField street = (PropertyField) fm.getFields()[1];
 
         //Kauf der Strasse und testen
-        fm.buyProperty(patrick, street, street.getPrice());
+        FieldService.buyPropertyField(patrick, street, street.getPrice());
         Assert.assertTrue("Strasse nicht gekauft", street.getOwner() == patrick);
         Assert.assertTrue("Geld nicht abgezogen", patrick.getMoney() == 1500 - street.getPrice());
 
@@ -139,11 +141,11 @@ public class MonopolyUnitTest {
     @Test
     public void testBuyHouse() {
 
-        gc = new Game(1);
-        gc.init();
-        board = gc.board;
-        players = gc.players;
-        fm = gc.getFieldManager();
+        game = new Game(1);
+        game.init();
+        board = game.getBoard();
+        players = game.getPlayers();
+        fm = board.getFieldManager();
         Player player = players[0];
         StreetField street = (StreetField) board.getFields()[11];
         StreetField street2 = (StreetField) board.getFields()[13];
@@ -172,11 +174,11 @@ public class MonopolyUnitTest {
     @Test
     public void testSellHouse() {
 
-        gc = new Game(1);
-        gc.init();
-        board = gc.board;
-        players = gc.players;
-        fm = gc.getFieldManager();
+        game = new Game(1);
+        game.init();
+        board = game.getBoard();
+        players = game.getPlayers();
+        fm = board.getFieldManager();
         Player player = players[0];
         StreetField street = (StreetField) board.getFields()[11];
         StreetField street2 = (StreetField) board.getFields()[13];
@@ -203,11 +205,11 @@ public class MonopolyUnitTest {
     @Test
     public void testIsComplete() {
 
-        gc = new Game(1);
-        gc.init();
-        board = gc.board;
-        players = gc.players;
-        fm = gc.getFieldManager();
+        game = new Game(1);
+        game.init();
+        board = game.getBoard();
+        players = game.getPlayers();
+        fm = board.getFieldManager();
         Player player = players[0];
         StreetField street = (StreetField) board.getFields()[11];
         StreetField street2 = (StreetField) board.getFields()[13];
@@ -224,21 +226,21 @@ public class MonopolyUnitTest {
     @Test
     public void testTakeMortgage() {
 
-        gc = new Game(1);
-        gc.init();
-        board = gc.board;
-        players = gc.players;
-        fm = gc.getFieldManager();
+        game = new Game(1);
+        game.init();
+        board = game.getBoard();
+        players = game.getPlayers();
+        fm = board.getFieldManager();
         Player player = players[0];
-        StationField suedbahnhof = (StationField) gc.board.getFields()[5];
-        StationField nordbahnhof = (StationField) gc.board.getFields()[25];
+        StationField suedbahnhof = (StationField) fm.getFields()[5];
+        StationField nordbahnhof = (StationField) fm.getFields()[25];
 
-        StreetField theaterStrasse = (StreetField) gc.board.getFields()[21];
-        StreetField badStrasse = (StreetField) gc.board.getFields()[1];
-        StreetField turmStrasse = (StreetField) gc.board.getFields()[3];
+        StreetField theaterStrasse = (StreetField) fm.getFields()[21];
+        StreetField badStrasse = (StreetField) fm.getFields()[1];
+        StreetField turmStrasse = (StreetField) fm.getFields()[3];
 
-        SupplyField elWerk = (SupplyField) gc.board.getFields()[12];
-        SupplyField wasserWerk = (SupplyField) gc.board.getFields()[28];
+        SupplyField elWerk = (SupplyField) fm.getFields()[12];
+        SupplyField wasserWerk = (SupplyField) fm.getFields()[28];
 
         suedbahnhof.setOwner(player);
         nordbahnhof.setOwner(player);
@@ -290,15 +292,15 @@ public class MonopolyUnitTest {
     @Test
     public void testPayMortgage() {
 
-        gc = new Game(1);
-        gc.init();
-        board = gc.board;
-        players = gc.players;
-        fm = gc.getFieldManager();
+        game = new Game(1);
+        game.init();
+        board = game.getBoard();
+        players = game.getPlayers();
+        fm = board.getFieldManager();
         Player player = players[0];
-        Property suedbahnhof = (Property) gc.board.getFields()[5];
-        Property nordbahnhof = (Property) gc.board.getFields()[25];
-        StreetField badStrasse = (StreetField) gc.board.getFields()[1];
+        PropertyField suedbahnhof = (PropertyField) fm.getFields()[5];
+        PropertyField nordbahnhof = (PropertyField) fm.getFields()[25];
+        StreetField badStrasse = (StreetField) fm.getFields()[1];
 
         suedbahnhof.setOwner(player);
         nordbahnhof.setOwner(player);
@@ -306,8 +308,7 @@ public class MonopolyUnitTest {
 
         suedbahnhof.setMortgageTaken(true);
         //getRent()
-        PlayerService pc = new PlayerService();
-        pc.takeMoney(player, 1400);
+        PlayerService.takeMoney(player, 1400);
 
         fm.payMortgage(suedbahnhof);
         Assert.assertEquals(true, suedbahnhof.isMortgageTaken());
@@ -324,22 +325,22 @@ public class MonopolyUnitTest {
     @Test
     public void testTaxField() {
         System.out.println("TaxField");
-        gc = new Game(1);
-        gc.init();
-        board = gc.board;
-        players = gc.players;
-        fm = gc.getFieldManager();
+        game = new Game(1);
+        game.init();
+        board = game.getBoard();
+        players = game.getPlayers();
+        fm = board.getFieldManager();
         Player player = players[0];
-        TaxField einSteuer = (TaxField) gc.board.getFields()[4];
-        TaxField zusatzSteuer = (TaxField) gc.board.getFields()[38];
+        TaxField einSteuer = (TaxField) fm.getFields()[4];
+        TaxField zusatzSteuer = (TaxField) fm.getFields()[38];
 
         int expMoney1 = player.getMoney() - einSteuer.getTax();
-//        gc.processPlayerOnTaxField(player, einSteuer);
+//        game.processPlayerOnTaxField(player, einSteuer);
         player.setPosition(4);
         Assert.assertEquals(expMoney1, player.getMoney());
 
         int expMoney2 = player.getMoney() - zusatzSteuer.getTax();
-//        gc.processPlayerOnTaxField(player, zusatzSteuer);
+//        game.processPlayerOnTaxField(player, zusatzSteuer);
         player.setPosition(38);
         Assert.assertEquals(expMoney2, player.getMoney());
     }
@@ -348,15 +349,15 @@ public class MonopolyUnitTest {
     public void testBankrupt() {
 
         //initialisierung
-        gc = new Game(1);
-        gc.init();
-        board = gc.board;
-        players = gc.players;
-        fm = gc.getFieldManager();
+        game = new Game(1);
+        game.init();
+        board = game.getBoard();
+        players = game.getPlayers();
+        fm = board.getFieldManager();
         Player patrick = players[0];
-        StationField suedbahnhof = (StationField) gc.board.getFields()[5];
-        StationField nordbahnhof = (StationField) gc.board.getFields()[25];
-        StreetField badStrasse = (StreetField) gc.board.getFields()[1];
+        StationField suedbahnhof = (StationField) fm.getFields()[5];
+        StationField nordbahnhof = (StationField) fm.getFields()[25];
+        StreetField badStrasse = (StreetField) fm.getFields()[1];
 
         suedbahnhof.setOwner(patrick);
         nordbahnhof.setOwner(patrick);
@@ -365,13 +366,13 @@ public class MonopolyUnitTest {
         nordbahnhof.setMortgageTaken(true);
 
         //bankrupt und testen
-        PlayerService.bankrupt(patrick, board, players);
+        PlayerService.bankrupt(patrick, board);
 
-        Assert.assertTrue("Property noch im Besitz", suedbahnhof.getOwner() != patrick);
-        Assert.assertTrue("Property noch im Besitz", nordbahnhof.getOwner() != patrick);
-        Assert.assertTrue("Property noch im Besitz", badStrasse.getOwner() != patrick);
-        Assert.assertTrue("Property hat noch Hypothek", nordbahnhof.isMortgageTaken() == false);
-        Assert.assertTrue("Property hat noch Haueser", badStrasse.getHouseCount() == 0);
+        Assert.assertTrue("PropertyField noch im Besitz", suedbahnhof.getOwner() != patrick);
+        Assert.assertTrue("PropertyField noch im Besitz", nordbahnhof.getOwner() != patrick);
+        Assert.assertTrue("PropertyField noch im Besitz", badStrasse.getOwner() != patrick);
+        Assert.assertTrue("PropertyField hat noch Hypothek", nordbahnhof.isMortgageTaken() == false);
+        Assert.assertTrue("PropertyField hat noch Haueser", badStrasse.getHouseCount() == 0);
         Assert.assertTrue("Spieler ist kein Spectator", patrick.isBankrupt() == true);
     }
 
@@ -379,20 +380,20 @@ public class MonopolyUnitTest {
     public void testPayRent() {
 
         //initialisierung
-        gc = new Game(2);
-        gc.init();
-        board = gc.board;
-        players = gc.players;
-        fm = gc.getFieldManager();
+        game = new Game(2);
+        game.init();
+        board = game.getBoard();
+        players = game.getPlayers();
+        fm = board.getFieldManager();
         Player patrick = players[0];
         Player chris = players[1];
-        StreetField badStrasse = (StreetField) gc.board.getFields()[1];
-        StreetField turmStrasse = (StreetField) gc.board.getFields()[3];
-        SupplyField wasserWerk = (SupplyField) gc.board.getFields()[28];
-        StationField suedbahnhof = (StationField) gc.board.getFields()[5];
-        StationField westbahnhof = (StationField) gc.board.getFields()[15];
-        StationField nordbahnhof = (StationField) gc.board.getFields()[25];
-        StationField hauptbahnhof = (StationField) gc.board.getFields()[35];
+        StreetField badStrasse = (StreetField) fm.getFields()[1];
+        StreetField turmStrasse = (StreetField) fm.getFields()[3];
+        SupplyField wasserWerk = (SupplyField) fm.getFields()[28];
+        StationField suedbahnhof = (StationField) fm.getFields()[5];
+        StationField westbahnhof = (StationField) fm.getFields()[15];
+        StationField nordbahnhof = (StationField) fm.getFields()[25];
+        StationField hauptbahnhof = (StationField) fm.getFields()[35];
 
         PlayerService.giveMoney(patrick, 1000);
         PlayerService.giveMoney(chris, 1000);
@@ -452,17 +453,18 @@ public class MonopolyUnitTest {
     public void testGoToJail() {
 
         //initialisierung
-        gc = new Game(1);
-        gc.init();
-        board = gc.board;
-        players = gc.players;
-        fm = gc.getFieldManager();
+        game = new Game(1);
+        game.init();
+        board = game.getBoard();
+        players = game.getPlayers();
+        fm = board.getFieldManager();
         Player patrick = players[0];
         patrick.setPosition(39);
         int[] rollResult = {14, 16};
 
         //GoToJailField und test
-        gc.fieldPhase(patrick, rollResult);
+        game.fieldPhase(patrick, rollResult);
+        // TODO (von Maxi) Patrick, könntest du es irgendwie so umprogrammieren, dass du hier den Aufruf auf die Feldphase nicht machen musst?
 
         Assert.assertTrue("Spieler nicht im Gefaengnis", patrick.isInJail() == true);
         Assert.assertTrue("Tage im Gefaengnis sind nicht 0", patrick.getDaysInJail() == 0);
