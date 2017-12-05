@@ -1,9 +1,9 @@
 package de.btu.monopoly.data.card;
 
-import de.btu.monopoly.core.FieldManager;
-import de.btu.monopoly.core.FieldService;
+import de.btu.monopoly.data.field.FieldManager;
+import de.btu.monopoly.core.service.FieldService;
 import de.btu.monopoly.core.GameBoard;
-import de.btu.monopoly.core.PlayerService;
+import de.btu.monopoly.core.service.PlayerService;
 import de.btu.monopoly.data.Player;
 import de.btu.monopoly.data.field.CardField;
 import de.btu.monopoly.data.field.Field;

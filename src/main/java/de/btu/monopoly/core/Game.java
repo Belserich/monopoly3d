@@ -1,5 +1,7 @@
 package de.btu.monopoly.core;
 
+import de.btu.monopoly.core.service.FieldService;
+import de.btu.monopoly.core.service.PlayerService;
 import de.btu.monopoly.data.*;
 import de.btu.monopoly.data.card.CardStack;
 import de.btu.monopoly.data.field.*;

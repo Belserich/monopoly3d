@@ -1,6 +1,7 @@
-package de.btu.monopoly.core;
+package de.btu.monopoly.core.service;
 
 import com.sun.istack.internal.Nullable;
+import de.btu.monopoly.core.service.PlayerService;
 import de.btu.monopoly.data.Player;
 import de.btu.monopoly.data.field.Property;
 import de.btu.monopoly.data.field.SupplyField;

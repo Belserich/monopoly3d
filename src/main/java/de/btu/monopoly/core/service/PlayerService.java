@@ -1,5 +1,6 @@
-package de.btu.monopoly.core;
+package de.btu.monopoly.core.service;
 
+import de.btu.monopoly.core.GameBoard;
 import de.btu.monopoly.data.Bank;
 import de.btu.monopoly.data.Player;
 
@@ -18,12 +19,17 @@ public class PlayerService {
      *
      * @param player Spieler
      */
-    static void toJail(Player player) {
+    public static void toJail(Player player) {
         player.setInJail(true);
         player.setDaysInJail(0);
         LOGGER.info(String.format("%s ist jetzt im Gefaengnis.", player.getName()));
     }
-
+    
+    /**
+     * Befreit den Spieler aus dem Gefaengnis.
+     *
+     * @param player Spieler
+     */
     public static void freeFromJail(Player player) {
         player.setInJail(false);
         player.setDaysInJail(-1);
@@ -37,7 +43,7 @@ public class PlayerService {
      * @param amount Anzahl der zu laufenden Felder
      * @return Die neue Position des Spielers auf dem Feld( und darueber hinaus).
      */
-    static int movePlayer(Player player, int amount) {
+    public static int movePlayer(Player player, int amount) {
         int pos = player.getPosition();
         pos += amount;
         player.setPosition(pos);
@@ -64,7 +70,14 @@ public class PlayerService {
             return false;
         }
     }
-
+    
+    /**
+     * Versucht, dem Spielerkonto Geld abzubuchen. Bricht ab, wenn der Spieler nicht genug Geld besitzt.
+     *
+     * @param player Spieler
+     * @param amount Summe
+     * @return ob die Buchung erfolgreich war
+     */
     public static boolean takeMoney(Player player, int amount) {
         if (checkLiquidity(player, amount)) {
             takeMoneyUnchecked(player, amount);
@@ -88,6 +101,13 @@ public class PlayerService {
         }
     }
     
+    /**
+     * Nimmt einem Spieler Geld und gibt es einem anderen.
+     *
+     * @param from Spieler (zu zahlen)
+     * @param to Spieler (bekommt)
+     * @param amount Summe
+     */
     public static void takeAndGiveMoneyUnchecked(Player from, Player to, int amount) {
         takeMoneyUnchecked(from, amount);
         giveMoney(to, amount);
