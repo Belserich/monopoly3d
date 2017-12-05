@@ -27,13 +27,25 @@ public class Game {
     }
 
     /**
-     * Die zentrale Manager-Klasse für alles was das Spiel betrifft.
+     * Konstruktor fuer lokales Spiel
      *
      * @param playerCount Anzahl Spieler
      *
      */
     public Game(int playerCount) {
         this.players = new Player[playerCount];
+        for (int i = 0; i < players.length; i++) {
+            players[i] = new Player("Mathias " + (i + 1), i, 1500);
+        }
+    }
+
+    /**
+     * Konstruktor für Netzwerkspiel
+     *
+     * @param players Player[] welches vom Server initialisiert wird
+     */
+    public Game(Player[] players) {
+        this.players = players;
     }
 
     public void init() {
@@ -53,9 +65,6 @@ public class Game {
 
         fieldManager = new FieldManager(board.getFields());
 
-        for (int i = 0; i < players.length; i++) {
-            players[i] = new Player("Mathias " + (i + 1), i, 1500);
-        }
     }
 
     public void start() {
