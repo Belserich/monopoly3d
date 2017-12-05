@@ -1,7 +1,5 @@
 package de.btu.monopoly.data.field;
 
-import static de.btu.monopoly.core.Game.LOGGER;
-
 import com.sun.istack.internal.NotNull;
 import de.btu.monopoly.core.GameBoard;
 import de.btu.monopoly.core.service.FieldService;
