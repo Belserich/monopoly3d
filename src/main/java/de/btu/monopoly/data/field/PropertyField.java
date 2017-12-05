@@ -35,11 +35,6 @@ public abstract class PropertyField extends Field {
     private boolean mortgageTaken;
 
     /**
-     * Liste der Nachbarn des Feldes (Straßenzug)
-     */
-    List<PropertyField> neighbours = new ArrayList<>();
-
-    /**
      * Die abstrakte Oberklasse aller Felder, die kaufbar und mit Mietspreisen belegt sind. Man soll diese Felder außerdem mit
      * einer Hypothek belasten können und diese auch für {@code (Hypothekswert + 10% des Kaufpreises)} Einheiten der gewählten
      * Währung zurückzahlen können.
@@ -103,28 +98,6 @@ public abstract class PropertyField extends Field {
     public void setMortgageTaken(boolean mortgageTaken) {
         this.mortgageTaken = mortgageTaken;
     }
-
-    /**
-     * Gibt die Miete des Grundstuecks zurueck. Im Falle eines Werkes entspricht die Miete dem Multiplikator fuer die Augenzahl.
-     */
-    public int getRent() {
-        return 0;
-    }
-
-    /**
-     * Fuegt dem Grundstueck ein Nachbargrundstueck hinzu.
-     *
-     * @param neighbour neuer Nachbar
-     */
-    public void addNeighbour(PropertyField neighbour) {
-        this.getNeighbours().add(neighbour);
-    }
-
-    /**
-     * @return Liste der Nachbarn
-     */
-    public List<PropertyField> getNeighbours() {
-        return neighbours;
-    }
-
+    
+    public int getRent() { return 0; }
 }

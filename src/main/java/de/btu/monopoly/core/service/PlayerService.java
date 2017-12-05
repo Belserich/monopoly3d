@@ -81,9 +81,9 @@ public class PlayerService {
     public static boolean takeMoney(Player player, int amount) {
         if (checkLiquidity(player, amount)) {
             takeMoneyUnchecked(player, amount);
-            return false;
+            return true;
         }
-        return true;
+        return false;
     }
 
     /**
@@ -95,7 +95,7 @@ public class PlayerService {
     public static void takeMoneyUnchecked(Player player, int amount) {
         Bank bank = player.getBank();
         bank.withdraw(amount);
-        LOGGER.info(String.format("%s (+%d)", bank.toString(), amount));
+        LOGGER.info(bank.toString() + " (" + (amount >= 0 ? "-" : "+") + Math.abs(amount) + ")");
         if (!bank.isLiquid()) {
             LOGGER.info(String.format("%s hat sich verschuldet!", player.getName()));
         }
@@ -122,7 +122,7 @@ public class PlayerService {
     public static void giveMoney(Player player, int amount) {
         Bank bank = player.getBank();
         bank.deposit(amount);
-        LOGGER.info(String.format("%s (-%d)", bank.toString(), amount));
+        LOGGER.info(bank.toString() + " (" + (amount >= 0 ? "+" : "-") + Math.abs(amount) + ")");
     }
 
     /**

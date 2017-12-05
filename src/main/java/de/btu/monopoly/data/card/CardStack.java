@@ -6,7 +6,6 @@
 package de.btu.monopoly.data.card;
 
 import com.sun.istack.internal.NotNull;
-import de.btu.monopoly.data.parser.CardAction;
 
 import java.util.*;
 
@@ -46,7 +45,7 @@ public class CardStack {
     /**
      * Gibt die nächste Karte vom Stapel zurück und legt sie wieder ans "Ende".
      */
-    Card nextCard() {
+    public Card nextCard() {
         Card retObj = stack.remove();
         stack.add(retObj);
         return retObj;

@@ -1,10 +1,8 @@
 package de.btu.monopoly.core.service;
 
 import com.sun.istack.internal.Nullable;
-import de.btu.monopoly.data.field.PropertyField;
+import de.btu.monopoly.data.field.*;
 import de.btu.monopoly.data.player.Player;
-import de.btu.monopoly.data.field.SupplyField;
-import de.btu.monopoly.data.field.TaxField;
 
 import java.util.logging.Logger;
 
@@ -51,6 +49,7 @@ public class FieldService {
      * @return true, wenn das Feld gekauft wurde, false sonst
      */
     public static boolean buyPropertyField(Player player, PropertyField prop, int price) {
+        LOGGER.info(String.format("%s versucht das Grundstück %s zu kaufen.", player.getName(), prop.getName()));
         if (PlayerService.takeMoney(player, price)) {
             LOGGER.info(String.format("%s kauft das Grundstück %s", player.getName(), prop.getName()));
             prop.setOwner(player);
@@ -59,6 +58,10 @@ public class FieldService {
             LOGGER.warning(String.format("%s hat nicht genug Geld, um %s zu kaufen!", player.getName(), prop.getName()));
             return false;
         }
+    }
+    
+    public static boolean buyPropertyField(Player player, PropertyField prop) {
+        return buyPropertyField(player, prop, prop.getPrice());
     }
     
     /**

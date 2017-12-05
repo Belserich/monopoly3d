@@ -1,5 +1,7 @@
 package de.btu.monopoly.data.field;
 
+import de.btu.monopoly.core.service.FieldService;
+
 /**
  * @author Maximilian Bels (belsmaxi@b-tu.de)
  */
@@ -62,16 +64,12 @@ public class StreetField extends PropertyField {
      * @return Miete der Strasse
      */
     public int getRent() {
-        if (!isMortgageTaken()) {
-            if (complete()) {
-                if (houseCount == 0) {
-                    return rents[houseCount] * 2;
-                } else {
-                    return rents[houseCount];
-                }
-            } else {
-                return rents[0];
+        System.out.println(houseCount);
+        if (!isMortgageTaken() && getOwner() != null) {
+            if (fieldManager.isComplete(this) && houseCount == 0) {
+                   return rents[0] * 2;
             }
+            else return rents[houseCount];
         }
         return 0;
     }
@@ -90,20 +88,8 @@ public class StreetField extends PropertyField {
         return houseCount;
     }
 
-    public void setHouseCount(int count) {
-        houseCount = count;
-    }
-
-    /**
-     * @return Gibt an, ob alle Straßen des zugehörigen Straßenzugs im Besitz desselben Spielers sind.
-     */
-    public boolean complete() {
-        for (PropertyField nei : super.getNeighbours()) {
-            if (nei.getOwner() != super.getOwner() || nei.getOwner() == null) {
-                return false;
-            }
-        }
-        return true;
+    protected void setHouseCount(int houseCount) {
+        this.houseCount = houseCount;
     }
 
     @Override

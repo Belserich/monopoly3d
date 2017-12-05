@@ -1,5 +1,6 @@
 package de.btu.monopoly.data.field;
 
+import de.btu.monopoly.data.card.Card;
 import de.btu.monopoly.data.card.CardStack;
 
 /**
@@ -18,8 +19,8 @@ public class CardField extends Field {
         cards.shuffle();
     }
     
-    public CardStack getCardStack() {
-        return cards;
+    public Card nextCard() {
+        return cards.nextCard();
     }
     
     @Override

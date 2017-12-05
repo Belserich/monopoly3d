@@ -1,4 +1,4 @@
-package de.btu.monopoly.data.parser;
+package de.btu.monopoly.data.card;
 
 /**
  * @author Maximilian Bels (belsmaxi@b-tu.de)
@@ -28,7 +28,7 @@ public enum CardAction {
     }
     
     public void ensureArgs(int[] args) {
-        if (args.length != argAmount) {
+        if (args.length < argAmount) {
             throw new IllegalArgumentException(String.format("Given amount of arguments (%d) does not match expected amount (%d)!",
                     args.length, argAmount));
         }

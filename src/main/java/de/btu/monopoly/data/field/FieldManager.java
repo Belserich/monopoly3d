@@ -6,9 +6,12 @@ import de.btu.monopoly.core.service.FieldService;
 import de.btu.monopoly.core.service.PlayerService;
 import de.btu.monopoly.data.player.Player;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 
 /**
  *
@@ -35,6 +38,7 @@ public class FieldManager {
      */
     public FieldManager(Field[] fields) {
         this.fields = fields;
+        Arrays.asList(fields).forEach(f -> f.fieldManager = this);
         houseCounters = new HashMap<>();
     }
     
@@ -82,7 +86,7 @@ public class FieldManager {
     @NotNull
     public Field movePlayer(Player player, int amount) {
         int pos = PlayerService.movePlayer(player, amount);
-        if (pos > fields.length) {
+        if (pos >= fields.length) {
             pos %= fields.length;
             player.setPosition(pos);
             PlayerService.giveMoney(player, getGoField().getAmount());
@@ -114,13 +118,18 @@ public class FieldManager {
      */
     public boolean buyHouse(StreetField street) {
         Player player = street.getOwner();
-
+    
         LOGGER.info(String.format("%s versucht, ein Haus auf %s zu kaufen.", player.getName(), street.getName()));
         if (balanceCheck(street, 1, 0)
                 && PlayerService.checkLiquidity(player, street.getHousePrice())) {
             if (street.getHouseCount() < 5) {
-                buyHouseUnchecked(street);
-                return true;
+                if (!street.isMortgageTaken()) {
+                    buyHouseUnchecked(street);
+                    return true;
+                }
+                else {
+                    LOGGER.warning(String.format("Auf %s lastet eine Hypothek, es kann kein Haus gekauft werden!", street.getName()));
+                }
             } else {
                 LOGGER.warning(String.format("Auf %s steht bereits die maximale Anzahl an Haeusern.", street.getName()));
             }
@@ -135,12 +144,15 @@ public class FieldManager {
      */
     private void buyHouseUnchecked(StreetField street) {
         Player player = street.getOwner();
+    
+        LOGGER.info(String.format("%s kauft ein Haus auf %s.", player.getName(), street.getName()));
         PlayerService.takeMoneyUnchecked(player, street.getHousePrice());
         
         int newNumHouses = street.getHouseCount() + 1;
         street.setHouseCount(newNumHouses);
         
-        Integer[] houseCounter = houseCounters.getOrDefault(player, new Integer[2]);
+        Integer[] defaultArray = new Integer[]{ new Integer(0), new Integer(0) };
+        Integer[] houseCounter = houseCounters.getOrDefault(player, defaultArray);
         houseCounter[0] += (newNumHouses == 5) ? -5 : 1;
         houseCounter[1] += (newNumHouses == 5) ? 1 : 0;
         houseCounters.put(player, houseCounter);
@@ -173,7 +185,9 @@ public class FieldManager {
      */
     private void sellHouseUnchecked(StreetField street) {
         Player player = street.getOwner();
-        PlayerService.giveMoney(player, street.getHousePrice());
+        
+        LOGGER.info(String.format("%s verkauft ein Haus auf %s.", player.getName(), street.getName()));
+        PlayerService.giveMoney(player, street.getHousePrice() / 2);
         
         int newNumHouses = street.getHouseCount() - 1;
         street.setHouseCount(newNumHouses);
@@ -192,7 +206,7 @@ public class FieldManager {
      * @param negTolerance untere Toleranzgrenze
      * @return ob die Straße innerhalb der Toleranzgrenzen gleichmäßig bebaut wurde
      */
-    private boolean balanceCheck(StreetField street, int posTolerance, int negTolerance) {
+    public boolean balanceCheck(StreetField street, int posTolerance, int negTolerance) {
         int hc = street.getHouseCount();
         int[] neighbours = FieldService.NEIGHBOUR_IDS[getPropertyId(street)];
         for (Integer neigh : neighbours) {
@@ -215,8 +229,9 @@ public class FieldManager {
     public boolean isComplete(PropertyField prop) {
         Player owner = prop.getOwner();
         int[] neighbourIds = FieldService.NEIGHBOUR_IDS[getPropertyId(prop)];
-        for (Integer neigh : neighbourIds) {
-            if (((PropertyField) fields[neigh]).getOwner() != owner) {
+        for (Integer neighId : neighbourIds) {
+            PropertyField neigh = (PropertyField) fields[neighId];
+            if (neigh.getOwner() != owner && !neigh.isMortgageTaken()) {
                 return false;
             }
         }
@@ -243,6 +258,25 @@ public class FieldManager {
             throw new IllegalArgumentException("Given property is not a field of the current board.");
         }
         return propertyId;
+    }
+    
+    public Stream<PropertyField> getOwnedNeighbours(PropertyField prop) {
+        Player owner = prop.getOwner();
+        Objects.requireNonNull(owner);
+        
+        Stream.Builder<PropertyField> builder = Stream.builder();
+        int id = getPropertyId(prop);
+        
+        int[] neighbourIds = FieldService.NEIGHBOUR_IDS[id];
+        for (Integer neighId : neighbourIds) {
+            if (neighId != id) {
+                PropertyField neigh = (PropertyField) fields[neighId];
+                if (neigh.getOwner() == owner) {
+                    builder.accept(neigh);
+                }
+            }
+        }
+        return builder.build();
     }
     
     /**
@@ -278,18 +312,23 @@ public class FieldManager {
     public void takeMortgage(PropertyField prop) {
         Player player = prop.getOwner();
 
+        // TODO
         LOGGER.info(String.format("%s versucht eine Hypothek fuer %s aufzunehmen.", player.getName(), prop.getName()));
         if (prop instanceof StreetField) {
             StreetField street = (StreetField) prop;
             if (street.getHouseCount() != 0) {
                 LOGGER.warning(String.format("Auf %s stehen Haeuser! Hypothek kann nicht aufgenommen werden.", street.getName()));
-            } else if (!balanceCheck(street, 0, 0)) // Hier gilt houseCount = 0
+            }
+            else if (!balanceCheck(street, 0, 0)) // Hier gilt houseCount = 0
             {
                 LOGGER.warning(String.format("Auf dem Straßenzug von %s stehen Haeuser! Hypothek kann nicht aufgenommen werden.",
                         street.getName()));
             }
+            else if (street.isMortgageTaken()) {
+                LOGGER.warning("Es wurde bereits eine Hypothek für dieses gebäude aufgenommen!");
+            }
+            else takeMortgageUnchecked(prop);
         }
-        takeMortgageUnchecked(prop);
     }
     
     /**
@@ -312,7 +351,7 @@ public class FieldManager {
     public void payMortgage(PropertyField prop) {
         Player player = prop.getOwner();
         
-        LOGGER.info(String.format("%s versucht, eine Hypthek auf %s abzuzahlen", player.getName(), prop.getName()));
+        LOGGER.info(String.format("%s versucht, eine Hypothek auf %s abzuzahlen.", player.getName(), prop.getName()));
         if (prop.isMortgageTaken()) {
             if (PlayerService.checkLiquidity(player, prop.getMortgageBack())) {
                 payMortgageUnchecked(prop);

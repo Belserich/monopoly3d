@@ -42,7 +42,7 @@ public class InputHandler {
             }
 
             if (output < 1 || output > max) {
-                LOGGER.log(Level.INFO, "Deine Eingabe liegt nicht im Wertebereich! Bitte erneut versuchen:");
+                LOGGER.log(Level.INFO, "Deine Eingabe liegt nicht im Wertebereich! Bitte erneut versuchen.");
             }
         } while (output < 1 || output > max);
 

@@ -1,7 +1,5 @@
 package de.btu.monopoly.data.card;
 
-import de.btu.monopoly.data.parser.CardAction;
-
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;

@@ -1,5 +1,8 @@
 package de.btu.monopoly.data.field;
 
+import de.btu.monopoly.core.service.FieldService;
+import de.btu.monopoly.data.player.Player;
+
 /**
  * @author Maximilian Bels (belsmaxi@b-tu.de)
  */
@@ -27,28 +30,17 @@ public class SupplyField extends PropertyField {
      */
     @Override
     public int getRent() {
-        if (isMortgageTaken()) {
-            return 0;
-        }
-        if (complete()) {
-            return mult2;
-        } else {
-            return mult1;
-        }
-    }
-
-    /**
-     * Prüft, ob alle zugehörigen Werke im Besitz desselben Spielers sind.
-     *
-     * @return true, wenn alle Werke im Besitz des Spielers sind, sonst false.
-     */
-    public boolean complete() {
-        for (PropertyField nei : super.getNeighbours()) {
-            if (!(nei.getOwner() == (super.getOwner()))) {
-                return false;
+        Player owner = getOwner();
+        if (!isMortgageTaken() && owner != null) {
+            int validNeighbourCount = (int) fieldManager.getOwnedNeighbours(this)
+                    .filter(p -> !p.isMortgageTaken())
+                    .count();
+            if (validNeighbourCount == 0) {
+                return mult1;
             }
+            else return mult2;
         }
-        return true;
+        else return 0;
     }
 
     @Override
