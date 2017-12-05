@@ -8,8 +8,6 @@ import de.btu.monopoly.data.field.TaxField;
 
 import java.util.logging.Logger;
 
-import static de.btu.monopoly.core.Game.LOGGER;
-
 /**
  * @author Maximilian Bels (belsmaxi@b-tu.de)
  */

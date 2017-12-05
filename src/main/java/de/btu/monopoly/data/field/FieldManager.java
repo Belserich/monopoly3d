@@ -10,12 +10,15 @@ import de.btu.monopoly.data.player.Player;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
 /**
  *
  * @author Christian Prinz
  */
 public class FieldManager {
+    
+    private static final Logger LOGGER = Logger.getLogger(FieldService.class.getCanonicalName());
 
     /**
      * Die Felder des Spielbretts
