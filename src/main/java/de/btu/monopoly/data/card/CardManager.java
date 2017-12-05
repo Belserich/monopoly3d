@@ -1,14 +1,14 @@
-package de.btu.monopoly.core;
+package de.btu.monopoly.data.card;
 
-import de.btu.monopoly.data.Card;
-import de.btu.monopoly.data.CardStack;
+import de.btu.monopoly.core.FieldManager;
+import de.btu.monopoly.core.FieldService;
+import de.btu.monopoly.core.GameBoard;
+import de.btu.monopoly.core.PlayerService;
 import de.btu.monopoly.data.Player;
 import de.btu.monopoly.data.field.CardField;
 import de.btu.monopoly.data.field.Field;
 import de.btu.monopoly.data.field.Property;
 import de.btu.monopoly.data.parser.CardAction;
-
-import java.util.List;
 
 /**
  * @author Maximilian Bels (belsmaxi@b-tu.de)
@@ -25,7 +25,7 @@ public class CardManager {
         Field field = board.getFields()[player.getPosition()];
         
         if (!(field instanceof CardField)) {
-            throw new IllegalArgumentException(String.format("%s is not standing on a card field!"));
+            throw new IllegalArgumentException(String.format("%s is not standing on a card field!", player.getName()));
         }
     
         CardStack stack = ((CardField) field).getCardStack();

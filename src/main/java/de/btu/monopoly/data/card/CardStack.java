@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.btu.monopoly.data;
+package de.btu.monopoly.data.card;
 
 import com.sun.istack.internal.NotNull;
 import de.btu.monopoly.data.parser.CardAction;
@@ -33,7 +33,7 @@ public class CardStack {
      */
     public CardStack(Card[] cards) {
         this();
-        stack.addAll(Arrays.asList(cards));
+        Arrays.asList(cards).forEach(this::addCard);
     }
 
     /**
@@ -46,7 +46,7 @@ public class CardStack {
     /**
      * Gibt die nächste Karte vom Stapel zurück und legt sie wieder ans "Ende".
      */
-    public Card nextCard() {
+    Card nextCard() {
         Card retObj = stack.remove();
         stack.add(retObj);
         return retObj;
@@ -60,7 +60,7 @@ public class CardStack {
      * @return nächste Karte vom angegebenen Typ
      */
     @NotNull
-    public Card nextCard(CardAction action) {
+    private Card nextCard(CardAction action) {
         for (Card c : stack) {
             if (c.getActions().contains(action)) {
                 return c;
@@ -74,7 +74,7 @@ public class CardStack {
      *
      * @param card Karte
      */
-    public void addCard(Card card) {
+    void addCard(Card card) {
         card.setCardStack(this);
         stack.add(card);
     }
@@ -83,17 +83,14 @@ public class CardStack {
      * Entfernt eine Karte aus dem Stapel.
      *
      * @param card Karte
-     * @return ob die Karte im Stapel enthalten war
      */
-    public boolean removeCard(Card card) {
+    void removeCard(Card card) {
         // Geht den Stapel von hinten durch da die gesuchte Karte meist die Letzte ist.
         for (int i = stack.size() - 1; i >= 0; i--) {
             if (stack.get(i) == card) {
                 stack.remove(i);
-                return true;
             }
         }
-        return false;
     }
     
     /**
@@ -103,7 +100,7 @@ public class CardStack {
      * @return nächste Karte eines bestimmten Aktionstyps
      */
     @NotNull
-    public Card removeCardOfAction(CardAction action) {
+    Card removeCardOfAction(CardAction action) {
         Card retObj = nextCard(action);
         stack.remove(retObj);
         return retObj;
@@ -115,7 +112,7 @@ public class CardStack {
      * @param action Action
      * @return Anzahl Karten des festgelegten Typs
      */
-    public int countCardsOfAction(CardAction action) {
+    int countCardsOfAction(CardAction action) {
         int counter = 0;
         for (Card c : stack) {
             counter += c.getActions().contains(action) ? 1 : 0;
@@ -123,7 +120,10 @@ public class CardStack {
         return counter;
     }
     
-    public void removeAll() {
+    /**
+     * Entfernt alle Karten aus dem Stapel.
+     */
+    void removeAll() {
         stack.clear();
     }
     

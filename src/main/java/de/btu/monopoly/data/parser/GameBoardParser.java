@@ -1,6 +1,6 @@
 package de.btu.monopoly.data.parser;
 
-import de.btu.monopoly.data.CardStack;
+import de.btu.monopoly.data.card.CardStack;
 import de.btu.monopoly.core.GameBoard;
 import de.btu.monopoly.data.field.*;
 import java.io.IOException;

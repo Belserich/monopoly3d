@@ -1,5 +1,7 @@
 package de.btu.monopoly.data;
 
+import de.btu.monopoly.data.card.CardStack;
+
 /**
  * @author Maximilian Bels (belsmaxi@b-tu.de)
  */

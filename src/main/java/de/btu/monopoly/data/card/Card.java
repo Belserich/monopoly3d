@@ -1,4 +1,4 @@
-package de.btu.monopoly.data;
+package de.btu.monopoly.data.card;
 
 import de.btu.monopoly.data.parser.CardAction;
 
@@ -70,7 +70,7 @@ public class Card {
     /**
      * @return Typen der Karte
      */
-    public List<CardAction> getActions() {
+    List<CardAction> getActions() {
         return actions;
     }
 
@@ -86,14 +86,14 @@ public class Card {
      *
      * @param stack Kartenstapel
      */
-    public void setCardStack(CardStack stack) {
+    void setCardStack(CardStack stack) {
         this.stack = stack;
     }
     
     /**
      * @return der zugehörige Kartenstapel
      */
-    public CardStack getCardStack() {
+    CardStack getCardStack() {
         return stack;
     }
     

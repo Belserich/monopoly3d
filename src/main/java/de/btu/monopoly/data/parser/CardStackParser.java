@@ -1,7 +1,7 @@
 package de.btu.monopoly.data.parser;
 
-import de.btu.monopoly.data.Card;
-import de.btu.monopoly.data.CardStack;
+import de.btu.monopoly.data.card.Card;
+import de.btu.monopoly.data.card.CardStack;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Logger;

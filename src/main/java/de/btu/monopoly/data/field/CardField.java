@@ -1,6 +1,6 @@
 package de.btu.monopoly.data.field;
 
-import de.btu.monopoly.data.CardStack;
+import de.btu.monopoly.data.card.CardStack;
 
 /**
  * @author Maximilian Bels (belsmaxi@b-tu.de)

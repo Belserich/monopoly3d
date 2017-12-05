@@ -2,6 +2,7 @@ package de.btu.monopoly.core;
 
 import com.sun.istack.internal.NotNull;
 import de.btu.monopoly.data.Player;
+import de.btu.monopoly.data.card.CardManager;
 import de.btu.monopoly.data.field.Field;
 
 import java.util.LinkedList;
