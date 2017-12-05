@@ -1,7 +1,7 @@
 package de.btu.monopoly.data;
 
+import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.player.Player;
-import de.btu.monopoly.data.field.Property;
 
 /**
  * Eine Klasse die zur Auktion von Grundstuecken dient
@@ -16,14 +16,14 @@ public class Auction {
 
     private Player winner;
 
-    private Property property;
+    private PropertyField property;
 
     /**
      *
      * @param property Die Strasse die versteigert werden soll
      * @param players Spieler die an der Auktion teilnehmen
      */
-    public Auction(Property property, Player[] players) {
+    public Auction(PropertyField property, Player[] players) {
         this.property = property;
         this.players = players;
     }

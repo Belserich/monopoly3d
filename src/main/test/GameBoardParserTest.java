@@ -1,6 +1,6 @@
 import de.btu.monopoly.core.GameBoard;
 import de.btu.monopoly.data.field.Field;
-import de.btu.monopoly.data.field.Property;
+import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.parser.GameBoardParser;
 import org.xml.sax.SAXException;
 
@@ -18,8 +18,8 @@ public class GameBoardParserTest {
         GameBoard board = GameBoardParser.parse(BOARD_DATA_PATH);
         for (Field f : board.getFields())
         {
-            if (f instanceof Property) {
-                ((Property) f).getNeighbours().forEach(p -> System.out.println(p.getClass()));
+            if (f instanceof PropertyField) {
+                ((PropertyField) f).getNeighbours().forEach(p -> System.out.println(p.getClass()));
             }
         }
     }

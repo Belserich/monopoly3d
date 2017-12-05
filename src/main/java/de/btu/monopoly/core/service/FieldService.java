@@ -1,8 +1,8 @@
 package de.btu.monopoly.core.service;
 
 import com.sun.istack.internal.Nullable;
+import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.player.Player;
-import de.btu.monopoly.data.field.Property;
 import de.btu.monopoly.data.field.SupplyField;
 import de.btu.monopoly.data.field.TaxField;
 
@@ -14,10 +14,10 @@ import static de.btu.monopoly.core.Game.LOGGER;
 public class FieldService {
     
     /**
-     * Sammlung aller Nachbar-Ids in aufsteigender Reihenfolge. Der Erste beider Indizes steht immer für eine eigene Property
+     * Sammlung aller Nachbar-Ids in aufsteigender Reihenfolge. Der Erste beider Indizes steht immer für eine eigene PropertyField
      * (Bahnhof, Werk oder Straße). Die Zuordnung ist <bold>nicht</bold> 1:1 zu {@code GameBoard.FIELD_STRUCTURE}, d.h. die IDs an
      * der Stelle {@code i} stehen hier nicht für die Nachbarn des Feldes mit dem Index {@code i}, sondern für das {@code i}-te
-     * Property Feld. Die Aufzählung beginnt bei der Ersten Straße und schreitet dann im Uhrzeigersinn fort.
+     * PropertyField Feld. Die Aufzählung beginnt bei der Ersten Straße und schreitet dann im Uhrzeigersinn fort.
      */
     public static final int[][] NEIGHBOUR_IDS = {
             {3}, {1}, {15, 25, 35}, {8, 9}, {6, 9}, {6, 8}, // Erste Reihe
@@ -48,7 +48,7 @@ public class FieldService {
      * @param price des Grundstueckes (der sich bei einer Auktion aendern kann)
      * @return true, wenn das Feld gekauft wurde, false sonst
      */
-    public static boolean buyProperty(Player player, Property prop, int price) {
+    public static boolean buyPropertyField(Player player, PropertyField prop, int price) {
         if (PlayerService.takeMoney(player, price)) {
             LOGGER.info(String.format("%s kauft das Grundstück %s", player.getName(), prop.getName()));
             prop.setOwner(player);
@@ -68,7 +68,7 @@ public class FieldService {
      * @param amplifier Multiplikator
      * @return den wahren Mietswert des Grundstücks
      */
-    public static int getRent(Property prop, @Nullable int[] rollResult, int amplifier) {
+    public static int getRent(PropertyField prop, @Nullable int[] rollResult, int amplifier) {
         int rent = prop.getRent();
         if (prop instanceof SupplyField && rollResult != null) {
             rent = rent * (rollResult[0] + rollResult[1]);
@@ -77,21 +77,21 @@ public class FieldService {
     }
     
     /**
-     * Hilfsmethode (siehe {@code getRent(Property prop, int[] rollResult, int amplifier)})
+     * Hilfsmethode (siehe {@code getRent(PropertyField prop, int[] rollResult, int amplifier)})
      */
-    public static int getRent(Property prop, @Nullable int[] rollResult) {
+    public static int getRent(PropertyField prop, @Nullable int[] rollResult) {
         return getRent(prop, rollResult, 1);
     }
     
     /**
-     * Zieht dem Konto des Spielers Geld in Höhe des Mietswertes des angegebenen Property-Felds
+     * Zieht dem Konto des Spielers Geld in Höhe des Mietswertes des angegebenen PropertyField-Felds
      * ab und gibt das Geld an den Besitzer des Feldes weiter.
      *
      * @param player Spieler
      * @param prop Feld
      * @return ob die Transaktion erfolgreich war, also ob das angegebene Feld einen Besitzer hat
      */
-    public static boolean payRent(Player player, Property prop, @Nullable int[] rollResult, int amplifier) {
+    public static boolean payRent(Player player, PropertyField prop, @Nullable int[] rollResult, int amplifier) {
         Player owner = prop.getOwner();
         if (owner == null || owner == player) {
             return false;

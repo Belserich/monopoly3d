@@ -23,7 +23,7 @@ public class FieldManager {
     private final Field[] fields;
     
     /**
-     * Ordnet Spielern die Property-Felder in ihrem Besitz zu. Vereinfacht die Logik mancher Karten
+     * Ordnet Spielern die PropertyField-Felder in ihrem Besitz zu. Vereinfacht die Logik mancher Karten
      */
     private Map<Player, Integer[]> houseCounters;
     
@@ -211,11 +211,11 @@ public class FieldManager {
      * @param prop betroffenes Grundstück
      * @return ob alle Straßen des betroffenen Straßenzugs demselben Spieler gehören
      */
-    public boolean isComplete(Property prop) {
+    public boolean isComplete(PropertyField prop) {
         Player owner = prop.getOwner();
         int[] neighbourIds = FieldService.NEIGHBOUR_IDS[getPropertyId(prop)];
         for (Integer neigh : neighbourIds) {
-            if (((Property) fields[neigh]).getOwner() != owner) {
+            if (((PropertyField) fields[neigh]).getOwner() != owner) {
                 return false;
             }
         }
@@ -226,12 +226,12 @@ public class FieldManager {
      * siehe {@code NEIGHBOUR_IDS}
      *
      * @param prop betroffenes Feld
-     * @return Anzahl der Property Felder vor diesem +1
+     * @return Anzahl der PropertyField Felder vor diesem +1
      */
-    private int getPropertyId(Property prop) {
+    private int getPropertyId(PropertyField prop) {
         int propertyId = -1;
         for (Field field : fields) {
-            if (field instanceof Property) {
+            if (field instanceof PropertyField) {
                 propertyId++;
                 if (field == prop) {
                     return propertyId;
@@ -252,8 +252,8 @@ public class FieldManager {
     public void bankrupt(Player player) {
         for (Field field : fields) {
             
-            if (field instanceof Property) {
-                Property prop = (Property) field;
+            if (field instanceof PropertyField) {
+                PropertyField prop = (PropertyField) field;
                 
                 if (prop.getOwner() == player) {
                     prop.setOwner(null);
@@ -274,7 +274,7 @@ public class FieldManager {
      *
      * @param prop betroffenes Grundstück
      */
-    public void takeMortgage(Property prop) {
+    public void takeMortgage(PropertyField prop) {
         Player player = prop.getOwner();
 
         LOGGER.info(String.format("%s versucht eine Hypothek fuer %s aufzunehmen.", player.getName(), prop.getName()));
@@ -296,7 +296,7 @@ public class FieldManager {
      *
      * @param prop betroffenes Feld
      */
-    private void takeMortgageUnchecked(Property prop) {
+    private void takeMortgageUnchecked(PropertyField prop) {
         Player player = prop.getOwner();
         PlayerService.giveMoney(player, prop.getMortgageValue());
         prop.setMortgageTaken(true);
@@ -308,7 +308,7 @@ public class FieldManager {
      *
      * @param prop betroffenes Feld
      */
-    public void payMortgage(Property prop) {
+    public void payMortgage(PropertyField prop) {
         Player player = prop.getOwner();
         
         LOGGER.info(String.format("%s versucht, eine Hypthek auf %s abzuzahlen", player.getName(), prop.getName()));
@@ -328,7 +328,7 @@ public class FieldManager {
      *
      * @param prop betroffenes Feld
      */
-    private void payMortgageUnchecked(Property prop) {
+    private void payMortgageUnchecked(PropertyField prop) {
         Player player = prop.getOwner();
         PlayerService.takeMoneyUnchecked(player, prop.getMortgageBack());
         prop.setMortgageTaken(false);

@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * @author Maximilian Bels (belsmaxi@b-tu.de)
  */
-public abstract class Property extends Field {
+public abstract class PropertyField extends Field {
 
     /**
      * Preis des Grundstuecks
@@ -37,7 +37,7 @@ public abstract class Property extends Field {
     /**
      * Liste der Nachbarn des Feldes (Straßenzug)
      */
-    List<Property> neighbours = new ArrayList<>();
+    List<PropertyField> neighbours = new ArrayList<>();
 
     /**
      * Die abstrakte Oberklasse aller Felder, die kaufbar und mit Mietspreisen belegt sind. Man soll diese Felder außerdem mit
@@ -48,7 +48,7 @@ public abstract class Property extends Field {
      * @param mortgage Hypothekswert
      * @param mortgageBack Hypotheksrückwert
      */
-    Property(String name, int price, int mortgage, int mortgageBack) {
+    PropertyField(String name, int price, int mortgage, int mortgageBack) {
         super(name);
         this.price = price;
         this.mortgage = mortgage;
@@ -116,14 +116,14 @@ public abstract class Property extends Field {
      *
      * @param neighbour neuer Nachbar
      */
-    public void addNeighbour(Property neighbour) {
+    public void addNeighbour(PropertyField neighbour) {
         this.getNeighbours().add(neighbour);
     }
 
     /**
      * @return Liste der Nachbarn
      */
-    public List<Property> getNeighbours() {
+    public List<PropertyField> getNeighbours() {
         return neighbours;
     }
 

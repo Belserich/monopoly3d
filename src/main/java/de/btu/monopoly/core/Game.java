@@ -204,33 +204,33 @@ public class Game {
                 break;
 
             default:
-                Property prop = (Property) board.getFields()[player.getPosition()];
+                PropertyField prop = (PropertyField) board.getFields()[player.getPosition()];
                 processPlayerOnPropertyField(player, prop, rollResult);
                 break;
         }
     }
 
-    private void processPlayerOnPropertyField(Player player, Property prop, int[] rollResult) {
+    private void processPlayerOnPropertyField(Player player, PropertyField prop, int[] rollResult) {
         Player other = prop.getOwner();
         if (other == null) { // Feld frei
             LOGGER.info(String.format("%s steht auf einem freien Grundstück und kann es: %n[1] Kaufen %n[2] Nicht Kaufen",
                     player.getName()));
             processBuyPropertyFieldOption(player, prop);
         }
-        else if (other == player) { // Property im eigenen Besitz
+        else if (other == player) { // PropertyField im eigenen Besitz
             LOGGER.fine(String.format("%s steht auf seinem eigenen Grundstück.", player.getName()));
         }
-        else { // Property nicht in eigenem Besitz
+        else { // PropertyField nicht in eigenem Besitz
             LOGGER.info(String.format("%s steht auf dem Grundstück von %s.", player.getName(), other.getName()));
             PlayerService.takeAndGiveMoneyUnchecked(player, other, FieldService.getRent(prop, rollResult));
         }
     }
     
-    private void processBuyPropertyFieldOption(Player player, Property prop) {
+    private void processBuyPropertyFieldOption(Player player, PropertyField prop) {
         switch (InputHandler.getUserInput(2)) {
             case 1: // Kaufen
                 LOGGER.info(String.format("%s >> %s", player.getName(), prop.getName()));
-                if (!FieldService.buyProperty(player, prop, prop.getPrice())) {
+                if (!FieldService.buyPropertyField(player, prop, prop.getPrice())) {
                     LOGGER.warning(String.format("%s hat nicht genug Geld! %s wird zwangsversteigert.",
                             player.getName(), prop.getName()));
                     betPhase(prop);
@@ -258,8 +258,8 @@ public class Game {
             choice = InputHandler.getUserInput(5);
             if (choice != 1) {
                 Field currField = board.getFields()[InputHandler.askForField(player, board) - 1]; // Wahl der Strasse
-                if (currField instanceof Property) {
-                    Property property = (Property) currField;
+                if (currField instanceof PropertyField) {
+                    PropertyField property = (PropertyField) currField;
                     switch (choice) {
                         case 2: // Haus kaufen
                             if (!(currField instanceof StreetField)) {
@@ -308,7 +308,7 @@ public class Game {
         } while (choice != 1);
     }
 
-    private void betPhase(Property property) {
+    private void betPhase(PropertyField property) {
         Auction auc = new Auction(property, players);
         auc.startAuction();
     }

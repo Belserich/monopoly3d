@@ -3,7 +3,7 @@ package de.btu.monopoly.data.field;
 /**
  * @author Maximilian Bels (belsmaxi@b-tu.de)
  */
-public class StreetField extends Property {
+public class StreetField extends PropertyField {
 
     /**
      * Miete der Straße, abhänging vom Bebauungsstatus
@@ -98,7 +98,7 @@ public class StreetField extends Property {
      * @return Gibt an, ob alle Straßen des zugehörigen Straßenzugs im Besitz desselben Spielers sind.
      */
     public boolean complete() {
-        for (Property nei : super.getNeighbours()) {
+        for (PropertyField nei : super.getNeighbours()) {
             if (nei.getOwner() != super.getOwner() || nei.getOwner() == null) {
                 return false;
             }

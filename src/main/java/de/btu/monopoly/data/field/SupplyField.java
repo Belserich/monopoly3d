@@ -3,7 +3,7 @@ package de.btu.monopoly.data.field;
 /**
  * @author Maximilian Bels (belsmaxi@b-tu.de)
  */
-public class SupplyField extends Property {
+public class SupplyField extends PropertyField {
 
     private final int mult1;
     private final int mult2;
@@ -43,7 +43,7 @@ public class SupplyField extends Property {
      * @return true, wenn alle Werke im Besitz des Spielers sind, sonst false.
      */
     public boolean complete() {
-        for (Property nei : super.getNeighbours()) {
+        for (PropertyField nei : super.getNeighbours()) {
             if (!(nei.getOwner() == (super.getOwner()))) {
                 return false;
             }

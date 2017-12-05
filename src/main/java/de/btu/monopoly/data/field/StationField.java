@@ -3,7 +3,7 @@ package de.btu.monopoly.data.field;
 /**
  * @author Maximilian Bels (belsmaxi@b-tu.de)
  */
-public class StationField extends Property {
+public class StationField extends PropertyField {
 
     /**
      * Die Miete des Bahnhofs in Abhaengigkeit der Anzahl Bahnhöfe im Besitz
@@ -38,7 +38,7 @@ public class StationField extends Property {
      */
     public int ownedStations() {
         int numberOfStationsOwned = 0;
-        for (Property nei : super.getNeighbours()) {
+        for (PropertyField nei : super.getNeighbours()) {
             if (nei.getOwner() == getOwner()) {
                 if (!nei.isMortgageTaken()) {
                     numberOfStationsOwned++;
