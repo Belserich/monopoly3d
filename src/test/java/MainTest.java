@@ -1,8 +1,8 @@
 //
 //
-//import de.btu.monopoly.core.FieldManager;
+//import de.btu.monopoly.data.field.FieldManager;
 //import de.btu.monopoly.core.Game;
-//import de.btu.monopoly.core.PlayerService;
+//import de.btu.monopoly.core.service.PlayerService;
 //import de.btu.monopoly.data.*;
 //import de.btu.monopoly.data.field.*;
 //import java.util.logging.Level;
@@ -68,8 +68,8 @@
 //        street1.setOwner(player);                                   // Eine Strasse geben
 //        StreetField street2 = (StreetField) gc.board.getFields()[3];
 //        street2.setOwner(player);                                   // Zweite Strasse geben
-//        Property station = (Property) gc.board.getFields()[5];
-//        station.setOwner(player);                                   // Eine Property geben
+//        PropertyField station = (PropertyField) gc.board.getFields()[5];
+//        station.setOwner(player);                                   // Eine PropertyField geben
 //
 //        street1.setHouseCount(3);                                   // Strasse 1 bebauen
 //        street2.setMortgageTaken(true);                             // Strasse 2 Hypothek aufnehmen
@@ -225,9 +225,9 @@
 //     */
 //    private static void testBuyStreet() {
 //        Player player = players[0];
-//        Property street = (Property) gc.board.getFields()[1];
+//        PropertyField street = (PropertyField) gc.board.getFields()[1];
 //        PlayerService.giveMoney(player, 1000 - player.getMoney());
-//        fm.buyProperty(player, street, street.getPrice());
+//        fm.buyPropertyField(player, street, street.getPrice());
 //
 //        assert player.getMoney() == 1000 - street.getPrice() : "failed : Geld bei Straßenkauf nicht Abgebucht";
 //        assert street.getOwner() == player : "failed : Straßenbesitz wurde nicht geaendert";
@@ -251,8 +251,8 @@
 //
 //        // Owner  alle Strassen geben (5, 6, 12)
 //        for (Field field : gc.board.getFields()) {
-//            if (field instanceof Property) {
-//                Property actual = (Property) field;
+//            if (field instanceof PropertyField) {
+//                PropertyField actual = (PropertyField) field;
 //                actual.setOwner(owner);
 //            }
 //        }
@@ -263,7 +263,7 @@
 //        // Test fuer Miete zahlen auf Bahnhof (4fache Bahnhofsmiete abziehen)
 //        player.setPosition(5);
 //        gc.fieldPhase(player, rollResult);                          // -200 = 800
-//        Property bahnhof2 = (Property) gc.board.getFields()[15];    // owner einen Bahnhof wegnehmen
+//        PropertyField bahnhof2 = (PropertyField) gc.board.getFields()[15];    // owner einen Bahnhof wegnehmen
 //        bahnhof2.setOwner(null);                                    // jetzt mit 3facher Miete
 //        gc.fieldPhase(player, rollResult);                          // -100 = 700
 //        assert player.getMoney() == 700 : "failed : falsche Bahnhofsmiete abgezogen!";
@@ -272,7 +272,7 @@
 //        // Test fuer Miete zahlen auf Werk (10 x Augenzahl)
 //        player.setPosition(12);
 //        gc.fieldPhase(player, rollResult);                          // -10*11 = 590
-//        Property werk2 = (Property) gc.board.getFields()[28];       // owner ein Werk wegnehmen
+//        PropertyField werk2 = (PropertyField) gc.board.getFields()[28];       // owner ein Werk wegnehmen
 //        werk2.setOwner(null);                                       // jetzt mit 4*Augenzahl
 //        gc.fieldPhase(player, rollResult);                          // -4*11 = 546
 //        assert player.getMoney() == 546 : "failed : falsche Werksmiete abgezogen!";
@@ -294,8 +294,8 @@
 //
 //        // Owner  alle Strassen wegnehmen (5, 6, 8, 9, 12)
 //        for (Field field : gc.board.getFields()) {
-//            if (field instanceof Property) {
-//                Property actual = (Property) field;
+//            if (field instanceof PropertyField) {
+//                PropertyField actual = (PropertyField) field;
 //                actual.setOwner(null);
 //            }
 //        }
@@ -501,8 +501,8 @@
 //     */
 //    private static void testPayMortgage() {
 //        //Variablen initialisieren
-//        Property suedbahnhof = (Property) gc.board.getFields()[5];
-//        Property nordbahnhof = (Property) gc.board.getFields()[25];
+//        PropertyField suedbahnhof = (PropertyField) gc.board.getFields()[5];
+//        PropertyField nordbahnhof = (PropertyField) gc.board.getFields()[25];
 //        Player player = players[0];
 //
 //        player.setMoney(800);

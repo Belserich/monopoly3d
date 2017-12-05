@@ -6,12 +6,16 @@ import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.data.field.SupplyField;
 import de.btu.monopoly.data.field.TaxField;
 
+import java.util.logging.Logger;
+
 import static de.btu.monopoly.core.Game.LOGGER;
 
 /**
  * @author Maximilian Bels (belsmaxi@b-tu.de)
  */
 public class FieldService {
+    
+    private static final Logger LOGGER = Logger.getLogger(FieldService.class.getCanonicalName());
     
     /**
      * Sammlung aller Nachbar-Ids in aufsteigender Reihenfolge. Der Erste beider Indizes steht immer für eine eigene PropertyField
