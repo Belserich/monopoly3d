@@ -5,9 +5,9 @@
  */
 package de.btu.monopoly.data.card;
 
-import com.sun.istack.internal.NotNull;
-
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedList;
 
 /**
  *
@@ -58,7 +58,6 @@ public class CardStack {
      * @param action Aktionstyp
      * @return nächste Karte vom angegebenen Typ
      */
-    @NotNull
     private Card nextCard(CardAction action) {
         for (Card c : stack) {
             if (c.getActions().contains(action)) {
@@ -98,7 +97,6 @@ public class CardStack {
      * @param action Aktionstyp
      * @return nächste Karte eines bestimmten Aktionstyps
      */
-    @NotNull
     Card removeCardOfAction(CardAction action) {
         Card retObj = nextCard(action);
         stack.remove(retObj);

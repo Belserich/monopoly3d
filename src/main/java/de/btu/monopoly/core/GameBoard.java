@@ -1,10 +1,9 @@
 package de.btu.monopoly.core;
 
-import com.sun.istack.internal.NotNull;
-import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.data.card.CardManager;
 import de.btu.monopoly.data.field.Field;
 import de.btu.monopoly.data.field.FieldManager;
+import de.btu.monopoly.data.player.Player;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -65,14 +64,13 @@ public class GameBoard
      *
      * @param player Spieler
      */
-    public void addPlayer(@NotNull Player player) {
+    public void addPlayer(Player player) {
         activePlayers.add(player);
     }
     
     /**
      * @return die aktiven Spielerinstanzen
      */
-    @NotNull
     public List<Player> getActivePlayers() {
         sortOutInactivePlayers();
         return activePlayers;
@@ -88,17 +86,14 @@ public class GameBoard
     /**
      * @return Felder des Spielbretts
      */
-    @NotNull
     public Field[] getFields() {
         return fieldManager.getFields();
     }
     
-    @NotNull
     public CardManager getCardManager() {
         return cardManager;
     }
     
-    @NotNull
     public FieldManager getFieldManager() {
         return fieldManager;
     }

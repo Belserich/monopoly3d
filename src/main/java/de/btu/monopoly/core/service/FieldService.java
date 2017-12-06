@@ -1,7 +1,8 @@
 package de.btu.monopoly.core.service;
 
-import com.sun.istack.internal.Nullable;
-import de.btu.monopoly.data.field.*;
+import de.btu.monopoly.data.field.PropertyField;
+import de.btu.monopoly.data.field.SupplyField;
+import de.btu.monopoly.data.field.TaxField;
 import de.btu.monopoly.data.player.Player;
 
 import java.util.logging.Logger;
@@ -73,7 +74,7 @@ public class FieldService {
      * @param amplifier Multiplikator
      * @return den wahren Mietswert des Grundstücks
      */
-    public static int getRent(PropertyField prop, @Nullable int[] rollResult, int amplifier) {
+    public static int getRent(PropertyField prop, int[] rollResult, int amplifier) {
         int rent = prop.getRent();
         if (prop instanceof SupplyField && rollResult != null) {
             rent = rent * (rollResult[0] + rollResult[1]);
@@ -84,7 +85,7 @@ public class FieldService {
     /**
      * Hilfsmethode (siehe {@code getRent(PropertyField prop, int[] rollResult, int amplifier)})
      */
-    public static int getRent(PropertyField prop, @Nullable int[] rollResult) {
+    public static int getRent(PropertyField prop, int[] rollResult) {
         return getRent(prop, rollResult, 1);
     }
     
@@ -96,7 +97,7 @@ public class FieldService {
      * @param prop Feld
      * @return ob die Transaktion erfolgreich war, also ob das angegebene Feld einen Besitzer hat
      */
-    public static boolean payRent(Player player, PropertyField prop, @Nullable int[] rollResult, int amplifier) {
+    public static boolean payRent(Player player, PropertyField prop, int[] rollResult, int amplifier) {
         Player owner = prop.getOwner();
         if (owner == null || owner == player) {
             return false;

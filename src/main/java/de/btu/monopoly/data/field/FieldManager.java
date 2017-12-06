@@ -1,6 +1,5 @@
 package de.btu.monopoly.data.field;
 
-import com.sun.istack.internal.NotNull;
 import de.btu.monopoly.core.GameBoard;
 import de.btu.monopoly.core.service.FieldService;
 import de.btu.monopoly.core.service.PlayerService;
@@ -45,7 +44,6 @@ public class FieldManager {
     /**
      * @return Feld-Array
      */
-    @NotNull
     public Field[] getFields() {
         return fields;
     }
@@ -83,7 +81,6 @@ public class FieldManager {
      * @param player Spieler
      * @param amount Anzahl Felder
      */
-    @NotNull
     public Field movePlayer(Player player, int amount) {
         int pos = PlayerService.movePlayer(player, amount);
         if (pos >= fields.length) {
@@ -101,7 +98,6 @@ public class FieldManager {
      * @param nextFieldType Feldtyp
      * @return das neue Feld auf dem sich der Spieler befindet
      */
-    @NotNull
     public Field movePlayer(Player player, GameBoard.FieldType nextFieldType) {
         int pos = player.getPosition();
         int fields = 0;
