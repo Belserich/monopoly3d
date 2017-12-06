@@ -5,27 +5,40 @@
  */
 package de.btu.monopoly.net.networkClasses;
 
-import de.btu.monopoly.data.Player;
-
 /**
  *
  * @author Christian Prinz
  */
 public class JoinResponse {
 
-    private Player[] players;
+    private String name;
+    private int id;
 
     /**
-     * @return the players
+     * @return the name
      */
-    public Player[] getPlayers() {
-        return players;
+    public String getName() {
+        return name;
     }
 
     /**
-     * @param players the players to set
+     * @param name the name to set
      */
-    public void setPlayers(Player[] players) {
-        this.players = players;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    /**
+     * @return the id
+     */
+    public int getId() {
+        return id;
+    }
+
+    /**
+     * @param id the id to set
+     */
+    public void setId(int id) {
+        this.id = id;
     }
 }

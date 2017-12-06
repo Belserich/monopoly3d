@@ -15,7 +15,7 @@ import de.btu.monopoly.net.client.GameClient;
 public class Lobby {
 
     private boolean inLobby = true;
-    private Player[] players;
+    private static Player[] players;
     private String playerName;
     private GameClient playerClient;
 

@@ -20,8 +20,6 @@ public class MainMenu {
     public static final Logger LOGGER = Logger.getLogger(MainMenu.class.getCanonicalName());
 
     public void start() {
-
-        int choice = 0;
         System.out.println("HAUPTMENÜ\n[1] Spiel starten\n[2] Spiel beitreten");
         switch (InputHandler.getUserInput(2)) {
             case 1:
