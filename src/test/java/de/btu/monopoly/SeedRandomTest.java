@@ -1,3 +1,5 @@
+package de.btu.monopoly;
+
 import java.util.Random;
 
 /**
