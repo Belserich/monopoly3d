@@ -55,6 +55,10 @@ public class GameClient {
         kryo.register(JoinResponse.class);
         kryo.register(GamestartRequest.class);
         kryo.register(GamestartResponse.class);
+        kryo.register(BroadcastUsersRequest.class);
+        kryo.register(BroadcastUsersResponse.class);
+        kryo.register(IamHostRequest.class);
+        kryo.register(String[].class);
     }
 
     public void sendTCP(Object object) {

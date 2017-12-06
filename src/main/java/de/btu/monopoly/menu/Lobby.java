@@ -5,7 +5,6 @@
  */
 package de.btu.monopoly.menu;
 
-import de.btu.monopoly.data.Player;
 import de.btu.monopoly.net.client.GameClient;
 
 /**
@@ -15,7 +14,7 @@ import de.btu.monopoly.net.client.GameClient;
 public class Lobby {
 
     private boolean inLobby = true;
-    private static Player[] players;
+    private static String[] users;
     private String playerName;
     private GameClient playerClient;
 
@@ -34,17 +33,17 @@ public class Lobby {
     }
 
     /**
-     * @return the players
+     * @return the users
      */
-    protected Player[] getPlayers() {
-        return players;
+    protected String[] getUsers() {
+        return users;
     }
 
     /**
-     * @param players the players to set
+     * @param players the users to set
      */
-    protected void setPlayers(Player[] players) {
-        this.players = players;
+    protected void setUsers(String[] players) {
+        this.users = players;
     }
 
     /**

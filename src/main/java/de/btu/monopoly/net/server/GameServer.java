@@ -34,7 +34,7 @@ public class GameServer {
         server.start();
         try {
             server.bind(tcpPort);
-            server.addListener(new ServerListener());
+            server.addListener(new ServerListener(server));
         } catch (IOException ex) {
             ex.printStackTrace();
             Log.warn("Server konnte nicht gebunden werden{0}", ex);
@@ -52,6 +52,10 @@ public class GameServer {
         kryo.register(JoinResponse.class);
         kryo.register(GamestartRequest.class);
         kryo.register(GamestartResponse.class);
+        kryo.register(BroadcastUsersRequest.class);
+        kryo.register(BroadcastUsersResponse.class);
+        kryo.register(IamHostRequest.class);
+        kryo.register(String[].class);
     }
 
 }
