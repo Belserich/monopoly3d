@@ -52,8 +52,6 @@ public class GameServer {
         kryo.register(JoinResponse.class);
         kryo.register(GamestartRequest.class);
         kryo.register(GamestartResponse.class);
-        kryo.register(de.btu.monopoly.menu.LobbyService.class);
-
     }
 
 }

@@ -14,6 +14,6 @@ import com.esotericsoftware.kryonet.Listener;
  */
 public class ClientListener extends Listener {
 
-    public void recieved(Connection connection, Object object) {
+    public void received(Connection connection, Object object) {
     }
 }

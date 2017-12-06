@@ -22,9 +22,8 @@ public class ServerListener extends Listener {
     private static ArrayList<Player> tempPlayerList = new ArrayList();
     private static int runningID = 0;
 
-    public void recieved(Connection connection, Object object) {
+    public void received(Connection connection, Object object) {
 
-        System.out.println("hhhhh" + object);
         if (object instanceof JoinRequest) {
             Log.info("JoinRequest erhalten");
             JoinRequest req = (JoinRequest) object;
@@ -32,20 +31,28 @@ public class ServerListener extends Listener {
             // Client der Connections-Liste hizufügen
             connections.add(connection);
 
-            // Spieler für den joinenden Client anlegen und ins TempArray legen
-            Player player = new Player(req.getName(), runningID, 1500);
+            //ID festlegen und namen holen
+            int id = runningID;
             runningID++;
-            tempPlayerList.add(player);
+            String name = req.getName();
 
-            //Player[] erzeugen und fuellen
-            Player[] players = new Player[tempPlayerList.size()];
-            for (int i = 0; i < players.length; i++) {
-                players[i] = tempPlayerList.get(i);
-            }
-
+//            // Spieler für den joinenden Client anlegen und ins TempArray legen
+//            Player player = new Player(req.getName(), runningID, 1500);
+//            runningID++;
+//            tempPlayerList.add(player);
+//
+//            //Player[] erzeugen und fuellen
+//            Player[] players = new Player[tempPlayerList.size()];
+//            for (int i = 0; i < players.length; i++) {
+//                players[i] = tempPlayerList.get(i);
+//            }
+//            if (players.length > 0) {
+//                Log.info(players[0].getName());
+//            }
             //Response erzeugen
             JoinResponse res = new JoinResponse();
-            res.setPlayers(players);
+            res.setId(id);
+            res.setName(name);
 
             //Responses verteilen
             connection.sendTCP(res);

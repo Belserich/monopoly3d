@@ -7,10 +7,9 @@ package de.btu.monopoly.menu;
 
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
+import com.esotericsoftware.minlog.Log;
 import de.btu.monopoly.net.networkClasses.GamestartResponse;
 import de.btu.monopoly.net.networkClasses.JoinResponse;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -18,14 +17,12 @@ import java.util.logging.Logger;
  */
 public class LobbyClientListener extends Listener {
 
-    public static final Logger LOGGER = Logger.getLogger(LobbyClientListener.class.getCanonicalName());
-
-    public void recieved(Connection connection, Object object) {
+    public void received(Connection connection, Object object) {
 
         if (object instanceof JoinResponse) {
-            LOGGER.setLevel(Level.ALL);
+            Log.info("JoinResponse erhalten");
             JoinResponse joinRes = (JoinResponse) object;
-            LobbyService.joinResponse(joinRes.getPlayers());
+            LobbyService.joinResponse(joinRes.getName(), joinRes.getId());
         }
 
         if (object instanceof GamestartResponse) {
