@@ -13,4 +13,4 @@
 ## Decision Outcome
 
 * **Chosen Alternative:** \<JUnit\>
-* **Rationale:** \<Vorgefertigte Struktur des Testklasse, übersichtliche Testergebnisse, einfache Einbindung in die Pipeline bei jedem Commit.\>
+* **Rationale:** \<Vorgefertigte Struktur der Testklasse, übersichtliche Testergebnisse, einfache Einbindung in die Pipeline bei jedem Commit. Zudem Empfehlung des Scrum Masters.\>
