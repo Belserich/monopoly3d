@@ -307,24 +307,27 @@ public class FieldManager {
      */
     public void takeMortgage(PropertyField prop) {
         Player player = prop.getOwner();
-
-        // TODO
+    
         LOGGER.info(String.format("%s versucht eine Hypothek fuer %s aufzunehmen.", player.getName(), prop.getName()));
         if (prop instanceof StreetField) {
             StreetField street = (StreetField) prop;
             if (street.getHouseCount() != 0) {
                 LOGGER.warning(String.format("Auf %s stehen Haeuser! Hypothek kann nicht aufgenommen werden.", street.getName()));
+                return;
             }
             else if (!balanceCheck(street, 0, 0)) // Hier gilt houseCount = 0
             {
                 LOGGER.warning(String.format("Auf dem Straßenzug von %s stehen Haeuser! Hypothek kann nicht aufgenommen werden.",
                         street.getName()));
+                return;
             }
             else if (street.isMortgageTaken()) {
                 LOGGER.warning("Es wurde bereits eine Hypothek für dieses gebäude aufgenommen!");
+                return;
             }
-            else takeMortgageUnchecked(prop);
         }
+        
+        takeMortgageUnchecked(prop);
     }
     
     /**
