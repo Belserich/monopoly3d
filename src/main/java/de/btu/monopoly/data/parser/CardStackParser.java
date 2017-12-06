@@ -1,9 +1,12 @@
 package de.btu.monopoly.data.parser;
 
-import de.btu.monopoly.data.Card;
-import de.btu.monopoly.data.CardStack;
+import de.btu.monopoly.data.card.Card;
+import de.btu.monopoly.data.card.CardAction;
+import de.btu.monopoly.data.card.CardStack;
 import java.io.File;
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
 import javax.xml.parsers.DocumentBuilder;
@@ -31,7 +34,7 @@ public class CardStackParser {
      * @throws SAXException wenn das Dokument nicht gelesen werden konnte, also eine beschädigte Grobstruktur vorliegt
      */
     public static CardStack parse(String path) throws ParserConfigurationException, IOException, SAXException {
-        Card[] cards;
+        List<Card> cards;
 
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
@@ -40,14 +43,14 @@ public class CardStackParser {
         Document doc = builder.parse(file);
 
         NodeList nList = doc.getElementsByTagName("card");
-        cards = new Card[nList.getLength()];
+        cards = new LinkedList<>();
         for (int i = 0; i < nList.getLength(); i++) {
             Node node = nList.item(i);
             if (node.getNodeType() == Node.ELEMENT_NODE) {
-                cards[i] = parseElement((Element) node);
+                cards.addAll(parseElement((Element) node));
             }
         }
-        return new CardStack(cards);
+        return new CardStack(cards.toArray(new Card[cards.size()]));
     }
 
     /**
@@ -57,11 +60,11 @@ public class CardStackParser {
      * @param elem Die Element Instanz eines card-Tags
      * @return Die Karte, die mit den entsprechenden Daten erstellt wurde.
      */
-    private static Card parseElement(Element elem) {
+    private static List<Card> parseElement(Element elem) {
         String name = null, text = null;
-        Card.Action[] types = null;
+        CardAction[] types = null;
         int[] args = null;
-        int amount = 1;
+        int amount;
 
         try {
             name = elem.getAttribute("name");
@@ -69,8 +72,8 @@ public class CardStackParser {
 
             types = convertNodesToStream(elem.getElementsByTagName("action"))
                     .map(Node::getTextContent)
-                    .map(s -> Card.Action.valueOf(s.toUpperCase()))
-                    .toArray(Card.Action[]::new);
+                    .map(s -> CardAction.valueOf(s.toUpperCase()))
+                    .toArray(CardAction[]::new);
         } catch (NullPointerException ex) {
             logException(ex);
         }
@@ -83,11 +86,18 @@ public class CardStackParser {
             logException(ex);
         }
 
-        NodeList aList = elem.getElementsByTagName("amount");
-        if (aList != null && aList.item(0) != null) {
-            amount = Integer.parseInt(aList.item(0).getTextContent());
+        try {
+            amount = Integer.parseInt(elem.getAttribute("amount"));
         }
-        return new Card(name, text, types, args);
+        catch (NumberFormatException ex) {
+            amount = 1;
+        }
+        
+        List<Card> retObj = new LinkedList<>();
+        for (int i = 0; i < amount; i++) {
+            retObj.add(new Card(name, text, types, args));
+        }
+        return retObj;
     }
 
     /**

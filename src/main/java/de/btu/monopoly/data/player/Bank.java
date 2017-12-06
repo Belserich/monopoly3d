@@ -1,4 +1,4 @@
-package de.btu.monopoly.data;
+package de.btu.monopoly.data.player;
 
 import java.util.logging.Logger;
 

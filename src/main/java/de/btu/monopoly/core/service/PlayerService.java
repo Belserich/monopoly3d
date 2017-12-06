@@ -1,11 +1,9 @@
-package de.btu.monopoly.core;
+package de.btu.monopoly.core.service;
 
-import de.btu.monopoly.data.Bank;
-import de.btu.monopoly.data.GameBoard;
-import de.btu.monopoly.data.Player;
-import de.btu.monopoly.data.field.Field;
-import de.btu.monopoly.data.field.Property;
-import de.btu.monopoly.data.field.StreetField;
+import de.btu.monopoly.core.GameBoard;
+import de.btu.monopoly.data.player.Bank;
+import de.btu.monopoly.data.player.Player;
+
 import java.util.logging.Logger;
 
 /**
@@ -15,7 +13,7 @@ import java.util.logging.Logger;
 public class PlayerService {
 
     private static final Logger LOGGER = Logger.getLogger(de.btu.monopoly.core.Game.class.getCanonicalName());
-
+    
     /**
      * Setzt alle nötigen Attribute, wenn der Spieler ins Gefängnis kommt. Bitte {@code FieldManager.toJail()} benutzen.
      *
@@ -26,7 +24,12 @@ public class PlayerService {
         player.setDaysInJail(0);
         LOGGER.info(String.format("%s ist jetzt im Gefaengnis.", player.getName()));
     }
-
+    
+    /**
+     * Befreit den Spieler aus dem Gefaengnis.
+     *
+     * @param player Spieler
+     */
     public static void freeFromJail(Player player) {
         player.setInJail(false);
         player.setDaysInJail(-1);
@@ -40,7 +43,7 @@ public class PlayerService {
      * @param amount Anzahl der zu laufenden Felder
      * @return Die neue Position des Spielers auf dem Feld( und darueber hinaus).
      */
-    static int movePlayer(Player player, int amount) {
+    public static int movePlayer(Player player, int amount) {
         int pos = player.getPosition();
         pos += amount;
         player.setPosition(pos);
@@ -67,13 +70,20 @@ public class PlayerService {
             return false;
         }
     }
-
+    
+    /**
+     * Versucht, dem Spielerkonto Geld abzubuchen. Bricht ab, wenn der Spieler nicht genug Geld besitzt.
+     *
+     * @param player Spieler
+     * @param amount Summe
+     * @return ob die Buchung erfolgreich war
+     */
     public static boolean takeMoney(Player player, int amount) {
         if (checkLiquidity(player, amount)) {
             takeMoneyUnchecked(player, amount);
-            return false;
+            return true;
         }
-        return true;
+        return false;
     }
 
     /**
@@ -85,10 +95,22 @@ public class PlayerService {
     public static void takeMoneyUnchecked(Player player, int amount) {
         Bank bank = player.getBank();
         bank.withdraw(amount);
-        LOGGER.info(String.format("%s (+%d)", bank.toString(), amount));
+        LOGGER.info(bank.toString() + " (" + (amount >= 0 ? "-" : "+") + Math.abs(amount) + ")");
         if (!bank.isLiquid()) {
             LOGGER.info(String.format("%s hat sich verschuldet!", player.getName()));
         }
+    }
+    
+    /**
+     * Nimmt einem Spieler Geld und gibt es einem anderen.
+     *
+     * @param from Spieler (zu zahlen)
+     * @param to Spieler (bekommt)
+     * @param amount Summe
+     */
+    public static void takeAndGiveMoneyUnchecked(Player from, Player to, int amount) {
+        takeMoneyUnchecked(from, amount);
+        giveMoney(to, amount);
     }
 
     /**
@@ -100,7 +122,7 @@ public class PlayerService {
     public static void giveMoney(Player player, int amount) {
         Bank bank = player.getBank();
         bank.deposit(amount);
-        LOGGER.info(String.format("%s (-%d)", bank.toString(), amount));
+        LOGGER.info(bank.toString() + " (" + (amount >= 0 ? "+" : "-") + Math.abs(amount) + ")");
     }
 
     /**
@@ -118,65 +140,15 @@ public class PlayerService {
     }
 
     /**
-     *
-     * @param player zu pruefender Spieler
-     * @param board das Spielbrett (zum Besitz wegnehmen)
-     * @param players alle Mitspieler (zum Game-Over-Check)
-     * @return boolean, ob das Spiel gameOver ist
+     * @param player betroffener Spieler
+     * @param board Spielbrett-Instanz
      */
-    public static void bankrupt(Player player, GameBoard board, Player[] players) {
+    public static void bankrupt(Player player, GameBoard board) {
         LOGGER.info(String.format("%s ist Bankrott und ab jetzt nur noch Zuschauer. All sein Besitz geht zurück an die Bank.",
                 player.getName()));
+        
         player.setBankrupt(true);
-        Field[] fields = board.getFields(); // TODO
-
-        for (int i = 0; i < fields.length; i++) {
-            Field field = fields[i];
-
-            // Löschen der Hypothek und des Eigentums
-            if (field instanceof Property) {
-                if (((Property) field).getOwner() == player) {
-                    ((Property) field).setOwner(null);
-                    ((Property) field).setMortgageTaken(false);
-                }
-
-                // Löschen der Anzahl an Häusern
-                if (field instanceof StreetField) {
-                    ((StreetField) fields[i]).setHouseCount(0);
-
-                }
-            }
-        }
-        // TODO @cards - Gefängnisfreikarten müssen zurück in den Stapel
-    }
-
-    /**
-     *
-     * @param player Spieler dessen Hauser/Hotels gezaehlt werden
-     * @param housePrice Preis fuer ein Haus
-     * @param hotelPrice Preis fuer ein Hotel
-     * @param board GameBoard
-     * @return Summe der Renovierungskosten
-     */
-    public static int sumRenovation(Player player, int housePrice, int hotelPrice, GameBoard board) {
-        //TODO spaeter, wenn Kartenstapel gedruckt wurde
-
-        int renovationHotel = 0;
-        int renovationHouse = 0;
-        for (Field field : board.getFields()) {
-            if (field instanceof StreetField) {
-                if (((StreetField) field).getOwner() == player) {
-                    int houses = ((StreetField) field).getHouseCount();
-                    if (houses < 5) {
-                        renovationHouse += (housePrice * houses);
-
-                    } else {
-                        renovationHotel += hotelPrice;
-
-                    }
-                }
-            }
-        }
-        return renovationHouse + renovationHotel;
+        board.getFieldManager().bankrupt(player);
+        board.getCardManager().bankrupt(player);
     }
 }

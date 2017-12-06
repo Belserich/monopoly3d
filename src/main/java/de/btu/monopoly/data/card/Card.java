@@ -1,16 +1,18 @@
-package de.btu.monopoly.data;
+package de.btu.monopoly.data.card;
 
 import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @author Maximilian Bels (belsmaxi@b-tu.de)
  */
 public class Card {
     
-    public enum Action {
-        JAIL, GO_JAIL, GIVE_MONEY, NEXT_STATION_RENT_AMP, MOVE_PLAYER, PAY_MONEY,
-        SET_POSITION, RENOVATE, NEXT_SUPPLY, BIRTHDAY, PAY_MONEY_ALL;
-    }
+    /**
+     * zugehöriger Kartenstapel
+     */
+    private CardStack stack;
     
     /**
      * Kartentitel
@@ -25,7 +27,7 @@ public class Card {
     /**
      * Kartentypen
      */
-    private final Action[] actions;
+    private final List<CardAction> actions;
 
     /**
      * Kartenargumente
@@ -40,11 +42,13 @@ public class Card {
      * @param text Kartentext
      * @param args Zusatzargumente
      */
-    public Card(String name, String text, Action[] actions, int[] args) {
-        this.actions = actions;
+    public Card(String name, String text, CardAction[] actions, int[] args) {
         this.name = name;
         this.text = text;
         this.args = args;
+        
+        this.actions = new LinkedList<>();
+        this.actions.addAll(Arrays.asList(actions));
     }
     
     /**
@@ -64,7 +68,7 @@ public class Card {
     /**
      * @return Typen der Karte
      */
-    public Action[] getActions() {
+    List<CardAction> getActions() {
         return actions;
     }
 
@@ -75,8 +79,25 @@ public class Card {
         return args;
     }
     
+    /**
+     * Setzt den derzeitigen zugehörigen Kartenstapel
+     *
+     * @param stack Kartenstapel
+     */
+    void setCardStack(CardStack stack) {
+        this.stack = stack;
+    }
+    
+    /**
+     * @return der zugehörige Kartenstapel
+     */
+    CardStack getCardStack() {
+        return stack;
+    }
+    
     @Override
     public String toString() {
-        return String.format("[Karte] Name: \"%s\", Text: \"%s\", Aktionen: %s, Argumente: %s", name, text, Arrays.toString(actions), Arrays.toString(args));
+        return String.format("[Karte] Name: \"%s\", Text: \"%s\", Aktionen: %s, Argumente: %s",
+                name, text, Arrays.toString(actions.toArray()), Arrays.toString(args));
     }
 }

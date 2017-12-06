@@ -1,13 +1,13 @@
 package de.btu.monopoly.data.field;
 
-import de.btu.monopoly.data.Player;
+import de.btu.monopoly.data.player.Player;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author Maximilian Bels (belsmaxi@b-tu.de)
  */
-public abstract class Property extends Field {
+public abstract class PropertyField extends Field {
 
     /**
      * Preis des Grundstuecks
@@ -35,11 +35,6 @@ public abstract class Property extends Field {
     private boolean mortgageTaken;
 
     /**
-     * Liste der Nachbarn des Feldes (Straßenzug)
-     */
-    List<Property> neighbours = new ArrayList<>();
-
-    /**
      * Die abstrakte Oberklasse aller Felder, die kaufbar und mit Mietspreisen belegt sind. Man soll diese Felder außerdem mit
      * einer Hypothek belasten können und diese auch für {@code (Hypothekswert + 10% des Kaufpreises)} Einheiten der gewählten
      * Währung zurückzahlen können.
@@ -48,7 +43,7 @@ public abstract class Property extends Field {
      * @param mortgage Hypothekswert
      * @param mortgageBack Hypotheksrückwert
      */
-    Property(String name, int price, int mortgage, int mortgageBack) {
+    PropertyField(String name, int price, int mortgage, int mortgageBack) {
         super(name);
         this.price = price;
         this.mortgage = mortgage;
@@ -103,28 +98,6 @@ public abstract class Property extends Field {
     public void setMortgageTaken(boolean mortgageTaken) {
         this.mortgageTaken = mortgageTaken;
     }
-
-    /**
-     * Gibt die Miete des Grundstuecks zurueck. Im Falle eines Werkes entspricht die Miete dem Multiplikator fuer die Augenzahl.
-     */
-    public int getRent() {
-        return 0;
-    }
-
-    /**
-     * Fuegt dem Grundstueck ein Nachbargrundstueck hinzu.
-     *
-     * @param neighbour neuer Nachbar
-     */
-    public void addNeighbour(Property neighbour) {
-        this.getNeighbours().add(neighbour);
-    }
-
-    /**
-     * @return Liste der Nachbarn
-     */
-    public List<Property> getNeighbours() {
-        return neighbours;
-    }
-
+    
+    public int getRent() { return 0; }
 }

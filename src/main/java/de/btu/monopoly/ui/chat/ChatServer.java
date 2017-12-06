@@ -4,7 +4,7 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
-import de.btu.monopoly.data.Player;
+import de.btu.monopoly.data.player.Player;
 
 import java.io.IOException;
 import java.io.PrintStream;

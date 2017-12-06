@@ -1,9 +1,12 @@
 package de.btu.monopoly.data.field;
 
+import de.btu.monopoly.core.service.FieldService;
+import de.btu.monopoly.data.player.Player;
+
 /**
  * @author Maximilian Bels (belsmaxi@b-tu.de)
  */
-public class StationField extends Property {
+public class StationField extends PropertyField {
 
     /**
      * Die Miete des Bahnhofs in Abhaengigkeit der Anzahl Bahnhöfe im Besitz
@@ -25,27 +28,15 @@ public class StationField extends Property {
         this.rents[3] = rent3;
     }
 
-    @Override
     public int getRent() {
-        if (isMortgageTaken()) {
-            return 0;
+        Player owner = getOwner();
+        if (!isMortgageTaken() && owner != null) {
+            int validNeighbourCount = (int) fieldManager.getOwnedNeighbours(this)
+                    .filter(p -> !p.isMortgageTaken())
+                    .count();
+            return rents[validNeighbourCount];
         }
-        return rents[ownedStations()];
-    }
-
-    /**
-     * @return Anzahl der Bahnhofe im selben Besitz
-     */
-    public int ownedStations() {
-        int numberOfStationsOwned = 0;
-        for (Property nei : super.getNeighbours()) {
-            if (nei.getOwner() == getOwner()) {
-                if (!nei.isMortgageTaken()) {
-                    numberOfStationsOwned++;
-                }
-            }
-        }
-        return numberOfStationsOwned;
+        else return 0;
     }
 
     @Override

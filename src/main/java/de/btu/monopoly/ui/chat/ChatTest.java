@@ -4,40 +4,42 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
-import de.btu.monopoly.data.Player;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import de.btu.monopoly.data.player.Player;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  * @author Maximilian Bels (belsmaxi@b-tu.de)
  */
 public class ChatTest extends Application {
-
+    
     public static void main(String[] args) {
         ChatTest.launch(args);
     }
-
+    
     public static final Logger LOGGER = Logger.getLogger(ChatTest.class.getCanonicalName());
+    
     private TextArea chatArea;
     private TextField chatField;
-
+    
     private Client client;
-
+    
     @Override
     public void start(Stage stage) throws Exception {
         stage.setTitle("Chat");
-
+        
         ChatServer server = new ChatServer(System.out);
         server.init();
-
+        
         initClient();
-
+        
         ChatPanel chatPanel = new ChatPanel();
         chatPanel.setPrefSize(300, 300);
 
@@ -47,33 +49,34 @@ public class ChatTest extends Application {
 //                field.
 //            }
 //        });
+        
         Scene scene = new Scene(chatPanel);
         stage.setScene(scene);
-
+        
         stage.show();
     }
-
+    
     public void initClient() {
         Client client = new Client();
         client.start();
         Runtime.getRuntime().addShutdownHook(
                 new Thread(() -> client.stop()));
         client.addListener(new ClientListener());
-
+    
         Kryo kryo = client.getKryo();
         kryo.register(NetworkData.class);
         kryo.register(NetworkData.Type.class);
         kryo.register(Player.class);
-
+        
         try {
             client.connect(5000, "localhost", 10222);
         } catch (IOException ex) {
             LOGGER.log(Level.WARNING, "Konnte nicht mit dem Server verbinden!{0}", ex);
         }
     }
-
+    
     class ClientListener extends Listener {
-
+        
         @Override
         public void received(Connection connection, Object obj) {
             if (obj instanceof NetworkData) {
