@@ -9,6 +9,7 @@ import de.btu.monopoly.data.parser.CardStackParser;
 import de.btu.monopoly.data.parser.GameBoardParser;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.input.InputHandler;
+import de.btu.monopoly.net.client.GameClient;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -32,14 +33,17 @@ public class Game {
      */
     private final Player[] players;
 
+    private final GameClient client;
+
     /**
      * Die fachliche Komponente des Spiels als Einheit, bestehend aus einem Spielbrett, den Spielern sowie Zuschauern.
      *
      * @param players Spieler
      *
      */
-    public Game(Player[] players) {
+    public Game(Player[] players, GameClient client) {
         this.players = players;
+        this.client = client;
     }
 
     public void init() {
