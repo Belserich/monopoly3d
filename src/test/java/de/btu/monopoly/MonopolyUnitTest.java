@@ -1,11 +1,11 @@
 package de.btu.monopoly;
 
 //Imports
-
 import de.btu.monopoly.core.Game;
 import de.btu.monopoly.core.GameBoard;
 import de.btu.monopoly.core.service.FieldService;
 import de.btu.monopoly.core.service.PlayerService;
+import de.btu.monopoly.data.card.*;
 import de.btu.monopoly.data.field.*;
 import de.btu.monopoly.data.player.Player;
 import org.junit.Assert;
@@ -23,20 +23,20 @@ public class MonopolyUnitTest {
     private static FieldManager fm;
 
     public MonopolyUnitTest() {
-        
+
         players = new Player[4];
         for (int i = 0; i < 4; i++) {
             Player player = new Player("Mathias " + (i + 1), i, 1500);
             players[i] = player;
         }
-        
+
         game = new Game(players);
         game.init();
     }
-    
+
     @Test
     public void testGameBoard() {
-        
+
         //initialisierung
         board = game.getBoard();
         players = game.getPlayers();
@@ -159,9 +159,6 @@ public class MonopolyUnitTest {
         fm.buyHouse(street3);
         fm.buyHouse(street);
 
-//        street.setHouseCount(0);
-//        street2.setHouseCount(1);
-//        street3.setHouseCount(1);
         //act
         int expResult = 1;
         int expHousePrice = 100;
@@ -194,13 +191,10 @@ public class MonopolyUnitTest {
         fm.buyHouse(street2);
         fm.buyHouse(street2); // geht nicht, da Straßenzug unausgeglichen
         fm.buyHouse(street3);
-//        street.setHouseCount(1);
-//        street2.setHouseCount(2); // setHouseCount() darf nicht so gesetzt werden! Habs jetzt protected gemacht. in Zukunft bitte die obige Lösung benutzen.
-//        street3.setHouseCount(1);
 
         fm.sellHouse(street); // wenn du das Haus hier wieder verkaufst kann danach die Anzahl Häuser auf dem Feld nicht 1 sein!
         int expHouses = 1;
-//        int expMoney = 1500; // warum das?
+
         expMoney = expMoney - street.getHousePrice() - street2.getHousePrice() - street3.getHousePrice() + (street.getHousePrice() / 2);
         Assert.assertEquals(expMoney, player.getMoney());
         Assert.assertEquals(0, street.getHouseCount()); // expHouses durch 0 ersetzt
@@ -378,7 +372,7 @@ public class MonopolyUnitTest {
 
     @Test
     public void testPayRent() {
-        
+
         board = game.getBoard();
         players = game.getPlayers();
         fm = board.getFieldManager();
@@ -460,24 +454,98 @@ public class MonopolyUnitTest {
 
     }
 
-    //@Test TODO Kann nicht testen ohne extra Eingaben
+    @Test
     public void testGoToJail() {
 
         board = game.getBoard();
         players = game.getPlayers();
         fm = board.getFieldManager();
         Player patrick = players[0];
-        patrick.setPosition(39);
+        patrick.setPosition(30);
         int[] rollResult = {14, 16};
 
         //GoToJailField und test
         game.fieldPhase(patrick, rollResult);
-        // TODO (von Maxi) Patrick, könntest du es irgendwie so umprogrammieren, dass du hier den Aufruf auf die Feldphase nicht machen musst?
+        // TODO evt ohne fielPhase Aufruf
 
         Assert.assertTrue("Spieler nicht im Gefaengnis", patrick.isInJail() == true);
         Assert.assertTrue("Tage im Gefaengnis sind nicht 0", patrick.getDaysInJail() == 0);
         Assert.assertTrue("Position ist nicht im Gefaengnis", patrick.getPosition() == 10);
 
+    }
+
+    public void testDoubletToJail() {
+
+        //initialisierung
+        board = game.getBoard();
+        players = game.getPlayers();
+        fm = board.getFieldManager();
+        Player patrick = players[0];
+
+        /*
+        Zur Zeit nicht implementier bar, man muss irgendwie
+        in der turn() (welche private) das Attribut doubletCounter veraendern koennen!!
+        TODO @Maxi (von patrick) ne Idee?
+         */
+    }
+
+    @Test
+    public void testPayPrisonDeposit() {
+
+        //initialisierung
+        board = game.getBoard();
+        players = game.getPlayers();
+        fm = board.getFieldManager();
+        Player patrick = players[0];
+
+        patrick.setPosition(10);
+        patrick.setInJail(true);
+        int patrickMoney = patrick.getMoney();
+
+        //Freikaufen + Tests
+        game.processJailPayOption(patrick);
+        Assert.assertTrue("Gefaengnisfreikauf hat nicht funktioniert", patrick.getMoney() == (patrickMoney - 50));
+
+    }
+
+    @Test
+    public void testRollOutOfJail() {
+
+        //initialisierung
+        board = game.getBoard();
+        players = game.getPlayers();
+        fm = board.getFieldManager();
+        Player patrick = players[0];
+
+        patrick.setPosition(10);
+        patrick.setInJail(true);
+
+        //Freiwuerfeln + Tests
+        do {
+            game.processJailRollOption(patrick);
+            patrick.setDaysInJail(0);
+        } while (patrick.isInJail());
+        Assert.assertTrue("Spieler ist immer noch im Gefaengnis", patrick.isInJail() == false);
+    }
+
+    @Test
+    public void testLeavJailWithCard() {
+
+        //initialisierung
+        board = game.getBoard();
+        players = game.getPlayers();
+        fm = board.getFieldManager();
+        Player patrick = players[0];
+
+        patrick.setPosition(10);
+        patrick.setInJail(true);
+
+        Card jailCard = new Card("JAIL", "Gefaengnisfrei Karte", new CardAction[]{CardAction.JAIL}, null);
+        patrick.getCardStack().addCard(jailCard);
+
+        //Freikarte + testen
+        game.processJailCardOption(patrick);
+        Assert.assertTrue("Spieler immer noch im Gefaengnis", patrick.isInJail() == false);
     }
 
 }
