@@ -8,8 +8,12 @@ package de.btu.monopoly.net.server;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.minlog.Log;
-import de.btu.monopoly.data.Player;
-import de.btu.monopoly.net.networkClasses.*;
+import de.btu.monopoly.data.player.Player;
+import de.btu.monopoly.net.networkClasses.GamestartRequest;
+import de.btu.monopoly.net.networkClasses.GamestartResponse;
+import de.btu.monopoly.net.networkClasses.JoinRequest;
+import de.btu.monopoly.net.networkClasses.JoinResponse;
+
 import java.util.ArrayList;
 
 /**

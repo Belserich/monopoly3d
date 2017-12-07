@@ -2,18 +2,19 @@ package de.btu.monopoly.core;
 
 import de.btu.monopoly.core.service.FieldService;
 import de.btu.monopoly.core.service.PlayerService;
-import de.btu.monopoly.data.*;
+import de.btu.monopoly.data.Auction;
 import de.btu.monopoly.data.card.CardStack;
 import de.btu.monopoly.data.field.*;
-import de.btu.monopoly.data.parser.*;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.xml.parsers.ParserConfigurationException;
-
+import de.btu.monopoly.data.parser.CardStackParser;
+import de.btu.monopoly.data.parser.GameBoardParser;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.input.InputHandler;
 import org.xml.sax.SAXException;
+
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author Christian Prinz
@@ -35,11 +36,11 @@ public class Game {
     /**
      * Die fachliche Komponente des Spiels als Einheit, bestehend aus einem Spielbrett, den Spielern sowie Zuschauern.
      *
-     * @param playerCount Anzahl Spieler
+     * @param players Spieler
      *
      */
-    public Game(int playerCount) {
-        this.players = new Player[playerCount];
+    public Game(Player[] players) {
+        this.players = players;
     }
 
     public void init() {

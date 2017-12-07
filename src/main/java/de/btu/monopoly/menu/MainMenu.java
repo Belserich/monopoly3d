@@ -5,9 +5,10 @@
  */
 package de.btu.monopoly.menu;
 
-import de.btu.monopoly.core.InputHandler;
+import de.btu.monopoly.input.InputHandler;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.server.GameServer;
+
 import java.util.Scanner;
 import java.util.logging.Logger;
 

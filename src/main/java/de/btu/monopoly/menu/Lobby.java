@@ -5,7 +5,7 @@
  */
 package de.btu.monopoly.menu;
 
-import de.btu.monopoly.data.Player;
+import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.net.client.GameClient;
 
 /**

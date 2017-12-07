@@ -7,11 +7,12 @@ package de.btu.monopoly.menu;
 
 import com.esotericsoftware.minlog.Log;
 import de.btu.monopoly.core.Game;
-import de.btu.monopoly.core.InputHandler;
-import de.btu.monopoly.data.Player;
+import de.btu.monopoly.data.player.Player;
+import de.btu.monopoly.input.InputHandler;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.networkClasses.GamestartRequest;
 import de.btu.monopoly.net.networkClasses.JoinRequest;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
