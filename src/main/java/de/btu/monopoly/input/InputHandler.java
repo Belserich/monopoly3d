@@ -7,8 +7,8 @@ package de.btu.monopoly.input;
 
 import de.btu.monopoly.core.GameBoard;
 import de.btu.monopoly.core.service.FieldService;
-import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.data.field.Field;
+import de.btu.monopoly.data.player.Player;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,7 +18,7 @@ import java.util.logging.Logger;
  * @author Christian Prinz
  */
 public class InputHandler {
-    
+
     private static final Logger LOGGER = Logger.getLogger(FieldService.class.getCanonicalName());
 
     /**
@@ -63,5 +63,10 @@ public class InputHandler {
         }
         LOGGER.log(Level.INFO, mesg);
         return getUserInput(39);
+    }
+
+    public static String askForString() {
+        Scanner scanner = new Scanner(System.in);
+        return scanner.nextLine();
     }
 }

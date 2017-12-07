@@ -8,6 +8,7 @@ package de.btu.monopoly.menu;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.minlog.Log;
+import de.btu.monopoly.net.networkClasses.BroadcastUsersResponse;
 import de.btu.monopoly.net.networkClasses.GamestartResponse;
 import de.btu.monopoly.net.networkClasses.JoinResponse;
 
@@ -21,8 +22,14 @@ public class LobbyClientListener extends Listener {
 
         if (object instanceof JoinResponse) {
             Log.info("JoinResponse erhalten");
-            JoinResponse joinRes = (JoinResponse) object;
-            LobbyService.joinResponse(joinRes.getName(), joinRes.getId());
+            JoinResponse res = (JoinResponse) object;
+            LobbyService.joinResponse(res.getName());
+        }
+
+        if (object instanceof BroadcastUsersResponse) {
+            Log.info("BroadcastUsersResponse erhalten");
+            BroadcastUsersResponse res = (BroadcastUsersResponse) object;
+            LobbyService.setNewUsers(res.getUsers());
         }
 
         if (object instanceof GamestartResponse) {

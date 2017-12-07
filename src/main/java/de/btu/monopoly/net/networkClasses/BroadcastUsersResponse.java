@@ -9,21 +9,22 @@ package de.btu.monopoly.net.networkClasses;
  *
  * @author Christian Prinz
  */
-public class JoinResponse {
+public class BroadcastUsersResponse {
 
-    private String name;
+    private String[] users;
 
     /**
-     * @return the name
+     * @return the users
      */
-    public String getName() {
-        return name;
+    public String[] getUsers() {
+        return users;
     }
 
     /**
-     * @param name the name to set
+     * @param users the users to set
      */
-    public void setName(String name) {
-        this.name = name;
+    public void setUsers(String[] users) {
+        this.users = users;
     }
+
 }
