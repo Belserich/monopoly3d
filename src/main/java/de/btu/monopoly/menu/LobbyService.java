@@ -24,7 +24,7 @@ public class LobbyService {
 
     private static Lobby lobby;
 
-    public static void joinLobbyAsHost(String name, GameClient client) {
+    public static void joinLobbyAsHost(String name, GameClient client) { // @fix redundant ->
         lobby = new Lobby();
         lobby.setPlayerName(name);
         lobby.setPlayerClient(client);
@@ -51,7 +51,7 @@ public class LobbyService {
             }
         }
         startGame();
-    }
+    }                                                                   // <- @fix redundant
 
     public static void joinLobby(String name, GameClient client) {
         lobby = new Lobby();

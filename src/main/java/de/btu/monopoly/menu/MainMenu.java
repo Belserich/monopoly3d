@@ -36,12 +36,12 @@ public class MainMenu {
         // Server und Client starten und verbinden
         GameServer server = new GameServer(59687);
         server.startServer();
-        GameClient client = new GameClient(59687, 5000);
+        GameClient client = new GameClient(59687, 5000);    // @fix redundant ->
         client.connect("127.0.0.1");
 
         // Spielernamen abfragen
         System.out.println("Geben sie einen Spielernamen ein");
-        String name = askForString();
+        String name = askForString();                       // <- @fix redundant
 
         // Lobby als Host joinen
         LobbyService.joinLobbyAsHost(name, client);
