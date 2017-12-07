@@ -33,7 +33,7 @@ public class ServerListener extends Listener {
             JoinRequest req = (JoinRequest) object;
             JoinResponse res = new JoinResponse();
             res.setName(req.getName());
-            this.host.sendTCP(res);
+            this.getHost().sendTCP(res);
         }
 
         if (object instanceof BroadcastUsersRequest) {
@@ -51,6 +51,13 @@ public class ServerListener extends Listener {
 
     public ServerListener(Server server) {
         this.server = server;
+    }
+
+    /**
+     * @return the host
+     */
+    public Connection getHost() {
+        return host;
     }
 
 }

@@ -22,6 +22,7 @@ public class GameServer {
     private int tcpPort;
     private Server server;
     private Kryo kryo;
+    private ServerListener serverL;
 
     public GameServer(int tcp) {
         this.tcpPort = tcp;
@@ -36,7 +37,8 @@ public class GameServer {
         server.start();
         try {
             server.bind(tcpPort);
-            server.addListener(new ServerListener(server));
+            serverL = new ServerListener(server);
+            server.addListener(serverL);
         } catch (IOException ex) {
             Log.warn("Server konnte nicht gebunden werden{0}", ex);
         }
@@ -67,6 +69,13 @@ public class GameServer {
             Log.warn("ServerIP konnte nicht ausgelesen werden" + ex);
         }
         return output;
+    }
+
+    /**
+     * @return the serverL
+     */
+    public ServerListener getServerListener() {
+        return serverL;
     }
 
 }

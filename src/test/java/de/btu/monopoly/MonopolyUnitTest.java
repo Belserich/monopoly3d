@@ -1,13 +1,17 @@
 package de.btu.monopoly;
 
 //Imports
+import com.esotericsoftware.kryonet.Connection;
+import com.esotericsoftware.minlog.Log;
 import de.btu.monopoly.core.Game;
 import de.btu.monopoly.core.GameBoard;
-import de.btu.monopoly.core.service.FieldService;
-import de.btu.monopoly.core.service.PlayerService;
+import de.btu.monopoly.core.service.*;
 import de.btu.monopoly.data.card.*;
 import de.btu.monopoly.data.field.*;
 import de.btu.monopoly.data.player.Player;
+import de.btu.monopoly.net.client.*;
+import de.btu.monopoly.net.networkClasses.*;
+import de.btu.monopoly.net.server.*;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -21,6 +25,8 @@ public class MonopolyUnitTest {
     private static GameBoard board;
     private static Player[] players;
     private static FieldManager fm;
+    private static GameServer server;
+    private static GameClient client;
 
     public MonopolyUnitTest() {
 
@@ -29,9 +35,44 @@ public class MonopolyUnitTest {
             Player player = new Player("Mathias " + (i + 1), i, 1500);
             players[i] = player;
         }
-
-        game = new Game(players);
+        client = new GameClient(59687, 5000);
+        game = new Game(players, client);
         game.init();
+    }
+
+    @Test
+    public void testNetwork() {
+
+        // initialisierung
+        server = new GameServer(59687);
+        server.startServer();
+        client = new GameClient(59687, 5000);
+        String localHost = System.getProperty("myapplication.ip");
+        client.connect(localHost);
+        Assert.assertTrue("Server nicht initialisiert", server != null);
+        Assert.assertTrue("Client nicht initialisiert", client != null);
+        Assert.assertTrue("2. Client nicht initialisiert", client != null);
+
+        // Client1 schickt Request an Server
+        client.sendTCP(new IamHostRequest());
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException ex) {
+            Log.warn("Fehler: " + ex);
+        }
+        Assert.assertTrue("Client1 konnte keinen Request senden", (server.getServerListener().getHost() != null));
+        Connection host1 = server.getServerListener().getHost();
+
+        //Client2 schickt Request an Server
+        GameClient client2 = new GameClient(59687, 5000);
+        client2.connect(localHost);
+        client2.sendTCP(new IamHostRequest());
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException ex) {
+            Log.warn("Fehler: " + ex);
+        }
+        Assert.assertTrue("Client2 konnte keinen Request senden", (server.getServerListener().getHost() != host1));
     }
 
     @Test
@@ -483,9 +524,8 @@ public class MonopolyUnitTest {
         Player patrick = players[0];
 
         /*
-        Zur Zeit nicht implementier bar, man muss irgendwie
-        in der turn() (welche private) das Attribut doubletCounter veraendern koennen!!
-        TODO @Maxi (von patrick) ne Idee?
+         * Zur Zeit nicht implementier bar, man muss irgendwie in der turn() (welche private) das Attribut doubletCounter
+         * veraendern koennen!! TODO @Maxi (von patrick) ne Idee?
          */
     }
 

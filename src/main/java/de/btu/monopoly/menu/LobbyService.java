@@ -32,6 +32,7 @@ public class LobbyService {
         lobby = new Lobby();
         lobby.setPlayerName(name);
         lobby.setPlayerClient(client);
+        lobby.setPlayerId(0);
         String[] users = new String[1];
 
         // Player hinzufuegen
@@ -74,7 +75,7 @@ public class LobbyService {
 
     private static void startGame() {
         Player[] players = getPlayersArray();
-        Game controller = new Game(players);
+        Game controller = new Game(players, lobby.getPlayerClient());
         controller.init();
         controller.start();
     }
@@ -84,10 +85,6 @@ public class LobbyService {
         JoinRequest req = new JoinRequest();
         req.setName(lobby.getPlayerName());
         lobby.getPlayerClient().sendTCP(req);
-    }
-
-    private static void gamestartRequest() {
-        lobby.getPlayerClient().sendTCP(new GamestartRequest());
     }
 
     public static void joinResponse(String name) {
@@ -100,10 +97,15 @@ public class LobbyService {
         newser[newser.length - 1] = name;
         lobby.setUsers(newser);
 
+        // playerID festlegen, falls man selbst neu hinzugefuegt wurde
         // neues Array broadcasten (lassen)
         BroadcastUsersRequest req = new BroadcastUsersRequest();
         req.setUsers(newser);
         lobby.getPlayerClient().sendTCP(req);
+    }
+
+    private static void gamestartRequest() {
+        lobby.getPlayerClient().sendTCP(new GamestartRequest());
     }
 
     public static void gamestartResponse() {
@@ -113,17 +115,27 @@ public class LobbyService {
     public static void setNewUsers(String[] users) {
         Log.info("BroadcastUsersResponse wird verarbeitet");
         lobby.setUsers(users);
+
+        // ID festlegen, falls man der zuletzt hinzugefuegte User ist
+        if (lobby.getPlayerId() == -1) {
+            lobby.setPlayerId(users.length - 1);
+        }
         System.out.println("aktuelle Spieler in der Lobby:");
         for (String user : lobby.getUsers()) {
             System.out.println(" - " + user);
         }
+        System.out.println("Meine ID ist: " + lobby.getPlayerId());
     }
 
     private static Player[] getPlayersArray() {
         String[] users = lobby.getUsers();
         Player[] players = new Player[users.length];
         for (int i = 0; i < players.length; i++) {
-            players[i] = new Player(users[i], i, 1500);
+            Player newPlayer = new Player(users[i], i, 1500);
+            players[i] = newPlayer;
+            if (lobby.getPlayerId() == i) {
+                lobby.getPlayerClient().setPlayerOnClient(newPlayer);
+            }
         }
         return players;
     }

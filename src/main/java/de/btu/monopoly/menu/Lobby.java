@@ -17,6 +17,7 @@ public class Lobby {
     private String[] users;
     private String playerName;
     private GameClient playerClient;
+    private int playerID = -1;
 
     /**
      * @return the inLobby
@@ -42,7 +43,7 @@ public class Lobby {
     /**
      * @param players the users to set
      */
-    protected void setUsers(String[] players) {
+    public void setUsers(String[] players) {
         this.users = players;
     }
 
@@ -72,5 +73,19 @@ public class Lobby {
      */
     public void setPlayerClient(GameClient aPlayerClient) {
         playerClient = aPlayerClient;
+    }
+
+    /**
+     * @return the playerID
+     */
+    public int getPlayerId() {
+        return playerID;
+    }
+
+    /**
+     * @param id the playerID to set
+     */
+    public void setPlayerId(int id) {
+        this.playerID = id;
     }
 }
