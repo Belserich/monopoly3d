@@ -185,29 +185,43 @@ public class MonopolyUnitTest {
     @Test
     public void testBuyHouse() {
 
+        //initialisierung
         board = game.getBoard();
+        Field[] fields = board.getFields();
         players = game.getPlayers();
+
         fm = board.getFieldManager();
         Player player = players[0];
-        StreetField street = (StreetField) board.getFields()[11];
-        StreetField street2 = (StreetField) board.getFields()[13];
-        StreetField street3 = (StreetField) board.getFields()[14];
+        StreetField street = (StreetField) fields[11];
+        StreetField street2 = (StreetField) fields[13];
+        StreetField street3 = (StreetField) fields[14];
 
+        //Strassenbesitzer geben
         street.setOwner(player);
         street2.setOwner(player);
         street3.setOwner(player);
-        fm.buyHouse(street2);
-        fm.buyHouse(street3);
-        fm.buyHouse(street);
 
-        //act
+        //Haeuseranzahl setzen
+        street.setHouseCount(0);
+        street2.setHouseCount(1);
+        street3.setHouseCount(1);
+
+        //act und assert
+        fm.buyHouse(street);
         int expResult = 1;
-        int expHousePrice = 100;
-        int expMoney = 1500 - street.getHousePrice() - street2.getHousePrice() - street3.getHousePrice();
+        int expHousPrice = 100;
+        int expMoney = 1500 - street.getHousePrice();
         int result = street.getHouseCount();
-        Assert.assertEquals(expResult, result);
-        Assert.assertEquals(expHousePrice, street.getHousePrice());
-        Assert.assertEquals(expMoney, player.getMoney());
+
+        Assert.assertTrue(
+                "Hause wurde nicht bebaut! expected: "
+                + expResult + " but was: " + street.getHouseCount(), expResult == street.getHouseCount());
+        Assert.assertTrue(
+                "Preis vom Haus ist falsch! expected: "
+                + expHousPrice + " but was: " + street.getHousePrice(), expHousPrice == street.getHousePrice());
+        Assert.assertTrue(
+                "`Geld wurde nicht abgebucht! expected: "
+                + expMoney + " but was: " + player.getMoney(), expMoney == player.getMoney());
 
     }
 
