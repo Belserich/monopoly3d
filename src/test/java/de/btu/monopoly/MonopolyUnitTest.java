@@ -365,32 +365,40 @@ public class MonopolyUnitTest {
     @Test
     public void testPayMortgage() {
 
+       //initialisierung
         board = game.getBoard();
+        Field[] fields = board.getFields();
         players = game.getPlayers();
+
         fm = board.getFieldManager();
         Player player = players[0];
-        PropertyField suedbahnhof = (PropertyField) fm.getFields()[5];
-        PropertyField nordbahnhof = (PropertyField) fm.getFields()[25];
-        StreetField badStrasse = (StreetField) fm.getFields()[1];
 
+        StationField suedbahnhof = (StationField) fields[5];
+        StationField nordbahnhof = (StationField) fields[25];
+        StreetField badStrasse = (StreetField) fields[1];
+
+        //Strassenbesitzer geben
         suedbahnhof.setOwner(player);
         nordbahnhof.setOwner(player);
         badStrasse.setOwner(player);
 
+        //setze Hypothek ist aufgenommen
         suedbahnhof.setMortgageTaken(true);
         //getRent()
-        PlayerService.takeMoney(player, 1400);
+        PlayerService pc = new PlayerService();
 
+        //Geld von Spieler abziehe, damit er nicht genug hat
+        pc.takeMoney(player, 1400);
+
+        //act und assert
         fm.payMortgage(suedbahnhof);
-        Assert.assertEquals(true, suedbahnhof.isMortgageTaken());
-        Assert.assertEquals(100, player.getMoney());
-        Assert.assertEquals(0, suedbahnhof.getRent());
-
         badStrasse.setMortgageTaken(true);
         int expMoney = player.getMoney() - badStrasse.getMortgageBack();
         fm.payMortgage(badStrasse);
-        Assert.assertEquals(expMoney, player.getMoney());
-        Assert.assertEquals(2, badStrasse.getRent()); //TODO
+        Assert.assertTrue("Geld nicht richtig abgebucht! expected: " + expMoney + "but: "
+                + player.getMoney(), expMoney == player.getMoney());
+        Assert.assertTrue("Geld nicht richtig abgebucht! expected: " + 2 + " but: "
+                + badStrasse.getRent(), 2 == badStrasse.getRent()); 
     }
 
 //    @Test
