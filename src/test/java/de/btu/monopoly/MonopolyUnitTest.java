@@ -287,7 +287,7 @@ public class MonopolyUnitTest {
     @Test
     public void testTakeMortgage() {
 
-       //initialisierung
+        //initialisierung
         board = game.getBoard();
         Field[] fields = board.getFields();
         players = game.getPlayers();
@@ -358,14 +358,12 @@ public class MonopolyUnitTest {
         Assert.assertTrue("Rent falsch! expected: " + 20 + " but was: "
                 + theaterStrasse.getRent(), 20 == turmStrasse.getRent());
 
-    
-
     }
 
     @Test
     public void testPayMortgage() {
 
-       //initialisierung
+        //initialisierung
         board = game.getBoard();
         Field[] fields = board.getFields();
         players = game.getPlayers();
@@ -398,30 +396,43 @@ public class MonopolyUnitTest {
         Assert.assertTrue("Geld nicht richtig abgebucht! expected: " + expMoney + "but: "
                 + player.getMoney(), expMoney == player.getMoney());
         Assert.assertTrue("Geld nicht richtig abgebucht! expected: " + 2 + " but: "
-                + badStrasse.getRent(), 2 == badStrasse.getRent()); 
+                + badStrasse.getRent(), 2 == badStrasse.getRent());
     }
 
-//    @Test
-//    public void testTaxField() {
-//        game = new Game(1); // alles hinfällig!
-//        game.init();
-//        board = game.getBoard();
-//        players = game.getPlayers();
-//        fm = board.getFieldManager();
-//        Player player = players[0];
-//        TaxField einSteuer = (TaxField) fm.getFields()[4];
-//        TaxField zusatzSteuer = (TaxField) fm.getFields()[38];
-//
-//        int expMoney1 = player.getMoney() - einSteuer.getTax();
-////        game.processPlayerOnTaxField(player, einSteuer);
-//        player.setPosition(4);
-//        Assert.assertEquals(expMoney1, player.getMoney());
-//
-//        int expMoney2 = player.getMoney() - zusatzSteuer.getTax();
-////        game.processPlayerOnTaxField(player, zusatzSteuer);
-//        player.setPosition(38);
-//        Assert.assertEquals(expMoney2, player.getMoney());
-//    }
+    @Test
+    public void testTaxField() {
+        //initialisierung
+        board = game.getBoard();
+        Field[] fields = board.getFields();
+        players = game.getPlayers();
+
+        fm = board.getFieldManager();
+        Player player = players[0];
+
+        Player player2 = players[1];
+        int[] rollResult = {8, 3};
+        TaxField einSteuer = (TaxField) fields[4];
+        TaxField zusatzSteuer = (TaxField) fields[38];
+
+        int expMoney1 = player2.getMoney() - einSteuer.getTax();
+        int expMoney2 = player.getMoney() - zusatzSteuer.getTax();
+
+        //Position setzen
+        player.setPosition(38);
+        player2.setPosition(4);
+
+        //act und assert
+        game.fieldPhase(player, rollResult);
+
+        game.fieldPhase(player2, rollResult);
+
+        Assert.assertTrue(
+                "Geld wurde nicht abgebucht!", expMoney1 == player2.getMoney());
+        Assert.assertTrue(
+                "Geld wurde nicht abgebucht!", expMoney2 == player.getMoney());
+
+    }
+
     @Test
     public void testBankrupt() {
 
