@@ -12,8 +12,6 @@ import de.btu.monopoly.net.networkClasses.*;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -40,7 +38,6 @@ public class GameServer {
             server.bind(tcpPort);
             server.addListener(new ServerListener(server));
         } catch (IOException ex) {
-            ex.printStackTrace();
             Log.warn("Server konnte nicht gebunden werden{0}", ex);
         }
 
@@ -67,7 +64,7 @@ public class GameServer {
         try {
             output = InetAddress.getLocalHost().getHostAddress();
         } catch (UnknownHostException ex) {
-            Logger.getLogger(GameServer.class.getName()).log(Level.SEVERE, null, ex);
+            Log.warn("ServerIP konnte nicht ausgelesen werden");
         }
         return output;
     }

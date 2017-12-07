@@ -20,6 +20,7 @@ import java.util.logging.Logger;
  */
 public class LobbyService {
 
+    private static final Logger LOGGER = Logger.getLogger(LobbyService.class.getCanonicalName());
     private static Lobby lobby;
 
     public static void joinLobbyAsHost(GameClient client) {
@@ -43,7 +44,7 @@ public class LobbyService {
         try {
             Thread.sleep(500);
         } catch (InterruptedException ex) {
-            Logger.getLogger(LobbyService.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.WARNING, "Fehler: {0}", ex);
         }
 
         // Schleife die die Lobby festhaelt, während die neuen Spieler joinen
