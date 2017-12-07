@@ -229,12 +229,13 @@ public class MonopolyUnitTest {
     public void testSellHouse() {
 
         board = game.getBoard();
+        Field[] fields = board.getFields();
         players = game.getPlayers();
         fm = board.getFieldManager();
         Player player = players[0];
-        StreetField street = (StreetField) board.getFields()[11];
-        StreetField street2 = (StreetField) board.getFields()[13];
-        StreetField street3 = (StreetField) board.getFields()[14];
+        StreetField street = (StreetField) fields[11];
+        StreetField street2 = (StreetField) fields[13];
+        StreetField street3 = (StreetField) fields[14];
 
         int expMoney = player.getMoney();
 
@@ -263,19 +264,23 @@ public class MonopolyUnitTest {
     @Test
     public void testIsComplete() {
 
+        //initialisierung
         board = game.getBoard();
+        Field[] fields = board.getFields();
         players = game.getPlayers();
         fm = board.getFieldManager();
         Player player = players[0];
-        StreetField street = (StreetField) board.getFields()[11];
-        StreetField street2 = (StreetField) board.getFields()[13];
-        StreetField street3 = (StreetField) board.getFields()[14];
+        StreetField street = (StreetField) fields[11];
+        StreetField street2 = (StreetField) fields[13];
+        StreetField street3 = (StreetField) fields[14];
 
+        //Strassenbesitzer geben
         street.setOwner(player);
         street2.setOwner(player);
         street3.setOwner(player);
 
-        Assert.assertEquals(true, fm.isComplete(street));
+        //act und assert
+        Assert.assertTrue("Strasse ist nicht komplett!", true == fm.isComplete(street));
 
     }
 
