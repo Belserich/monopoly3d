@@ -35,7 +35,7 @@ public class MainMenu {
         GameServer server = new GameServer(59687);
         server.startServer();
         GameClient client = new GameClient(59687, 5000);    // @fix redundant ->
-        String localHost = "127.0.0.1";
+        String localHost = System.getProperty("myapplication.ip");
         client.connect(localHost);
         System.out.println("Die ServerIP ist " + server.getServerIP());
 
