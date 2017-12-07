@@ -131,7 +131,7 @@ public class Game {
         } while (player.isInJail() && choice != 1);
     }
 
-    private void processJailRollOption(Player player) {
+    public void processJailRollOption(Player player) {
         int[] result = PlayerService.roll(player);
         if (result[0] == result[1]) {
             PlayerService.freeFromJail(player);
@@ -145,7 +145,7 @@ public class Game {
         }
     }
 
-    private void processJailPayOption(Player player) {
+    public void processJailPayOption(Player player) {
         if (PlayerService.takeMoney(player, 50)) {
             LOGGER.info(String.format("%s hat 50 gezahlt und ist frei!", player.getName()));
             PlayerService.freeFromJail(player);
@@ -154,7 +154,7 @@ public class Game {
         }
     }
 
-    private void processJailCardOption(Player player) {
+    public void processJailCardOption(Player player) {
         if (board.getCardManager().useJailCard(player)) {
             LOGGER.info(String.format("%s hat eine Gefängnis-Frei-Karte benutzt.", player.getName()));
         } else {
