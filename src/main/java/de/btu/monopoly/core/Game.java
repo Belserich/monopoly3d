@@ -55,12 +55,6 @@ public class Game {
         } catch (IOException | SAXException | ParserConfigurationException ex) {
             LOGGER.log(Level.WARNING, "Fehler beim initialisieren des Boards / der Karten.", ex);
         }
-
-        for (int i = 0; i < players.length; i++) {
-            Player player = new Player("Mathias " + (i + 1), i, 1500);
-            players[i] = player;
-            board.addPlayer(player);
-        }
     
         System.err.println("-------------------------");
     }

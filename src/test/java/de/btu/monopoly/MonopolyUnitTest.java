@@ -1,7 +1,9 @@
 package de.btu.monopoly;
 
 //Imports
-import de.btu.monopoly.core.*;
+
+import de.btu.monopoly.core.Game;
+import de.btu.monopoly.core.GameBoard;
 import de.btu.monopoly.core.service.FieldService;
 import de.btu.monopoly.core.service.PlayerService;
 import de.btu.monopoly.data.field.*;
@@ -20,12 +22,22 @@ public class MonopolyUnitTest {
     private static Player[] players;
     private static FieldManager fm;
 
+    public MonopolyUnitTest() {
+        
+        players = new Player[4];
+        for (int i = 0; i < 4; i++) {
+            Player player = new Player("Mathias " + (i + 1), i, 1500);
+            players[i] = player;
+        }
+        
+        game = new Game(players);
+        game.init();
+    }
+    
     @Test
     public void testGameBoard() {
-
+        
         //initialisierung
-        game = new Game(2);
-        game.init();
         board = game.getBoard();
         players = game.getPlayers();
         fm = board.getFieldManager();
@@ -48,8 +60,6 @@ public class MonopolyUnitTest {
     public void testRoll() {
 
         //initialisierung
-        game = new Game(1);
-        game.init();
         board = game.getBoard();
         players = game.getPlayers();
         fm = board.getFieldManager();
@@ -67,8 +77,6 @@ public class MonopolyUnitTest {
     public void testGoField() {
 
         //initialisierung
-        game = new Game(2);
-        game.init();
         board = game.getBoard();
         players = game.getPlayers();
         fm = board.getFieldManager();
@@ -98,8 +106,6 @@ public class MonopolyUnitTest {
     public void testCornerField() {
 
         //initialisierung
-        game = new Game(1);
-        game.init();
         board = game.getBoard();
         players = game.getPlayers();
         fm = board.getFieldManager();
@@ -122,8 +128,6 @@ public class MonopolyUnitTest {
     public void testBuyStreet() {
 
         //initialisierung
-        game = new Game(1);
-        game.init();
         board = game.getBoard();
         players = game.getPlayers();
         fm = board.getFieldManager();
@@ -140,8 +144,6 @@ public class MonopolyUnitTest {
     @Test
     public void testBuyHouse() {
 
-        game = new Game(1);
-        game.init();
         board = game.getBoard();
         players = game.getPlayers();
         fm = board.getFieldManager();
@@ -174,8 +176,6 @@ public class MonopolyUnitTest {
     @Test
     public void testSellHouse() {
 
-        game = new Game(1);
-        game.init();
         board = game.getBoard();
         players = game.getPlayers();
         fm = board.getFieldManager();
@@ -214,8 +214,6 @@ public class MonopolyUnitTest {
     @Test
     public void testIsComplete() {
 
-        game = new Game(1);
-        game.init();
         board = game.getBoard();
         players = game.getPlayers();
         fm = board.getFieldManager();
@@ -235,8 +233,6 @@ public class MonopolyUnitTest {
     @Test
     public void testTakeMortgage() {
 
-        game = new Game(1);
-        game.init();
         board = game.getBoard();
         players = game.getPlayers();
         fm = board.getFieldManager();
@@ -302,8 +298,6 @@ public class MonopolyUnitTest {
     @Test
     public void testPayMortgage() {
 
-        game = new Game(1);
-        game.init();
         board = game.getBoard();
         players = game.getPlayers();
         fm = board.getFieldManager();
@@ -356,9 +350,6 @@ public class MonopolyUnitTest {
     @Test
     public void testBankrupt() {
 
-        //initialisierung
-        game = new Game(1);
-        game.init();
         board = game.getBoard();
         players = game.getPlayers();
         fm = board.getFieldManager();
@@ -387,10 +378,7 @@ public class MonopolyUnitTest {
 
     @Test
     public void testPayRent() {
-
-        //initialisierung
-        game = new Game(2);
-        game.init();
+        
         board = game.getBoard();
         players = game.getPlayers();
         fm = board.getFieldManager();
@@ -475,9 +463,6 @@ public class MonopolyUnitTest {
     //@Test TODO Kann nicht testen ohne extra Eingaben
     public void testGoToJail() {
 
-        //initialisierung
-        game = new Game(1);
-        game.init();
         board = game.getBoard();
         players = game.getPlayers();
         fm = board.getFieldManager();
