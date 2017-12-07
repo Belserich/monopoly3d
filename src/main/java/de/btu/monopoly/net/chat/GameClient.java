@@ -7,6 +7,7 @@ package de.btu.monopoly.net.chat;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Client;
+import de.btu.monopoly.data.player.Player;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,6 +23,7 @@ public class GameClient {
     private int timeout;
     private Client client;
     private Kryo kryo;
+    private Player playerOnClient;
 
     public GameClient(int tcp, int udp, int timeout) {
         this.tcpPort = tcp;
@@ -48,6 +50,20 @@ public class GameClient {
 
     private void registerClasses() {
         // die selben Klassen wie beim Server
+    }
+
+    /**
+     * @return the playerOnClient
+     */
+    public Player getPlayerOnClient() {
+        return playerOnClient;
+    }
+
+    /**
+     * @param playerOnClient the playerOnClient to set
+     */
+    public void setPlayerOnClient(Player playerOnClient) {
+        this.playerOnClient = playerOnClient;
     }
 
 }

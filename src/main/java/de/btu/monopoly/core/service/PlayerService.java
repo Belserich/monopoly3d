@@ -136,8 +136,8 @@ public class PlayerService {
     public static int[] roll(Player player) {
         int[] result = new int[2];
 
-        result[0] = rng.nextInt(6) + 1;
-        result[1] = rng.nextInt(6) + 1;
+        result[0] = getRng().nextInt(6) + 1;
+        result[1] = getRng().nextInt(6) + 1;
 
         LOGGER.info(String.format("Würfelergebnis: %d %d", result[0], result[1]));
         return result;
@@ -154,5 +154,12 @@ public class PlayerService {
         player.setBankrupt(true);
         board.getFieldManager().bankrupt(player);
         board.getCardManager().bankrupt(player);
+    }
+
+    /**
+     * @return the rng
+     */
+    public static Random getRng() {
+        return rng;
     }
 }

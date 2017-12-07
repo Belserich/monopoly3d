@@ -7,6 +7,7 @@ package de.btu.monopoly.menu;
 
 import com.esotericsoftware.minlog.Log;
 import de.btu.monopoly.core.Game;
+import de.btu.monopoly.core.service.PlayerService;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.input.InputHandler;
 import de.btu.monopoly.net.client.GameClient;
@@ -14,7 +15,7 @@ import de.btu.monopoly.net.networkClasses.BroadcastUsersRequest;
 import de.btu.monopoly.net.networkClasses.GamestartRequest;
 import de.btu.monopoly.net.networkClasses.IamHostRequest;
 import de.btu.monopoly.net.networkClasses.JoinRequest;
-
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -52,7 +53,7 @@ public class LobbyService {
             LOGGER.log(Level.WARNING, "Fehler: {0}", ex);
             Thread.currentThread().interrupt();
         }
-    
+
         System.out.println("klick auf 1 zum Starten");
         InputHandler.getUserInput(1);
         gamestartRequest();
@@ -120,9 +121,9 @@ public class LobbyService {
         }
         System.out.println("aktuelle Spieler in der Lobby:");
         for (String user : lobby.getUsers()) {
-            System.out.println(" - " + user);
+            Log.info(" - " + user);
         }
-        System.out.println("Meine ID ist: " + lobby.getPlayerId());
+        Log.info("Meine ID ist: " + lobby.getPlayerId());
     }
 
     private static Player[] getPlayersArray() {
@@ -134,6 +135,18 @@ public class LobbyService {
             if (lobby.getPlayerId() == i) {
                 lobby.getPlayerClient().setPlayerOnClient(newPlayer);
             }
+        }
+        Log.info("Spielreihenfolge wird ausgewürfelt:");
+        Player temp;
+        Player rand;
+        Random random = PlayerService.getRng();
+        for (int i = 0; i < players.length; i++) {
+            temp = players[i];
+            int r = random.nextInt(players.length);
+            rand = players[r];
+            players[i] = rand;
+            players[r] = temp;
+            Log.info("[" + i + "] " + players[i].getName());
         }
         return players;
     }
