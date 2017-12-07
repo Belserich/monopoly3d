@@ -22,7 +22,11 @@ public class LobbyService {
 
     private static Lobby lobby;
 
-    public static void joinLobbyAsHost(String name, GameClient client) {
+    public static void joinLobbyAsHost(GameClient client) {
+        // Spielernamen abfragen
+        System.out.println("Geben sie einen Spielernamen ein");
+        String name = InputHandler.askForString();
+
         // Lobby init
         lobby = new Lobby();
         lobby.setPlayerName(name);
@@ -42,14 +46,24 @@ public class LobbyService {
             Logger.getLogger(LobbyService.class.getName()).log(Level.SEVERE, null, ex);
         }
 
+        // Schleife die die Lobby festhaelt, während die neuen Spieler joinen
         while (lobby.isInLobby()) {
             System.out.println("klick auf 1 zum Starten");
             InputHandler.getUserInput(1);
             gamestartRequest();
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(LobbyService.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 
-    public static void joinLobby(String name, GameClient client) {
+    public static void joinLobby(GameClient client) {
+        // Spielernamen abfragen
+        System.out.println("Geben sie einen Spielernamen ein");
+        String name = InputHandler.askForString();
+
         // Lobby init
         lobby = new Lobby();
         lobby.setPlayerName(name);

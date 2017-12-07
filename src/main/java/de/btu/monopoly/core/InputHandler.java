@@ -61,4 +61,16 @@ public class InputHandler {
         LOGGER.log(Level.INFO, mesg);
         return getUserInput(39);
     }
+
+    /**
+     *
+     * @return String input
+     */
+    public static String askForString() {
+        Scanner input = new Scanner(System.in);
+
+        String ip = input.nextLine();
+
+        return ip;
+    }
 }
