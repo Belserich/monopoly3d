@@ -3,13 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.btu.monopoly.net;
+package de.btu.monopoly.net.server;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Server;
+import com.esotericsoftware.minlog.Log;
+import de.btu.monopoly.net.networkClasses.*;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -18,36 +18,40 @@ import java.util.logging.Logger;
 public class GameServer {
 
     private int tcpPort;
-    private int udpPort;
     private Server server;
     private Kryo kryo;
 
-    public GameServer(int tcp, int udp) {
+    public GameServer(int tcp) {
         this.tcpPort = tcp;
-        this.udpPort = udp;
 
         server = new Server();
         kryo = server.getKryo();
-        registerClasses();
+        registerKryoClasses();
     }
 
     public void startServer() {
+        Log.info("Server startet");
         server.start();
-
         try {
-            server.bind(tcpPort, udpPort);
+            server.bind(tcpPort);
             server.addListener(new ServerListener());
         } catch (IOException ex) {
-            Logger.getLogger(GameServer.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
+            Log.warn("Server konnte nicht gebunden werden{0}", ex);
         }
+
     }
 
     public void stopServer() {
+        Log.info("Server fährt runter");
         server.stop();
     }
 
-    private void registerClasses() {
-        //hier kommt zum Beispiel: kryo.register(InputRequest.class);
+    private void registerKryoClasses() {
+        kryo.register(JoinRequest.class);
+        kryo.register(JoinResponse.class);
+        kryo.register(GamestartRequest.class);
+        kryo.register(GamestartResponse.class);
     }
 
 }

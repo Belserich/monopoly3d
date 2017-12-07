@@ -5,7 +5,7 @@
  */
 package de.btu.monopoly;
 
-import de.btu.monopoly.core.Game;
+import de.btu.monopoly.menu.MainMenu;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
@@ -48,12 +48,16 @@ public class Launcher extends Application {
         launch(args);
     }
 
-    private static void initGame() {
-        Game controller = new Game(2);
-        controller.init();
-        controller.start();
+    public static void initGame() {
+        MainMenu mainMenu = new MainMenu();
+        mainMenu.start();
     }
 
+//    private static void initGame() {
+//        Game controller = new Game(2);
+//        controller.init();
+//        controller.start();
+//    }
     private static void configLoggers() {
         try {
             LogManager.getLogManager().readConfiguration(Launcher.class.getResourceAsStream("/data/config/logging.properties"));

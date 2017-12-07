@@ -3,13 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.btu.monopoly.net;
+package de.btu.monopoly.net.client;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Client;
+import com.esotericsoftware.minlog.Log;
+import de.btu.monopoly.menu.LobbyClientListener;
+import de.btu.monopoly.net.networkClasses.*;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -18,36 +19,45 @@ import java.util.logging.Logger;
 public class GameClient {
 
     private int tcpPort;
-    private int udpPort;
     private int timeout;
     private Client client;
     private Kryo kryo;
 
-    public GameClient(int tcp, int udp, int timeout) {
+    public GameClient(int tcp, int timeout) {
         this.tcpPort = tcp;
-        this.udpPort = udp;
         this.timeout = timeout;
 
         client = new Client();
         kryo = client.getKryo();
-        registerClasses();
+        registerKryoClasses();
     }
 
     public void connect(String serverIP) {
+        Log.info("Client verbindet");
         try {
-            client.connect(timeout, serverIP, tcpPort, udpPort);
+            client.start();
+            client.connect(timeout, serverIP, tcpPort);
             client.addListener(new ClientListener());
+            client.addListener(new LobbyClientListener());
         } catch (IOException ex) {
-            Logger.getLogger(GameClient.class.getName()).log(Level.SEVERE, null, ex);
+            Log.warn("Client konnte nicht gestartet werden{0}", ex);
         }
+
     }
 
     public void disconnect() {
+        Log.info("Client trennt Verbindung");
         client.stop();
     }
 
-    private void registerClasses() {
-        // die selben Klassen wie beim Server
+    private void registerKryoClasses() {
+        kryo.register(JoinRequest.class);
+        kryo.register(JoinResponse.class);
+        kryo.register(GamestartRequest.class);
+        kryo.register(GamestartResponse.class);
     }
 
+    public void sendTCP(Object object) {
+        client.sendTCP(object);
+    }
 }

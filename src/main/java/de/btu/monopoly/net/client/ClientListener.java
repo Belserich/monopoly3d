@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.btu.monopoly.net;
+package de.btu.monopoly.net.client;
 
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
@@ -12,10 +12,8 @@ import com.esotericsoftware.kryonet.Listener;
  *
  * @author Christian Prinz
  */
-public class ServerListener extends Listener {
+public class ClientListener extends Listener {
 
-    public void recieved(Connection connection, Object object) {
-
+    public void received(Connection connection, Object object) {
     }
-
 }
