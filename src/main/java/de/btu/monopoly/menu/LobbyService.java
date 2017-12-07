@@ -45,6 +45,7 @@ public class LobbyService {
             Thread.sleep(500);
         } catch (InterruptedException ex) {
             LOGGER.log(Level.WARNING, "Fehler: {0}", ex);
+            Thread.currentThread().interrupt();
         }
 
         // Schleife die die Lobby festhaelt, während die neuen Spieler joinen

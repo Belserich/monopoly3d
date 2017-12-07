@@ -64,7 +64,7 @@ public class GameServer {
         try {
             output = InetAddress.getLocalHost().getHostAddress();
         } catch (UnknownHostException ex) {
-            Log.warn("ServerIP konnte nicht ausgelesen werden");
+            Log.warn("ServerIP konnte nicht ausgelesen werden" + ex);
         }
         return output;
     }
