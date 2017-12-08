@@ -53,9 +53,6 @@ public class ServerListener extends Listener {
             Log.info("BroadcastPlayerChoiceRequest erhalten");
             server.sendToAllExceptTCP(connection.getID(), object);
         }
-        else {
-            System.err.println("Falsches packet angekommen! " + object.getClass());
-        }
     }
     
 
