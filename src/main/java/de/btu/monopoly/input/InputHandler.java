@@ -9,6 +9,7 @@ import de.btu.monopoly.core.GameBoard;
 import de.btu.monopoly.core.service.FieldService;
 import de.btu.monopoly.data.field.Field;
 import de.btu.monopoly.data.player.Player;
+
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -28,24 +29,21 @@ public class InputHandler {
      * @return int der Durch den Anwender gewaehlt wurde
      */
     public static int getUserInput(int max) {
-
         Scanner scanner = new Scanner(System.in);
         int output = -1;
-
-        // Solange nicht der richtige Wertebereich eingegeben wird, wird die Eingabe wiederholt.
         do {
             LOGGER.log(Level.INFO, "Eingabe: ");
             try {
                 output = Integer.parseInt(scanner.nextLine());
             } catch (NumberFormatException ex) {
-                LOGGER.log(Level.WARNING, "FEHLER: falsche Eingabe!");
+                LOGGER.log(Level.WARNING, "Fehler: falsche Eingabe!");
             }
-
+        
             if (output < 1 || output > max) {
                 LOGGER.log(Level.INFO, "Deine Eingabe liegt nicht im Wertebereich! Bitte erneut versuchen.");
             }
-        } while (output < 1 || output > max);
-
+        }
+        while (output < 1 || output > max);
         return output;
     }
 

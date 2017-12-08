@@ -11,6 +11,7 @@ import com.esotericsoftware.minlog.Log;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.menu.LobbyClientListener;
 import de.btu.monopoly.net.networkClasses.*;
+
 import java.io.IOException;
 
 /**
@@ -24,6 +25,8 @@ public class GameClient {
     private Client client;
     private Kryo kryo;
     private Player playerOnClient;
+    
+    private ClientListener listener;
 
     public GameClient(int tcp, int timeout) {
         this.tcpPort = tcp;
@@ -39,7 +42,8 @@ public class GameClient {
         try {
             client.start();
             client.connect(timeout, serverIP, tcpPort);
-            client.addListener(new ClientListener());
+            listener = new ClientListener();
+            client.addListener(listener);
             client.addListener(new LobbyClientListener());
         } catch (IOException ex) {
             Log.warn("Client konnte nicht gestartet werden{0}", ex);
@@ -53,6 +57,7 @@ public class GameClient {
     }
 
     private void registerKryoClasses() {
+        kryo.register(BroadcastPlayerChoiceRequest.class);
         kryo.register(JoinRequest.class);
         kryo.register(JoinResponse.class);
         kryo.register(GamestartRequest.class);
@@ -65,6 +70,10 @@ public class GameClient {
 
     public void sendTCP(Object object) {
         client.sendTCP(object);
+    }
+    
+    public BroadcastPlayerChoiceRequest[] getPlayerChoiceObjects() {
+        return listener.getPlayerChoiceObjects();
     }
 
     /**

@@ -10,7 +10,11 @@ import de.btu.monopoly.core.Game;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.input.InputHandler;
 import de.btu.monopoly.net.client.GameClient;
-import de.btu.monopoly.net.networkClasses.*;
+import de.btu.monopoly.net.networkClasses.BroadcastUsersRequest;
+import de.btu.monopoly.net.networkClasses.GamestartRequest;
+import de.btu.monopoly.net.networkClasses.IamHostRequest;
+import de.btu.monopoly.net.networkClasses.JoinRequest;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -48,13 +52,10 @@ public class LobbyService {
             LOGGER.log(Level.WARNING, "Fehler: {0}", ex);
             Thread.currentThread().interrupt();
         }
-
-        // Schleife die die Lobby festhaelt, während die neuen Spieler joinen
-        while (lobby.isInLobby()) {
-            System.out.println("klick auf 1 zum Starten");
-            InputHandler.getUserInput(1);
-            gamestartRequest();
-        }
+    
+        System.out.println("klick auf 1 zum Starten");
+        InputHandler.getUserInput(1);
+        gamestartRequest();
     }
 
     public static void joinLobby(GameClient client) {
@@ -68,9 +69,6 @@ public class LobbyService {
         lobby.setPlayerClient(client);
 
         joinRequest();
-        while (lobby.isInLobby()) {
-
-        }
     }
 
     private static void startGame() {

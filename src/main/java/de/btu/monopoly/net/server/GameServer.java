@@ -9,6 +9,7 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Server;
 import com.esotericsoftware.minlog.Log;
 import de.btu.monopoly.net.networkClasses.*;
+
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -51,6 +52,7 @@ public class GameServer {
     }
 
     private void registerKryoClasses() {
+        kryo.register(BroadcastPlayerChoiceRequest.class);
         kryo.register(JoinRequest.class);
         kryo.register(JoinResponse.class);
         kryo.register(GamestartRequest.class);

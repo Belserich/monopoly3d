@@ -6,6 +6,7 @@
 package de.btu.monopoly.menu;
 
 import com.esotericsoftware.kryonet.Connection;
+import com.esotericsoftware.kryonet.FrameworkMessage;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.minlog.Log;
 import de.btu.monopoly.net.networkClasses.BroadcastUsersResponse;
@@ -20,20 +21,25 @@ public class LobbyClientListener extends Listener {
 
     public void received(Connection connection, Object object) {
 
-        if (object instanceof JoinResponse) {
+        if (object instanceof FrameworkMessage) {
+            // TODO LOG
+        }
+        else if (object instanceof JoinResponse) {
             Log.info("JoinResponse erhalten");
             JoinResponse res = (JoinResponse) object;
             LobbyService.joinResponse(res.getName());
         }
-
-        if (object instanceof BroadcastUsersResponse) {
+        else if (object instanceof BroadcastUsersResponse) {
             Log.info("BroadcastUsersResponse erhalten");
             BroadcastUsersResponse res = (BroadcastUsersResponse) object;
             LobbyService.setNewUsers(res.getUsers());
         }
-
-        if (object instanceof GamestartResponse) {
-            LobbyService.gamestartResponse();
+        else if (object instanceof GamestartResponse) {
+            Thread t = new Thread( LobbyService::gamestartResponse );
+            t.start();
+        }
+        else {
+            System.err.println("Falsches packet angekommen! " + object.getClass());
         }
     }
 }

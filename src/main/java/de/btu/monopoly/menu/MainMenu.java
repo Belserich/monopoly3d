@@ -8,6 +8,7 @@ package de.btu.monopoly.menu;
 import de.btu.monopoly.input.InputHandler;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.server.GameServer;
+
 import java.util.logging.Logger;
 
 /**
@@ -20,7 +21,8 @@ public class MainMenu {
 
     public void start() {
         System.out.println("HAUPTMENÜ\n[1] Spiel starten\n[2] Spiel beitreten");
-        switch (InputHandler.getUserInput(2)) {
+        int choice = InputHandler.getUserInput(2);
+        switch (choice) {
             case 1:
                 createGame();
                 break;
@@ -34,9 +36,9 @@ public class MainMenu {
         // Server und Client starten und verbinden
         GameServer server = new GameServer(59687);
         server.startServer();
-        GameClient client = new GameClient(59687, 5000);    // @fix redundant ->
-        String localHost = System.getProperty("myapplication.ip");
-        client.connect(localHost);
+        GameClient client = new GameClient(59687, 5000);
+        String localHost = System.getProperty("myapp.ip");
+        client.connect("localhost");
         System.out.println("Die ServerIP ist " + server.getServerIP());
 
         // Lobby als Host joinen

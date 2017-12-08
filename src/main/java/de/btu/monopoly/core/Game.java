@@ -10,17 +10,21 @@ import de.btu.monopoly.data.parser.GameBoardParser;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.input.InputHandler;
 import de.btu.monopoly.net.client.GameClient;
+import de.btu.monopoly.net.networkClasses.BroadcastPlayerChoiceRequest;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.xml.parsers.ParserConfigurationException;
-import org.xml.sax.SAXException;
 
 /**
  * @author Christian Prinz
  */
 public class Game {
-
+    
+    public static final int SEED = 1;
+    
     private static final Logger LOGGER = Logger.getLogger(Game.class.getCanonicalName());
 
     /**
@@ -114,7 +118,7 @@ public class Game {
             LOGGER.info(String.format(" %s ist im Gefängnis und kann: %n[1] - 3-mal Würfeln, um mit einem Pasch freizukommen "
                     + "%n[2] - Bezahlen (50€) %n[3] - Gefängnis-Frei-Karte benutzen", player.getName()));
 
-            choice = InputHandler.getUserInput(3);
+            choice = getClientChoice(player, 3);
             switch (choice) {
                 case 1:
                     processJailRollOption(player);
@@ -129,10 +133,35 @@ public class Game {
                     break;
 
                 default:
-                    LOGGER.log(Level.WARNING, "Fehler: Gefängnis-Switch überschritten!");
+                    LOGGER.log(Level.WARNING, "Fehler: Die Wahl des Spielers ist außerhalb des erlaubten Bereichs!");
                     break;
             }
         } while (player.isInJail() && choice != 1);
+    }
+    
+    private int getClientChoice(Player player, int max) {
+        Player thisPlayer = client.getPlayerOnClient();
+    
+        if (thisPlayer == player) {
+            int choice = InputHandler.getUserInput(max);
+            BroadcastPlayerChoiceRequest packet = new BroadcastPlayerChoiceRequest();
+            packet.setChoice(choice);
+            client.sendTCP(packet);
+            return choice;
+        }
+        else {
+            do {
+                BroadcastPlayerChoiceRequest[] packets = client.getPlayerChoiceObjects();
+                if (packets.length > 1) {
+                    LOGGER.warning("Fehler: Mehr als ein choice-Packet registriert!");
+                    return -1;
+                }
+                else if (packets.length == 1) {
+                    return packets[0].getChoice();
+                }
+            }
+            while (true);
+        }
     }
 
     public void processJailRollOption(Player player) {
@@ -231,7 +260,7 @@ public class Game {
     }
 
     private void processBuyPropertyFieldOption(Player player, PropertyField prop) {
-        switch (InputHandler.getUserInput(2)) {
+        switch (getClientChoice(player, 2)) {
             case 1: // Kaufen
                 LOGGER.info(String.format("%s >> %s", player.getName(), prop.getName()));
                 if (!FieldService.buyPropertyField(player, prop, prop.getPrice())) {
@@ -242,12 +271,12 @@ public class Game {
                 break;
 
             case 2: // Auktion
-                LOGGER.info(player.getName() + "hat sich gegen den Kauf entschieden, die Straße wird nun versteigert.");
+                LOGGER.info(player.getName() + " hat sich gegen den Kauf entschieden, die Straße wird nun versteigert.");
                 betPhase(prop);
                 break;
 
             default:
-                LOGGER.warning("getUserInput() hat index außerhalb des zurückgegeben.");
+                LOGGER.warning("Fehler: Wahl außerhalb des gültigen Bereichs!");
                 break;
         }
     }
@@ -259,7 +288,7 @@ public class Game {
             LOGGER.info(String.format("%s ist an der Reihe! Waehle eine Aktion:%n[1] - Nichts%n[2] - Haus kaufen%n[3] - Haus verkaufen%n[4] - "
                     + "Hypothek aufnehmen%n[5] - Hypothek abbezahlen", player.getName()));
 
-            choice = InputHandler.getUserInput(5);
+            choice = getClientChoice(player, 5);
             if (choice != 1) {
                 Field currField = board.getFields()[InputHandler.askForField(player, board) - 1]; // Wahl der Strasse
                 if (currField instanceof PropertyField) {

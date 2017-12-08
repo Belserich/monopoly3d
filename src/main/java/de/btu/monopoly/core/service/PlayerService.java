@@ -1,9 +1,11 @@
 package de.btu.monopoly.core.service;
 
+import de.btu.monopoly.core.Game;
 import de.btu.monopoly.core.GameBoard;
 import de.btu.monopoly.data.player.Bank;
 import de.btu.monopoly.data.player.Player;
 
+import java.util.Random;
 import java.util.logging.Logger;
 
 /**
@@ -13,6 +15,8 @@ import java.util.logging.Logger;
 public class PlayerService {
 
     private static final Logger LOGGER = Logger.getLogger(de.btu.monopoly.core.Game.class.getCanonicalName());
+    
+    private static final Random rng = new Random(Game.SEED);
     
     /**
      * Setzt alle nötigen Attribute, wenn der Spieler ins Gefängnis kommt. Bitte {@code FieldManager.toJail()} benutzen.
@@ -132,8 +136,8 @@ public class PlayerService {
     public static int[] roll(Player player) {
         int[] result = new int[2];
 
-        result[0] = ((int) (Math.random() * 6)) + 1;
-        result[1] = ((int) (Math.random() * 6)) + 1;
+        result[0] = rng.nextInt(6) + 1;
+        result[1] = rng.nextInt(6) + 1;
 
         LOGGER.info(String.format("Würfelergebnis: %d %d", result[0], result[1]));
         return result;
