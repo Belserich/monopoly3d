@@ -88,7 +88,7 @@ public class StreetField extends PropertyField {
         return houseCount;
     }
 
-    protected void setHouseCount(int houseCount) {
+    public void setHouseCount(int houseCount) {
         this.houseCount = houseCount;
     }
 
