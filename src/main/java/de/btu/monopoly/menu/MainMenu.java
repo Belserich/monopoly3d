@@ -8,7 +8,7 @@ package de.btu.monopoly.menu;
 import de.btu.monopoly.input.InputHandler;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.server.GameServer;
-
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -20,7 +20,8 @@ public class MainMenu {
     public static final Logger LOGGER = Logger.getLogger(MainMenu.class.getCanonicalName());
 
     public void start() {
-        System.out.println("HAUPTMENÜ\n[1] Spiel starten\n[2] Spiel beitreten");
+        LOGGER.setLevel(Level.FINER);
+        LOGGER.fine("HAUPTMENÜ\n[1] Spiel starten\n[2] Spiel beitreten");
         int choice = InputHandler.getUserInput(2);
         switch (choice) {
             case 1:
@@ -39,7 +40,7 @@ public class MainMenu {
         GameClient client = new GameClient(59687, 5000);
         String localHost = System.getProperty("myapp.ip");
         client.connect("localhost");
-        System.out.println("Die ServerIP ist " + server.getServerIP());
+        LOGGER.info("Die ServerIP ist " + server.getServerIP());
 
         // Lobby als Host joinen
         LobbyService.joinLobbyAsHost(client);
@@ -48,7 +49,7 @@ public class MainMenu {
     private void joinGame() {
         // Client starten und verbinden
         GameClient client = new GameClient(59687, 5000);
-        System.out.println("Geben sie die IP-Adresse des Servers ein");
+        LOGGER.fine("Geben sie die IP-Adresse des Servers ein");
         client.connect(InputHandler.askForString()); // while Schleife bis mit Server verbunden (evtl. begrenzte Versuche)
 
         // Lobby als Client joinen

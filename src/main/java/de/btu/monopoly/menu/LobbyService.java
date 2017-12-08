@@ -5,7 +5,6 @@
  */
 package de.btu.monopoly.menu;
 
-import com.esotericsoftware.minlog.Log;
 import de.btu.monopoly.core.Game;
 import de.btu.monopoly.core.service.PlayerService;
 import de.btu.monopoly.data.player.Player;
@@ -29,8 +28,9 @@ public class LobbyService {
     private static Lobby lobby;
 
     public static void joinLobbyAsHost(GameClient client) {
+        LOGGER.setLevel(Level.FINER);
         // Spielernamen abfragen
-        System.out.println("Geben sie einen Spielernamen ein");
+        LOGGER.fine("Geben sie einen Spielernamen ein");
         String name = InputHandler.askForString();
 
         // Lobby init
@@ -54,14 +54,15 @@ public class LobbyService {
             Thread.currentThread().interrupt();
         }
 
-        System.out.println("klick auf 1 zum Starten");
+        LOGGER.fine("klick auf 1 zum Starten");
         InputHandler.getUserInput(1);
         gamestartRequest();
     }
 
     public static void joinLobby(GameClient client) {
+        LOGGER.setLevel(Level.FINER);
         // Spielernamen abfragen
-        System.out.println("Geben sie einen Spielernamen ein");
+        LOGGER.fine("Geben sie einen Spielernamen ein");
         String name = InputHandler.askForString();
 
         // Lobby init
@@ -80,14 +81,14 @@ public class LobbyService {
     }
 
     private static void joinRequest() {
-        Log.info(lobby.getPlayerName() + " sendet Request");
+        LOGGER.finer(lobby.getPlayerName() + " sendet Request");
         JoinRequest req = new JoinRequest();
         req.setName(lobby.getPlayerName());
         lobby.getPlayerClient().sendTCP(req);
     }
 
     public static void joinResponse(String name) {
-        Log.info("JoinResponse wird verarbeitet");
+        LOGGER.finer("JoinResponse wird verarbeitet");
 
         // neuen Spieler dem Array hinzufügen
         String[] olsers = lobby.getUsers();
@@ -112,18 +113,18 @@ public class LobbyService {
     }
 
     public static void setNewUsers(String[] users) {
-        Log.info("BroadcastUsersResponse wird verarbeitet");
+        LOGGER.finer("BroadcastUsersResponse wird verarbeitet");
         lobby.setUsers(users);
 
         // ID festlegen, falls man der zuletzt hinzugefuegte User ist
         if (lobby.getPlayerId() == -1) {
             lobby.setPlayerId(users.length - 1);
         }
-        System.out.println("aktuelle Spieler in der Lobby:");
+        LOGGER.fine("aktuelle Spieler in der Lobby:");
         for (String user : lobby.getUsers()) {
-            Log.info(" - " + user);
+            LOGGER.fine(" - " + user);
         }
-        Log.info("Meine ID ist: " + lobby.getPlayerId());
+        LOGGER.fine("Meine ID ist: " + lobby.getPlayerId());
     }
 
     private static Player[] getPlayersArray() {
@@ -136,7 +137,7 @@ public class LobbyService {
                 lobby.getPlayerClient().setPlayerOnClient(newPlayer);
             }
         }
-        Log.info("Spielreihenfolge wird ausgewürfelt:");
+        LOGGER.info("Spielreihenfolge wird ausgewürfelt");
         Player temp;
         Player rand;
         Random random = PlayerService.getRng();
@@ -146,7 +147,6 @@ public class LobbyService {
             rand = players[r];
             players[i] = rand;
             players[r] = temp;
-            Log.info("[" + i + "] " + players[i].getName());
         }
         return players;
     }

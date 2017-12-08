@@ -8,10 +8,11 @@ package de.btu.monopoly.menu;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.FrameworkMessage;
 import com.esotericsoftware.kryonet.Listener;
-import com.esotericsoftware.minlog.Log;
 import de.btu.monopoly.net.networkClasses.BroadcastUsersResponse;
 import de.btu.monopoly.net.networkClasses.GamestartResponse;
 import de.btu.monopoly.net.networkClasses.JoinResponse;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -19,27 +20,26 @@ import de.btu.monopoly.net.networkClasses.JoinResponse;
  */
 public class LobbyClientListener extends Listener {
 
+    private static final Logger LOGGER = Logger.getLogger(LobbyClientListener.class.getCanonicalName());
+
     public void received(Connection connection, Object object) {
 
         if (object instanceof FrameworkMessage) {
             // TODO LOG
-        }
-        else if (object instanceof JoinResponse) {
-            Log.info("JoinResponse erhalten");
+        } else if (object instanceof JoinResponse) {
+            LOGGER.finer("JoinResponse erhalten");
             JoinResponse res = (JoinResponse) object;
             LobbyService.joinResponse(res.getName());
-        }
-        else if (object instanceof BroadcastUsersResponse) {
-            Log.info("BroadcastUsersResponse erhalten");
+        } else if (object instanceof BroadcastUsersResponse) {
+            LOGGER.finer("BroadcastUsersResponse erhalten");
             BroadcastUsersResponse res = (BroadcastUsersResponse) object;
             LobbyService.setNewUsers(res.getUsers());
-        }
-        else if (object instanceof GamestartResponse) {
-            Thread t = new Thread( LobbyService::gamestartResponse );
+        } else if (object instanceof GamestartResponse) {
+            LOGGER.finer("GamestartResponse erhalten");
+            Thread t = new Thread(LobbyService::gamestartResponse);
             t.start();
-        }
-        else {
-            System.err.println("Falsches packet angekommen! " + object.getClass());
+        } else {
+            LOGGER.log(Level.WARNING, "Falsches packet angekommen! {0}", object.getClass());
         }
     }
 }

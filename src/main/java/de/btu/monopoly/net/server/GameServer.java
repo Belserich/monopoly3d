@@ -7,12 +7,13 @@ package de.btu.monopoly.net.server;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Server;
-import com.esotericsoftware.minlog.Log;
+import de.btu.monopoly.core.Game;
 import de.btu.monopoly.net.networkClasses.*;
-
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -20,6 +21,7 @@ import java.net.UnknownHostException;
  */
 public class GameServer {
 
+    private static final Logger LOGGER = Logger.getLogger(Game.class.getCanonicalName());
     private int tcpPort;
     private Server server;
     private Kryo kryo;
@@ -34,20 +36,20 @@ public class GameServer {
     }
 
     public void startServer() {
-        Log.info("Server startet");
+        LOGGER.finer("Server startet");
         server.start();
         try {
             server.bind(tcpPort);
             serverL = new ServerListener(server);
             server.addListener(serverL);
         } catch (IOException ex) {
-            Log.warn("Server konnte nicht gebunden werden{0}", ex);
+            LOGGER.log(Level.WARNING, "Server konnte nicht gebunden werden {0}", ex);
         }
 
     }
 
     public void stopServer() {
-        Log.info("Server fährt runter");
+        LOGGER.finer("Server fährt runter");
         server.stop();
     }
 
@@ -68,7 +70,7 @@ public class GameServer {
         try {
             output = InetAddress.getLocalHost().getHostAddress();
         } catch (UnknownHostException ex) {
-            Log.warn("ServerIP konnte nicht ausgelesen werden" + ex);
+            LOGGER.log(Level.WARNING, "ServerIP konnte nicht ausgelesen werden{0}", ex);
         }
         return output;
     }
