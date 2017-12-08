@@ -6,15 +6,11 @@
 package de.btu.monopoly.net.server;
 
 import com.esotericsoftware.kryonet.Connection;
+import com.esotericsoftware.kryonet.FrameworkMessage;
 import com.esotericsoftware.kryonet.Listener;
+import com.esotericsoftware.kryonet.Server;
 import com.esotericsoftware.minlog.Log;
-import de.btu.monopoly.data.player.Player;
-import de.btu.monopoly.net.networkClasses.GamestartRequest;
-import de.btu.monopoly.net.networkClasses.GamestartResponse;
-import de.btu.monopoly.net.networkClasses.JoinRequest;
-import de.btu.monopoly.net.networkClasses.JoinResponse;
-
-import java.util.ArrayList;
+import de.btu.monopoly.net.networkClasses.*;
 
 /**
  *
@@ -22,56 +18,53 @@ import java.util.ArrayList;
  */
 public class ServerListener extends Listener {
 
-    private static ArrayList<Connection> connections = new ArrayList();
-    private static ArrayList<Player> tempPlayerList = new ArrayList();
-    private static int runningID = 0;
+    private Server server;
+    private Connection host;
 
     public void received(Connection connection, Object object) {
+        super.received(connection, object);
+        
+        if (object instanceof FrameworkMessage) {
+            // TODO LOG
+        }
+        else if (object instanceof IamHostRequest) {
+            this.host = connection;
+            Log.info("Host vermerkt");
 
-        if (object instanceof JoinRequest) {
-            Log.info("JoinRequest erhalten");
+        }
+        else if (object instanceof JoinRequest) {
+            Log.info("Server: JoinRequest erhalten");
             JoinRequest req = (JoinRequest) object;
-
-            // Client der Connections-Liste hizufügen
-            connections.add(connection);
-
-            //ID festlegen und namen holen
-            int id = runningID;
-            runningID++;
-            String name = req.getName();
-
-//            // Spieler für den joinenden Client anlegen und ins TempArray legen
-//            Player player = new Player(req.getName(), runningID, 1500);
-//            runningID++;
-//            tempPlayerList.add(player);
-//
-//            //Player[] erzeugen und fuellen
-//            Player[] players = new Player[tempPlayerList.size()];
-//            for (int i = 0; i < players.length; i++) {
-//                players[i] = tempPlayerList.get(i);
-//            }
-//            if (players.length > 0) {
-//                Log.info(players[0].getName());
-//            }
-            //Response erzeugen
             JoinResponse res = new JoinResponse();
-            res.setId(id);
-            res.setName(name);
-
-            //Responses verteilen
-            connection.sendTCP(res);
-            for (Connection con : connections) {
-                con.sendTCP(res);
-            }
+            res.setName(req.getName());
+            this.getHost().sendTCP(res);
         }
-
-        if (object instanceof GamestartRequest) {
-            // Response verteilen
-            for (Connection con : connections) {
-                con.sendTCP(new GamestartResponse());
-            }
-
+        else if (object instanceof BroadcastUsersRequest) {
+            Log.info("BroadcastUsersRequest erhalten");
+            BroadcastUsersRequest req = (BroadcastUsersRequest) object;
+            BroadcastUsersResponse res = new BroadcastUsersResponse();
+            res.setUsers(req.getUsers());
+            server.sendToAllTCP(res);
         }
+        else if (object instanceof GamestartRequest) {
+            server.sendToAllTCP(new GamestartResponse());
+        }
+        else if (object instanceof BroadcastPlayerChoiceRequest) {
+            Log.info("BroadcastPlayerChoiceRequest erhalten");
+            server.sendToAllExceptTCP(connection.getID(), object);
+        }
+    }
+    
+
+    public ServerListener(Server server) {
+        this.server = server;
+    }
+
+    /**
+     * @return the host
+     */
+    public Connection getHost() {
+        return host;
     }
 
 }

@@ -5,8 +5,7 @@
  */
 package de.btu.monopoly;
 
-import de.btu.monopoly.core.Game;
-import de.btu.monopoly.data.player.Player;
+import de.btu.monopoly.menu.MainMenu;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -51,15 +50,8 @@ public class Launcher extends Application {
     }
 
     public static void initGame() {
-        Player[] players = new Player[4];
-        for (int i = 0; i < 4; i++) {
-            Player player = new Player("Mathias " + (i + 1), i, 1500);
-            players[i] = player;
-        }
-    
-        Game game = new Game(players);
-        game.init();
-        game.start();
+        MainMenu mainMenu = new MainMenu();
+        mainMenu.start();
     }
     
     private static void configLoggers() {

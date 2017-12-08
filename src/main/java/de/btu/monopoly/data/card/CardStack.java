@@ -14,19 +14,19 @@ import java.util.LinkedList;
  * @author Christian Prinz
  */
 public class CardStack {
-    
+
     /**
      * Die Kartenliste
      */
     private final LinkedList<Card> stack;
-    
+
     /**
      * Ein Kartenstapel.
      */
     public CardStack() {
         stack = new LinkedList<>();
     }
-    
+
     /**
      * Ein Kartenstapel mit vorinitialisierten Karten.
      */
@@ -50,10 +50,9 @@ public class CardStack {
         stack.add(retObj);
         return retObj;
     }
-    
+
     /**
-     * Gibt die naechste Karte des angegebenen Typs zuruec, entfernt sie und fügt sie
-     * wieder ans Ende des Stapels.
+     * Gibt die naechste Karte des angegebenen Typs zuruec, entfernt sie und fügt sie wieder ans Ende des Stapels.
      *
      * @param action Aktionstyp
      * @return nächste Karte vom angegebenen Typ
@@ -66,17 +65,17 @@ public class CardStack {
         }
         return null;
     }
-    
+
     /**
      * Fügt die angegebene Karte ans Ende des Stapels.
      *
      * @param card Karte
      */
-    void addCard(Card card) {
+    public void addCard(Card card) {
         card.setCardStack(this);
         stack.add(card);
     }
-    
+
     /**
      * Entfernt eine Karte aus dem Stapel.
      *
@@ -90,7 +89,7 @@ public class CardStack {
             }
         }
     }
-    
+
     /**
      * Entfernt die nächste Karte einer bestimmten Action aus dem Stapel.
      *
@@ -102,7 +101,7 @@ public class CardStack {
         stack.remove(retObj);
         return retObj;
     }
-    
+
     /**
      * Zählt die Anzahl der Karten einer bestimmten Aktionsart im Stapel.
      *
@@ -116,18 +115,22 @@ public class CardStack {
         }
         return counter;
     }
-    
+
     /**
      * Entfernt alle Karten aus dem Stapel.
      */
     void removeAll() {
         stack.clear();
     }
-    
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder("[Kartenstapel]\n");
-        stack.forEach(c -> { builder.append("\t"); builder.append(c); builder.append("\n"); } );
+        stack.forEach(c -> {
+            builder.append("\t");
+            builder.append(c);
+            builder.append("\n");
+        });
         return builder.toString();
     }
 }

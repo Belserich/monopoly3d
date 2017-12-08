@@ -9,7 +9,6 @@ import de.btu.monopoly.input.InputHandler;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.server.GameServer;
 
-import java.util.Scanner;
 import java.util.logging.Logger;
 
 /**
@@ -22,7 +21,8 @@ public class MainMenu {
 
     public void start() {
         System.out.println("HAUPTMENÜ\n[1] Spiel starten\n[2] Spiel beitreten");
-        switch (InputHandler.getUserInput(2)) {
+        int choice = InputHandler.getUserInput(2);
+        switch (choice) {
             case 1:
                 createGame();
                 break;
@@ -36,38 +36,22 @@ public class MainMenu {
         // Server und Client starten und verbinden
         GameServer server = new GameServer(59687);
         server.startServer();
-        GameClient client = new GameClient(59687, 5000);    // @fix redundant ->
-        client.connect("127.0.0.1");
-
-        // Spielernamen abfragen
-        System.out.println("Geben sie einen Spielernamen ein");
-        String name = askForString();                       // <- @fix redundant
+        GameClient client = new GameClient(59687, 5000);
+        String localHost = System.getProperty("myapp.ip");
+        client.connect("localhost");
+        System.out.println("Die ServerIP ist " + server.getServerIP());
 
         // Lobby als Host joinen
-        LobbyService.joinLobbyAsHost(name, client);
+        LobbyService.joinLobbyAsHost(client);
     }
 
     private void joinGame() {
         // Client starten und verbinden
         GameClient client = new GameClient(59687, 5000);
         System.out.println("Geben sie die IP-Adresse des Servers ein");
-        client.connect(askForString()); // while Schleife bis mit Server verbunden (evtl. begrenzte Versuche)
-
-        // Spielernamen abfragen
-        System.out.println("Geben sie einen Spielernamen ein");
-        String name = askForString();
+        client.connect(InputHandler.askForString()); // while Schleife bis mit Server verbunden (evtl. begrenzte Versuche)
 
         // Lobby als Client joinen
-        LobbyService.joinLobby(name, client);
+        LobbyService.joinLobby(client);
     }
-
-    //evtl auslagern
-    private String askForString() {
-        Scanner input = new Scanner(System.in);
-
-        String ip = input.nextLine();
-
-        return ip;
-    }
-
 }
