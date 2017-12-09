@@ -11,19 +11,19 @@ package de.btu.monopoly.net.networkClasses;
  */
 public class JoinResponse {
 
-    private String name;
+    private int id;
 
     /**
-     * @return the name
+     * @return the id
      */
-    public String getName() {
-        return name;
+    public int getId() {
+        return id;
     }
 
     /**
-     * @param name the name to set
+     * @param id the id to set
      */
-    public void setName(String name) {
-        this.name = name;
+    public void setId(int id) {
+        this.id = id;
     }
 }
