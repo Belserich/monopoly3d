@@ -39,7 +39,7 @@ public class MainMenu {
         server.startServer();
         GameClient client = new GameClient(59687, 5000);
         String localHost = System.getProperty("myapp.ip");
-        client.connect("localhost");
+        client.connect(localHost);
         LOGGER.info("Die ServerIP ist " + server.getServerIP());
 
         // Lobby als Host joinen
