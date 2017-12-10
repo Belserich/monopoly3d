@@ -23,7 +23,7 @@ public class Launcher extends Application {
     public static final Logger LOGGER = Logger.getLogger(Launcher.class.getCanonicalName());
 
     public void start(Stage stage) throws Exception {
-
+        new SceneManager();
     }
 
     /**
@@ -36,8 +36,8 @@ public class Launcher extends Application {
     public static void main(String[] args) throws Exception {
         configLoggers();
         //initGame();
-        //launch(args);
-        new SceneManager();
+        launch(args);
+
     }
 
     public static void initGame() {

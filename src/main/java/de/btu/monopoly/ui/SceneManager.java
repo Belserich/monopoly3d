@@ -18,7 +18,7 @@ import javafx.stage.Stage;
 public class SceneManager extends Stage {
 
     private Stage stage;
-    private Scene scene;
+    private static Scene scene;
 
     public SceneManager() throws IOException {
         stage = this;
@@ -31,7 +31,7 @@ public class SceneManager extends Stage {
         stage.show();
     }
 
-    public void changeScene(FXMLLoader loader) throws IOException {
+    public static void changeScene(FXMLLoader loader) throws IOException {
 
         Parent root = loader.load();
 
