@@ -27,6 +27,7 @@ public class MonopolyUnitTest {
     private static FieldManager fm;
     private static GameServer server;
     private static GameClient client;
+    private static CardManager cm;
 
     public MonopolyUnitTest() {
 
@@ -631,12 +632,190 @@ public class MonopolyUnitTest {
         patrick.setPosition(10);
         patrick.setInJail(true);
 
-        Card jailCard = new Card("JAIL", "Gefaengnisfrei Karte", new CardAction[]{CardAction.JAIL}, null);
+        Card jailCard = new Card("Gefaengnisfrei Karte", "Du kommst aus dem Gefaengnis frei", new CardAction[]{CardAction.JAIL}, null);
         patrick.getCardStack().addCard(jailCard);
 
         //Freikarte + testen
         game.processJailCardOption(patrick);
         Assert.assertTrue("Spieler immer noch im Gefaengnis", patrick.isInJail() == false);
+    }
+
+    @Test
+    public void testCardPayMoney() {
+
+        //initialisierung
+        board = game.getBoard();
+        players = game.getPlayers();
+        fm = board.getFieldManager();
+        Player patrick = players[0];
+        cm = board.getCardManager();
+
+        Card payCard = new Card("Strafzettel", "Strafzettel! Zahle #1{$currency}.", new CardAction[]{CardAction.PAY_MONEY}, new int[]{15});
+
+        int currMoney = patrick.getMoney();
+
+        cm.manageCardAction(patrick, payCard);
+        Assert.assertTrue("Spieler musste kein Geld zahlen", currMoney == patrick.getMoney() + 15);
+
+    }
+
+    @Test
+    public void testCardMoving() {
+
+        //initialisierung
+        board = game.getBoard();
+        players = game.getPlayers();
+        fm = board.getFieldManager();
+        Player patrick = players[0];
+        cm = board.getCardManager();
+
+        patrick.setPosition(0);
+        Card nextTrain = new Card("Bahnhof", "Ruecke vor bis zum naechsten Bahnhof", new CardAction[]{CardAction.NEXT_STATION_RENT_AMP}, new int[]{2});
+        Card seestrasse = new Card("Seestrasse", "Ruecke vor bis zur Seestrasse", new CardAction[]{CardAction.SET_POSITION}, new int[]{11});
+        Card opernplatz = new Card("Opernplatz", "Ruecke vor bis zum Opernplatz", new CardAction[]{CardAction.SET_POSITION}, new int[]{24});
+        Card werk = new Card("Werk", "Ruecke vor bis zum naechsten Werk", new CardAction[]{CardAction.NEXT_SUPPLY}, null);
+        Card schlossallee = new Card("Schlossallee", "Ruecke vor bis zur Schlossallee", new CardAction[]{CardAction.SET_POSITION}, new int[]{39});
+        Card suedbahnhof = new Card("Suedbahnhof", "Ruecke vor bis zum Suedbahnhof", new CardAction[]{CardAction.SET_POSITION}, new int[]{5});
+        Card dreiZurueck = new Card("Drei Felder zurueck", "Drei Felder zurueck", new CardAction[]{CardAction.MOVE_PLAYER}, new int[]{3});
+        Card los = new Card("Los", "Ruecke vor bis auf Los", new CardAction[]{CardAction.SET_POSITION}, new int[]{0});
+
+        //Karten + Tests
+        cm.manageCardAction(patrick, nextTrain);
+        Assert.assertTrue("Spieler ist nicht auf Suedbahnhof(naechster)!", patrick.getPosition() == 5);
+
+        cm.manageCardAction(patrick, seestrasse);
+        Assert.assertTrue("Spieler nicht auf Seestrasse", patrick.getPosition() == 11);
+
+        cm.manageCardAction(patrick, opernplatz);
+        Assert.assertTrue("Spieler nicht auf Opernplatz", patrick.getPosition() == 24);
+
+        //TODO Fehler ausbessern
+//        cm.manageCardAction(patrick, werk);
+//        Assert.assertTrue("Spieler nicht auf Wasserwerk", patrick.getPosition() == 28);
+        cm.manageCardAction(patrick, schlossallee);
+        Assert.assertTrue("Spieler nicht auf Schlossallee", patrick.getPosition() == 39);
+
+        //TODO Spieler muss ueber Los bewegt werden und Geld bekommen!!
+        int currMoney = patrick.getMoney();
+        cm.manageCardAction(patrick, suedbahnhof);
+        Assert.assertTrue("Spieler nicht auf Suedbahnhof", patrick.getPosition() == 5);
+        Assert.assertTrue("Spieler hat kein Geld bekommen (Los)", patrick.getMoney() == currMoney + fm.getGoField().getAmount());
+
+        cm.manageCardAction(patrick, dreiZurueck);
+        Assert.assertTrue("Spieler nicht drei Felder zurueck gegangen!", patrick.getPosition() == 2);
+
+        //TOD Spieler bekommt auch hier kein Geld!
+        currMoney = patrick.getMoney();
+        cm.manageCardAction(patrick, los);
+        Assert.assertTrue("Spieler nicht auf Los!", patrick.getPosition() == 0);
+        Assert.assertTrue("Spieler hat kein Geld bekommen (Los)", patrick.getMoney() == currMoney + fm.getGoField().getAmount());
+
+    }
+
+    @Test
+    public void testCardGiveMoney() {
+
+        //initialisierung
+        board = game.getBoard();
+        players = game.getPlayers();
+        fm = board.getFieldManager();
+        Player patrick = players[0];
+        cm = board.getCardManager();
+        int currMoney = patrick.getMoney();
+        Card contract = new Card("Bausparvertrag", "Dein Bausparvertrag wird faellig. Du erhaelst #1{$currency}.", new CardAction[]{CardAction.GIVE_MONEY}, new int[]{150});
+        Card dividend = new Card("Dividende", "Die Bank zahlt dir eine Dividende von #1{$currency}.", new CardAction[]{CardAction.GIVE_MONEY}, new int[]{50});
+
+        //Karten + Tests
+        cm.manageCardAction(patrick, contract);
+        Assert.assertTrue("Spieler hat kein Geld aus Bausparvertrag erhalten", patrick.getMoney() == currMoney + 150);
+
+        currMoney = patrick.getMoney();
+        cm.manageCardAction(patrick, dividend);
+        Assert.assertTrue("Spieler hat kein Geld aus der Dividende erhalten", patrick.getMoney() == currMoney + 50);
+
+    }
+
+    //@Test TODO @Maxi haben darueber gesprochen :)
+    public void testCardRenovate() {
+
+        //initialisierung
+        board = game.getBoard();
+        players = game.getPlayers();
+        fm = board.getFieldManager();
+        Player patrick = players[0];
+        cm = board.getCardManager();
+        Field[] fields = board.getFields();
+        int currMoney = patrick.getMoney();
+
+        StreetField seestasse = (StreetField) fields[11];
+        StreetField hafenstrasse = (StreetField) fields[13];
+        StreetField neueStrasse = (StreetField) fields[14];
+
+        //Strassenbesitzer geben
+        seestasse.setOwner(patrick);
+        hafenstrasse.setOwner(patrick);
+        neueStrasse.setOwner(patrick);
+
+        //Haeueser bauen
+        seestasse.setHouseCount(1);
+        hafenstrasse.setHouseCount(1);
+        neueStrasse.setHouseCount(1);
+
+        //TODO fehlt 2. args
+        Card renovate = new Card("Renovieren", "Du laesste deine Haeuser renovieren", new CardAction[]{CardAction.RENOVATE}, new int[]{25});
+
+        //Renovieren + Test
+        cm.manageCardAction(patrick, renovate);
+        Assert.assertTrue("Spieler wurder kein/falsch Geld abgezogen", patrick.getMoney() == currMoney - 75);
+
+    }
+
+    @Test
+    public void testCardCEO() {
+
+        //initialisierung
+        board = game.getBoard();
+        players = game.getPlayers();
+        fm = board.getFieldManager();
+        Player patrick = players[0];
+        Player schmarotzer = players[1];
+        Player parasit = players[2];
+        cm = board.getCardManager();
+
+        int currMoney1 = patrick.getMoney();
+        int currMoney2 = schmarotzer.getMoney();
+        int currMoney3 = parasit.getMoney();
+
+        Card ceo = new Card("Vorstand", "Zahle jedem Spieler #1{$currency}.", new CardAction[]{CardAction.PAY_MONEY_ALL}, new int[]{50});
+
+        //Vorstandswahl + Test
+        cm.manageCardAction(patrick, ceo);
+        //TODO Spieler wird falsch Geld abgezogen
+        Assert.assertTrue("Spieler wurde kein/falsch Geld abgezogen", patrick.getMoney() == currMoney1 - (2 * ceo.getArgs()[0]));
+        Assert.assertTrue("Spieler wurde kein/falsch Geld gegeben", schmarotzer.getMoney() == currMoney2 + ceo.getArgs()[0]);
+        Assert.assertTrue("Spieler wurde kein/falsch Geld gegeben", parasit.getMoney() == currMoney3 + ceo.getArgs()[0]);
+
+    }
+
+    @Test
+    public void testCardGoToJail() {
+
+        //initialisierung
+        board = game.getBoard();
+        players = game.getPlayers();
+        fm = board.getFieldManager();
+        Player patrick = players[0];
+        cm = board.getCardManager();
+
+        patrick.setInJail(false);
+        patrick.setPosition(0);
+
+        Card goToJail = new Card("Ins Gefaengnis", "Gehe in das Gefaegnis!", new CardAction[]{CardAction.GO_JAIL}, new int[]{200});
+
+        //Ins Gefaegnis + Test
+        cm.manageCardAction(patrick, goToJail);
+        Assert.assertTrue("Spieler nicht auf Gefaengnisfeld", patrick.getPosition() == 10);
+        Assert.assertTrue("Spieler nicht IM Gefaegnis", patrick.isInJail() == true);
     }
 
 }
