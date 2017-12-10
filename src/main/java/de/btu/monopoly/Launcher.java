@@ -6,16 +6,13 @@
 package de.btu.monopoly;
 
 import de.btu.monopoly.menu.MainMenu;
-import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
-
+import de.btu.monopoly.ui.SceneManager;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
+import javafx.application.Application;
+import javafx.stage.Stage;
 
 /**
  *
@@ -26,14 +23,7 @@ public class Launcher extends Application {
     public static final Logger LOGGER = Logger.getLogger(Launcher.class.getCanonicalName());
 
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("/fxml/Scene.fxml"));
 
-        Scene scene = new Scene(root);
-        scene.getStylesheets().add("/styles/Styles.css");
-
-        stage.setTitle("Monopoly");
-        stage.setScene(scene);
-        stage.show();
     }
 
     /**
@@ -45,15 +35,16 @@ public class Launcher extends Application {
      */
     public static void main(String[] args) throws Exception {
         configLoggers();
-        initGame();
-        // launch(args);
+        //initGame();
+        //launch(args);
+        new SceneManager();
     }
 
     public static void initGame() {
         MainMenu mainMenu = new MainMenu();
         mainMenu.start();
     }
-    
+
     private static void configLoggers() {
         try {
             LogManager.getLogManager().readConfiguration(Launcher.class.getResourceAsStream("/data/config/logging.properties"));
