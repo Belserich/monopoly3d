@@ -14,6 +14,7 @@ import de.btu.monopoly.net.client.GameClient;
 public class Lobby {
 
     private boolean host = true;
+    private boolean ki = false;
     private String[][] users;
     private String playerName;
     private GameClient playerClient;
@@ -87,5 +88,19 @@ public class Lobby {
      */
     public void setPlayerId(int id) {
         this.playerID = id;
+    }
+
+    /**
+     * @return the ki
+     */
+    public boolean isKi() {
+        return ki;
+    }
+
+    /**
+     * @param ki the ki to set
+     */
+    public void setKi(boolean ki) {
+        this.ki = ki;
     }
 }

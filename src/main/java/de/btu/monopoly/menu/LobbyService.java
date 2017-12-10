@@ -53,11 +53,40 @@ public class LobbyService extends Listener {
         }
         System.out.println("Name?:");
         changeName(InputHandler.askForString());
+
         if (lobby.isHost()) {
             System.out.println("Eingabe machen für Spielstart");
             InputHandler.askForString();
             gamestartRequest();
         }
+    }
+
+    public static void addKI(String name) { //TODO Funktioniert noch nicht (Threads)
+        Thread t = new Thread() {
+            @Override
+            public void run() {
+                kiLobby(name);
+            }
+        };
+        t.setName("KI");
+        t.start();
+    }
+
+    private static void kiLobby(String name) {
+        // Client starten und verbinden
+        GameClient client = new GameClient(59687, 5000);
+        String localHost = System.getProperty("myapp.ip");
+        client.connect(localHost);
+
+        // Lobby init
+        lobby = new Lobby();
+        lobby.setHost(false);
+        lobby.setKi(true);
+        lobby.setPlayerName(name);
+        lobby.setPlayerClient(client);
+
+        joinRequest();
+
     }
 
     public static void changeName(String name) {
@@ -77,12 +106,17 @@ public class LobbyService extends Listener {
         for (int i = 0; i < users.length; i++) {
             int id = Integer.parseInt(users[i][0]);
             Player player = new Player(users[i][1], id, 1500);
-            players[i] = player;
 
-            //PlayerOnClient setzen
+            //wenn es sich um den aktuellen Spieler handelt
             if (id == lobby.getPlayerId()) {
+                // wenn er eine KI ist
+                if (lobby.isKi()) {
+                    player.setKi(true);
+                }
                 lobby.getPlayerClient().setPlayerOnClient(player);
             }
+
+            players[i] = player;
         }
 
         return players;
@@ -125,20 +159,25 @@ public class LobbyService extends Listener {
             lobby.setUsers(refres.getUsers());
 
             //TODO kommt in GUI weg:
-            System.out.println("Spieler in Lobby");
+            System.out.println("Spieler in Lobby: (Meine ID: " + lobby.getPlayerId() + ")");
             for (int i = 0; i < lobby.getUsers().length; i++) {
-                System.out.println("- " + lobby.getUsers()[i][1]);
+                System.out.print("[" + lobby.getUsers()[i][0] + "] ");
+                System.out.println(lobby.getUsers()[i][1]);
+            }
+            if (lobby.isHost()) {
+                System.out.println("Eingabe machen für Spielstart");
             }
 
         } else if (object instanceof GamestartResponse) { //TODO elegantere Loesung
             LOGGER.finer("GamestartResponse wird verarbeitet");
-//            startGame();
+
             Thread t = new Thread() {
                 @Override
                 public void run() {
                     startGame();
                 }
             };
+            t.setName("Game");
             t.start();
         } else {
             LOGGER.log(Level.WARNING, "Falsches packet angekommen! {0}", object.getClass());
