@@ -99,4 +99,9 @@ public abstract class PropertyField extends Field implements Tradeable {
     }
     
     public int getRent() { return 0; }
+    
+    @Override
+    public int getTradingValue() {
+        return getRent();
+    }
 }
