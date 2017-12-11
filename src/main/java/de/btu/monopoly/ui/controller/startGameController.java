@@ -1,5 +1,7 @@
 package de.btu.monopoly.ui.controller;
 
+import de.btu.monopoly.menu.LobbyService;
+import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.ui.SceneManager;
 import java.io.IOException;
 import java.net.URL;
@@ -16,6 +18,8 @@ import javafx.scene.control.Button;
  */
 public class startGameController implements Initializable {
 
+    public static GameClient client;
+
     @FXML
     private Button backButton;
 
@@ -28,10 +32,15 @@ public class startGameController implements Initializable {
     // startGame.fxml
     //-----------------------------------------------------------------------------------------
     @FXML
-    private void createLobbyButtonAction(ActionEvent event) throws IOException {
+    private void createLobbyButtonAction(ActionEvent event) throws IOException, InterruptedException {
+
+        LobbyService.joinLobby(client, true);
+        Thread.sleep(200);
+        LobbyService.changeName("John");
 
         // Wechselt die Scene auf Lobby
         SceneManager.changeScene(new FXMLLoader(getClass().getResource("/fxml/Lobby.fxml")));
+
     }
 
     @FXML
