@@ -1,8 +1,8 @@
 package de.btu.monopoly.core;
 
+import de.btu.monopoly.core.mechanics.Auction;
 import de.btu.monopoly.core.service.FieldService;
 import de.btu.monopoly.core.service.PlayerService;
-import de.btu.monopoly.data.Auction;
 import de.btu.monopoly.data.card.CardStack;
 import de.btu.monopoly.data.field.*;
 import de.btu.monopoly.data.parser.CardStackParser;

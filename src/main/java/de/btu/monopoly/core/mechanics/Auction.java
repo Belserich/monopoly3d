@@ -1,4 +1,4 @@
-package de.btu.monopoly.data;
+package de.btu.monopoly.core.mechanics;
 
 import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.player.Player;
