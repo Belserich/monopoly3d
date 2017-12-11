@@ -11,6 +11,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 
 /**
  *
@@ -22,6 +23,9 @@ public class startGameController implements Initializable {
 
     @FXML
     private Button backButton;
+
+    @FXML
+    private TextField nicknameHostTextView;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -36,7 +40,7 @@ public class startGameController implements Initializable {
 
         LobbyService.joinLobby(client, true);
         Thread.sleep(200);
-        LobbyService.changeName("John");
+        LobbyService.changeName(nicknameHostTextView.getText());
 
         // Wechselt die Scene auf Lobby
         SceneManager.changeScene(new FXMLLoader(getClass().getResource("/fxml/Lobby.fxml")));
