@@ -64,6 +64,7 @@ public class GameServer {
         kryo.register(GamestartResponse.class);
         kryo.register(ChangeUsernameRequest.class);
         kryo.register(RefreshLobbyResponse.class);
+        kryo.register(JoinImpossibleResponse.class);
         kryo.register(String[].class);
         kryo.register(String[][].class);
     }

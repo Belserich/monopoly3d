@@ -149,6 +149,9 @@ public class LobbyService extends Listener {
 
         if (object instanceof FrameworkMessage) {
             // TODO LOG
+        } else if (object instanceof JoinImpossibleResponse) {
+            LOGGER.info("Spiel wurde bereits gestartet");
+            Thread.interrupted();
         } else if (object instanceof JoinResponse) {
             LOGGER.finer("JoinResponse wird verarbeitet");
             JoinResponse joinres = (JoinResponse) object;
