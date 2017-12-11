@@ -73,8 +73,8 @@ public class Game {
     public void start() {
         LOGGER.setLevel(Level.ALL);
         LOGGER.info("Spiel beginnt.");
-
-        while (board.getActivePlayers().size() > 1) {
+        
+        while (board.updateActivePlayers().getActivePlayers().size() > 1) {
             for (Player activePlayer : board.getActivePlayers()) {
                 turn(activePlayer);
                 if (!activePlayer.getBank().isLiquid()) {
@@ -140,9 +140,8 @@ public class Game {
     }
     
     private int getClientChoice(Player player, int max) {
-        Player thisPlayer = client.getPlayerOnClient();
-    
-        if (thisPlayer == player) {
+        
+        if (isChoiceFromThisClient(player)) {
             int choice = InputHandler.getUserInput(max);
             BroadcastPlayerChoiceRequest packet = new BroadcastPlayerChoiceRequest();
             packet.setChoice(choice);
@@ -162,6 +161,11 @@ public class Game {
             }
             while (true);
         }
+    }
+    
+    private boolean isChoiceFromThisClient(Player player) {
+        Player thisPlayer = client.getPlayerOnClient();
+        return thisPlayer == player;
     }
 
     public void processJailRollOption(Player player) {
@@ -336,7 +340,11 @@ public class Game {
     }
     
     private void processPlayerTradeOption(Player player) {
-        // TODO
+        if (isChoiceFromThisClient(player)) {
+            for (Player activePlayer : board.getActivePlayers()) {
+            
+            }
+        }
     }
 
     private void betPhase(PropertyField property) {
