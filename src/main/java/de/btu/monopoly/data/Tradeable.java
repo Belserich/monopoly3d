@@ -5,5 +5,5 @@ package de.btu.monopoly.data;
  */
 public interface Tradeable {
     
-    void getTradingValue();
+    int getTradingValue();
 }
