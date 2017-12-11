@@ -286,11 +286,14 @@ public class Game {
 
         do {
             LOGGER.info(String.format("%s ist an der Reihe! Waehle eine Aktion:%n[1] - Nichts%n[2] - Haus kaufen%n[3] - Haus verkaufen%n[4] - "
-                    + "Hypothek aufnehmen%n[5] - Hypothek abbezahlen", player.getName()));
+                    + "Hypothek aufnehmen%n[5] - Hypothek abbezahlen%n[6] - Handeln", player.getName()));
 
-            choice = getClientChoice(player, 5);
+            choice = getClientChoice(player, 6);
             if (choice != 1) {
-                Field currField = board.getFields()[InputHandler.askForField(player, board) - 1]; // Wahl der Strasse
+                
+                Field[] ownedFields = board.getFieldManager().getOwnedPropertyFields(player).toArray(Field[]::new);
+                Field currField = board.getFields()[InputHandler.askForField(player, ownedFields) - 1]; // Wahl der Strasse
+                
                 if (currField instanceof PropertyField) {
                     PropertyField property = (PropertyField) currField;
                     switch (choice) {
@@ -300,10 +303,6 @@ public class Game {
                                 break;
                             }
                             StreetField streetField = (StreetField) property;
-                            if (streetField.getOwner() != player) {
-                                LOGGER.info("Diese Straße gehört dir nicht.");
-                                break;
-                            }
                             board.getFieldManager().buyHouse(streetField);
                             break;
 
@@ -313,36 +312,31 @@ public class Game {
                                 break;
                             }
                             streetField = (StreetField) property;
-                            if (streetField.getOwner() != player) {
-                                LOGGER.info("Diese Straße gehört dir nicht, oder hat keine Häuser zum verkaufen.");
-                                break;
-                            }
                             board.getFieldManager().sellHouse(streetField);
                             break;
 
                         case 4: // Hypothek aufnehmen
-                            if (property.getOwner() == player && (!(property.isMortgageTaken()))) {
-                                board.getFieldManager().takeMortgage(property);
-                            } else {
-                                LOGGER.info("Diese Straße gehört dir nicht, oder hat schon eine Hypothek.");
-                            }
+                            board.getFieldManager().takeMortgage(property);
                             break;
 
-                        case 5: // Hypothek zurückzahlen {
-                            if (property.getOwner() != player) {
-                                LOGGER.log(Level.INFO, "Diese Straße gehört dir nicht, oder hat keine Hypothek zum abzahlen.");
-                            }
+                        case 5: // Hypothek zurückzahlen
                             board.getFieldManager().payMortgage(property);
-                            LOGGER.log(Level.INFO, "Hypothek abgezahlt.");
                             break;
-
+                        case 6: // Handeln
+                            processPlayerTradeOption(player);
+                            break;
                         default:
                             LOGGER.log(Level.WARNING, "Fehler: StreetFieldSwitch überlaufen.");
                             break;
                     }
                 }
             }
-        } while (choice != 1);
+        }
+        while (choice != 1);
+    }
+    
+    private void processPlayerTradeOption(Player player) {
+        // TODO
     }
 
     private void betPhase(PropertyField property) {

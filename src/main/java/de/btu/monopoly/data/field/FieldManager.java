@@ -69,7 +69,7 @@ public class FieldManager {
         return retObj;
     }
     
-    private Stream<PropertyField> getOwnedPropertyFields(Player player) {
+    public Stream<PropertyField> getOwnedPropertyFields(Player player) {
         return Stream.of(fields)
                 .filter(f -> f instanceof PropertyField)
                 .map(f -> (PropertyField) f)
