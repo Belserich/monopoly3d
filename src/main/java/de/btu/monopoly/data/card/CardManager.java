@@ -1,13 +1,16 @@
 package de.btu.monopoly.data.card;
 
-import de.btu.monopoly.data.field.FieldManager;
-import de.btu.monopoly.core.service.FieldService;
 import de.btu.monopoly.core.GameBoard;
+import de.btu.monopoly.core.service.FieldService;
 import de.btu.monopoly.core.service.PlayerService;
+import de.btu.monopoly.data.Tradeable;
+import de.btu.monopoly.data.field.FieldManager;
 import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.player.Player;
 
+import java.util.List;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 /**
  * @author Maximilian Bels (belsmaxi@b-tu.de)
@@ -111,14 +114,20 @@ public class CardManager {
         else return false;
     }
     
+    public List<Tradeable> getTradeableCards(Player player) {
+        return player.getCardStack().cards.stream()
+                .filter(c -> c instanceof Tradeable)
+                .map(c -> (Tradeable) c)
+                .collect(Collectors.toList());
+    }
+    
     private void processRenovateAction(Player player, int[] args) {
         FieldManager fm = board.getFieldManager();
-        int houseCount = fm.getHouseCount(player);
-        int hotelCount = fm.getHotelCount(player);
+        int[] counts = fm.getHouseAndHotelCount(player);
         
-        LOGGER.info(String.format("Rechnung: %d (Häuser) * %d und %d (Hotels) * %d", houseCount, args[0], hotelCount, args[1]));
-        PlayerService.takeMoneyUnchecked(player, houseCount * args[0]);
-        PlayerService.takeMoneyUnchecked(player, hotelCount * args[1]);
+        LOGGER.info(String.format("Rechnung: %d (Häuser) * %d und %d (Hotels) * %d", counts[0], args[0], counts[1], args[1]));
+        PlayerService.takeMoneyUnchecked(player, counts[0] * args[0]);
+        PlayerService.takeMoneyUnchecked(player, counts[1] * args[1]);
     }
     
     private void putBackOnStack(Card card) {

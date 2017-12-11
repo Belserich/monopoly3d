@@ -3,13 +3,14 @@ package de.btu.monopoly.data.field;
 import de.btu.monopoly.core.GameBoard;
 import de.btu.monopoly.core.service.FieldService;
 import de.btu.monopoly.core.service.PlayerService;
+import de.btu.monopoly.data.Tradeable;
 import de.btu.monopoly.data.player.Player;
 
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 import java.util.Objects;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -26,11 +27,6 @@ public class FieldManager {
     private final Field[] fields;
     
     /**
-     * Ordnet Spielern die PropertyField-Felder in ihrem Besitz zu. Vereinfacht die Logik mancher Karten
-     */
-    private Map<Player, Integer[]> houseCounters;
-    
-    /**
      * Diese Manager-Klasse verwaltet das Feld-Array eines Spielbretts
      *
      * @param fields Feld-Array
@@ -38,7 +34,6 @@ public class FieldManager {
     public FieldManager(Field[] fields) {
         this.fields = fields;
         Arrays.asList(fields).forEach(f -> f.fieldManager = this);
-        houseCounters = new HashMap<>();
     }
     
     /**
@@ -56,23 +51,36 @@ public class FieldManager {
     }
     
     /**
-     * Gibt die Gesamtanzahl der Häuser im Spielerbesitz zurück.
+     * Gibt die Gesamtanzahl der Häuser und Hotels im Spielerbesitz zurück.
      *
      * @param player Spieler
-     * @return Gesamtanzahl der Häuser im Spielerbesitz
+     * @return Gesamtanzahl der Häuser und Hotels im Spielerbesitz (Index 0 - Häuser, Index 1 - Hotels)
      */
-    public int getHouseCount(Player player) {
-        return houseCounters.getOrDefault(player, new Integer[1])[0];
+    public int[] getHouseAndHotelCount(Player player) {
+        int[] retObj = new int[2];
+        getOwnedPropertyFields(player)
+                .filter(p -> p instanceof StreetField)
+                .map(p -> (StreetField)p)
+                .forEach(p -> {
+                    int houseCount = p.getHouseCount();
+                    retObj[0] = houseCount % 5;
+                    retObj[1] = houseCount / 5;
+                });
+        return retObj;
     }
     
-    /**
-     * Gibt die Gesamtanzahl der Hotels im Spielerbesitz zurück.
-     *
-     * @param player Spieler
-     * @return Gesamtanzahl der Hotels im Spielerbesitz
-     */
-    public int getHotelCount(Player player) {
-        return houseCounters.getOrDefault(player, new Integer[2])[1];
+    private Stream<PropertyField> getOwnedPropertyFields(Player player) {
+        return Stream.of(fields)
+                .filter(f -> f instanceof PropertyField)
+                .map(f -> (PropertyField) f)
+                .filter(p -> p.getOwner() == player);
+    }
+    
+    public List<Tradeable> getTradeableStreets(Player player) {
+        return getOwnedPropertyFields(player)
+                .filter(p -> p instanceof Tradeable)
+                .map(p -> (Tradeable) p)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -146,12 +154,6 @@ public class FieldManager {
         
         int newNumHouses = street.getHouseCount() + 1;
         street.setHouseCount(newNumHouses);
-        
-        Integer[] defaultArray = new Integer[]{ new Integer(0), new Integer(0) };
-        Integer[] houseCounter = houseCounters.getOrDefault(player, defaultArray);
-        houseCounter[0] += (newNumHouses == 5) ? -5 : 1;
-        houseCounter[1] += (newNumHouses == 5) ? 1 : 0;
-        houseCounters.put(player, houseCounter);
     }
 
     /**
@@ -187,11 +189,6 @@ public class FieldManager {
         
         int newNumHouses = street.getHouseCount() - 1;
         street.setHouseCount(newNumHouses);
-    
-        Integer[] houseCounter = houseCounters.get(player);
-        houseCounter[0] += (newNumHouses == 4) ? 4 : -1;
-        houseCounter[1] += (newNumHouses == 4) ? -1 : 0;
-        houseCounters.put(player, houseCounter);
     }
 
     /**
@@ -293,7 +290,6 @@ public class FieldManager {
                     if (prop instanceof StreetField) {
                         StreetField street = (StreetField) prop;
                         street.setHouseCount(0);
-                        houseCounters.remove(player);
                     }
                 }
             }
