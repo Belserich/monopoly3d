@@ -9,7 +9,6 @@ import de.btu.monopoly.core.GameBoard;
 import de.btu.monopoly.core.service.FieldService;
 import de.btu.monopoly.data.field.Field;
 import de.btu.monopoly.data.player.Player;
-
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -21,6 +20,7 @@ import java.util.logging.Logger;
 public class InputHandler {
 
     private static final Logger LOGGER = Logger.getLogger(FieldService.class.getCanonicalName());
+    public static int choice = -1;
 
     /**
      * Nimmt Spielereingaben entgegen.
@@ -38,12 +38,11 @@ public class InputHandler {
             } catch (NumberFormatException ex) {
                 LOGGER.log(Level.WARNING, "Fehler: falsche Eingabe!");
             }
-        
+
             if (output < 1 || output > max) {
                 LOGGER.log(Level.INFO, "Deine Eingabe liegt nicht im Wertebereich! Bitte erneut versuchen.");
             }
-        }
-        while (output < 1 || output > max);
+        } while (output < 1 || output > max);
         return output;
     }
 
@@ -67,4 +66,15 @@ public class InputHandler {
         Scanner scanner = new Scanner(System.in);
         return scanner.nextLine();
     }
+
+    //public static int askGuiForInt() {
+    //  while (choice == -1) {
+    //    try {
+    //      Thread.sleep(200);
+    //} catch (InterruptedException ex) {
+    //  throw new RuntimeException();
+    //}
+    //}
+    //return choice;
+//}
 }

@@ -1,5 +1,8 @@
 package de.btu.monopoly.ui.controller;
 
+import static de.btu.monopoly.menu.MainMenu.LOGGER;
+import de.btu.monopoly.net.client.GameClient;
+import de.btu.monopoly.net.server.GameServer;
 import de.btu.monopoly.ui.SceneManager;
 import java.io.IOException;
 import java.net.URL;
@@ -30,6 +33,16 @@ public class MenuController implements Initializable {
 
         // Wechselt die Scene auf startGame
         SceneManager.changeScene(new FXMLLoader(getClass().getResource("/fxml/startGame.fxml")));
+
+        // Server und Client starten und verbinden
+        GameServer server = new GameServer(59687);
+        server.startServer();
+        GameClient client = new GameClient(59687, 5000);
+        String localHost = System.getProperty("myapp.ip");
+        client.connect("localhost");
+        LOGGER.info("Die ServerIP ist " + server.getServerIP());
+
+        startGameController.client = client;
 
     }
 

@@ -10,7 +10,6 @@ import com.esotericsoftware.kryonet.FrameworkMessage;
 import com.esotericsoftware.kryonet.Listener;
 import de.btu.monopoly.core.Game;
 import de.btu.monopoly.data.player.Player;
-import de.btu.monopoly.input.InputHandler;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.networkClasses.*;
 import java.net.InetAddress;
@@ -45,19 +44,9 @@ public class LobbyService extends Listener {
 
         joinRequest();
 
-        //TODO kommt in GUI weg:
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(LobbyService.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        System.out.println("Name?:");
-        changeName(InputHandler.askForString());
-        if (lobby.isHost()) {
-            System.out.println("Eingabe machen für Spielstart");
-            InputHandler.askForString();
-            gamestartRequest();
-        }
+        // Methode für Spielstart
+        // Muss dann in den Button
+        //gamestartRequest();
     }
 
     public static void changeName(String name) {

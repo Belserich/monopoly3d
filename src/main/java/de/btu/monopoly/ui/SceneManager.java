@@ -26,7 +26,7 @@ public class SceneManager extends Stage {
 
         scene = new Scene(root);
 
-        // stage.setFullScreen(true);
+        stage.setFullScreen(true);
         stage.setScene(scene);
         stage.show();
     }

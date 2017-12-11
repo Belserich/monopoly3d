@@ -11,20 +11,19 @@ import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.input.InputHandler;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.networkClasses.BroadcastPlayerChoiceRequest;
-import org.xml.sax.SAXException;
-
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.xml.parsers.ParserConfigurationException;
+import org.xml.sax.SAXException;
 
 /**
  * @author Christian Prinz
  */
 public class Game {
-    
+
     public static final int SEED = 1;
-    
+
     private static final Logger LOGGER = Logger.getLogger(Game.class.getCanonicalName());
 
     /**
@@ -138,29 +137,26 @@ public class Game {
             }
         } while (player.isInJail() && choice != 1);
     }
-    
+
     private int getClientChoice(Player player, int max) {
         Player thisPlayer = client.getPlayerOnClient();
-    
+
         if (thisPlayer == player) {
             int choice = InputHandler.getUserInput(max);
             BroadcastPlayerChoiceRequest packet = new BroadcastPlayerChoiceRequest();
             packet.setChoice(choice);
             client.sendTCP(packet);
             return choice;
-        }
-        else {
+        } else {
             do {
                 BroadcastPlayerChoiceRequest[] packets = client.getPlayerChoiceObjects();
                 if (packets.length > 1) {
                     LOGGER.warning("Fehler: Mehr als ein choice-Packet registriert!");
                     return -1;
-                }
-                else if (packets.length == 1) {
+                } else if (packets.length == 1) {
                     return packets[0].getChoice();
                 }
-            }
-            while (true);
+            } while (true);
         }
     }
 

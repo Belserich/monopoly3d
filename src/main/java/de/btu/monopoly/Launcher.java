@@ -5,7 +5,6 @@
  */
 package de.btu.monopoly;
 
-import de.btu.monopoly.menu.MainMenu;
 import de.btu.monopoly.ui.SceneManager;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -38,11 +37,6 @@ public class Launcher extends Application {
         //initGame();
         launch(args);
 
-    }
-
-    public static void initGame() {
-        MainMenu mainMenu = new MainMenu();
-        mainMenu.start();
     }
 
     private static void configLoggers() {

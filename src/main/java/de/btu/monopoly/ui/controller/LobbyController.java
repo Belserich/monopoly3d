@@ -1,5 +1,6 @@
 package de.btu.monopoly.ui.controller;
 
+import de.btu.monopoly.menu.Lobby;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
@@ -17,7 +18,7 @@ public class LobbyController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        name1Label.setText("Test");
+        name1Label.setText(Lobby.getUsers()[0][1]);
     }
 
 }

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package de.btu.monopoly.menu;
 
 import de.btu.monopoly.net.client.GameClient;
@@ -14,7 +9,7 @@ import de.btu.monopoly.net.client.GameClient;
 public class Lobby {
 
     private boolean host = true;
-    private String[][] users;
+    private static String[][] users;
     private String playerName;
     private GameClient playerClient;
     private int playerID = -1;
@@ -36,7 +31,7 @@ public class Lobby {
     /**
      * @return the users
      */
-    protected String[][] getUsers() {
+    public static String[][] getUsers() {
         return users;
     }
 
