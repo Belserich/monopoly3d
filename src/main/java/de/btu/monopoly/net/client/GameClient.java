@@ -7,9 +7,11 @@ package de.btu.monopoly.net.client;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Client;
+import de.btu.monopoly.core.service.NetworkService;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.menu.LobbyClientListener;
-import de.btu.monopoly.net.networkClasses.*;
+import de.btu.monopoly.net.networkClasses.BroadcastPlayerChoiceRequest;
+
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -36,7 +38,7 @@ public class GameClient {
 
         client = new Client();
         kryo = client.getKryo();
-        registerKryoClasses();
+        NetworkService.registerKryoClasses(kryo);
     }
 
     public void connect(String serverIP) {
@@ -56,18 +58,6 @@ public class GameClient {
     public void disconnect() {
         LOGGER.finer("Client trennt Verbindung");
         client.stop();
-    }
-
-    private void registerKryoClasses() {
-        kryo.register(BroadcastPlayerChoiceRequest.class);
-        kryo.register(JoinRequest.class);
-        kryo.register(JoinResponse.class);
-        kryo.register(GamestartRequest.class);
-        kryo.register(GamestartResponse.class);
-        kryo.register(BroadcastUsersRequest.class);
-        kryo.register(BroadcastUsersResponse.class);
-        kryo.register(IamHostRequest.class);
-        kryo.register(String[].class);
     }
 
     public void sendTCP(Object object) {
