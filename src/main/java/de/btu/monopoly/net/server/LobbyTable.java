@@ -21,6 +21,7 @@ public class LobbyTable extends Listener {
     private static final Logger LOGGER = Logger.getLogger(LobbyTable.class.getCanonicalName());
     private Server server;
     private String[][] users;
+    private boolean gameStarted = false;
 
     LobbyTable(Server server) {
         this.server = server;
@@ -138,14 +139,19 @@ public class LobbyTable extends Listener {
 
         } else if (object instanceof JoinRequest) {
             LOGGER.finer("JoinRequest erhalten");
-            JoinRequest joinreq = (JoinRequest) object;
-            registerUser(joinreq.getName(), connection);
+            if (!gameStarted) {
+                JoinRequest joinreq = (JoinRequest) object;
+                registerUser(joinreq.getName(), connection);
+            } else {
+                connection.sendTCP(new JoinImpossibleResponse());
+            }
         } else if (object instanceof ChangeUsernameRequest) {
             LOGGER.finer("ChangeUsernameRequest erhalten");
             ChangeUsernameRequest chanreq = (ChangeUsernameRequest) object;
             changeUserName(chanreq.getUserId(), chanreq.getUserName());
         } else if (object instanceof GamestartRequest) {
             LOGGER.finer("GamestartRequest erhalten");
+            gameStarted = true;
             gamestartResponse();
             createGameTable();
         }
