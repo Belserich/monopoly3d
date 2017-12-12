@@ -61,41 +61,40 @@ public class LobbyService extends Listener {
         changeName(InputHandler.askForString());
 
         if (lobby.isHost()) {
-//            addKI("Gegner");
             System.out.println("Eingabe machen für Spielstart");
             InputHandler.askForString();
             gamestartRequest();
         }
     }
 
-    public static void addKI(String name) { //TODO Funktioniert noch nicht (Threads)
-        Thread t = new Thread() {
-            @Override
-            public void run() {
-                kiLobby(name);
-            }
-        };
-        t.setName("KI");
-        t.start();
-    }
-
-    private static void kiLobby(String name) {
-        // Client starten und verbinden
-        GameClient client = new GameClient(59687, 5000);
-        String localHost = System.getProperty("myapp.ip");
-        client.connect(localHost);
-
-        // Lobby init
-        lobby = new Lobby();
-        lobby.setHost(false);
-        lobby.setKi(true);
-        lobby.setPlayerName(name);
-        lobby.setPlayerClient(client);
-
-        joinRequest();
+    public static void addKI(String name, int kiLevel) {
+        if (kiLevel < 1 || kiLevel > 3) {
+            LOGGER.warning("kein gültiges KI Level eingegeben!");
+        } else {
+            AddKiRequest req = new AddKiRequest();
+            req.setKiLevel(kiLevel);
+            req.setName(name);
+            lobby.getPlayerClient().sendTCP(req);
+        }
 
     }
 
+//    private static void kiLobby(String name) {
+//        // Client starten und verbinden
+//        GameClient client = new GameClient(59687, 5000);
+//        String localHost = System.getProperty("myapp.ip");
+//        client.connect(localHost);
+//
+//        // Lobby init
+//        lobby = new Lobby();
+//        lobby.setHost(false);
+//        lobby.setKi(true);
+//        lobby.setPlayerName(name);
+//        lobby.setPlayerClient(client);
+//
+//        joinRequest();
+//
+//    }
     public static void changeName(String name) {
         lobby.setPlayerName(name);
         changeUsernameRequest();
@@ -112,7 +111,7 @@ public class LobbyService extends Listener {
         Player[] players = new Player[users.length];
         for (int i = 0; i < users.length; i++) {
             int id = Integer.parseInt(users[i][0]);
-            Player player = new Player(users[i][1], id, 1500);
+            Player player = new Player(users[i][1], i, 1500);
 
             //wenn es sich um den aktuellen Spieler handelt
             if (id == lobby.getPlayerId()) {

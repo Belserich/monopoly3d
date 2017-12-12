@@ -151,6 +151,10 @@ public class LobbyTable extends Listener {
             } else {
                 connection.sendTCP(new JoinImpossibleResponse());
             }
+        } else if (object instanceof AddKiRequest) {
+            LOGGER.finer("AddKiRequest erhalten");
+            AddKiRequest kireq = (AddKiRequest) object;
+            registerUser(kireg.getName, connection);
         } else if (object instanceof ChangeUsernameRequest) {
             LOGGER.finer("ChangeUsernameRequest erhalten");
             ChangeUsernameRequest chanreq = (ChangeUsernameRequest) object;

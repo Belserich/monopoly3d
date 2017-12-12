@@ -48,9 +48,9 @@ public class Player {
     private boolean isBankrupt;
 
     /**
-     * ob der Spieler eine KI ist
+     * der Schwierigkeitsgrad der KI (0 = keine KI ; 1 = leicht ; 2 = mittel ; 3 = schwer)
      */
-    private boolean ki;
+    private int kiLevel;
 
     /**
      * Erstellt eine neue Spielerinstanz.
@@ -62,7 +62,7 @@ public class Player {
     public Player(String name, int id, int startMoney) {
         this.id = id;
         this.bank = new Bank(startMoney);
-        this.ki = false;
+        this.kiLevel = 0;
         this.name = name;
         position = 0;
 
@@ -172,17 +172,19 @@ public class Player {
 
     /**
      * ob der Spieler eine KI ist
-     * @return the ki
+     *
+     * @return the kiLevel
      */
-    public boolean isKi() {
-        return ki;
+    public int getKiLevel() {
+        return kiLevel;
     }
 
     /**
      * ob der Spieler eine KI ist
-     * @param ki the ki to set
+     *
+     * @param kiLevel the kiLevel to set
      */
-    public void setKi(boolean ki) {
-        this.ki = ki;
+    public void setKiLevel(int kiLevel) {
+        this.kiLevel = kiLevel;
     }
 }
