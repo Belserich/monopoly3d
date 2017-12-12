@@ -44,7 +44,7 @@ public class startGameController implements Initializable {
         LobbyService.changeName(nicknameHostTextView.getText());
 
         // Wechselt die Scene auf Lobby
-        SceneManager.changeScene(new FXMLLoader(getClass().getResource("/fxml/Lobby.fxml")));
+        SceneManager.changeSceneToLobby(new FXMLLoader(getClass().getResource("/fxml/Lobby.fxml")));
 
     }
 

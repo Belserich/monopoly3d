@@ -53,7 +53,7 @@ public class joinGameController implements Initializable {
 
         if (MessageControl.getConnectionError() == false) {
             // Wechselt die Scene auf Lobby
-            SceneManager.changeScene(new FXMLLoader(getClass().getResource("/fxml/Lobby.fxml")));
+            SceneManager.changeSceneToLobby(new FXMLLoader(getClass().getResource("/fxml/Lobby.fxml")));
         } else {
             errorLabel.setText("Die Verbindung konnte nicht hergestellt werden.");
         }

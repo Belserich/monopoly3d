@@ -5,6 +5,7 @@
  */
 package de.btu.monopoly.ui;
 
+import de.btu.monopoly.ui.controller.LobbyController;
 import java.io.IOException;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -19,6 +20,7 @@ public class SceneManager extends Stage {
 
     private Stage stage;
     private static Scene scene;
+    private static LobbyController controller;
 
     public SceneManager() throws IOException {
         stage = this;
@@ -38,4 +40,21 @@ public class SceneManager extends Stage {
         scene.setRoot(root);
 
     }
+
+    public static void changeSceneToLobby(FXMLLoader loader) throws IOException {
+
+        Parent root = loader.load();
+        controller = loader.getController();
+
+        scene.setRoot(root);
+
+    }
+
+    public static void updateLobby() throws InterruptedException {
+        if (controller != null) {
+            controller.update();
+        }
+
+    }
+
 }

@@ -6,6 +6,8 @@ import de.btu.monopoly.ui.SceneManager;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -53,42 +55,52 @@ public class LobbyController implements Initializable {
      * Anzeigen der Spieler in der Lobby
      */
     public void update() {
-        if (Lobby.getUsers() != null) {
-            if (Lobby.getUsers().length >= 1) {
-                name1Label.setText(Lobby.getUsers()[0][1]);
-            } else {
-                name1Label.setText("frei");
-            }
-            if (Lobby.getUsers().length >= 2) {
-                name2Label.setText(Lobby.getUsers()[1][1]);
-            } else {
-                name2Label.setText("frei");
-            }
-            if (Lobby.getUsers().length >= 3) {
-                name3Label.setText(Lobby.getUsers()[2][1]);
-            } else {
-                name3Label.setText("frei");
-            }
-            if (Lobby.getUsers().length >= 4) {
-                name4Label.setText(Lobby.getUsers()[3][1]);
-            } else {
-                name4Label.setText("frei");
-            }
-            if (Lobby.getUsers().length >= 5) {
-                name5Label.setText(Lobby.getUsers()[4][1]);
-            } else {
-                name5Label.setText("frei");
-            }
-            if (Lobby.getUsers().length >= 6) {
-                name6Label.setText(Lobby.getUsers()[5][1]);
-            } else {
-                name6Label.setText("frei");
+
+        Task task = new Task<Void>() {
+
+            @Override
+            protected Void call() throws Exception {
+                if (Lobby.getUsers() != null) {
+                    if (Lobby.getUsers().length >= 1) {
+                        name1Label.setText(Lobby.getUsers()[0][1]);
+                    } else {
+                        name1Label.setText("frei");
+                    }
+                    if (Lobby.getUsers().length >= 2) {
+                        name2Label.setText(Lobby.getUsers()[1][1]);
+                    } else {
+                        name2Label.setText("frei");
+                    }
+                    if (Lobby.getUsers().length >= 3) {
+                        name3Label.setText(Lobby.getUsers()[2][1]);
+                    } else {
+                        name3Label.setText("frei");
+                    }
+                    if (Lobby.getUsers().length >= 4) {
+                        name4Label.setText(Lobby.getUsers()[3][1]);
+                    } else {
+                        name4Label.setText("frei");
+                    }
+                    if (Lobby.getUsers().length >= 5) {
+                        name5Label.setText(Lobby.getUsers()[4][1]);
+                    } else {
+                        name5Label.setText("frei");
+                    }
+                    if (Lobby.getUsers().length >= 6) {
+                        name6Label.setText(Lobby.getUsers()[5][1]);
+                    } else {
+                        name6Label.setText("frei");
+                    }
+
+                }
+                return null;
             }
 
-        }
+        };
+        Platform.runLater(task);
     }
 
-    // Spiel starten - Button
+// Spiel starten - Button
     @FXML
     private void playButtonAction(ActionEvent event) throws IOException, InterruptedException {
         LobbyService.startGame();
@@ -101,7 +113,7 @@ public class LobbyController implements Initializable {
     @FXML
     private void leaveLobbyButtonAction(ActionEvent event) throws IOException, InterruptedException {
 
-        // Wechselt die Scene auf Game
+        // Wechselt die Scene auf Menu
         SceneManager.changeScene(new FXMLLoader(getClass().getResource("/fxml/Menu.fxml")));
     }
 }

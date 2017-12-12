@@ -48,9 +48,11 @@ public class GameClient {
             listener = new ClientListener();
             client.addListener(listener);
             client.addListener(new LobbyService());
+            // Lobby wird in GUI geöffnet
             MessageControl.setConnectionError(false);
         } catch (IOException ex) {
             LOGGER.log(Level.WARNING, "Client konnte nicht gestartet werden {0}", ex);
+            // GUI meldet Fehler
             MessageControl.setConnectionError(true);
         }
 

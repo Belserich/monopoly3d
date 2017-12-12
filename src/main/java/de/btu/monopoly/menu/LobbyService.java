@@ -12,6 +12,7 @@ import de.btu.monopoly.core.Game;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.networkClasses.*;
+import de.btu.monopoly.ui.SceneManager;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.logging.Level;
@@ -112,6 +113,9 @@ public class LobbyService extends Listener {
             LOGGER.finer("RefreshLobbyResponse wird verarbeitet");
             RefreshLobbyResponse refres = (RefreshLobbyResponse) object;
             lobby.setUsers(refres.getUsers());
+
+            // Lobby updaten
+            SceneManager.updateLobby();
 
             //TODO kommt in GUI weg:
             System.out.println("Spieler in Lobby");
