@@ -42,7 +42,7 @@ public class MainMenu {
         client.connect(localHost);
         LOGGER.info("Die ServerIP ist " + server.getServerIP());
 
-        // Lobby als Host joinen
+        // Lobby als Host joinen @GUI kommt weg
         LobbyService.joinLobby(client, true);
     }
 

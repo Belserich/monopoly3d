@@ -10,6 +10,8 @@ import com.esotericsoftware.kryonet.FrameworkMessage;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 import de.btu.monopoly.net.networkClasses.*;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.logging.Logger;
 
 /**
@@ -105,7 +107,7 @@ public class LobbyTable extends Listener {
     }
 
     public void createGameTable() {
-
+        //TODO evtl für Auktion!!!
     }
 
     // RESPONSES:____________________________________________
@@ -160,6 +162,10 @@ public class LobbyTable extends Listener {
     @Override
     public void disconnected(Connection connection) {
         deleteUser(connection);
+    }
+
+    public void shuffle() { //TODO ausprobieren und implementieren
+        Collections.shuffle(Arrays.asList(users));
     }
 
 }

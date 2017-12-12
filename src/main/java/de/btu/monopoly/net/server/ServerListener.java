@@ -22,6 +22,7 @@ public class ServerListener extends Listener {
 
     private Server server;
 
+    @Override
     public void received(Connection connection, Object object) {
         super.received(connection, object);
 
@@ -32,6 +33,11 @@ public class ServerListener extends Listener {
             LOGGER.finer("BroadcastPlayerChoiceRequest erhalten");
             server.sendToAllExceptTCP(connection.getID(), object);
         }
+    }
+
+    @Override
+    public void disconnected(Connection connection) {
+        // TODO
     }
 
     public ServerListener(Server server) {
