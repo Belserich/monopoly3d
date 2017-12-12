@@ -34,7 +34,7 @@ public class LobbyTable extends Listener {
         LOGGER.finer("User wird registriert");
         String[][] tempusers;
         String connectionString = connection.toString();
-        int newUserId = -1;
+        int newUserId;
 
         // Array fuer neuen User vorbereiten und ID festlegen
         if (users == null) {
@@ -52,7 +52,7 @@ public class LobbyTable extends Listener {
         }
 
         //neuen User eintragen
-        tempusers[newUserId][0] = "" + newUserId;
+        tempusers[newUserId][0] = Integer.toString(newUserId);
         tempusers[newUserId][1] = name;
         tempusers[newUserId][2] = connectionString;
         users = tempusers;
@@ -63,7 +63,7 @@ public class LobbyTable extends Listener {
 
     public void changeUserName(int id, String name) {
         LOGGER.finer("Username wird geändert");
-        String idstr = "" + id;
+        String idstr = Integer.toString(id);
         for (int i = 0; i < users.length; i++) {
             if (users[i][0].equals(idstr)) {
                 users[i][1] = name;

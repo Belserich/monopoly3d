@@ -54,7 +54,7 @@ public class LobbyService extends Listener {
         try {
             Thread.sleep(500);
         } catch (InterruptedException ex) {
-            Logger.getLogger(LobbyService.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.warning("Fehler: " + ex);
         }
         System.out.println("Name?:");
         changeName(InputHandler.askForString());
