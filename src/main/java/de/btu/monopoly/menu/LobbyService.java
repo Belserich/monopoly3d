@@ -61,6 +61,7 @@ public class LobbyService extends Listener {
         changeName(InputHandler.askForString());
 
         if (lobby.isHost()) {
+            addKI("Computergegner", 1);
             System.out.println("Eingabe machen für Spielstart");
             InputHandler.askForString();
             gamestartRequest();
@@ -79,22 +80,6 @@ public class LobbyService extends Listener {
 
     }
 
-//    private static void kiLobby(String name) {
-//        // Client starten und verbinden
-//        GameClient client = new GameClient(59687, 5000);
-//        String localHost = System.getProperty("myapp.ip");
-//        client.connect(localHost);
-//
-//        // Lobby init
-//        lobby = new Lobby();
-//        lobby.setHost(false);
-//        lobby.setKi(true);
-//        lobby.setPlayerName(name);
-//        lobby.setPlayerClient(client);
-//
-//        joinRequest();
-//
-//    }
     public static void changeName(String name) {
         lobby.setPlayerName(name);
         changeUsernameRequest();

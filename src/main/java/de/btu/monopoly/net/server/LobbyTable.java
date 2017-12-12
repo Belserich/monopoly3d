@@ -31,7 +31,7 @@ public class LobbyTable extends Listener {
         this.server = server;
     }
 
-    public void registerUser(String name, Connection connection) {
+    public void registerUser(String name, Connection connection, int kiLevel) {
         LOGGER.finer("User wird registriert");
         String[][] tempusers;
         String connectionString = connection.toString();
@@ -39,16 +39,17 @@ public class LobbyTable extends Listener {
 
         // Array fuer neuen User vorbereiten und ID festlegen
         if (users == null) {
-            tempusers = new String[1][3];
+            tempusers = new String[1][4];
             slot = 0;
         } else {
-            tempusers = new String[users.length + 1][3];
+            tempusers = new String[users.length + 1][4];
             slot = users.length;
             // altes Array in neues uebernehmen
             for (int i = 0; i < users.length; i++) {
                 tempusers[i][0] = users[i][0];  //PlayerID (nicht UserID)
                 tempusers[i][1] = users[i][1];  //UserName
                 tempusers[i][2] = users[i][2];  //ConnectionString
+                tempusers[i][3] = users[i][3];  //kiLevel
             }
         }
 
@@ -56,9 +57,12 @@ public class LobbyTable extends Listener {
         tempusers[slot][0] = Integer.toString(playerID);
         tempusers[slot][1] = name;
         tempusers[slot][2] = connectionString;
+        tempusers[slot][3] = Integer.toString(kiLevel);
         users = tempusers;
 
-        joinRespone(playerID, connection);
+        if (kiLevel == 0) {
+            joinRespone(playerID, connection);
+        }
         playerID++;
         refreshLobbyResponse();
     }
@@ -147,14 +151,13 @@ public class LobbyTable extends Listener {
             LOGGER.finer("JoinRequest erhalten");
             if (!gameStarted) {
                 JoinRequest joinreq = (JoinRequest) object;
-                registerUser(joinreq.getName(), connection);
+                registerUser(joinreq.getName(), connection, 0);
             } else {
                 connection.sendTCP(new JoinImpossibleResponse());
             }
         } else if (object instanceof AddKiRequest) {
             LOGGER.finer("AddKiRequest erhalten");
-            AddKiRequest kireq = (AddKiRequest) object;
-            registerUser(kireg.getName, connection);
+            registerUser(((AddKiRequest) object).getName(), connection, ((AddKiRequest) object).getKiLevel());
         } else if (object instanceof ChangeUsernameRequest) {
             LOGGER.finer("ChangeUsernameRequest erhalten");
             ChangeUsernameRequest chanreq = (ChangeUsernameRequest) object;

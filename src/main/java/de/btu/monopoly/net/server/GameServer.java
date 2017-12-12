@@ -68,7 +68,7 @@ public class GameServer {
         kryo.register(String[].class);
         kryo.register(String[][].class);
         kryo.register(BroadcastRandomSeedRequest.class);
-
+        kryo.register(AddKiRequest.class);
     }
 
     public String getServerIP() {
