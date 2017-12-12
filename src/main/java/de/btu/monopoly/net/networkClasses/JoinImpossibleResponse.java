@@ -9,6 +9,6 @@ package de.btu.monopoly.net.networkClasses;
  *
  * @author Christian Prinz
  */
-public class IamHostRequest {
+public class JoinImpossibleResponse {
 
 }

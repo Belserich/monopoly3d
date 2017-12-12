@@ -13,37 +13,38 @@ import de.btu.monopoly.net.client.GameClient;
  */
 public class Lobby {
 
-    private boolean inLobby = true;
-    private String[] users;
+    private boolean host = true;
+    private boolean ki = false;
+    private String[][] users;
     private String playerName;
     private GameClient playerClient;
     private int playerID = -1;
 
     /**
-     * @return the inLobby
+     * @return the host
      */
-    protected boolean isInLobby() {
-        return inLobby;
+    protected boolean isHost() {
+        return host;
     }
 
     /**
-     * @param inLobby the inLobby to set
+     * @param host the host to set
      */
-    protected void setInLobby(boolean inLobby) {
-        this.inLobby = inLobby;
+    protected void setHost(boolean host) {
+        this.host = host;
     }
 
     /**
      * @return the users
      */
-    protected String[] getUsers() {
+    protected String[][] getUsers() {
         return users;
     }
 
     /**
      * @param players the users to set
      */
-    public void setUsers(String[] players) {
+    public void setUsers(String[][] players) {
         this.users = players;
     }
 
@@ -87,5 +88,19 @@ public class Lobby {
      */
     public void setPlayerId(int id) {
         this.playerID = id;
+    }
+
+    /**
+     * @return the ki
+     */
+    public boolean isKi() {
+        return ki;
+    }
+
+    /**
+     * @param ki the ki to set
+     */
+    public void setKi(boolean ki) {
+        this.ki = ki;
     }
 }

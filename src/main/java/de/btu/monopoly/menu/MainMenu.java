@@ -22,7 +22,7 @@ public class MainMenu {
     
     public static final Logger LOGGER = Logger.getLogger(MainMenu.class.getCanonicalName());
 
-    public void start() {
+    public void start() { //@GUI wird nicht verwendet
         LOGGER.setLevel(Level.FINER);
         LOGGER.fine("HAUPTMENÜ\n[1] Spiel starten\n[2] Spiel beitreten");
         int choice = InputHandler.getUserInput(2);
@@ -38,11 +38,12 @@ public class MainMenu {
         GameServer server = new GameServer(59687);
         server.startServer();
         GameClient client = new GameClient(59687, 5000);
-        client.connect("localhost");
+        String localHost = System.getProperty("myapp.ip");
+        client.connect(localHost);
         LOGGER.info("Die ServerIP ist " + server.getServerIP());
 
-        // Lobby als Host joinen
-        LobbyService.joinLobbyAsHost(client);
+        // Lobby als Host joinen @GUI kommt weg
+        LobbyService.joinLobby(client, true);
     }
 
     private void joinGame() {
@@ -52,6 +53,6 @@ public class MainMenu {
         client.connect(InputHandler.askForString()); // while Schleife bis mit Server verbunden (evtl. begrenzte Versuche)
 
         // Lobby als Client joinen
-        LobbyService.joinLobby(client);
+        LobbyService.joinLobby(client, false);
     }
 }
