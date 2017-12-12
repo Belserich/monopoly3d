@@ -13,13 +13,16 @@
     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="50.0" />
   </columnConstraints>
   <rowConstraints>
+      <RowConstraints minHeight="10.0" percentHeight="70.0" prefHeight="30.0" vgrow="SOMETIMES" />
     <RowConstraints minHeight="10.0" percentHeight="70.0" vgrow="SOMETIMES" />
       <RowConstraints percentHeight="30.0" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
-      <Label fx:id="ipLabel" text="Gib hier die Adresse des Hosts ein:  " />
-      <Button fx:id="searchButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#searchButtonAction" text="Lobby beitreten" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-      <Button fx:id="backButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#backButtonAction" text="Zurück" GridPane.rowIndex="1" />
-      <TextField fx:id="ipAdressTextView" promptText="IP Adresse" GridPane.columnIndex="1" />
+      <Label fx:id="ipLabel" text="Gib hier die Adresse des Hosts ein:  " GridPane.rowIndex="1" />
+      <Button fx:id="searchButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#searchButtonAction" text="Lobby beitreten" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+      <Button fx:id="backButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#backButtonAction" text="Zurück" GridPane.rowIndex="2" />
+      <TextField fx:id="ipAdressTextField" promptText="IP Adresse" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+      <Label fx:id="nameLabel" text="Gib hier deinen Namen ein:" />
+      <TextField fx:id="nameTextField" promptText="Name" GridPane.columnIndex="1" />
    </children>
 </GridPane>

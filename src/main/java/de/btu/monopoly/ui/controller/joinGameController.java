@@ -1,5 +1,7 @@
 package de.btu.monopoly.ui.controller;
 
+import de.btu.monopoly.menu.LobbyService;
+import de.btu.monopoly.menu.MainMenu;
 import de.btu.monopoly.ui.SceneManager;
 import java.io.IOException;
 import java.net.URL;
@@ -8,7 +10,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 
 /**
  *
@@ -16,7 +18,11 @@ import javafx.scene.control.Button;
  */
 public class joinGameController implements Initializable {
 
-    public Button backButton;
+    @FXML
+    private TextField nameTextField;
+
+    @FXML
+    private TextField ipAdressTextField;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -32,10 +38,16 @@ public class joinGameController implements Initializable {
 
     // Button joinLobby
     @FXML
-    private void searchButtonAction(ActionEvent event) throws IOException {
+    private void searchButtonAction(ActionEvent event) throws IOException, InterruptedException {
+        // Server initialisieren
+        MainMenu menu = new MainMenu();
+        menu.joinGame(ipAdressTextField.getText());
 
-        //TODO searchButtonAction
-        System.out.println("joinLobbyButton ausgeführt! (Noch nicht implementiert!)");
+        // Namen wechseln
+        Thread.sleep(200);
+        LobbyService.changeName(nameTextField.getText());
 
+        // Wechselt die Scene auf Lobby
+        SceneManager.changeScene(new FXMLLoader(getClass().getResource("/fxml/Lobby.fxml")));
     }
 }

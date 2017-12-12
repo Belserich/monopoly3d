@@ -5,7 +5,6 @@
  */
 package de.btu.monopoly.menu;
 
-import de.btu.monopoly.input.InputHandler;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.server.GameServer;
 import de.btu.monopoly.ui.controller.startGameController;
@@ -31,11 +30,10 @@ public class MainMenu {
         startGameController.client = client;
     }
 
-    public void joinGame() {
+    public void joinGame(String ip) {
         // Client starten und verbinden
         GameClient client = new GameClient(59687, 5000);
-        LOGGER.fine("Geben sie die IP-Adresse des Servers ein");
-        client.connect(InputHandler.askForString()); // while Schleife bis mit Server verbunden (evtl. begrenzte Versuche)
+        client.connect(ip); // while Schleife bis mit Server verbunden (evtl. begrenzte Versuche)
 
         // Lobby als Client joinen
         LobbyService.joinLobby(client, false);

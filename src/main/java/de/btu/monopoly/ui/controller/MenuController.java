@@ -32,6 +32,7 @@ public class MenuController implements Initializable {
         // Wechselt die Scene auf startGame
         SceneManager.changeScene(new FXMLLoader(getClass().getResource("/fxml/startGame.fxml")));
 
+        // Server initialisieren
         MainMenu menu = new MainMenu();
         menu.createGame();
 

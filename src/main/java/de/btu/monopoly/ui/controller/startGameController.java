@@ -38,6 +38,7 @@ public class startGameController implements Initializable {
     @FXML
     private void createLobbyButtonAction(ActionEvent event) throws IOException, InterruptedException {
 
+        // JoinLobby und Namen übernehmen
         LobbyService.joinLobby(client, true);
         Thread.sleep(200);
         LobbyService.changeName(nicknameHostTextView.getText());
