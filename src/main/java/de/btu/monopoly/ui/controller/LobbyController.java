@@ -37,8 +37,16 @@ public class LobbyController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
+        // Updatet die Spieler in der Lobby
         update();
-        playButton.setDisable(true);
+
+        // playButton kann nur der Host drücken
+        if (Lobby.getUsers() != null) {
+            if (Lobby.getUsers().length != 1) {
+                playButton.setDisable(true);
+            }
+        }
     }
 
     /**

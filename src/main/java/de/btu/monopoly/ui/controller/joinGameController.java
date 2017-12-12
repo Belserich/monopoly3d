@@ -10,6 +10,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
 /**
@@ -23,6 +24,9 @@ public class joinGameController implements Initializable {
 
     @FXML
     private TextField ipAdressTextField;
+
+    @FXML
+    private Label errorLabel;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -47,7 +51,13 @@ public class joinGameController implements Initializable {
         Thread.sleep(200);
         LobbyService.changeName(nameTextField.getText());
 
-        // Wechselt die Scene auf Lobby
-        SceneManager.changeScene(new FXMLLoader(getClass().getResource("/fxml/Lobby.fxml")));
+        if (MessageControl.getConnectionError() == false) {
+            // Wechselt die Scene auf Lobby
+            SceneManager.changeScene(new FXMLLoader(getClass().getResource("/fxml/Lobby.fxml")));
+        } else {
+            errorLabel.setText("Die Verbindung konnte nicht hergestellt werden.");
+        }
+
     }
+
 }
