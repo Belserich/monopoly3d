@@ -18,9 +18,9 @@ In the context of our research study, please record the three most important dec
 ## Markdown Decision Record -- Templates
 
 To ease the documentation of decision during the _Softwarepraktikum_ / _Softwaretechnikpraktikum_ we provide you with a set of three templates. Each decision is to be placed in a separate copy of one of the provided templates. Finally, the documentation should be uploaded in _GitLab_ to a folder called `doc/mdr`, where it is easily accessible to the whole team. The links to the templates are as follows:
-* [Compact template](templates/captureTemplate_compact.md) (captures the minimum of required information)
-* [Extensive template](templates/captureTemplate_extensive.md) (captures an elaborate record of rationale information)
-* [Table-based template](templates/captureTemplate_table.md) (captures a structured overview of rationale information)
+* [Compact template](https://git.informatik.tu-cottbus.de/schubmat/markdown-decision-records/blob/master/templates/captureTemplate_compact.md) (captures the minimum of required information)
+* [Extensive template](https://git.informatik.tu-cottbus.de/schubmat/markdown-decision-records/blob/master/templates/captureTemplate_extensive.md) (captures an elaborate record of rationale information)
+* [Table-based template](https://git.informatik.tu-cottbus.de/schubmat/markdown-decision-records/blob/master/templates/captureTemplate_table.md) (captures a structured overview of rationale information)
 
 Therefore, at least three files should be created per sprint, which represent the most important decisions.
 

@@ -17,19 +17,19 @@ import java.util.logging.Logger;
  */
 public class MainMenu {
 
+    protected static final int CREATE_GAME = 1;
+    protected static final int JOIN_GAME = 2;
+    
     public static final Logger LOGGER = Logger.getLogger(MainMenu.class.getCanonicalName());
 
     public void start() { //@GUI wird nicht verwendet
         LOGGER.setLevel(Level.FINER);
         LOGGER.fine("HAUPTMENÜ\n[1] Spiel starten\n[2] Spiel beitreten");
         int choice = InputHandler.getUserInput(2);
-        switch (choice) {
-            case 1:
-                createGame();
-                break;
-            case 2:
-                joinGame();
-                break;
+        if (choice == CREATE_GAME) {
+            createGame();
+        } else if (choice == JOIN_GAME) {
+            joinGame();
         }
     }
 
