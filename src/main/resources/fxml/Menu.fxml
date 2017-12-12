@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.image.*?>
 <?import com.jfoenix.controls.*?>
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
@@ -10,26 +14,32 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.btu.monopoly.ui.controller.MenuController">
+<GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="1080.0" minWidth="1920.0" style="-fx-background-color: #0d47a1;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.btu.monopoly.ui.controller.MenuController">
    <columnConstraints>
-      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="80.0" />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" percentWidth="20.0" />
    </columnConstraints>
    <rowConstraints>
+      <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-      <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-      <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-      <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-      <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-      <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
    </rowConstraints>
    <children>
-      <Label text="Monopoly - Hauptmenü" GridPane.columnIndex="1" />
-        <Button fx:id="startGameButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#startGameButtonAction" text="Spiel starten" GridPane.columnIndex="1" GridPane.rowIndex="1">
-         
-      </Button>
-      <Button fx:id="joinGameButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#joinGameButtonAction" text="Spiel beitreten" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-      <Button fx:id="closeButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#closeButtonAction" text="Schließen" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+      <Label alignment="CENTER" contentDisplay="RIGHT" text="Monopoly - Hauptmenü" textFill="WHITE" translateX="350.0">
+         <font>
+            <Font size="53.0" />
+         </font></Label>
+      <JFXButton fx:id="joinGameButton" onAction="#joinGameButtonAction" prefHeight="80.0" prefWidth="200.0" style="-fx-background-color: #5472d3;" text="Spiel beitreten" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+      <JFXButton fx:id="startGameButton" contentDisplay="RIGHT" onAction="#startGameButtonAction" prefHeight="80.0" prefWidth="200.0" ripplerFill="RED" style="-fx-background-color: #5472d3;" text="Spiel starten" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+      <JFXButton fx:id="closeButton" onAction="#closeButtonAction" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #5472d3;" text="Schließen" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+
+
    </children>
 </GridPane>
