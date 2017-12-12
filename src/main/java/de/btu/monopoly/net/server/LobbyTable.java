@@ -25,6 +25,7 @@ public class LobbyTable extends Listener {
     private String[][] users;
     private boolean gameStarted = false;
     private long randomSeed;
+    private int playerID = 0;
 
     LobbyTable(Server server) {
         this.server = server;
@@ -34,30 +35,31 @@ public class LobbyTable extends Listener {
         LOGGER.finer("User wird registriert");
         String[][] tempusers;
         String connectionString = connection.toString();
-        int newUserId;
+        int slot;
 
         // Array fuer neuen User vorbereiten und ID festlegen
         if (users == null) {
             tempusers = new String[1][3];
-            newUserId = 0;
+            slot = 0;
         } else {
             tempusers = new String[users.length + 1][3];
-            newUserId = users.length;
+            slot = users.length;
             // altes Array in neues uebernehmen
             for (int i = 0; i < users.length; i++) {
-                tempusers[i][0] = users[i][0];
-                tempusers[i][1] = users[i][1];
-                tempusers[i][2] = users[i][2];
+                tempusers[i][0] = users[i][0];  //PlayerID (nicht UserID)
+                tempusers[i][1] = users[i][1];  //UserName
+                tempusers[i][2] = users[i][2];  //ConnectionString
             }
         }
 
         //neuen User eintragen
-        tempusers[newUserId][0] = Integer.toString(newUserId);
-        tempusers[newUserId][1] = name;
-        tempusers[newUserId][2] = connectionString;
+        tempusers[slot][0] = Integer.toString(playerID);
+        tempusers[slot][1] = name;
+        tempusers[slot][2] = connectionString;
         users = tempusers;
 
-        joinRespone(newUserId, connection);
+        joinRespone(playerID, connection);
+        playerID++;
         refreshLobbyResponse();
     }
 

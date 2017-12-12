@@ -116,13 +116,8 @@ public class LobbyService extends Listener {
 
             //wenn es sich um den aktuellen Spieler handelt
             if (id == lobby.getPlayerId()) {
-                // wenn er eine KI ist
-                if (lobby.isKi()) {
-                    player.setKi(true);
-                }
                 lobby.getPlayerClient().setPlayerOnClient(player);
             }
-            System.out.println(player.isKi());
             players[i] = player;
         }
 
@@ -179,7 +174,7 @@ public class LobbyService extends Listener {
             //TODO kommt in GUI weg:
             System.out.println("Spieler in Lobby: (Meine ID: " + lobby.getPlayerId() + ")");
             for (int i = 0; i < lobby.getUsers().length; i++) {
-                System.out.print("[" + lobby.getUsers()[i][0] + "] ");
+                System.out.print("[" + i + "] ");
                 System.out.println(lobby.getUsers()[i][1]);
             }
             if (lobby.isHost()) {
