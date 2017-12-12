@@ -19,6 +19,7 @@ public class Lobby {
     private String playerName;
     private GameClient playerClient;
     private int playerID = -1;
+    private long randomSeed;
 
     /**
      * @return the host
@@ -102,5 +103,19 @@ public class Lobby {
      */
     public void setKi(boolean ki) {
         this.ki = ki;
+    }
+
+    /**
+     * @return the randomSeed
+     */
+    public long getRandomSeed() {
+        return randomSeed;
+    }
+
+    /**
+     * @param randomSeed the randomSeed to set
+     */
+    public void setRandomSeed(long randomSeed) {
+        this.randomSeed = randomSeed;
     }
 }

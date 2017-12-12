@@ -15,6 +15,7 @@ import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.networkClasses.*;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -43,6 +44,10 @@ public class LobbyService extends Listener {
         lobby.setPlayerName(ipName);
         lobby.setPlayerClient(client);
 
+        if (lobby.isHost()) {
+            generateRandomSeed();
+        }
+
         joinRequest();
 
         //TODO kommt in GUI weg:
@@ -55,6 +60,7 @@ public class LobbyService extends Listener {
         changeName(InputHandler.askForString());
 
         if (lobby.isHost()) {
+//            addKI("Gegner");
             System.out.println("Eingabe machen für Spielstart");
             InputHandler.askForString();
             gamestartRequest();
@@ -95,7 +101,7 @@ public class LobbyService extends Listener {
     }
 
     public static void startGame() {//TODO
-        Game controller = new Game(generatePlayerArray(), lobby.getPlayerClient());
+        Game controller = new Game(generatePlayerArray(), lobby.getPlayerClient(), lobby.getRandomSeed());
         controller.init();
         controller.start();
     }
@@ -115,11 +121,18 @@ public class LobbyService extends Listener {
                 }
                 lobby.getPlayerClient().setPlayerOnClient(player);
             }
-
+            System.out.println(player.isKi());
             players[i] = player;
         }
 
         return players;
+    }
+
+    private static void generateRandomSeed() {
+        long seed = new Random().nextLong();
+        BroadcastRandomSeedRequest req = new BroadcastRandomSeedRequest();
+        req.setSeed(seed);
+        lobby.getPlayerClient().sendTCP(req);
     }
 
     // REQUESTS:__________________________________an LobbyTable
@@ -156,6 +169,7 @@ public class LobbyService extends Listener {
             LOGGER.finer("JoinResponse wird verarbeitet");
             JoinResponse joinres = (JoinResponse) object;
             lobby.setPlayerId(joinres.getId());
+            lobby.setRandomSeed(joinres.getSeed());
         } else if (object instanceof RefreshLobbyResponse) {
             LOGGER.finer("RefreshLobbyResponse wird verarbeitet");
             RefreshLobbyResponse refres = (RefreshLobbyResponse) object;

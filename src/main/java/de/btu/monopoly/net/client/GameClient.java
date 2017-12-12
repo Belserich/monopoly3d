@@ -69,6 +69,7 @@ public class GameClient {
         kryo.register(JoinImpossibleResponse.class);
         kryo.register(String[].class);
         kryo.register(String[][].class);
+        kryo.register(BroadcastRandomSeedRequest.class);
     }
 
     public void sendTCP(Object object) {

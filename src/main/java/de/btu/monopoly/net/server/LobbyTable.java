@@ -24,6 +24,7 @@ public class LobbyTable extends Listener {
     private Server server;
     private String[][] users;
     private boolean gameStarted = false;
+    private long randomSeed;
 
     LobbyTable(Server server) {
         this.server = server;
@@ -115,6 +116,7 @@ public class LobbyTable extends Listener {
         LOGGER.finer("Server sendet JoinResponse");
         JoinResponse joinres = new JoinResponse();
         joinres.setId(id);
+        joinres.setSeed(randomSeed);
         connection.sendTCP(joinres);
     }
 
@@ -156,6 +158,9 @@ public class LobbyTable extends Listener {
             gameStarted = true;
             gamestartResponse();
             createGameTable();
+        } else if (object instanceof BroadcastRandomSeedRequest) {
+            BroadcastRandomSeedRequest req = (BroadcastRandomSeedRequest) object;
+            randomSeed = req.getSeed();
         }
     }
 
