@@ -34,6 +34,7 @@ public class GameServer {
         server = new Server();
         kryo = server.getKryo();
         NetworkService.registerKryoClasses(kryo);
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> stopServer()));
     }
 
     public void startServer() {

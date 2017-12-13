@@ -10,6 +10,7 @@ import com.esotericsoftware.kryonet.FrameworkMessage;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 import de.btu.monopoly.net.networkClasses.*;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.logging.Logger;

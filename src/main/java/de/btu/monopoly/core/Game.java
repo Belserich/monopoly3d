@@ -30,9 +30,9 @@ import java.util.stream.IntStream;
  */
 public class Game {
     
-    public static final int SEED = 1;
-    
     public static AtomicBoolean IS_RUNNING = new AtomicBoolean(false);
+    
+    public static final int SEED = 1;
     
     private static final Logger LOGGER = Logger.getLogger(Game.class.getCanonicalName());
 
@@ -47,6 +47,8 @@ public class Game {
     private final Player[] players;
 
     private final GameClient client;
+    
+    private final long seed;
 
     /**
      * Die fachliche Komponente des Spiels als Einheit, bestehend aus einem Spielbrett, den Spielern sowie Zuschauern.
@@ -54,9 +56,10 @@ public class Game {
      * @param players Spieler
      *
      */
-    public Game(Player[] players, GameClient client) {
+    public Game(Player[] players, GameClient client, long seed) {
         this.players = players;
         this.client = client;
+        this.seed = seed;
     }
 
     public void init() {

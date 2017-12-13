@@ -10,7 +10,6 @@ import com.esotericsoftware.kryonet.Client;
 import de.btu.monopoly.core.Game;
 import de.btu.monopoly.core.service.NetworkService;
 import de.btu.monopoly.data.player.Player;
-import de.btu.monopoly.menu.LobbyClientListener;
 import de.btu.monopoly.net.networkClasses.BroadcastPlayerChoiceRequest;
 
 import java.io.IOException;
@@ -53,7 +52,6 @@ public class GameClient {
             client.connect(timeout, serverIP, tcpPort);
             listener = new ClientListener(uiThread);
             client.addListener(listener);
-            client.addListener(new LobbyClientListener());
         } catch (IOException ex) {
             LOGGER.log(Level.WARNING, "Client konnte nicht gestartet werden {0}", ex);
         }

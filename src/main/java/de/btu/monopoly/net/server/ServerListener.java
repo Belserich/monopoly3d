@@ -9,7 +9,9 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.FrameworkMessage;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
-import de.btu.monopoly.net.networkClasses.*;
+import de.btu.monopoly.net.networkClasses.BroadcastPlayerChoiceRequest;
+import de.btu.monopoly.net.networkClasses.PlayerTradeRequest;
+import de.btu.monopoly.net.networkClasses.PlayerTradeResponse;
 
 import java.util.logging.Logger;
 

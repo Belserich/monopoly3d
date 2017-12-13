@@ -1,14 +1,18 @@
 package de.btu.monopoly;
 
 //Imports
+
 import de.btu.monopoly.core.Game;
 import de.btu.monopoly.core.GameBoard;
-import de.btu.monopoly.core.service.*;
-import de.btu.monopoly.data.card.*;
+import de.btu.monopoly.core.service.FieldService;
+import de.btu.monopoly.core.service.PlayerService;
+import de.btu.monopoly.data.card.Card;
+import de.btu.monopoly.data.card.CardAction;
+import de.btu.monopoly.data.card.CardManager;
 import de.btu.monopoly.data.field.*;
 import de.btu.monopoly.data.player.Player;
-import de.btu.monopoly.net.client.*;
-import de.btu.monopoly.net.server.*;
+import de.btu.monopoly.net.client.GameClient;
+import de.btu.monopoly.net.server.GameServer;
 import org.junit.Assert;
 import org.junit.Test;
 
