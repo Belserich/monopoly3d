@@ -5,10 +5,14 @@ import de.btu.monopoly.core.mechanics.Trade;
 import de.btu.monopoly.core.mechanics.TradeOffer;
 import de.btu.monopoly.net.networkClasses.*;
 
+import java.util.logging.Logger;
+
 /**
  * @author Maximilian Bels (belsmaxi@b-tu.de)
  */
 public class NetworkService {
+    
+    private static final Logger LOGGER = Logger.getLogger(NetworkService.class.getCanonicalName());
     
     public static void registerKryoClasses(Kryo kryo) {
         kryo.register(BroadcastPlayerChoiceRequest.class);
@@ -27,5 +31,13 @@ public class NetworkService {
         kryo.register(Trade.class);
         kryo.register(String[][].class);
         kryo.register(JoinResponse.class);
+    }
+    
+    public static void logReceiveMessage(Object obj) {
+        LOGGER.info("<- " + obj.getClass().getSimpleName());
+    }
+    
+    public static void logSendMessage(Object obj) {
+        LOGGER.info("-> " + obj.getClass().getSimpleName());
     }
 }

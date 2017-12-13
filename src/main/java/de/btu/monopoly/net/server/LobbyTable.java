@@ -9,6 +9,7 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.FrameworkMessage;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
+import de.btu.monopoly.core.service.NetworkService;
 import de.btu.monopoly.net.networkClasses.*;
 
 import java.util.Arrays;
@@ -116,24 +117,24 @@ public class LobbyTable extends Listener {
 
     // RESPONSES:____________________________________________
     public void joinRespone(int id, Connection connection) {
-        LOGGER.finer("Server sendet JoinResponse");
         JoinResponse joinres = new JoinResponse();
         joinres.setId(id);
         joinres.setSeed(randomSeed);
         connection.sendTCP(joinres);
+        NetworkService.logSendMessage(joinres);
     }
 
     public void refreshLobbyResponse() {
-        LOGGER.finer("Server sendet RefreshLobbyResponse");
         RefreshLobbyResponse refres = new RefreshLobbyResponse();
         refres.setUsers(users);
         server.sendToAllTCP(refres);
+        NetworkService.logSendMessage(refres);
     }
 
     public void gamestartResponse() {
-        LOGGER.finer("Server sendet GamestartResponse");
         GamestartResponse gares = new GamestartResponse();
         server.sendToAllTCP(gares);
+        NetworkService.logSendMessage(gares);
     }
 
     // LISTENER:_____________________________________________
@@ -141,29 +142,30 @@ public class LobbyTable extends Listener {
     public void received(Connection connection, Object object) {
         super.received(connection, object);
 
-        if (object instanceof FrameworkMessage) {
-            // TODO LOG
-
-        } else if (object instanceof JoinRequest) {
-            LOGGER.finer("JoinRequest erhalten");
-            if (!gameStarted) {
-                JoinRequest joinreq = (JoinRequest) object;
-                registerUser(joinreq.getName(), connection);
-            } else {
-                connection.sendTCP(new JoinImpossibleResponse());
+        if (!(object instanceof FrameworkMessage)) {
+            NetworkService.logReceiveMessage(object);
+            
+            if (object instanceof JoinRequest) {
+                if (!gameStarted) {
+                    JoinRequest joinreq = (JoinRequest) object;
+                    registerUser(joinreq.getName(), connection);
+                } else {
+                    connection.sendTCP(new JoinImpossibleResponse());
+                }
             }
-        } else if (object instanceof ChangeUsernameRequest) {
-            LOGGER.finer("ChangeUsernameRequest erhalten");
-            ChangeUsernameRequest chanreq = (ChangeUsernameRequest) object;
-            changeUserName(chanreq.getUserId(), chanreq.getUserName());
-        } else if (object instanceof GamestartRequest) {
-            LOGGER.finer("GamestartRequest erhalten");
-            gameStarted = true;
-            gamestartResponse();
-            createGameTable();
-        } else if (object instanceof BroadcastRandomSeedRequest) {
-            BroadcastRandomSeedRequest req = (BroadcastRandomSeedRequest) object;
-            randomSeed = req.getSeed();
+            else if (object instanceof ChangeUsernameRequest) {
+                ChangeUsernameRequest chanreq = (ChangeUsernameRequest) object;
+                changeUserName(chanreq.getUserId(), chanreq.getUserName());
+            }
+            else if (object instanceof GamestartRequest) {
+                gameStarted = true;
+                gamestartResponse();
+                createGameTable();
+            }
+            else if (object instanceof BroadcastRandomSeedRequest) {
+                BroadcastRandomSeedRequest req = (BroadcastRandomSeedRequest) object;
+                randomSeed = req.getSeed();
+            }
         }
     }
 
