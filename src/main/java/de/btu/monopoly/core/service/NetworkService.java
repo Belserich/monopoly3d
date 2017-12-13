@@ -25,5 +25,7 @@ public class NetworkService {
         kryo.register(int[].class);
         kryo.register(TradeOffer.class);
         kryo.register(Trade.class);
+        kryo.register(String[][].class);
+        kryo.register(JoinResponse.class);
     }
 }

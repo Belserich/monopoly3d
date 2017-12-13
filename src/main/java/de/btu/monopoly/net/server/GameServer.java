@@ -27,6 +27,7 @@ public class GameServer {
     private Server server;
     private Kryo kryo;
     private ServerListener serverL;
+    private LobbyTable lobbyTable;
 
     public GameServer(int tcp) {
         this.tcpPort = tcp;
@@ -43,7 +44,9 @@ public class GameServer {
         try {
             server.bind(tcpPort);
             serverL = new ServerListener(server);
+            lobbyTable = new LobbyTable(server);
             server.addListener(serverL);
+            server.addListener(lobbyTable);
         } catch (IOException ex) {
             LOGGER.log(Level.WARNING, "Server konnte nicht gebunden werden {0}", ex);
         }
