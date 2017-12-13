@@ -11,6 +11,8 @@ import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.ki.EasyKi;
 import de.btu.monopoly.ki.HardKi;
 import de.btu.monopoly.ki.MediumKi;
+import de.btu.monopoly.net.client.GameClient;
+import de.btu.monopoly.net.networkClasses.BroadcastPlayerChoiceRequest;
 import java.util.logging.Logger;
 
 /**
@@ -20,14 +22,16 @@ import java.util.logging.Logger;
 public class IOService {
 
     private static final Logger LOGGER = Logger.getLogger(IOService.class.getCanonicalName());
+    private static GameClient client;
 
     public static int jailChoice(Player player) {
         int choice = -1;
         switch (player.getKiLevel()) {
             case 0:
-            //TODO GUI
-            // while not -1 ->Gui
-
+                //TODO GUI
+                // while not -1 ->Gui
+                getClientChoice(player, 3);
+                break;
             case 1:
                 choice = EasyKi.jailOption(player);
                 break;
@@ -47,9 +51,10 @@ public class IOService {
         int choice = -1;
         switch (player.getKiLevel()) {
             case 0:
-            //TODO GUI
-            // while not -1 ->Gui
-
+                //TODO GUI
+                // while not -1 ->Gui
+                choice = getClientChoice(player, 2);
+                break;
             case 1:
                 choice = EasyKi.buyPropOption(player, prop);
                 break;
@@ -65,11 +70,13 @@ public class IOService {
         return choice;
     }
 
-    public static void actionSequence(Player player, GameBoard board) {
+    // wird noch zu void, wenn GUI fertig
+    public static int actionSequence(Player player, GameBoard board) {
+        int choice = 1; //kommt weg
         switch (player.getKiLevel()) {
             case 0:
-            //TODO GUI
-
+                //TODO GUI
+                choice = getClientChoice(player, 5);
             case 1:
                 EasyKi.processActionSequence(player, board);
                 break;
@@ -81,6 +88,36 @@ public class IOService {
                 break;
             default:
                 LOGGER.warning("Illegale KI-Stufe in JailChoice registriert");
+        }
+        return choice;
+    }
+
+    /**
+     * @param aClient the client to set
+     */
+    public static void setClient(GameClient aClient) {
+        client = aClient;
+    }
+
+    private static int getClientChoice(Player player, int max) {
+        Player thisPlayer = client.getPlayerOnClient();
+
+        if (thisPlayer == player) {
+            int choice = InputHandler.getUserInput(max);
+            BroadcastPlayerChoiceRequest packet = new BroadcastPlayerChoiceRequest();
+            packet.setChoice(choice);
+            client.sendTCP(packet);
+            return choice;
+        } else {
+            do {
+                BroadcastPlayerChoiceRequest[] packets = client.getPlayerChoiceObjects();
+                if (packets.length > 1) {
+                    LOGGER.warning("Fehler: Mehr als ein choice-Packet registriert!");
+                    return -1;
+                } else if (packets.length == 1) {
+                    return packets[0].getChoice();
+                }
+            } while (true);
         }
     }
 

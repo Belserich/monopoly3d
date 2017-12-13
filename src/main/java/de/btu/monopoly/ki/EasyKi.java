@@ -10,12 +10,15 @@ import de.btu.monopoly.data.card.CardAction;
 import de.btu.monopoly.data.card.CardStack;
 import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.player.Player;
+import java.util.logging.Logger;
 
 /**
  *
  * @author Christian Prinz
  */
 public class EasyKi {
+
+    private static final Logger LOGGER = Logger.getLogger(EasyKi.class.getCanonicalName());
 
     public static int jailOption(Player player) {
         int choice;
@@ -33,7 +36,7 @@ public class EasyKi {
     public static int buyPropOption(Player player, PropertyField prop) {
         int choice;
         int percentage = (int) (Math.random() * 101);
-        if (percentage <= 30) {
+        if (percentage <= 50) {
             choice = 1;
         } else {
             choice = 2;
@@ -42,7 +45,8 @@ public class EasyKi {
     }
 
     public static void processActionSequence(Player player, GameBoard board) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        LOGGER.finer("Der Computergegner hat keine Lust zu bauen, oder sich um Hyoptheken zu kümmern. "
+                + "Zum Handeln ist er nicht schlau genug");
     }
 
 }

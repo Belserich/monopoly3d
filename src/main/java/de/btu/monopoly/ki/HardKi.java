@@ -8,12 +8,15 @@ package de.btu.monopoly.ki;
 import de.btu.monopoly.core.GameBoard;
 import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.player.Player;
+import java.util.logging.Logger;
 
 /**
  *
  * @author Christian Prinz
  */
 public class HardKi {
+
+    private static final Logger LOGGER = Logger.getLogger(HardKi.class.getCanonicalName());
 
     public static int jailOption(Player player) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
