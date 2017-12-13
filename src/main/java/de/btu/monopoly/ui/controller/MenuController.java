@@ -52,6 +52,7 @@ public class MenuController implements Initializable {
 
         // Schließt die Anwendung
         Platform.exit();
+        System.exit(0);
 
     }
 }

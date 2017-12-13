@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.effect.*?>
+<?import com.jfoenix.controls.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
@@ -7,19 +12,28 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane fx:id="createLobbyGrid" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.btu.monopoly.ui.controller.startGameController">
+<GridPane fx:id="createLobbyGrid" minHeight="1080.0" minWidth="1920.0" style="-fx-background-color: #0d47a1;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.btu.monopoly.ui.controller.startGameController">
    <columnConstraints>
-      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="50.0" />
-      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="50.0" />
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="100.0" />
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="30.0" />
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="8.0" prefWidth="100.0" />
    </columnConstraints>
    <rowConstraints>
       <RowConstraints minHeight="10.0" percentHeight="70.0" vgrow="SOMETIMES" />
-      <RowConstraints percentHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" percentHeight="70.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" percentHeight="70.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" percentHeight="70.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" percentHeight="70.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints percentHeight="60.0" vgrow="SOMETIMES" />
    </rowConstraints>
    <children>
-      <Label fx:id="nameLabel" text="Gib hier deinen Namen ein:" />
-      <Button fx:id="createLobbyButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#createLobbyButtonAction" text="Lobby eröffnen" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-      <Button fx:id="backButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#backButtonAction" text="Zurück" GridPane.rowIndex="1" />
-      <TextField fx:id="nicknameHostTextView" promptText="Nickname" GridPane.columnIndex="1" />
+      <Label fx:id="nameLabel" text="Gib hier deinen Namen ein:" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+      <JFXButton fx:id="createLobbyButton" minHeight="80.0" minWidth="200.0" onAction="#createLobbyButtonAction" style="-fx-background-color: #5472d3;" text="Lobby eröffnen" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
+      <JFXButton fx:id="backButton" minHeight="50.0" minWidth="200.0" onAction="#backButtonAction" style="-fx-background-color: #5472d3;" text="Zurück" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.valignment="CENTER" />
+      <JFXTextField fx:id="nicknameHostTextView" promptText="Name" unFocusColor="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="2">
+         <effect>
+            <ColorAdjust brightness="1.0" />
+         </effect>
+      </JFXTextField>
    </children>
 </GridPane>
