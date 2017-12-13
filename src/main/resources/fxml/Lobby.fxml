@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
+<?import com.jfoenix.controls.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ColorPicker?>
 <?import javafx.scene.control.Label?>
@@ -7,8 +12,9 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane fx:id="LobbyGrid" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.btu.monopoly.ui.controller.LobbyController">
+<GridPane fx:id="LobbyGrid" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="1080.0" minWidth="1920.0" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #0d47a1;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.btu.monopoly.ui.controller.LobbyController">
   <columnConstraints>
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="5.0" prefWidth="100.0" />
     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -24,20 +30,41 @@
       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
-      <Label fx:id="lobbyLabel" text="Lobby:" />
-      <Label fx:id="name1Label" text="frei" GridPane.rowIndex="1" />
-      <Label fx:id="name2Label" text="frei" GridPane.rowIndex="2" />
-      <Label fx:id="name3Label" text="frei" GridPane.rowIndex="3" />
-      <Label fx:id="name4Label" text="frei" GridPane.rowIndex="4" />
-      <Label fx:id="name5Label" text="frei" GridPane.rowIndex="5" />
-      <Label fx:id="name6Label" text="frei" GridPane.rowIndex="6" />
-      <ColorPicker fx:id="colorPlayer1" maxWidth="40.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-      <ColorPicker fx:id="colorPlayer2" maxWidth="40.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-      <ColorPicker fx:id="colorPlayer3" maxWidth="40.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-      <ColorPicker fx:id="colorPlayer4" maxWidth="40.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-      <ColorPicker fx:id="colorPlayer5" maxWidth="40.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-      <ColorPicker fx:id="colorPlayer6" maxWidth="40.0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-      <Button fx:id="playButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#playButtonAction" text="Spiel starten" GridPane.columnIndex="2" GridPane.rowIndex="7" />
-      <Button fx:id="leaveLobbyButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#leaveLobbyButtonAction" text="Lobby verlassen" GridPane.rowIndex="7" />
+      <Label fx:id="lobbyLabel" text="Lobby:" textFill="WHITE" GridPane.columnIndex="1">
+         <font>
+            <Font size="56.0" />
+         </font></Label>
+      <Label fx:id="name1Label" text="frei" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="1">
+         <font>
+            <Font size="26.0" />
+         </font></Label>
+      <Label fx:id="name2Label" text="frei" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="2">
+         <font>
+            <Font size="26.0" />
+         </font></Label>
+      <Label fx:id="name3Label" text="frei" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="3">
+         <font>
+            <Font size="26.0" />
+         </font></Label>
+      <Label fx:id="name4Label" text="frei" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="4">
+         <font>
+            <Font size="26.0" />
+         </font></Label>
+      <Label fx:id="name5Label" text="frei" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="5">
+         <font>
+            <Font size="26.0" />
+         </font></Label>
+      <Label fx:id="name6Label" text="frei" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="6">
+         <font>
+            <Font size="26.0" />
+         </font></Label>
+      <JFXColorPicker fx:id="playerColor1" onAction="#pushColorPick" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+      <JFXColorPicker fx:id="playerColor2" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+      <JFXColorPicker fx:id="playerColor3" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+      <JFXColorPicker fx:id="playerColor4" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+      <JFXColorPicker fx:id="playerColor5" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+      <JFXColorPicker fx:id="playerColor6" GridPane.columnIndex="2" GridPane.rowIndex="6" />
+      <JFXButton fx:id="playButton" minHeight="80.0" minWidth="200.0" onAction="#playButtonAction" style="-fx-background-color: #5472d3;" text="Spiel starten" textFill="WHITE" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
+      <JFXButton fx:id="leaveLobbyButton" minHeight="80.0" minWidth="200.0" onAction="#leaveLobbyButtonAction" style="-fx-background-color: #5472d3;" text="Lobby verlassen" textFill="WHITE" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.valignment="CENTER" />
    </children>
 </GridPane>

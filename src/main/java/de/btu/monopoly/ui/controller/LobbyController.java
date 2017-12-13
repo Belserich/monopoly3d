@@ -2,7 +2,6 @@ package de.btu.monopoly.ui.controller;
 
 import de.btu.monopoly.menu.Lobby;
 import de.btu.monopoly.menu.LobbyService;
-import de.btu.monopoly.ui.SceneManager;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -10,7 +9,6 @@ import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -113,7 +111,17 @@ public class LobbyController implements Initializable {
     @FXML
     private void leaveLobbyButtonAction(ActionEvent event) throws IOException, InterruptedException {
 
+        // Schließt die Anwendung
+        Platform.exit();
+        System.exit(0);
+
         // Wechselt die Scene auf Menu
-        SceneManager.changeScene(new FXMLLoader(getClass().getResource("/fxml/Menu.fxml")));
+        // SceneManager.changeScene(new FXMLLoader(getClass().getResource("/fxml/Menu.fxml")));
+    }
+
+    // Spiel starten - Button
+    @FXML
+    private void pushColorPick(ActionEvent event) throws IOException, InterruptedException {
+
     }
 }

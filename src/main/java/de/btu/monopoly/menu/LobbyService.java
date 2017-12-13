@@ -114,8 +114,12 @@ public class LobbyService extends Listener {
             RefreshLobbyResponse refres = (RefreshLobbyResponse) object;
             lobby.setUsers(refres.getUsers());
 
-            // Lobby updaten
-            SceneManager.updateLobby();
+            try {
+                // Lobby updaten
+                SceneManager.updateLobby();
+            } catch (InterruptedException ex) {
+                Logger.getLogger(LobbyService.class.getName()).log(Level.SEVERE, null, ex);
+            }
 
             //TODO kommt in GUI weg:
             System.out.println("Spieler in Lobby");
