@@ -14,6 +14,9 @@ public class GuiMessages {
     // Setzen der Standardfarben (weiß)
     private static Color[] playerColors = {Color.WHITE, Color.WHITE, Color.WHITE, Color.WHITE, Color.WHITE, Color.WHITE};
 
+    // Speichern der Player ID für Disable von GUI Elementen
+    public static int PlayerID;
+
     //--------------------------------------------------
     public static void setConnectionError(boolean boo) {
         errorConnect = boo;

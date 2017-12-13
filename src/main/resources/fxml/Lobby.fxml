@@ -58,12 +58,12 @@
          <font>
             <Font size="26.0" />
          </font></Label>
-      <JFXColorPicker fx:id="playerColor1" onAction="#pushColorPick" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-      <JFXColorPicker fx:id="playerColor2" onAction="#pushColorPick" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-      <JFXColorPicker fx:id="playerColor3" onAction="#pushColorPick" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-      <JFXColorPicker fx:id="playerColor4" onAction="#pushColorPick" GridPane.columnIndex="2" GridPane.rowIndex="4" />
-      <JFXColorPicker fx:id="playerColor5" onAction="#pushColorPick" GridPane.columnIndex="2" GridPane.rowIndex="5" />
-      <JFXColorPicker fx:id="playerColor6" onAction="#pushColorPick" GridPane.columnIndex="2" GridPane.rowIndex="6" />
+      <JFXColorPicker fx:id="playerColor1" disable="true" onAction="#pushColorPick" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+      <JFXColorPicker fx:id="playerColor2" disable="true" onAction="#pushColorPick" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+      <JFXColorPicker fx:id="playerColor3" disable="true" onAction="#pushColorPick" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+      <JFXColorPicker fx:id="playerColor4" disable="true" onAction="#pushColorPick" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+      <JFXColorPicker fx:id="playerColor5" disable="true" onAction="#pushColorPick" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+      <JFXColorPicker fx:id="playerColor6" disable="true" onAction="#pushColorPick" GridPane.columnIndex="2" GridPane.rowIndex="6" />
       <JFXButton fx:id="playButton" minHeight="80.0" minWidth="200.0" onAction="#playButtonAction" style="-fx-background-color: #5472d3;" text="Spiel starten" textFill="WHITE" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
       <JFXButton fx:id="leaveLobbyButton" minHeight="80.0" minWidth="200.0" onAction="#leaveLobbyButtonAction" style="-fx-background-color: #5472d3;" text="Lobby verlassen" textFill="WHITE" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.valignment="CENTER" />
    </children>

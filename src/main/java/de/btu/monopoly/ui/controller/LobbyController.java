@@ -2,6 +2,7 @@ package de.btu.monopoly.ui.controller;
 
 import de.btu.monopoly.menu.Lobby;
 import de.btu.monopoly.menu.LobbyService;
+import de.btu.monopoly.ui.SceneManager;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -61,6 +62,24 @@ public class LobbyController implements Initializable {
             if (Lobby.getUsers().length != 1) {
                 playButton.setDisable(true);
             }
+        }
+        if (Lobby.getUsers().length == 1) {
+            playerColor1.setDisable(false);
+        }
+        if (Lobby.getUsers().length == 2) {
+            playerColor2.setDisable(false);
+        }
+        if (Lobby.getUsers().length == 3) {
+            playerColor3.setDisable(false);
+        }
+        if (Lobby.getUsers().length == 4) {
+            playerColor4.setDisable(false);
+        }
+        if (Lobby.getUsers().length == 5) {
+            playerColor5.setDisable(false);
+        }
+        if (Lobby.getUsers().length == 6) {
+            playerColor6.setDisable(false);
         }
     }
 
@@ -160,7 +179,10 @@ public class LobbyController implements Initializable {
     // Farben aktualisieren
     @FXML
     private void pushColorPick(ActionEvent event) throws IOException, InterruptedException {
+
         Color[] colors = {playerColor1.getValue(), playerColor2.getValue(), playerColor3.getValue(), playerColor4.getValue(), playerColor5.getValue(), playerColor6.getValue()};
         GuiMessages.setPlayerColors(colors);
+        SceneManager.updateLobbyColors();
+
     }
 }
