@@ -11,19 +11,34 @@ package de.btu.monopoly.net.networkClasses;
  */
 public class JoinResponse {
 
-    private String name;
+    private int id;
+    private long seed;
 
     /**
-     * @return the name
+     * @return the id
      */
-    public String getName() {
-        return name;
+    public int getId() {
+        return id;
     }
 
     /**
-     * @param name the name to set
+     * @param id the id to set
      */
-    public void setName(String name) {
-        this.name = name;
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    /**
+     * @return the seed
+     */
+    public long getSeed() {
+        return seed;
+    }
+
+    /**
+     * @param seed the seed to set
+     */
+    public void setSeed(long seed) {
+        this.seed = seed;
     }
 }

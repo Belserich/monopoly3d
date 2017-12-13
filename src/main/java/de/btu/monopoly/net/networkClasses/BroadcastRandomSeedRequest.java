@@ -9,22 +9,22 @@ package de.btu.monopoly.net.networkClasses;
  *
  * @author Christian Prinz
  */
-public class BroadcastUsersResponse {
+public class BroadcastRandomSeedRequest {
 
-    private String[] users;
+    private long seed;
 
     /**
-     * @return the users
+     * @return the seed
      */
-    public String[] getUsers() {
-        return users;
+    public long getSeed() {
+        return seed;
     }
 
     /**
-     * @param users the users to set
+     * @param seed the seed to set
      */
-    public void setUsers(String[] users) {
-        this.users = users;
+    public void setSeed(long seed) {
+        this.seed = seed;
     }
 
 }
