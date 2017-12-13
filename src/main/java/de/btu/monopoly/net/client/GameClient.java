@@ -10,7 +10,7 @@ import com.esotericsoftware.kryonet.Client;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.menu.LobbyService;
 import de.btu.monopoly.net.networkClasses.*;
-import de.btu.monopoly.ui.controller.MessageControl;
+import de.btu.monopoly.ui.controller.GuiMessages;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -49,11 +49,11 @@ public class GameClient {
             client.addListener(listener);
             client.addListener(new LobbyService());
             // Lobby wird in GUI geöffnet
-            MessageControl.setConnectionError(false);
+            GuiMessages.setConnectionError(false);
         } catch (IOException ex) {
             LOGGER.log(Level.WARNING, "Client konnte nicht gestartet werden {0}", ex);
             // GUI meldet Fehler
-            MessageControl.setConnectionError(true);
+            GuiMessages.setConnectionError(true);
         }
 
     }

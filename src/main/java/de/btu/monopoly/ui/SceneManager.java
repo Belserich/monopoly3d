@@ -52,7 +52,14 @@ public class SceneManager extends Stage {
 
     public static void updateLobby() throws InterruptedException {
         if (controller != null) {
-            controller.update();
+            controller.updateNames();
+        }
+
+    }
+
+    public static void updateLobbyColors() throws InterruptedException {
+        if (controller != null) {
+            controller.updateColors();
         }
 
     }

@@ -117,6 +117,8 @@ public class LobbyService extends Listener {
             try {
                 // Lobby updaten
                 SceneManager.updateLobby();
+                // Kann später entfernt werden wenn Farben implementiert sind
+                SceneManager.updateLobbyColors();
             } catch (InterruptedException ex) {
                 Logger.getLogger(LobbyService.class.getName()).log(Level.SEVERE, null, ex);
             }

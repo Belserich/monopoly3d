@@ -11,7 +11,9 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
+import javafx.scene.paint.Color;
 
 /**
  *
@@ -33,13 +35,26 @@ public class LobbyController implements Initializable {
     private Label name6Label;
 
     @FXML
+    private ColorPicker playerColor1;
+    @FXML
+    private ColorPicker playerColor2;
+    @FXML
+    private ColorPicker playerColor3;
+    @FXML
+    private ColorPicker playerColor4;
+    @FXML
+    private ColorPicker playerColor5;
+    @FXML
+    private ColorPicker playerColor6;
+
+    @FXML
     private Button playButton;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
         // Updatet die Spieler in der Lobby
-        update();
+        updateNames();
 
         // playButton kann nur der Host drücken
         if (Lobby.getUsers() != null) {
@@ -50,9 +65,9 @@ public class LobbyController implements Initializable {
     }
 
     /**
-     * Anzeigen der Spieler in der Lobby
+     * Anzeigen der Spielernamen in der Lobby
      */
-    public void update() {
+    public void updateNames() {
 
         Task task = new Task<Void>() {
 
@@ -98,7 +113,30 @@ public class LobbyController implements Initializable {
         Platform.runLater(task);
     }
 
-// Spiel starten - Button
+    /**
+     * Anzeigen der Spielerfarben in der Lobby
+     */
+    public void updateColors() {
+        Task task = new Task<Void>() {
+
+            @Override
+            protected Void call() throws Exception {
+                if (GuiMessages.getPlayerColors() != null) {
+                    playerColor1.setValue(GuiMessages.getPlayerColors()[0]);
+                    playerColor2.setValue(GuiMessages.getPlayerColors()[1]);
+                    playerColor3.setValue(GuiMessages.getPlayerColors()[2]);
+                    playerColor4.setValue(GuiMessages.getPlayerColors()[3]);
+                    playerColor5.setValue(GuiMessages.getPlayerColors()[4]);
+                    playerColor6.setValue(GuiMessages.getPlayerColors()[5]);
+
+                }
+                return null;
+            }
+        };
+        Platform.runLater(task);
+    }
+
+    // Spiel starten
     @FXML
     private void playButtonAction(ActionEvent event) throws IOException, InterruptedException {
         LobbyService.startGame();
@@ -107,7 +145,7 @@ public class LobbyController implements Initializable {
         // SceneManager.changeScene(new FXMLLoader(getClass().getResource("/fxml/Game.fxml")));
     }
 
-    // Lobby verlassen - Button
+    // Lobby verlassen
     @FXML
     private void leaveLobbyButtonAction(ActionEvent event) throws IOException, InterruptedException {
 
@@ -119,9 +157,10 @@ public class LobbyController implements Initializable {
         // SceneManager.changeScene(new FXMLLoader(getClass().getResource("/fxml/Menu.fxml")));
     }
 
-    // Spiel starten - Button
+    // Farben aktualisieren
     @FXML
     private void pushColorPick(ActionEvent event) throws IOException, InterruptedException {
-
+        Color[] colors = {playerColor1.getValue(), playerColor2.getValue(), playerColor3.getValue(), playerColor4.getValue(), playerColor5.getValue(), playerColor6.getValue()};
+        GuiMessages.setPlayerColors(colors);
     }
 }
