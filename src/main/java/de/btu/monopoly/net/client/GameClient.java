@@ -7,9 +7,11 @@ package de.btu.monopoly.net.client;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Client;
+import de.btu.monopoly.core.Game;
+import de.btu.monopoly.core.service.NetworkService;
 import de.btu.monopoly.data.player.Player;
-import de.btu.monopoly.menu.LobbyService;
-import de.btu.monopoly.net.networkClasses.*;
+import de.btu.monopoly.net.networkClasses.BroadcastPlayerChoiceRequest;
+
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,6 +24,7 @@ public class GameClient {
 
     private static final Logger LOGGER = Logger.getLogger(GameClient.class.getCanonicalName());
 
+    private UiInteractionThread uiThread;
     private int tcpPort;
     private int timeout;
     private Client client;
@@ -34,9 +37,12 @@ public class GameClient {
         this.tcpPort = tcp;
         this.timeout = timeout;
 
+        uiThread = new UiInteractionThread(this);
         client = new Client();
         kryo = client.getKryo();
-        registerKryoClasses();
+        NetworkService.registerKryoClasses(kryo);
+        
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> disconnect()));
     }
 
     public void connect(String serverIP) {
@@ -44,9 +50,8 @@ public class GameClient {
         try {
             client.start();
             client.connect(timeout, serverIP, tcpPort);
-            listener = new ClientListener();
+            listener = new ClientListener(uiThread);
             client.addListener(listener);
-            client.addListener(new LobbyService());
         } catch (IOException ex) {
             LOGGER.log(Level.WARNING, "Client konnte nicht gestartet werden {0}", ex);
         }
@@ -55,21 +60,8 @@ public class GameClient {
 
     public void disconnect() {
         LOGGER.finer("Client trennt Verbindung");
+        Game.IS_RUNNING.set(false);
         client.stop();
-    }
-
-    private void registerKryoClasses() {
-        kryo.register(BroadcastPlayerChoiceRequest.class);
-        kryo.register(JoinRequest.class);
-        kryo.register(JoinResponse.class);
-        kryo.register(GamestartRequest.class);
-        kryo.register(GamestartResponse.class);
-        kryo.register(ChangeUsernameRequest.class);
-        kryo.register(RefreshLobbyResponse.class);
-        kryo.register(JoinImpossibleResponse.class);
-        kryo.register(String[].class);
-        kryo.register(String[][].class);
-        kryo.register(BroadcastRandomSeedRequest.class);
     }
 
     public void sendTCP(Object object) {
@@ -77,9 +69,17 @@ public class GameClient {
     }
 
     public BroadcastPlayerChoiceRequest[] getPlayerChoiceObjects() {
-        return listener.getPlayerChoiceObjects();
+        return uiThread.receivedPlayerChoiceObjects.stream().toArray(BroadcastPlayerChoiceRequest[]::new);
     }
-
+    
+    public void clearPlayerChoiceObjects() {
+        uiThread.receivedPlayerChoiceObjects.clear();
+    }
+    
+    public UiInteractionThread getUiThread() {
+        return uiThread;
+    }
+    
     /**
      * @return the playerOnClient
      */

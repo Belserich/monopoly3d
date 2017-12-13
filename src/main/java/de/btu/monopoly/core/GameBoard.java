@@ -1,12 +1,14 @@
 package de.btu.monopoly.core;
 
-import static de.btu.monopoly.core.GameBoard.FieldType.*;
 import de.btu.monopoly.data.card.CardManager;
 import de.btu.monopoly.data.field.Field;
 import de.btu.monopoly.data.field.FieldManager;
 import de.btu.monopoly.data.player.Player;
+
 import java.util.LinkedList;
 import java.util.List;
+
+import static de.btu.monopoly.core.GameBoard.FieldType.*;
 
 /**
  * @author Maximilian Bels (belsmaxi@b-tu.de)
@@ -70,15 +72,15 @@ public class GameBoard {
      * @return die aktiven Spielerinstanzen
      */
     public List<Player> getActivePlayers() {
-        sortOutInactivePlayers();
         return activePlayers;
     }
-
+    
     /**
      * Sortiert alle Spieler die bankrott gegangen sind aus.
      */
-    private void sortOutInactivePlayers() {
+    public GameBoard updateActivePlayers() {
         activePlayers.removeIf(Player::isBankrupt);
+        return this;
     }
 
     /**

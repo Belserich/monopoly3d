@@ -18,13 +18,13 @@ public class CardStack {
     /**
      * Die Kartenliste
      */
-    private final LinkedList<Card> stack;
+    protected final LinkedList<Card> cards;
 
     /**
      * Ein Kartenstapel.
      */
     public CardStack() {
-        stack = new LinkedList<>();
+        cards = new LinkedList<>();
     }
 
     /**
@@ -39,15 +39,15 @@ public class CardStack {
      * Mischt den Kartenstapel.
      */
     public void shuffle() {
-        Collections.shuffle(stack);
+        Collections.shuffle(cards);
     }
 
     /**
      * Gibt die nächste Karte vom Stapel zurück und legt sie wieder ans "Ende".
      */
     public Card nextCard() {
-        Card retObj = stack.remove();
-        stack.add(retObj);
+        Card retObj = cards.remove();
+        cards.add(retObj);
         return retObj;
     }
 
@@ -58,7 +58,7 @@ public class CardStack {
      * @return nächste Karte vom angegebenen Typ
      */
     private Card nextCard(CardAction action) {
-        for (Card c : stack) {
+        for (Card c : cards) {
             if (c.getActions().contains(action)) {
                 return c;
             }
@@ -73,7 +73,7 @@ public class CardStack {
      */
     public void addCard(Card card) {
         card.setCardStack(this);
-        stack.add(card);
+        cards.add(card);
     }
 
     /**
@@ -83,9 +83,9 @@ public class CardStack {
      */
     void removeCard(Card card) {
         // Geht den Stapel von hinten durch da die gesuchte Karte meist die Letzte ist.
-        for (int i = stack.size() - 1; i >= 0; i--) {
-            if (stack.get(i) == card) {
-                stack.remove(i);
+        for (int i = cards.size() - 1; i >= 0; i--) {
+            if (cards.get(i) == card) {
+                cards.remove(i);
             }
         }
     }
@@ -98,7 +98,7 @@ public class CardStack {
      */
     Card removeCardOfAction(CardAction action) {
         Card retObj = nextCard(action);
-        stack.remove(retObj);
+        cards.remove(retObj);
         return retObj;
     }
 
@@ -110,7 +110,7 @@ public class CardStack {
      */
     int countCardsOfAction(CardAction action) {
         int counter = 0;
-        for (Card c : stack) {
+        for (Card c : cards) {
             counter += c.getActions().contains(action) ? 1 : 0;
         }
         return counter;
@@ -120,13 +120,19 @@ public class CardStack {
      * Entfernt alle Karten aus dem Stapel.
      */
     void removeAll() {
-        stack.clear();
+        cards.clear();
     }
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder("[Kartenstapel]\n");
-        stack.forEach(c -> {
+        StringBuilder builder = new StringBuilder("[Kartenstapel]");
+        
+        if (cards.isEmpty()) {
+            builder.append(" -");
+        }
+        else builder.append("\n");
+        
+        cards.forEach(c -> {
             builder.append("\t");
             builder.append(c);
             builder.append("\n");

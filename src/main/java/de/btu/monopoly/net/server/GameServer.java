@@ -8,7 +8,8 @@ package de.btu.monopoly.net.server;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Server;
 import de.btu.monopoly.core.Game;
-import de.btu.monopoly.net.networkClasses.*;
+import de.btu.monopoly.core.service.NetworkService;
+
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -26,14 +27,14 @@ public class GameServer {
     private Server server;
     private Kryo kryo;
     private ServerListener serverL;
-    private LobbyTable lobbyTable;
 
     public GameServer(int tcp) {
         this.tcpPort = tcp;
 
         server = new Server();
         kryo = server.getKryo();
-        registerKryoClasses();
+        NetworkService.registerKryoClasses(kryo);
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> stopServer()));
     }
 
     public void startServer() {
@@ -42,9 +43,7 @@ public class GameServer {
         try {
             server.bind(tcpPort);
             serverL = new ServerListener(server);
-            lobbyTable = new LobbyTable(server);
             server.addListener(serverL);
-            server.addListener(lobbyTable);
         } catch (IOException ex) {
             LOGGER.log(Level.WARNING, "Server konnte nicht gebunden werden {0}", ex);
         }
@@ -54,20 +53,6 @@ public class GameServer {
     public void stopServer() {
         LOGGER.finer("Server fährt runter");
         server.stop();
-    }
-
-    private void registerKryoClasses() {
-        kryo.register(BroadcastPlayerChoiceRequest.class);
-        kryo.register(JoinRequest.class);
-        kryo.register(JoinResponse.class);
-        kryo.register(GamestartRequest.class);
-        kryo.register(GamestartResponse.class);
-        kryo.register(ChangeUsernameRequest.class);
-        kryo.register(RefreshLobbyResponse.class);
-        kryo.register(JoinImpossibleResponse.class);
-        kryo.register(String[].class);
-        kryo.register(String[][].class);
-        kryo.register(BroadcastRandomSeedRequest.class);
     }
 
     public String getServerIP() {

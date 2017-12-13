@@ -63,6 +63,7 @@ public class Player {
         this.id = id;
         this.bank = new Bank(startMoney);
         this.ki = false;
+        
         this.name = name;
         position = 0;
 
@@ -168,6 +169,12 @@ public class Player {
      */
     public CardStack getCardStack() {
         return stack;
+    }
+    
+    @Override
+    public String toString() {
+        return String.format("[Spieler] Name: %s, ID: %d, %s %s %n\t%s %n\t%s",
+                name, id, isInJail ? "(" + daysInJail + " Tage im Gefängnis)" : "", isBankrupt ? "(Pleite)" : "", bank, stack);
     }
 
     /**

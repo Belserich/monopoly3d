@@ -8,6 +8,7 @@ package de.btu.monopoly.menu;
 import de.btu.monopoly.input.InputHandler;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.server.GameServer;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

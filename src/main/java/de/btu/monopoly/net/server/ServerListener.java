@@ -9,7 +9,10 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.FrameworkMessage;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
-import de.btu.monopoly.net.networkClasses.*;
+import de.btu.monopoly.net.networkClasses.BroadcastPlayerChoiceRequest;
+import de.btu.monopoly.net.networkClasses.PlayerTradeRequest;
+import de.btu.monopoly.net.networkClasses.PlayerTradeResponse;
+
 import java.util.logging.Logger;
 
 /**
@@ -31,6 +34,12 @@ public class ServerListener extends Listener {
 
         } else if (object instanceof BroadcastPlayerChoiceRequest) {
             LOGGER.finer("BroadcastPlayerChoiceRequest erhalten");
+            server.sendToAllExceptTCP(connection.getID(), object);
+        } else if (object instanceof PlayerTradeRequest) {
+            LOGGER.finer("PlayerTradeRequest erhalten");
+            server.sendToAllExceptTCP(connection.getID(), object);
+        } else if (object instanceof  PlayerTradeResponse) {
+            LOGGER.finer("PlayerTradeResposne erhalten");
             server.sendToAllExceptTCP(connection.getID(), object);
         }
     }
