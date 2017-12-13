@@ -157,7 +157,8 @@ public class LobbyTable extends Listener {
             }
         } else if (object instanceof AddKiRequest) {
             LOGGER.finer("AddKiRequest erhalten");
-            registerUser(((AddKiRequest) object).getName(), connection, ((AddKiRequest) object).getKiLevel());
+            AddKiRequest akr = (AddKiRequest) object;
+            registerUser(akr.getName(), connection, akr.getKiLevel());
         } else if (object instanceof ChangeUsernameRequest) {
             LOGGER.finer("ChangeUsernameRequest erhalten");
             ChangeUsernameRequest chanreq = (ChangeUsernameRequest) object;
