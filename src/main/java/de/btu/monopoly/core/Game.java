@@ -8,6 +8,7 @@ import de.btu.monopoly.data.field.*;
 import de.btu.monopoly.data.parser.CardStackParser;
 import de.btu.monopoly.data.parser.GameBoardParser;
 import de.btu.monopoly.data.player.Player;
+import de.btu.monopoly.input.IOService;
 import de.btu.monopoly.input.InputHandler;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.networkClasses.BroadcastPlayerChoiceRequest;
@@ -48,6 +49,7 @@ public class Game {
         this.players = players;
         this.client = client;
         this.SEED = randomSeed;
+        IOService.setClient(client);
     }
 
     public void init() {
@@ -118,7 +120,8 @@ public class Game {
             LOGGER.info(String.format(" %s ist im Gefängnis und kann: %n[1] - 3-mal Würfeln, um mit einem Pasch freizukommen "
                     + "%n[2] - Bezahlen (50€) %n[3] - Gefängnis-Frei-Karte benutzen", player.getName()));
 
-            choice = getClientChoice(player, 3);
+//            choice = getClientChoice(player, 3);
+            choice = IOService.jailChoice(player);
             switch (choice) {
                 case 1:
                     processJailRollOption(player);
@@ -257,7 +260,9 @@ public class Game {
     }
 
     private void processBuyPropertyFieldOption(Player player, PropertyField prop) {
-        switch (getClientChoice(player, 2)) {
+        int choice = IOService.buyPropertyChoice(player, prop);
+//        int choice = getClientChoice(player, 2);
+        switch (choice) {
             case 1: // Kaufen
                 LOGGER.info(String.format("%s >> %s", player.getName(), prop.getName()));
                 if (!FieldService.buyPropertyField(player, prop, prop.getPrice())) {
@@ -285,7 +290,8 @@ public class Game {
             LOGGER.info(String.format("%s ist an der Reihe! Waehle eine Aktion:%n[1] - Nichts%n[2] - Haus kaufen%n[3] - Haus verkaufen%n[4] - "
                     + "Hypothek aufnehmen%n[5] - Hypothek abbezahlen", player.getName()));
 
-            choice = getClientChoice(player, 5);
+//            choice = getClientChoice(player, 5);
+            choice = IOService.actionSequence(player, board);
             if (choice != 1) {
                 Field currField = board.getFields()[InputHandler.askForField(player, board) - 1]; // Wahl der Strasse
                 if (currField instanceof PropertyField) {
