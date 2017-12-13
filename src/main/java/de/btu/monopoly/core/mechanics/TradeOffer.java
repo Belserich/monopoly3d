@@ -1,13 +1,22 @@
-package de.btu.monopoly.net.networkClasses;
+package de.btu.monopoly.core.mechanics;
 
 /**
  * @author Maximilian Bels (belsmaxi@b-tu.de)
  */
-public class PlayerTradeOfferRequest {
+public class TradeOffer {
     
+    private int playerId;
     private int[] propertyIds;
     private int[] cardIds;
     private int money;
+    
+    public int getPlayerId() {
+        return playerId;
+    }
+    
+    public void setPlayerId(int playerId) {
+        this.playerId = playerId;
+    }
     
     public int[] getPropertyIds() {
         return propertyIds;

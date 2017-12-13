@@ -1,8 +1,11 @@
 package de.btu.monopoly.core;
 
 import de.btu.monopoly.core.mechanics.Auction;
+import de.btu.monopoly.core.mechanics.Trade;
+import de.btu.monopoly.core.mechanics.TradeOffer;
 import de.btu.monopoly.core.service.FieldService;
 import de.btu.monopoly.core.service.PlayerService;
+import de.btu.monopoly.data.card.Card;
 import de.btu.monopoly.data.card.CardStack;
 import de.btu.monopoly.data.field.*;
 import de.btu.monopoly.data.parser.CardStackParser;
@@ -11,12 +14,16 @@ import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.input.InputHandler;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.networkClasses.BroadcastPlayerChoiceRequest;
+import de.btu.monopoly.net.networkClasses.PlayerTradeRequest;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.IntStream;
 
 /**
  * @author Christian Prinz
@@ -24,6 +31,8 @@ import java.util.logging.Logger;
 public class Game {
     
     public static final int SEED = 1;
+    
+    public static AtomicBoolean IS_RUNNING = new AtomicBoolean(false);
     
     private static final Logger LOGGER = Logger.getLogger(Game.class.getCanonicalName());
 
@@ -68,6 +77,7 @@ public class Game {
         }
 
         System.err.println("-------------------------");
+        IS_RUNNING.set(true);
     }
 
     public void start() {
@@ -156,16 +166,18 @@ public class Game {
                     return -1;
                 }
                 else if (packets.length == 1) {
-                    return packets[0].getChoice();
+                    int retVal = packets[0].getChoice();
+                    client.clearPlayerChoiceObjects();
+                    return retVal;
                 }
             }
-            while (true);
+            while (IS_RUNNING.get());
         }
+        return -1;
     }
     
     private boolean isChoiceFromThisClient(Player player) {
-        Player thisPlayer = client.getPlayerOnClient();
-        return thisPlayer == player;
+        return player == client.getPlayerOnClient();
     }
 
     public void processJailRollOption(Player player) {
@@ -286,18 +298,20 @@ public class Game {
     }
 
     private void actionPhase(Player player) {
+        
         int choice;
-
         do {
             LOGGER.info(String.format("%s ist an der Reihe! Waehle eine Aktion:%n[1] - Nichts%n[2] - Haus kaufen%n[3] - Haus verkaufen%n[4] - "
                     + "Hypothek aufnehmen%n[5] - Hypothek abbezahlen%n[6] - Handeln", player.getName()));
-
+    
             choice = getClientChoice(player, 6);
-            if (choice != 1) {
-                
+            if (choice == 6) {
+                processPlayerTradeOption(player);
+            }
+            else if (choice > 1 && choice < 6) {
                 Field[] ownedFields = board.getFieldManager().getOwnedPropertyFields(player).toArray(Field[]::new);
                 Field currField = board.getFields()[InputHandler.askForField(player, ownedFields) - 1]; // Wahl der Strasse
-                
+    
                 if (currField instanceof PropertyField) {
                     PropertyField property = (PropertyField) currField;
                     switch (choice) {
@@ -309,7 +323,7 @@ public class Game {
                             StreetField streetField = (StreetField) property;
                             board.getFieldManager().buyHouse(streetField);
                             break;
-
+            
                         case 3: //Haus verkaufen
                             if (!(currField instanceof StreetField)) {
                                 LOGGER.info("Gewähltes Feld ist keine Straße!");
@@ -318,19 +332,13 @@ public class Game {
                             streetField = (StreetField) property;
                             board.getFieldManager().sellHouse(streetField);
                             break;
-
+            
                         case 4: // Hypothek aufnehmen
                             board.getFieldManager().takeMortgage(property);
                             break;
-
+            
                         case 5: // Hypothek zurückzahlen
                             board.getFieldManager().payMortgage(property);
-                            break;
-                        case 6: // Handeln
-                            processPlayerTradeOption(player);
-                            break;
-                        default:
-                            LOGGER.log(Level.WARNING, "Fehler: StreetFieldSwitch überlaufen.");
                             break;
                     }
                 }
@@ -341,10 +349,82 @@ public class Game {
     
     private void processPlayerTradeOption(Player player) {
         if (isChoiceFromThisClient(player)) {
-            for (Player activePlayer : board.getActivePlayers()) {
+            PlayerTradeRequest request = new PlayerTradeRequest();
+            Trade trade = new Trade();
             
+            trade.setSupply(createTradeOfferFor(player));
+            
+            List<Player> activePlayers = board.getActivePlayers();
+            StringBuilder builder = new StringBuilder("Waehle einen Spieler:\n");
+            for (int i = 0; i < activePlayers.size(); i++) {
+                Player p = activePlayers.get(i);
+                if (p != player) {
+                    builder.append(String.format("[%d] - %s%n", i + 1, p.toString()));
+                }
             }
+            LOGGER.info(builder.toString());
+            Player otherPlayer = activePlayers.get(InputHandler.getUserInput(activePlayers.size()) - 1);
+            trade.setDemand(createTradeOfferFor(otherPlayer));
+    
+            request.setTrade(trade);
+            client.sendTCP(new PlayerTradeRequest());
         }
+    }
+    
+    private TradeOffer createTradeOfferFor(Player player) {
+        TradeOffer retObj = new TradeOffer();
+        
+        IntStream.Builder propertyIdStream = IntStream.builder();
+        IntStream.Builder cardIdStream = IntStream.builder();
+        int money = 0;
+        
+        StringBuilder builder;
+        int i, choice;
+        boolean runOnce = false;
+        
+        retObj.setPlayerId(player.getId());
+        
+        PropertyField[] ownedProps = board.getFieldManager().getOwnedPropertyFields(player).toArray(PropertyField[]::new);
+        do {
+            builder = new StringBuilder(String.format("Welches Gebaeude bietet Spieler %s%s?%n", player.getName(), runOnce ? " noch" : ""));
+            for (i = 0; i < ownedProps.length; i++) {
+                builder.append(String.format("[%d] - %s%n", i + 1, ownedProps[i].getName()));
+            }
+            builder.append(String.format("[%d] - Keins%n", i + 1));
+            LOGGER.info(builder.toString());
+            choice = InputHandler.getUserInput(ownedProps.length + 1) - 1;
+            propertyIdStream.accept(choice);
+            runOnce = true;
+        }
+        while (choice != ownedProps.length);
+        
+        runOnce = false;
+        Card[] tradeableCards = board.getCardManager().getTradeableCards(player)
+                .map(t -> (Card) t)
+                .toArray(Card[]::new);
+        do {
+            builder = new StringBuilder(String.format("Welche Karte bietet Spieler %s%s?%n", player.getName(), runOnce ? " noch" : ""));
+            for (i = 0; i < tradeableCards.length; i++) {
+                builder.append(String.format("[%d] - %s%n", i + 1, tradeableCards[i].getName()));
+            }
+            builder.append(String.format("[%d] - Keine%n", i + 1));
+            LOGGER.info(builder.toString());
+            choice = InputHandler.getUserInput(tradeableCards.length + 1) - 1;
+            cardIdStream.accept(choice);
+            runOnce = true;
+        }
+        while (choice != tradeableCards.length);
+        
+        if (player.getBank().isLiquid()) {
+            LOGGER.info(String.format("Wieviel Geld bietet Spieler %s?%n", player.getName()));
+            money = InputHandler.getUserInput(player.getMoney());
+        }
+        
+        retObj.setPropertyIds(propertyIdStream.build().toArray());
+        retObj.setCardIds(cardIdStream.build().toArray());
+        retObj.setMoney(money);
+        
+        return retObj;
     }
 
     private void betPhase(PropertyField property) {

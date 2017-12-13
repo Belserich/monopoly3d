@@ -8,9 +8,8 @@ import de.btu.monopoly.data.field.FieldManager;
 import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.player.Player;
 
-import java.util.List;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author Maximilian Bels (belsmaxi@b-tu.de)
@@ -114,11 +113,10 @@ public class CardManager {
         else return false;
     }
     
-    public List<Tradeable> getTradeableCards(Player player) {
+    public Stream<Tradeable> getTradeableCards(Player player) {
         return player.getCardStack().cards.stream()
                 .filter(c -> c instanceof Tradeable)
-                .map(c -> (Tradeable) c)
-                .collect(Collectors.toList());
+                .map(c -> (Tradeable) c);
     }
     
     private void processRenovateAction(Player player, int[] args) {

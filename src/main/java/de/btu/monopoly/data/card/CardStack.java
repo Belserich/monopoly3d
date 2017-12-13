@@ -125,7 +125,13 @@ public class CardStack {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder("[Kartenstapel]\n");
+        StringBuilder builder = new StringBuilder("[Kartenstapel]");
+        
+        if (cards.isEmpty()) {
+            builder.append(" -");
+        }
+        else builder.append("\n");
+        
         cards.forEach(c -> {
             builder.append("\t");
             builder.append(c);

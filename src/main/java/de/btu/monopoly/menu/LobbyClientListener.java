@@ -11,7 +11,7 @@ import com.esotericsoftware.kryonet.Listener;
 import de.btu.monopoly.net.networkClasses.BroadcastUsersResponse;
 import de.btu.monopoly.net.networkClasses.GamestartResponse;
 import de.btu.monopoly.net.networkClasses.JoinResponse;
-import java.util.logging.Level;
+
 import java.util.logging.Logger;
 
 /**
@@ -38,8 +38,6 @@ public class LobbyClientListener extends Listener {
             LOGGER.finer("GamestartResponse erhalten");
             Thread t = new Thread(LobbyService::gamestartResponse);
             t.start();
-        } else {
-            LOGGER.log(Level.WARNING, "Falsches packet angekommen! {0}", object.getClass());
         }
     }
 }

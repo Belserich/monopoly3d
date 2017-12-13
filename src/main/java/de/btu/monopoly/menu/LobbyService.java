@@ -14,6 +14,7 @@ import de.btu.monopoly.net.networkClasses.BroadcastUsersRequest;
 import de.btu.monopoly.net.networkClasses.GamestartRequest;
 import de.btu.monopoly.net.networkClasses.IamHostRequest;
 import de.btu.monopoly.net.networkClasses.JoinRequest;
+
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -77,6 +78,8 @@ public class LobbyService {
         Player[] players = getPlayersArray();
         Game controller = new Game(players, lobby.getPlayerClient());
         controller.init();
+        System.err.println("UiThread start");
+        lobby.getPlayerClient().getUiThread().start();
         controller.start();
     }
 

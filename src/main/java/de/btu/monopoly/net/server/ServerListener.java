@@ -11,6 +11,7 @@ import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 import com.esotericsoftware.minlog.Log;
 import de.btu.monopoly.net.networkClasses.*;
+
 import java.util.logging.Logger;
 
 /**
@@ -50,6 +51,12 @@ public class ServerListener extends Listener {
             server.sendToAllTCP(new GamestartResponse());
         } else if (object instanceof BroadcastPlayerChoiceRequest) {
             LOGGER.finer("BroadcastPlayerChoiceRequest erhalten");
+            server.sendToAllExceptTCP(connection.getID(), object);
+        } else if (object instanceof PlayerTradeRequest) {
+            LOGGER.finer("PlayerTradeRequest erhalten");
+            server.sendToAllExceptTCP(connection.getID(), object);
+        } else if (object instanceof  PlayerTradeResponse) {
+            LOGGER.finer("PlayerTradeResposne erhalten");
             server.sendToAllExceptTCP(connection.getID(), object);
         }
     }
