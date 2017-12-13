@@ -96,7 +96,9 @@ public class LobbyService extends Listener {
         Player[] players = new Player[users.length];
         for (int i = 0; i < users.length; i++) {
             int id = Integer.parseInt(users[i][0]);
+            int kilvl = Integer.parseInt(users[i][3]);
             Player player = new Player(users[i][1], i, 1500);
+            player.setKiLevel(kilvl);
 
             //wenn es sich um den aktuellen Spieler handelt
             if (id == lobby.getPlayerId()) {
