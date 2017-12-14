@@ -23,6 +23,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 /**
@@ -73,13 +74,13 @@ public class mainSceneController implements Initializable {
         }
 
         // Farben festlegen
-        if (GuiMessages.getPlayerColors() != null) {
-            player0Button.setBackground(new Background(new BackgroundFill(GuiMessages.getPlayerColors()[0], CornerRadii.EMPTY, Insets.EMPTY)));
-            player1Button.setBackground(new Background(new BackgroundFill(GuiMessages.getPlayerColors()[1], CornerRadii.EMPTY, Insets.EMPTY)));
-            player2Button.setBackground(new Background(new BackgroundFill(GuiMessages.getPlayerColors()[2], CornerRadii.EMPTY, Insets.EMPTY)));
-            player3Button.setBackground(new Background(new BackgroundFill(GuiMessages.getPlayerColors()[3], CornerRadii.EMPTY, Insets.EMPTY)));
-            player4Button.setBackground(new Background(new BackgroundFill(GuiMessages.getPlayerColors()[4], CornerRadii.EMPTY, Insets.EMPTY)));
-            player5Button.setBackground(new Background(new BackgroundFill(GuiMessages.getPlayerColors()[5], CornerRadii.EMPTY, Insets.EMPTY)));
+        if (Lobby.getUsers() != null) {
+            player0Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[0][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+            player1Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[1][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+            player2Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[2][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+            player3Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[3][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+            player4Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[4][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+            player5Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[5][4]), CornerRadii.EMPTY, Insets.EMPTY)));
 
         }
     }

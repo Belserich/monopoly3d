@@ -50,6 +50,8 @@ public class LobbyController implements Initializable {
     @FXML
     private ColorPicker playerColor6;
 
+    private int id = -1;
+
     @FXML
     private Button playButton;
 
@@ -71,23 +73,31 @@ public class LobbyController implements Initializable {
                 playButton.setDisable(true);
             }
         }
+
+        // Funktion des eigenen Colorpickers aktivieren und ID im Controller festlegen
         if (Lobby.getUsers().length == 1) {
             playerColor1.setDisable(false);
+            id = 0;
         }
         if (Lobby.getUsers().length == 2) {
             playerColor2.setDisable(false);
+            id = 1;
         }
         if (Lobby.getUsers().length == 3) {
             playerColor3.setDisable(false);
+            id = 2;
         }
         if (Lobby.getUsers().length == 4) {
             playerColor4.setDisable(false);
+            id = 3;
         }
         if (Lobby.getUsers().length == 5) {
             playerColor5.setDisable(false);
+            id = 4;
         }
         if (Lobby.getUsers().length == 6) {
             playerColor6.setDisable(false);
+            id = 5;
         }
     }
 
@@ -148,13 +158,13 @@ public class LobbyController implements Initializable {
 
             @Override
             protected Void call() throws Exception {
-                if (GuiMessages.getPlayerColors() != null) {
-                    playerColor1.setValue(GuiMessages.getPlayerColors()[0]);
-                    playerColor2.setValue(GuiMessages.getPlayerColors()[1]);
-                    playerColor3.setValue(GuiMessages.getPlayerColors()[2]);
-                    playerColor4.setValue(GuiMessages.getPlayerColors()[3]);
-                    playerColor5.setValue(GuiMessages.getPlayerColors()[4]);
-                    playerColor6.setValue(GuiMessages.getPlayerColors()[5]);
+                if (Lobby.getUsers() != null) {
+                    playerColor1.setValue(Color.web(Lobby.getUsers()[0][4]));
+                    playerColor2.setValue(Color.web(Lobby.getUsers()[1][4]));
+                    playerColor3.setValue(Color.web(Lobby.getUsers()[2][4]));
+                    playerColor4.setValue(Color.web(Lobby.getUsers()[3][4]));
+                    playerColor5.setValue(Color.web(Lobby.getUsers()[4][4]));
+                    playerColor6.setValue(Color.web(Lobby.getUsers()[5][4]));
 
                 }
                 return null;
@@ -198,9 +208,29 @@ public class LobbyController implements Initializable {
     @FXML
     private void pushColorPick(ActionEvent event) throws IOException, InterruptedException {
 
-        Color[] colors = {playerColor1.getValue(), playerColor2.getValue(), playerColor3.getValue(), playerColor4.getValue(), playerColor5.getValue(), playerColor6.getValue()};
-        GuiMessages.setPlayerColors(colors);
-        //  SceneManager.updateLobbyColors();
+        switch (id) {
+            case 0: {
+                LobbyService.changeColor(playerColor1.getValue());
+            }
+            case 1: {
+                LobbyService.changeColor(playerColor1.getValue());
+            }
+            case 2: {
+                LobbyService.changeColor(playerColor1.getValue());
+            }
+            case 3: {
+                LobbyService.changeColor(playerColor1.getValue());
+            }
+            case 4: {
+                LobbyService.changeColor(playerColor1.getValue());
+            }
+            case 5: {
+                LobbyService.changeColor(playerColor1.getValue());
+            }
+            default: {
+
+            }
+        }
 
     }
 }
