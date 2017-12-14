@@ -9,24 +9,9 @@ package de.btu.monopoly.net.networkClasses;
  *
  * @author Christian Prinz
  */
-public class JoinResponse {
+public class BroadcastRandomSeedRequest {
 
-    private int id;
     private long seed;
-
-    /**
-     * @return the id
-     */
-    public int getId() {
-        return id;
-    }
-
-    /**
-     * @param id the id to set
-     */
-    public void setId(int id) {
-        this.id = id;
-    }
 
     /**
      * @return the seed
@@ -41,4 +26,5 @@ public class JoinResponse {
     public void setSeed(long seed) {
         this.seed = seed;
     }
+
 }

@@ -16,6 +16,9 @@ import java.util.logging.Logger;
  */
 public class MainMenu {
 
+    protected static final int CREATE_GAME = 1;
+    protected static final int JOIN_GAME = 2;
+    
     public static final Logger LOGGER = Logger.getLogger(MainMenu.class.getCanonicalName());
 
     public void createGame() {
@@ -24,7 +27,7 @@ public class MainMenu {
         server.startServer();
         GameClient client = new GameClient(59687, 5000);
         String localHost = System.getProperty("myapp.ip");
-        client.connect("localhost");
+        client.connect(localHost);
         LOGGER.info("Die ServerIP ist " + server.getServerIP());
 
         startGameController.client = client;

@@ -6,46 +6,51 @@ import de.btu.monopoly.data.card.CardStack;
  * @author Maximilian Bels (belsmaxi@b-tu.de)
  */
 public class Player {
-    
+
     /**
      * Spieler-ID
      */
     private final int id;
-    
+
     /**
      * Bank-Instanz
      */
     private final Bank bank;
-    
+
     /**
      * Karten in Spielerhaenden
      */
     private final CardStack stack;
-    
+
     /**
      * Spielername
      */
     private String name;
-    
+
     /**
      * Position als ganzzahlige Feld-ID
      */
     private int position;
-    
+
     /**
      * ob der Spieler im Gefaengnis ist
      */
     private boolean isInJail;
-    
+
     /**
      * Anzahl Tage im Gefaengnis
      */
     private int daysInJail;
-    
+
     /**
      * ob der Spieler Pleite ist
      */
     private boolean isBankrupt;
+
+    /**
+     * der Schwierigkeitsgrad der KI (0 = keine KI ; 1 = leicht ; 2 = mittel ; 3 = schwer)
+     */
+    private int kiLevel;
 
     /**
      * Erstellt eine neue Spielerinstanz.
@@ -57,12 +62,12 @@ public class Player {
     public Player(String name, int id, int startMoney) {
         this.id = id;
         this.bank = new Bank(startMoney);
-        
+        this.kiLevel = 0;
         this.name = name;
         position = 0;
 
         stack = new CardStack();
-        
+
         isInJail = false;
         daysInJail = 0;
     }
@@ -87,7 +92,7 @@ public class Player {
     public int getMoney() {
         return bank.balance();
     }
-    
+
     /**
      * @return Bank-Instanz des Spielers
      */
@@ -157,11 +162,35 @@ public class Player {
     public void setInJail(boolean inJail) {
         this.isInJail = inJail;
     }
-    
+
     /**
      * @return Karten in Spielerhand
      */
     public CardStack getCardStack() {
         return stack;
+    }
+    
+    @Override
+    public String toString() {
+        return String.format("[Spieler] Name: %s, ID: %d, %s %s %n\t%s %n\t%s",
+                name, id, isInJail ? "(" + daysInJail + " Tage im Gefängnis)" : "", isBankrupt ? "(Pleite)" : "", bank, stack);
+    }
+
+    /**
+     * ob der Spieler eine KI ist
+     *
+     * @return the kiLevel
+     */
+    public int getKiLevel() {
+        return kiLevel;
+    }
+
+    /**
+     * ob der Spieler eine KI ist
+     *
+     * @param kiLevel the kiLevel to set
+     */
+    public void setKiLevel(int kiLevel) {
+        this.kiLevel = kiLevel;
     }
 }

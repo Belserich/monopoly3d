@@ -1,11 +1,12 @@
 package de.btu.monopoly.data.field;
 
+import de.btu.monopoly.data.Tradeable;
 import de.btu.monopoly.data.player.Player;
 
 /**
  * @author Maximilian Bels (belsmaxi@b-tu.de)
  */
-public abstract class PropertyField extends Field {
+public abstract class PropertyField extends Field implements Tradeable {
 
     /**
      * Preis des Grundstuecks
@@ -98,4 +99,9 @@ public abstract class PropertyField extends Field {
     }
     
     public int getRent() { return 0; }
+    
+    @Override
+    public int getTradingValue() {
+        return getRent();
+    }
 }

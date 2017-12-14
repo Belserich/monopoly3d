@@ -3,20 +3,23 @@ package de.btu.monopoly.data.parser;
 import de.btu.monopoly.data.card.Card;
 import de.btu.monopoly.data.card.CardAction;
 import de.btu.monopoly.data.card.CardStack;
-import java.io.File;
-import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.logging.Logger;
-import java.util.stream.Stream;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
+import de.btu.monopoly.data.card.JailCard;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.File;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.logging.Logger;
+import java.util.stream.Stream;
 
 /**
  * @author Maximilian Bels (belsmaxi@b-tu.de)
@@ -95,7 +98,10 @@ public class CardStackParser {
         
         List<Card> retObj = new LinkedList<>();
         for (int i = 0; i < amount; i++) {
-            retObj.add(new Card(name, text, types, args));
+            if (Arrays.binarySearch(types, CardAction.JAIL) >= 0) {
+                retObj.add(new JailCard(name, text));
+            }
+            else retObj.add(new Card(name, text, types, args));
         }
         return retObj;
     }

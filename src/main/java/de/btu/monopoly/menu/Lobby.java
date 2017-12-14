@@ -9,10 +9,12 @@ import de.btu.monopoly.net.client.GameClient;
 public class Lobby {
 
     private boolean host = true;
+    private boolean ki = false;
     private static String[][] users;
     private String playerName;
     private GameClient playerClient;
     private int playerID = -1;
+    private long randomSeed;
 
     /**
      * @return the host
@@ -82,5 +84,33 @@ public class Lobby {
      */
     public void setPlayerId(int id) {
         this.playerID = id;
+    }
+
+    /**
+     * @return the ki
+     */
+    public boolean isKi() {
+        return ki;
+    }
+
+    /**
+     * @param ki the ki to set
+     */
+    public void setKi(boolean ki) {
+        this.ki = ki;
+    }
+
+    /**
+     * @return the randomSeed
+     */
+    public long getRandomSeed() {
+        return randomSeed;
+    }
+
+    /**
+     * @param randomSeed the randomSeed to set
+     */
+    public void setRandomSeed(long randomSeed) {
+        this.randomSeed = randomSeed;
     }
 }

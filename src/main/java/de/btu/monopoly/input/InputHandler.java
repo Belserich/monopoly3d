@@ -5,7 +5,6 @@
  */
 package de.btu.monopoly.input;
 
-import de.btu.monopoly.core.GameBoard;
 import de.btu.monopoly.core.service.FieldService;
 import de.btu.monopoly.data.field.Field;
 import de.btu.monopoly.data.player.Player;
@@ -52,9 +51,8 @@ public class InputHandler {
      * @param player Spieler der eine Eingabe machen soll
      * @return ein int Wert zu auswaehen einer Strasse
      */
-    public static int askForField(Player player, GameBoard board) {
+    public static int askForField(Player player, Field[] fields) {
         String mesg = player.getName() + "! Wähle ein Feld:\n";
-        Field[] fields = board.getFields();
         for (int i = 0; i < fields.length; i++) {
             mesg += String.format("[%d] - %s%n", i + 1, fields[i].getName());
         }

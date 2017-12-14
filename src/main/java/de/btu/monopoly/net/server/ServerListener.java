@@ -9,8 +9,10 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.FrameworkMessage;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
-import de.btu.monopoly.net.networkClasses.*;
-import java.util.logging.Logger;
+import de.btu.monopoly.core.service.NetworkService;
+import de.btu.monopoly.net.networkClasses.BroadcastPlayerChoiceRequest;
+import de.btu.monopoly.net.networkClasses.PlayerTradeRequest;
+import de.btu.monopoly.net.networkClasses.PlayerTradeResponse;
 
 /**
  *
@@ -18,23 +20,28 @@ import java.util.logging.Logger;
  */
 public class ServerListener extends Listener {
 
-    private static final Logger LOGGER = Logger.getLogger(ServerListener.class.getCanonicalName());
-
     private Server server;
-
+    
+    public ServerListener(Server server) {
+        this.server = server;
+    }
+    
+    @Override
     public void received(Connection connection, Object object) {
         super.received(connection, object);
 
-        if (object instanceof FrameworkMessage) {
-            // TODO LOG
-
-        } else if (object instanceof BroadcastPlayerChoiceRequest) {
-            LOGGER.finer("BroadcastPlayerChoiceRequest erhalten");
-            server.sendToAllExceptTCP(connection.getID(), object);
+        if (!(object instanceof FrameworkMessage)) {
+            NetworkService.logReceiveMessage(object);
+            
+            if (object instanceof BroadcastPlayerChoiceRequest) {
+                server.sendToAllExceptTCP(connection.getID(), object);
+            }
+            else if (object instanceof PlayerTradeRequest) {
+                server.sendToAllExceptTCP(connection.getID(), object);
+            }
+            else if (object instanceof  PlayerTradeResponse) {
+                server.sendToAllExceptTCP(connection.getID(), object);
+            }
         }
-    }
-
-    public ServerListener(Server server) {
-        this.server = server;
     }
 }
