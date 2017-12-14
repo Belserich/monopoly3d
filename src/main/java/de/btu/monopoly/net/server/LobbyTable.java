@@ -51,6 +51,7 @@ public class LobbyTable extends Listener {
                 tempusers[i][1] = users[i][1];  //UserName
                 tempusers[i][2] = users[i][2];  //ConnectionString
                 tempusers[i][3] = users[i][3];  //kiLevel
+                tempusers[i][4] = users[i][4];  //UserColor
             }
         }
 
@@ -59,6 +60,7 @@ public class LobbyTable extends Listener {
         tempusers[slot][1] = name;
         tempusers[slot][2] = connectionString;
         tempusers[slot][3] = Integer.toString(kiLevel);
+        tempusers[slot][4] = "0xffffffff";
         users = tempusers;
 
         if (kiLevel == 0) {
@@ -74,6 +76,18 @@ public class LobbyTable extends Listener {
         for (int i = 0; i < users.length; i++) {
             if (users[i][0].equals(idstr)) {
                 users[i][1] = name;
+            }
+        }
+
+        refreshLobbyResponse();
+    }
+
+    private void changeUserColor(int id, String userColor) {
+        LOGGER.finer("Usercolor wird geändert");
+        String idstr = Integer.toString(id);
+        for (int i = 0; i < users.length; i++) {
+            if (users[i][0].equals(idstr)) {
+                users[i][4] = userColor;
             }
         }
 
@@ -163,6 +177,10 @@ public class LobbyTable extends Listener {
                 LOGGER.finer("ChangeUsernameRequest erhalten");
                 ChangeUsernameRequest chanreq = (ChangeUsernameRequest) object;
                 changeUserName(chanreq.getUserId(), chanreq.getUserName());
+            } else if (object instanceof ChangeUsercolorRequest) {
+                LOGGER.finer("ChangeUsercolorRequest erhalten");
+                ChangeUsercolorRequest chanreq = (ChangeUsercolorRequest) object;
+                changeUserColor(chanreq.getUserId(), chanreq.getUserColor());
             } else if (object instanceof GamestartRequest) {
                 LOGGER.finer("GamestartRequest erhalten");
                 gameStarted = true;

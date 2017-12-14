@@ -18,6 +18,7 @@ import java.net.UnknownHostException;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.scene.paint.Color;
 
 /**
  *
@@ -85,6 +86,11 @@ public class LobbyService extends Listener {
         changeUsernameRequest();
     }
 
+    public static void changeColor(Color color) {
+        lobby.setPlayerColor(color.toString());
+        changeColorRequest();
+    }
+
     public static void startGame() {//TODO
         Game controller = new Game(generatePlayerArray(), lobby.getPlayerClient(), lobby.getRandomSeed());
         lobby.getPlayerClient().setGame(controller);
@@ -128,9 +134,17 @@ public class LobbyService extends Listener {
     }
 
     private static void changeUsernameRequest() {
-        LOGGER.finer(lobby.getPlayerName() + " sendet RefreshRequest");
+        LOGGER.finer(lobby.getPlayerName() + " sendet ChangeUsernameRequest");
         ChangeUsernameRequest req = new ChangeUsernameRequest();
         req.setUserName(lobby.getPlayerName());
+        req.setUserId(lobby.getPlayerId());
+        lobby.getPlayerClient().sendTCP(req);
+    }
+
+    private static void changeColorRequest() {
+        LOGGER.finer(lobby.getPlayerName() + " sendet ChangeUsercolorRequest");
+        ChangeUsercolorRequest req = new ChangeUsercolorRequest();
+        req.setUserColor(lobby.getPlayerColor());
         req.setUserId(lobby.getPlayerId());
         lobby.getPlayerClient().sendTCP(req);
     }

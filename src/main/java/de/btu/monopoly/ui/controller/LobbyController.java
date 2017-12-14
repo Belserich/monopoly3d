@@ -1,7 +1,6 @@
 package de.btu.monopoly.ui.controller;
 
 import de.btu.monopoly.menu.Lobby;
-import de.btu.monopoly.menu.LobbyService;
 import de.btu.monopoly.ui.SceneManager;
 import java.io.IOException;
 import java.net.URL;
@@ -164,7 +163,7 @@ public class LobbyController implements Initializable {
         SceneManager.changeScene(new FXMLLoader(getClass().getResource("/fxml/mainScene.fxml")));
 
         // Spiel starten
-        LobbyService.startGame();
+//        LobbyService.startGame();
     }
 
     // Lobby verlassen
