@@ -3,6 +3,7 @@ package de.btu.monopoly.core;
 import de.btu.monopoly.core.mechanics.Auction;
 import de.btu.monopoly.core.mechanics.Trade;
 import de.btu.monopoly.core.mechanics.TradeOffer;
+import de.btu.monopoly.core.service.AuctionService;
 import de.btu.monopoly.core.service.FieldService;
 import de.btu.monopoly.core.service.PlayerService;
 import de.btu.monopoly.data.card.Card;
@@ -406,7 +407,7 @@ public class Game {
 
     private void betPhase(PropertyField property) {
         Auction auc = new Auction(property, players);
-        auc.startAuction();
+        AuctionService.startAuction(auc);
     }
 
     public GameBoard getBoard() {
