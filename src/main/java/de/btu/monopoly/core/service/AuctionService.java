@@ -42,15 +42,23 @@ public class AuctionService {
     }
 
     /**
-     * Setzt das Gebot eines Spielers
+     * Setzt das Gebot eines Spielers, falls dieses hoeher ist als das aktuell hoechste Gebot
      *
      * @param activePlayers
      * @param i
      * @param bid
      */
-    private void setBid(int[][] activePlayers, int i, int bid) {
+    private boolean setBid(int[][] activePlayers, int i, int bid) {
 
-        activePlayers[i][1] = bid;
+        boolean isBidOk = true;
+
+        if (bid > getHighestBid(activePlayers)) {
+            activePlayers[i][1] = bid;
+        } else {
+            isBidOk = false;
+        }
+
+        return isBidOk;
     }
 
     /**
@@ -74,17 +82,35 @@ public class AuctionService {
      */
     private int getHighestBid(int[][] activePlayers) {
 
+        int highestBid = -1;
+
+        for (int i = 0; i < activePlayers.length; i++) {
+            if (highestBid < activePlayers[i][1] && activePlayers[i][1] != 0) {
+                highestBid = activePlayers[i][1];
+            }
+        }
+
+        return highestBid;
+    }
+
+    /**
+     * Das hoechste Gebot aller Bieter wird ermittelt. Es wird die ID des Spielers mit dem hoechsten Gebot zurueck gegeben
+     *
+     * @param activePlayers
+     * @return playerID
+     */
+    private int getHighestBidder(int[][] activePlayers) {
+
         int playerID = -1;
         int highestBid = -1;
 
         for (int i = 0; i < activePlayers.length; i++) {
             if (highestBid < activePlayers[i][1] && activePlayers[i][1] != 0) {
                 playerID = activePlayers[i][0];
-                highestBid = activePlayers[i][1];
             }
         }
 
-        return playerID;
+        return PlayerID;
     }
 
 }
