@@ -32,7 +32,7 @@
       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
-      <Label fx:id="lobbyLabel" text="Lobby:" textFill="WHITE" GridPane.columnIndex="1">
+      <Label fx:id="lobbyLabel" text="Lobby:" textFill="WHITE" textOverrun="CLIP" GridPane.columnIndex="1">
          <font>
             <Font size="56.0" />
          </font></Label>
@@ -77,5 +77,10 @@
          <effect>
             <ColorAdjust brightness="1.0" />
          </effect></JFXTextField>
+      <Label fx:id="lobbyLabelIp" text="IP Adresse" textFill="WHITE" textOverrun="CLIP" GridPane.columnIndex="2">
+         <font>
+            <Font size="56.0" />
+         </font>
+      </Label>
    </children>
 </GridPane>

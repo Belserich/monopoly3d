@@ -4,8 +4,12 @@ import de.btu.monopoly.menu.Lobby;
 import de.btu.monopoly.menu.LobbyService;
 import de.btu.monopoly.ui.SceneManager;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
@@ -24,6 +28,9 @@ import javafx.scene.paint.Color;
  * @author augat
  */
 public class LobbyController implements Initializable {
+
+    @FXML
+    private Label lobbyLabelIp;
 
     @FXML
     private Label name1Label;
@@ -67,6 +74,13 @@ public class LobbyController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
+        try {
+            // Anzeigen der IP Adresse
+            lobbyLabelIp.setText(InetAddress.getLocalHost().getHostAddress());
+        } catch (UnknownHostException ex) {
+            Logger.getLogger(LobbyController.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
         // Festlegen der Optionen in der Combobox
         difficultyComboBox.getItems().addAll("Einfach", "Mittel", "Schwer");
