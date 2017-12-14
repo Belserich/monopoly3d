@@ -179,6 +179,11 @@ public class LobbyController implements Initializable {
         // SceneManager.changeScene(new FXMLLoader(getClass().getResource("/fxml/Menu.fxml")));
     }
 
+    @FXML
+    private void KiButtonAction(ActionEvent event) {
+
+    }
+
     // Farben aktualisieren
     @FXML
     private void pushColorPick(ActionEvent event) throws IOException, InterruptedException {
