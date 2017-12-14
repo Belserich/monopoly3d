@@ -4,7 +4,7 @@ import de.btu.monopoly.core.Game;
 import de.btu.monopoly.core.GameBoard;
 import de.btu.monopoly.data.player.Bank;
 import de.btu.monopoly.data.player.Player;
-
+import de.btu.monopoly.input.IOService;
 import java.util.Random;
 import java.util.logging.Logger;
 
@@ -15,9 +15,9 @@ import java.util.logging.Logger;
 public class PlayerService {
 
     private static final Logger LOGGER = Logger.getLogger(de.btu.monopoly.core.Game.class.getCanonicalName());
-    
-    private static final Random rng = new Random(Game.SEED);
-    
+
+    private static final Random rng = new Random(Game.getSEED());
+
     /**
      * Setzt alle nötigen Attribute, wenn der Spieler ins Gefängnis kommt. Bitte {@code FieldManager.toJail()} benutzen.
      *
@@ -26,9 +26,10 @@ public class PlayerService {
     static void toJail(Player player) {
         player.setInJail(true);
         player.setDaysInJail(0);
+        IOService.sleep(2000);
         LOGGER.info(String.format("%s ist jetzt im Gefaengnis.", player.getName()));
     }
-    
+
     /**
      * Befreit den Spieler aus dem Gefaengnis.
      *
@@ -74,7 +75,7 @@ public class PlayerService {
             return false;
         }
     }
-    
+
     /**
      * Versucht, dem Spielerkonto Geld abzubuchen. Bricht ab, wenn der Spieler nicht genug Geld besitzt.
      *
@@ -104,7 +105,7 @@ public class PlayerService {
             LOGGER.info(String.format("%s hat sich verschuldet!", player.getName()));
         }
     }
-    
+
     /**
      * Nimmt einem Spieler Geld und gibt es einem anderen.
      *
@@ -150,7 +151,7 @@ public class PlayerService {
     public static void bankrupt(Player player, GameBoard board) {
         LOGGER.info(String.format("%s ist Bankrott und ab jetzt nur noch Zuschauer. All sein Besitz geht zurück an die Bank.",
                 player.getName()));
-        
+
         player.setBankrupt(true);
         board.getFieldManager().bankrupt(player);
         board.getCardManager().bankrupt(player);
