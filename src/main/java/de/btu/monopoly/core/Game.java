@@ -11,7 +11,6 @@ import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.input.IOService;
 import de.btu.monopoly.input.InputHandler;
 import de.btu.monopoly.net.client.GameClient;
-import de.btu.monopoly.net.networkClasses.BroadcastPlayerChoiceRequest;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -120,7 +119,6 @@ public class Game {
             LOGGER.info(String.format(" %s ist im Gefängnis und kann: %n[1] - 3-mal Würfeln, um mit einem Pasch freizukommen "
                     + "%n[2] - Bezahlen (50€) %n[3] - Gefängnis-Frei-Karte benutzen", player.getName()));
 
-//            choice = getClientChoice(player, 3);
             choice = IOService.jailChoice(player);
             switch (choice) {
                 case 1:
@@ -140,28 +138,6 @@ public class Game {
                     break;
             }
         } while (player.isInJail() && choice != 1);
-    }
-
-    private int getClientChoice(Player player, int max) {
-        Player thisPlayer = client.getPlayerOnClient();
-
-        if (thisPlayer == player) {
-            int choice = InputHandler.getUserInput(max);
-            BroadcastPlayerChoiceRequest packet = new BroadcastPlayerChoiceRequest();
-            packet.setChoice(choice);
-            client.sendTCP(packet);
-            return choice;
-        } else {
-            do {
-                BroadcastPlayerChoiceRequest[] packets = client.getPlayerChoiceObjects();
-                if (packets.length > 1) {
-                    LOGGER.warning("Fehler: Mehr als ein choice-Packet registriert!");
-                    return -1;
-                } else if (packets.length == 1) {
-                    return packets[0].getChoice();
-                }
-            } while (true);
-        }
     }
 
     public void processJailRollOption(Player player) {
@@ -217,6 +193,7 @@ public class Game {
         switch (type) {
             case TAX: // Steuerfeld
                 TaxField taxField = (TaxField) board.getFields()[player.getPosition()];
+                LOGGER.fine(String.format("%s steht auf einem Steuer-Zahlen-Feld.", player.getName()));
                 FieldService.payTax(player, taxField);
                 break;
 
@@ -232,9 +209,11 @@ public class Game {
                 break;
 
             case CORNER: // Eckfeld
+                LOGGER.fine(String.format("%s steht auf einem Eckfeld.", player.getName()));
                 break;
 
             case GO: // "LOS"-Feld
+                LOGGER.fine(String.format("%s steht auf LOS.", player.getName()));
                 break;
 
             default:
@@ -261,7 +240,7 @@ public class Game {
 
     private void processBuyPropertyFieldOption(Player player, PropertyField prop) {
         int choice = IOService.buyPropertyChoice(player, prop);
-//        int choice = getClientChoice(player, 2);
+
         switch (choice) {
             case 1: // Kaufen
                 LOGGER.info(String.format("%s >> %s", player.getName(), prop.getName()));
@@ -283,14 +262,13 @@ public class Game {
         }
     }
 
-    private void actionPhase(Player player) {
+    private void actionPhase(Player player) { //ist nur noch voruebergehend so gefuellt
         int choice;
 
         do {
             LOGGER.info(String.format("%s ist an der Reihe! Waehle eine Aktion:%n[1] - Nichts%n[2] - Haus kaufen%n[3] - Haus verkaufen%n[4] - "
                     + "Hypothek aufnehmen%n[5] - Hypothek abbezahlen", player.getName()));
 
-//            choice = getClientChoice(player, 5);
             choice = IOService.actionSequence(player, board);
             if (choice != 1) {
                 Field currField = board.getFields()[InputHandler.askForField(player, board) - 1]; // Wahl der Strasse
