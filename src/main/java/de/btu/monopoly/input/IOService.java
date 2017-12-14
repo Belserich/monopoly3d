@@ -77,8 +77,9 @@ public class IOService {
             case 0:
                 //TODO GUI
                 choice = getClientChoice(player, 5);
+                break;
             case 1:
-                EasyKi.processActionSequence(player, board);
+                choice = EasyKi.processActionSequence(player, board);
                 break;
             case 2:
                 MediumKi.processActionSequence(player, board);
@@ -118,6 +119,15 @@ public class IOService {
                     return packets[0].getChoice();
                 }
             } while (true);
+        }
+    }
+
+    public static void sleep(int millis) {
+        try {
+            Thread.sleep(millis);
+        } catch (InterruptedException ex) {
+            LOGGER.warning("FEHLER: " + ex);
+            Thread.currentThread().interrupt();
         }
     }
 

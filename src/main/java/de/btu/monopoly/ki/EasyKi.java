@@ -6,10 +6,12 @@
 package de.btu.monopoly.ki;
 
 import de.btu.monopoly.core.GameBoard;
+import de.btu.monopoly.core.service.PlayerService;
 import de.btu.monopoly.data.card.CardAction;
 import de.btu.monopoly.data.card.CardStack;
 import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.player.Player;
+import de.btu.monopoly.input.IOService;
 import java.util.logging.Logger;
 
 /**
@@ -30,23 +32,27 @@ public class EasyKi {
         } else {
             choice = 1;
         }
+        IOService.sleep(3000);
         return choice;
     }
 
     public static int buyPropOption(Player player, PropertyField prop) {
         int choice;
-        int percentage = (int) (Math.random() * 101);
+        int percentage = PlayerService.getRng().nextInt(100);
         if (percentage <= 50) {
             choice = 1;
         } else {
             choice = 2;
         }
+        IOService.sleep(3000);
         return choice;
     }
 
-    public static void processActionSequence(Player player, GameBoard board) {
+    public static int processActionSequence(Player player, GameBoard board) { //wird zu void
         LOGGER.finer("Der Computergegner hat keine Lust zu bauen, oder sich um Hyoptheken zu kümmern. "
                 + "Zum Handeln ist er nicht schlau genug");
+        IOService.sleep(3000);
+        return 1;
     }
 
 }
