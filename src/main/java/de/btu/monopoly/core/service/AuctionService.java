@@ -14,7 +14,6 @@ public class AuctionService {
      */
     public static void startAuction(Auction auc) {
 
-        int activCount = 0;
         Player[] players = auc.getPlayers();
         int playerNumb = players.length;
 
@@ -28,32 +27,24 @@ public class AuctionService {
             aucPlayers[i][2] = 1;                       //Spieler noch aktiv? 1 = ja, 0 = nein
         }
 
-        do {
-
-            /*
+        /*
             Spielogik
-             */
-            //for Schleife zur Ueberpruefung der aktiven Spieleranzahl
-            for (int i = 0; i < aucPlayers.length; i++) {
-                activCount += aucPlayers[i][2];
-            }
-        } while (activCount > 1);
-
+         */
     }
 
     /**
      * Setzt das Gebot eines Spielers, falls dieses hoeher ist als das aktuell hoechste Gebot
      *
-     * @param activePlayers
+     * @param aucPlayers
      * @param i
      * @param bid
      */
-    private boolean setBid(int[][] activePlayers, int i, int bid) {
+    private boolean setBid(int[][] aucPlayers, int i, int bid) {
 
         boolean isBidOk = true;
 
-        if (bid > getHighestBid(activePlayers)) {
-            activePlayers[i][1] = bid;
+        if (bid > getHighestBid(aucPlayers)) {
+            aucPlayers[i][1] = bid;
         } else {
             isBidOk = false;
         }
@@ -64,29 +55,29 @@ public class AuctionService {
     /**
      * Diese Methode ermoeglicht es einem Spieler, die Auktion zu verlassen.
      *
-     * @param activePlayers
+     * @param aucPlayers
      * @return
      */
-    private int[][] playerExit(int[][] activePlayers, int i) {
+    private int[][] playerExit(int[][] aucPlayers, int i) {
 
-        activePlayers[i][2] = 0;
+        aucPlayers[i][2] = 0;
 
-        return activePlayers;
+        return aucPlayers;
     }
 
     /**
      * Das hoechste Gebot aller Bieter wird ermittelt. Es wird die ID des Spielers mit dem hoechsten Gebot zurueck gegeben
      *
-     * @param activePlayers
+     * @param aucPlayers
      * @return playerID
      */
-    private int getHighestBid(int[][] activePlayers) {
+    private int getHighestBid(int[][] aucPlayers) {
 
         int highestBid = -1;
 
-        for (int i = 0; i < activePlayers.length; i++) {
-            if (highestBid < activePlayers[i][1] && activePlayers[i][1] != 0) {
-                highestBid = activePlayers[i][1];
+        for (int i = 0; i < aucPlayers.length; i++) {
+            if (highestBid < aucPlayers[i][1] && aucPlayers[i][1] != 0) {
+                highestBid = aucPlayers[i][1];
             }
         }
 
@@ -96,21 +87,42 @@ public class AuctionService {
     /**
      * Das hoechste Gebot aller Bieter wird ermittelt. Es wird die ID des Spielers mit dem hoechsten Gebot zurueck gegeben
      *
-     * @param activePlayers
+     * @param aucPlayers
      * @return playerID
      */
-    private int getHighestBidder(int[][] activePlayers) {
+    private int getHighestBidder(int[][] aucPlayers) {
 
         int playerID = -1;
         int highestBid = -1;
 
-        for (int i = 0; i < activePlayers.length; i++) {
-            if (highestBid < activePlayers[i][1] && activePlayers[i][1] != 0) {
-                playerID = activePlayers[i][0];
+        for (int i = 0; i < aucPlayers.length; i++) {
+            if (highestBid < aucPlayers[i][1] && aucPlayers[i][1] != 0) {
+                playerID = aucPlayers[i][0];
             }
         }
 
-        return PlayerID;
+        return playerID;
+    }
+
+    /**
+     * Ueberprueft ob die Auktion noch genug Bieter hat
+     *
+     * @param aucPlayers
+     * @return stillActive
+     */
+    private boolean auctionStillActive(int[][] aucPlayers) {
+
+        int activCount = 0;
+        boolean stillActive = false;
+        for (int i = 0; i < aucPlayers.length; i++) {
+            activCount += aucPlayers[i][2];
+        }
+
+        if (activCount > 1) {
+            stillActive = true;
+        }
+
+        return stillActive;
     }
 
 }
