@@ -75,6 +75,12 @@ public class mainSceneController implements Initializable {
         // Farben festlegen
         if (GuiMessages.getPlayerColors() != null) {
             player0Button.setBackground(new Background(new BackgroundFill(GuiMessages.getPlayerColors()[0], CornerRadii.EMPTY, Insets.EMPTY)));
+            player1Button.setBackground(new Background(new BackgroundFill(GuiMessages.getPlayerColors()[0], CornerRadii.EMPTY, Insets.EMPTY)));
+            player2Button.setBackground(new Background(new BackgroundFill(GuiMessages.getPlayerColors()[0], CornerRadii.EMPTY, Insets.EMPTY)));
+            player3Button.setBackground(new Background(new BackgroundFill(GuiMessages.getPlayerColors()[0], CornerRadii.EMPTY, Insets.EMPTY)));
+            player4Button.setBackground(new Background(new BackgroundFill(GuiMessages.getPlayerColors()[0], CornerRadii.EMPTY, Insets.EMPTY)));
+            player5Button.setBackground(new Background(new BackgroundFill(GuiMessages.getPlayerColors()[0], CornerRadii.EMPTY, Insets.EMPTY)));
+
         }
     }
 
