@@ -5,29 +5,25 @@
  */
 package de.btu.monopoly.ui.controller;
 
-import de.btu.monopoly.core.Game;
-import de.btu.monopoly.data.player.Player;
-import java.net.URL;
-import java.util.ResourceBundle;
-import javafx.application.Application;
-import javafx.fxml.Initializable;
-
-import com.jfoenix.controls.JFXTextArea;
+import de.btu.monopoly.menu.Lobby;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.ui.SceneManager;
-import static de.btu.monopoly.ui.controller.startGameController.client;
 import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextArea;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.stage.Stage;
-
 
 /**
  *
@@ -35,42 +31,73 @@ import javafx.stage.Stage;
  */
 public class mainSceneController implements Initializable {
 
-    
-    @FXML private Label playerMoney1;
-    @FXML private Button player1;
-    @FXML private ScrollPane scene2;
-   public static GameClient client;
-  
+    @FXML
+    private Label playerMoney1;
+    @FXML
+    private Button player0Button;
+    @FXML
+    private Button player1Button;
+    @FXML
+    private Button player2Button;
+    @FXML
+    private Button player3Button;
+    @FXML
+    private Button player4Button;
+    @FXML
+    private Button player5Button;
+
+    public static GameClient client;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        // User aus Lobby holen
+        if (Lobby.getUsers() != null) {
+            if (Lobby.getUsers().length >= 1) {
+                player0Button.setText(Lobby.getUsers()[0][1]);
+            }
+            if (Lobby.getUsers().length >= 2) {
+                player1Button.setText(Lobby.getUsers()[1][1]);
+            }
+            if (Lobby.getUsers().length >= 3) {
+                player2Button.setText(Lobby.getUsers()[2][1]);
+            }
+            if (Lobby.getUsers().length >= 4) {
+                player3Button.setText(Lobby.getUsers()[3][1]);
+            }
+            if (Lobby.getUsers().length >= 5) {
+                player4Button.setText(Lobby.getUsers()[4][1]);
+            }
+            if (Lobby.getUsers().length >= 6) {
+                player5Button.setText(Lobby.getUsers()[5][1]);
+            }
+        }
 
-       
+        // Farben festlegen
+        if (GuiMessages.getPlayerColors() != null) {
+            player0Button.setBackground(new Background(new BackgroundFill(GuiMessages.getPlayerColors()[0], CornerRadii.EMPTY, Insets.EMPTY)));
+        }
     }
-    public void changeName(ActionEvent event) throws IOException{
-      
+
+    public void changeName(ActionEvent event) throws IOException {
+
         SceneManager.changeScene(new FXMLLoader(getClass().getResource("/fxml/mainSecene.fxml")));
-       
-        
+
         //playerMoney1.setText(""+client.getPlayerOnClient().getMoney());
         playerMoney1.setText("1200");
     }
-    
-    public void getPopUpAction() throws IOException{
+
+    public void getPopUpAction() throws IOException {
         Stage primaryStage;
         Parent root;
-        
-       
-            if(player1.isPressed()){
-                System.out.println("You pressed mee");
-            primaryStage = (Stage)player1.getScene().getWindow();
-            root = FXMLLoader.load(getClass().getResource("popUpPlayer1.fxml"));
-            
-            Scene scene = new Scene(root);
-            primaryStage.setScene(scene);
-            primaryStage.show();
-            
-        }
-        
+
+        System.out.println("You pressed mee");
+        primaryStage = new Stage();
+        root = FXMLLoader.load(getClass().getResource("popUpPlayer1.fxml"));
+
+        Scene scene = new Scene(root);
+        primaryStage.setScene(scene);
+        primaryStage.show();
+
     }
-    
+
 }

@@ -10,6 +10,7 @@ import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
@@ -158,10 +159,12 @@ public class LobbyController implements Initializable {
     // Spiel starten
     @FXML
     private void playButtonAction(ActionEvent event) throws IOException, InterruptedException {
-        LobbyService.startGame();
 
         // Wechselt die Scene auf Game
-        // SceneManager.changeScene(new FXMLLoader(getClass().getResource("/fxml/Game.fxml")));
+        SceneManager.changeScene(new FXMLLoader(getClass().getResource("/fxml/mainScene.fxml")));
+
+        // Spiel starten
+        LobbyService.startGame();
     }
 
     // Lobby verlassen
@@ -182,7 +185,7 @@ public class LobbyController implements Initializable {
 
         Color[] colors = {playerColor1.getValue(), playerColor2.getValue(), playerColor3.getValue(), playerColor4.getValue(), playerColor5.getValue(), playerColor6.getValue()};
         GuiMessages.setPlayerColors(colors);
-        SceneManager.updateLobbyColors();
+        //  SceneManager.updateLobbyColors();
 
     }
 }
