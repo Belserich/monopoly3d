@@ -40,10 +40,10 @@ public class LobbyTable extends Listener {
 
         // Array fuer neuen User vorbereiten und ID festlegen
         if (users == null) {
-            tempusers = new String[1][4];
+            tempusers = new String[1][5];
             slot = 0;
         } else {
-            tempusers = new String[users.length + 1][4];
+            tempusers = new String[users.length + 1][5];
             slot = users.length;
             // altes Array in neues uebernehmen
             for (int i = 0; i < users.length; i++) {
