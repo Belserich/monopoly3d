@@ -16,7 +16,7 @@ public class PlayerService {
 
     private static final Logger LOGGER = Logger.getLogger(de.btu.monopoly.core.Game.class.getCanonicalName());
 
-    private static final Random rng = new Random(Game.SEED);
+    private static final Random rng = new Random(Game.getSEED());
 
     /**
      * Setzt alle nötigen Attribute, wenn der Spieler ins Gefängnis kommt. Bitte {@code FieldManager.toJail()} benutzen.

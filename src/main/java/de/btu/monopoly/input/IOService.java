@@ -5,7 +5,7 @@
  */
 package de.btu.monopoly.input;
 
-import static de.btu.monopoly.core.Game.IS_RUNNING;
+import de.btu.monopoly.core.Game;
 import de.btu.monopoly.core.GameBoard;
 import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.player.Player;
@@ -101,27 +101,6 @@ public class IOService {
         client = aClient;
     }
 
-//    private static int getClientChoice(Player player, int max) {
-//        Player thisPlayer = client.getPlayerOnClient();
-//
-//        if (thisPlayer == player) {
-//            int choice = InputHandler.getUserInput(max);
-//            BroadcastPlayerChoiceRequest packet = new BroadcastPlayerChoiceRequest();
-//            packet.setChoice(choice);
-//            client.sendTCP(packet);
-//            return choice;
-//        } else {
-//            do {
-//                BroadcastPlayerChoiceRequest[] packets = client.getPlayerChoiceObjects();
-//                if (packets.length > 1) {
-//                    LOGGER.warning("Fehler: Mehr als ein choice-Packet registriert!");
-//                    return -1;
-//                } else if (packets.length == 1) {
-//                    return packets[0].getChoice();
-//                }
-//            } while (true);
-//        }
-//    }
     private static int getClientChoice(Player player, int max) {
         boolean isChoiceFromThisClient = player == client.getPlayerOnClient();
         if (isChoiceFromThisClient) {
@@ -141,7 +120,7 @@ public class IOService {
                     client.clearPlayerChoiceObjects();
                     return retVal;
                 }
-            } while (IS_RUNNING.get());
+            } while (Game.getIS_RUNNING().get());
         }
         return -1;
     }

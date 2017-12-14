@@ -30,7 +30,7 @@ import org.xml.sax.SAXException;
  */
 public class Game {
 
-    public static AtomicBoolean IS_RUNNING = new AtomicBoolean(false);
+    private static AtomicBoolean IS_RUNNING = new AtomicBoolean(false);
 
     private static final Logger LOGGER = Logger.getLogger(Game.class.getCanonicalName());
 
@@ -46,7 +46,7 @@ public class Game {
 
     private final GameClient client;
 
-    public static long SEED;
+    private static long SEED;
 
     /**
      * Die fachliche Komponente des Spiels als Einheit, bestehend aus einem Spielbrett, den Spielern sowie Zuschauern.
@@ -79,7 +79,7 @@ public class Game {
         }
 
         System.err.println("-------------------------");
-        IS_RUNNING.set(true);
+        getIS_RUNNING().set(true);
     }
 
     public void start() {
@@ -170,7 +170,7 @@ public class Game {
                     client.clearPlayerChoiceObjects();
                     return retVal;
                 }
-            } while (IS_RUNNING.get());
+            } while (getIS_RUNNING().get());
         }
         return -1;
     }
@@ -440,5 +440,26 @@ public class Game {
 
     public Player[] getPlayers() {
         return players;
+    }
+
+    /**
+     * @return the SEED
+     */
+    public static long getSEED() {
+        return SEED;
+    }
+
+    /**
+     * @return the IS_RUNNING
+     */
+    public static AtomicBoolean getIS_RUNNING() {
+        return IS_RUNNING;
+    }
+
+    /**
+     * @param aIS_RUNNING the IS_RUNNING to set
+     */
+    public static void setIS_RUNNING(AtomicBoolean aIS_RUNNING) {
+        IS_RUNNING = aIS_RUNNING;
     }
 }

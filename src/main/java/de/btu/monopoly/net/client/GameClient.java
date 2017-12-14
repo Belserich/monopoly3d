@@ -12,7 +12,6 @@ import de.btu.monopoly.core.service.NetworkService;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.menu.LobbyService;
 import de.btu.monopoly.net.networkClasses.BroadcastPlayerChoiceRequest;
-
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -43,7 +42,7 @@ public class GameClient {
         client = new Client();
         kryo = client.getKryo();
         NetworkService.registerKryoClasses(kryo);
-        
+
         Runtime.getRuntime().addShutdownHook(new Thread(() -> disconnect()));
     }
 
@@ -63,7 +62,7 @@ public class GameClient {
 
     public void disconnect() {
         LOGGER.finer("Client trennt Verbindung");
-        Game.IS_RUNNING.set(false);
+        Game.getIS_RUNNING().set(false);
         client.stop();
     }
 
@@ -74,15 +73,15 @@ public class GameClient {
     public BroadcastPlayerChoiceRequest[] getPlayerChoiceObjects() {
         return uiThread.receivedPlayerChoiceObjects.stream().toArray(BroadcastPlayerChoiceRequest[]::new);
     }
-    
+
     public void clearPlayerChoiceObjects() {
         uiThread.receivedPlayerChoiceObjects.clear();
     }
-    
+
     public UiInteractionThread getUiThread() {
         return uiThread;
     }
-    
+
     /**
      * @return the playerOnClient
      */
