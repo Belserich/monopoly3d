@@ -11,7 +11,6 @@ import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 import de.btu.monopoly.core.service.NetworkService;
 import de.btu.monopoly.net.networkClasses.*;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.logging.Logger;
@@ -33,7 +32,7 @@ public class LobbyTable extends Listener {
         this.server = server;
     }
 
-    public void registerUser(String name, Connection connection) {
+    public void registerUser(String name, Connection connection, int kiLevel) {
         LOGGER.finer("User wird registriert");
         String[][] tempusers;
         String connectionString = connection.toString();
@@ -41,16 +40,17 @@ public class LobbyTable extends Listener {
 
         // Array fuer neuen User vorbereiten und ID festlegen
         if (users == null) {
-            tempusers = new String[1][3];
+            tempusers = new String[1][4];
             slot = 0;
         } else {
-            tempusers = new String[users.length + 1][3];
+            tempusers = new String[users.length + 1][4];
             slot = users.length;
             // altes Array in neues uebernehmen
             for (int i = 0; i < users.length; i++) {
                 tempusers[i][0] = users[i][0];  //PlayerID (nicht UserID)
                 tempusers[i][1] = users[i][1];  //UserName
                 tempusers[i][2] = users[i][2];  //ConnectionString
+                tempusers[i][3] = users[i][3];  //kiLevel
             }
         }
 
@@ -58,9 +58,12 @@ public class LobbyTable extends Listener {
         tempusers[slot][0] = Integer.toString(playerID);
         tempusers[slot][1] = name;
         tempusers[slot][2] = connectionString;
+        tempusers[slot][3] = Integer.toString(kiLevel);
         users = tempusers;
 
-        joinRespone(playerID, connection);
+        if (kiLevel == 0) {
+            joinRespone(playerID, connection);
+        }
         playerID++;
         refreshLobbyResponse();
     }
@@ -134,7 +137,7 @@ public class LobbyTable extends Listener {
     public void gamestartResponse() {
         GamestartResponse gares = new GamestartResponse();
         server.sendToAllTCP(gares);
-        NetworkService.logSendMessage(gares);
+        Thread.currentThread().interrupt();
     }
 
     // LISTENER:_____________________________________________
@@ -144,25 +147,28 @@ public class LobbyTable extends Listener {
 
         if (!(object instanceof FrameworkMessage)) {
             NetworkService.logReceiveMessage(object);
-            
+
             if (object instanceof JoinRequest) {
                 if (!gameStarted) {
                     JoinRequest joinreq = (JoinRequest) object;
-                    registerUser(joinreq.getName(), connection);
+                    registerUser(joinreq.getName(), connection, 0);
                 } else {
                     connection.sendTCP(new JoinImpossibleResponse());
                 }
-            }
-            else if (object instanceof ChangeUsernameRequest) {
+            } else if (object instanceof AddKiRequest) {
+                LOGGER.finer("AddKiRequest erhalten");
+                AddKiRequest akr = (AddKiRequest) object;
+                registerUser(akr.getName(), connection, akr.getKiLevel());
+            } else if (object instanceof ChangeUsernameRequest) {
+                LOGGER.finer("ChangeUsernameRequest erhalten");
                 ChangeUsernameRequest chanreq = (ChangeUsernameRequest) object;
                 changeUserName(chanreq.getUserId(), chanreq.getUserName());
-            }
-            else if (object instanceof GamestartRequest) {
+            } else if (object instanceof GamestartRequest) {
+                LOGGER.finer("GamestartRequest erhalten");
                 gameStarted = true;
                 gamestartResponse();
                 createGameTable();
-            }
-            else if (object instanceof BroadcastRandomSeedRequest) {
+            } else if (object instanceof BroadcastRandomSeedRequest) {
                 BroadcastRandomSeedRequest req = (BroadcastRandomSeedRequest) object;
                 randomSeed = req.getSeed();
             }

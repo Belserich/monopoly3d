@@ -31,6 +31,7 @@ public class GameClient {
     private Client client;
     private Kryo kryo;
     private Player playerOnClient;
+    private Game game;
 
     private ClientListener listener;
 
@@ -94,6 +95,20 @@ public class GameClient {
      */
     public void setPlayerOnClient(Player playerOnClient) {
         this.playerOnClient = playerOnClient;
+    }
+
+    /**
+     * @return the game
+     */
+    public Game getGame() {
+        return game;
+    }
+
+    /**
+     * @param game the game to set
+     */
+    public void setGame(Game game) {
+        this.game = game;
     }
 
 }

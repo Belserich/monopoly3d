@@ -108,7 +108,7 @@ public class CardStack {
      * @param action Action
      * @return Anzahl Karten des festgelegten Typs
      */
-    int countCardsOfAction(CardAction action) {
+    public int countCardsOfAction(CardAction action) {
         int counter = 0;
         for (Card c : cards) {
             counter += c.getActions().contains(action) ? 1 : 0;
