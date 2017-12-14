@@ -1,0 +1,34 @@
+
+/* 
+    Created on : Dec 12, 2017, 9:53:14 PM
+    Author     : Eleonora Kostova
+*/
+
+.playerColor1{
+    display: block;
+   -fx-background-color: green;
+}
+
+.playerColor2{
+    display: block;
+   -fx-background-color: blue;
+}
+
+.playerColor3{
+    display: block;
+   -fx-background-color: red;
+}
+
+.playerColor4{
+    display: block;
+   -fx-background-color: yellowgreen;
+}
+
+.playerColor5{
+    display: block;
+   -fx-background-color: orange;
+}
+.playerColor6{
+    display: block;
+   -fx-background-color: fuchsia;
+}

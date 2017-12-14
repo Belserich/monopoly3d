@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+
+<ScrollPane fx:id="p4Scene2" prefHeight="231.0" prefWidth="220.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.btu.monopoly.ui.controller.mainSceneController">
+   <content>
+      <AnchorPane id="AnchorPane" prefHeight="369.0" prefWidth="220.0">
+         <children>
+            <TextFlow prefHeight="45.0" styleClass="playerColor4" stylesheets="@../styles/mainSceneColors.css" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <Label alignment="CENTER" prefHeight="45.0" prefWidth="220.0" text="Spieler4">
+                     <font>
+                        <Font name="System Bold" size="22.0" />
+                     </font>
+                  </Label>
+               </children>
+            </TextFlow>
+         </children>
+      </AnchorPane>
+   </content>
+</ScrollPane>
