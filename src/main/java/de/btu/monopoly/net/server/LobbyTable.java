@@ -135,9 +135,11 @@ public class LobbyTable extends Listener {
     }
 
     public void gamestartResponse() {
+        shuffle();
+        refreshLobbyResponse();
         GamestartResponse gares = new GamestartResponse();
         server.sendToAllTCP(gares);
-        Thread.currentThread().interrupt();
+//        Thread.currentThread().interrupt();
     }
 
     // LISTENER:_____________________________________________
