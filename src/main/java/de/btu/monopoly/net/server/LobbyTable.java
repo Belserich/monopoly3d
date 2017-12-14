@@ -137,6 +137,7 @@ public class LobbyTable extends Listener {
         LOGGER.finer("Server sendet GamestartResponse");
         GamestartResponse gares = new GamestartResponse();
         server.sendToAllTCP(gares);
+        Thread.currentThread().interrupt();
     }
 
     // LISTENER:_____________________________________________

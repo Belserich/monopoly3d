@@ -7,6 +7,7 @@ package de.btu.monopoly.net.client;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Client;
+import de.btu.monopoly.core.Game;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.menu.LobbyService;
 import de.btu.monopoly.net.networkClasses.*;
@@ -27,6 +28,7 @@ public class GameClient {
     private Client client;
     private Kryo kryo;
     private Player playerOnClient;
+    private Game game;
 
     private ClientListener listener;
 
@@ -93,6 +95,20 @@ public class GameClient {
      */
     public void setPlayerOnClient(Player playerOnClient) {
         this.playerOnClient = playerOnClient;
+    }
+
+    /**
+     * @return the game
+     */
+    public Game getGame() {
+        return game;
+    }
+
+    /**
+     * @param game the game to set
+     */
+    public void setGame(Game game) {
+        this.game = game;
     }
 
 }

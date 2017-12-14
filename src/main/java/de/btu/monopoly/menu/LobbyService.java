@@ -87,6 +87,7 @@ public class LobbyService extends Listener {
 
     public static void startGame() {//TODO
         Game controller = new Game(generatePlayerArray(), lobby.getPlayerClient(), lobby.getRandomSeed());
+        lobby.getPlayerClient().setGame(controller);
         controller.init();
         controller.start();
     }
