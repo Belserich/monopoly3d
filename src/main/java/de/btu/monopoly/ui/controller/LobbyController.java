@@ -211,21 +211,27 @@ public class LobbyController implements Initializable {
         switch (id) {
             case 0: {
                 LobbyService.changeColor(playerColor1.getValue());
+                break;
             }
             case 1: {
-                LobbyService.changeColor(playerColor1.getValue());
+                LobbyService.changeColor(playerColor2.getValue());
+                break;
             }
             case 2: {
-                LobbyService.changeColor(playerColor1.getValue());
+                LobbyService.changeColor(playerColor3.getValue());
+                break;
             }
             case 3: {
-                LobbyService.changeColor(playerColor1.getValue());
+                LobbyService.changeColor(playerColor4.getValue());
+                break;
             }
             case 4: {
-                LobbyService.changeColor(playerColor1.getValue());
+                LobbyService.changeColor(playerColor5.getValue());
+                break;
             }
             case 5: {
-                LobbyService.changeColor(playerColor1.getValue());
+                LobbyService.changeColor(playerColor6.getValue());
+                break;
             }
             default: {
 
