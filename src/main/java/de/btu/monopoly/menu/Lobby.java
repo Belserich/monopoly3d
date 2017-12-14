@@ -12,6 +12,7 @@ public class Lobby {
     private boolean ki = false;
     private static String[][] users;
     private String playerName;
+    private String playerColor;
     private GameClient playerClient;
     private int playerID = -1;
     private long randomSeed;
@@ -112,5 +113,19 @@ public class Lobby {
      */
     public void setRandomSeed(long randomSeed) {
         this.randomSeed = randomSeed;
+    }
+
+    /**
+     * @return the playerColor
+     */
+    public String getPlayerColor() {
+        return playerColor;
+    }
+
+    /**
+     * @param playerColor the playerColor to set
+     */
+    public void setPlayerColor(String playerColor) {
+        this.playerColor = playerColor;
     }
 }
