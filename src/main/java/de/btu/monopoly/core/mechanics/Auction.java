@@ -10,8 +10,6 @@ import de.btu.monopoly.data.player.Player;
  */
 public class Auction {
 
-    private int price;
-
     private Player[] players;
 
     private PropertyField property;
@@ -33,6 +31,15 @@ public class Auction {
      */
     public Player[] getPlayers() {
         return this.players;
+    }
+
+    /**
+     * gibt die Property zurueck
+     *
+     * @return
+     */
+    public PropertyField getProperty() {
+        return this.property;
     }
 
 }
