@@ -49,23 +49,6 @@ public class LobbyService extends Listener {
         }
 
         joinRequest();
-//        addKI("Horst", 1);
-        //TODO kommt in GUI weg:
-//        try {
-//            Thread.sleep(500);
-//        } catch (InterruptedException ex) {
-//            LOGGER.warning("Fehler: " + ex);
-//            Thread.currentThread().interrupt();
-//        }
-//        System.out.println("Name?:");
-//        changeName(InputHandler.askForString());
-//
-//        if (lobby.isHost()) {
-//            addKI("Computergegner", 1);
-//            System.out.println("Eingabe machen für Spielstart");
-//            InputHandler.askForString();
-//            gamestartRequest();
-//        }
     }
 
     public static void addKI(String name, int kiLevel) {

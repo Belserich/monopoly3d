@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.effect.*?>
 <?import javafx.scene.text.*?>
 <?import com.jfoenix.controls.*?>
 <?import java.lang.*?>
@@ -68,7 +69,13 @@
       <JFXButton fx:id="playButton" minHeight="80.0" minWidth="200.0" onAction="#playButtonAction" style="-fx-background-color: #5472d3;" text="Spiel starten" textFill="WHITE" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
       <JFXButton fx:id="leaveLobbyButton" minHeight="80.0" minWidth="200.0" onAction="#leaveLobbyButtonAction" style="-fx-background-color: #5472d3;" text="Lobby verlassen" textFill="WHITE" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="6" GridPane.valignment="CENTER" />
       <JFXButton fx:id="KiButton" minHeight="80.0" minWidth="200.0" onAction="#KiButtonAction" style="-fx-background-color: #5472d3;" text="KI hinzufügen" textFill="WHITE" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.valignment="CENTER" />
-      <JFXComboBox fx:id="chooseDifficultyBox" prefHeight="39.0" prefWidth="218.0" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
-      <JFXTextField fx:id="KiNameTextField" focusColor="WHITE" prefHeight="39.0" prefWidth="255.0" promptText="Name" unFocusColor="WHITE" GridPane.columnIndex="3" GridPane.rowIndex="4" />
+      <JFXComboBox fx:id="difficultyComboBox" prefHeight="39.0" prefWidth="218.0" promptText="Ki Schwierigkeit" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
+         <effect>
+            <ColorAdjust brightness="1.0" />
+         </effect></JFXComboBox>
+      <JFXTextField fx:id="KiNameTextField" focusColor="WHITE" maxHeight="39.0" maxWidth="218.0" prefHeight="39.0" prefWidth="218.0" promptText="Name" unFocusColor="WHITE" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER">
+         <effect>
+            <ColorAdjust brightness="1.0" />
+         </effect></JFXTextField>
    </children>
 </GridPane>

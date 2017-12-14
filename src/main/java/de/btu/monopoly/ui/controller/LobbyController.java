@@ -14,6 +14,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 
@@ -52,8 +53,14 @@ public class LobbyController implements Initializable {
     @FXML
     private Button playButton;
 
+    @FXML
+    private ComboBox difficultyComboBox;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
+        // Festlegen der Optionen in der Combobox
+        difficultyComboBox.getItems().addAll("Einfach", "Mittel", "Schwer");
 
         // Updatet die Spieler in der Lobby
         updateNames();
@@ -164,7 +171,7 @@ public class LobbyController implements Initializable {
         SceneManager.changeScene(new FXMLLoader(getClass().getResource("/fxml/mainScene.fxml")));
 
         // Spiel starten
-        LobbyService.startGame();
+//        LobbyService.startGame();
     }
 
     // Lobby verlassen
@@ -182,6 +189,9 @@ public class LobbyController implements Initializable {
     @FXML
     private void KiButtonAction(ActionEvent event) {
 
+        int difficulty;
+
+        LobbyService.addKI("horst", 1);
     }
 
     // Farben aktualisieren
