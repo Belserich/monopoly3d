@@ -16,6 +16,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 
 /**
@@ -58,6 +59,12 @@ public class LobbyController implements Initializable {
     @FXML
     private ComboBox difficultyComboBox;
 
+    @FXML
+    private Button kiButton;
+
+    @FXML
+    private TextField kiNameTextField;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
@@ -98,6 +105,13 @@ public class LobbyController implements Initializable {
         if (Lobby.getUsers().length == 6) {
             playerColor6.setDisable(false);
             id = 5;
+        }
+
+        // Deaktivieren der KI Steuerung
+        if (id != 0) {
+            kiButton.setDisable(true);
+            kiNameTextField.setDisable(true);
+            difficultyComboBox.setDisable(true);
         }
     }
 
@@ -197,45 +211,89 @@ public class LobbyController implements Initializable {
     }
 
     @FXML
-    private void KiButtonAction(ActionEvent event) {
+    private void kiButtonAction(ActionEvent event) {
 
-        int difficulty;
+        if (difficultyComboBox.getSelectionModel().getSelectedItem() != null) {
+            // Colorpicker aktivieren
+            switch (Lobby.getUsers().length) {
+                case 1: {
+                    playerColor2.setDisable(false);
+                    break;
+                }
+                case 2: {
+                    playerColor3.setDisable(false);
+                    break;
+                }
+                case 3: {
+                    playerColor4.setDisable(false);
+                    break;
+                }
+                case 4: {
+                    playerColor5.setDisable(false);
+                    break;
+                }
+                case 5: {
+                    playerColor6.setDisable(false);
+                    break;
+                }
 
-        LobbyService.addKI("horst", 1);
+                default: {
+
+                }
+            }
+
+            // Schwierigkeit auslesen
+            int difficulty = -1;
+
+            switch ((String) difficultyComboBox.getSelectionModel().getSelectedItem()) {
+                case "Einfach": {
+                    difficulty = 1;
+                    break;
+                }
+                case "Mittel": {
+                    difficulty = 1;
+                    break;
+                }
+                case "Schwer": {
+                    difficulty = 1;
+                    break;
+                }
+                default: {
+
+                }
+            }
+
+            // KI hinzufügen
+            LobbyService.addKI(kiNameTextField.getText() + " ("
+                    + (String) difficultyComboBox.getSelectionModel().getSelectedItem()
+                    + ")", difficulty);
+        } else {
+            difficultyComboBox.setPromptText("Bitte auswählen!");
+        }
     }
 
     // Farben aktualisieren
     @FXML
     private void pushColorPick(ActionEvent event) throws IOException, InterruptedException {
 
-        switch (id) {
-            case 0: {
-                LobbyService.changeColor(playerColor1.getValue());
-                break;
-            }
-            case 1: {
-                LobbyService.changeColor(playerColor2.getValue());
-                break;
-            }
-            case 2: {
-                LobbyService.changeColor(playerColor3.getValue());
-                break;
-            }
-            case 3: {
-                LobbyService.changeColor(playerColor4.getValue());
-                break;
-            }
-            case 4: {
-                LobbyService.changeColor(playerColor5.getValue());
-                break;
-            }
-            case 5: {
-                LobbyService.changeColor(playerColor6.getValue());
-                break;
-            }
-            default: {
-
-            }
+        // Nur die aktiven Farben werden gesendet
+        if (!playerColor1.isDisabled()) {
+            LobbyService.changeColor(playerColor1.getValue());
+        }
+        if (!playerColor2.isDisabled()) {
+            LobbyService.changeColor(playerColor2.getValue());
+        }
+        if (!playerColor3.isDisabled()) {
+            LobbyService.changeColor(playerColor3.getValue());
+        }
+        if (!playerColor4.isDisabled()) {
+            LobbyService.changeColor(playerColor4.getValue());
+        }
+        if (!playerColor5.isDisabled()) {
+            LobbyService.changeColor(playerColor5.getValue());
+        }
+        if (!playerColor6.isDisabled()) {
+            LobbyService.changeColor(playerColor6.getValue());
         }
 
     }
