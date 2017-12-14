@@ -33,20 +33,45 @@ public class Auction {
      */
     public void startAuction() {
 
+        int activCount = 0;
         int playerNumb = this.players.length;
 
         /*
         Erstelle ein int[][] welches die ID's und Gebote der Spieler speichert
          */
-        int[][] aucPlayers = new int[playerNumb][2];
+        int[][] aucPlayers = new int[playerNumb][3];
         for (int i = 0; i < playerNumb; i++) {
-            aucPlayers[i][0] = players[i].getId();
-            aucPlayers[i][1] = 0;
+            aucPlayers[i][0] = players[i].getId();      //Speicher Spieler ID
+            aucPlayers[i][1] = 0;                       //Speichert Spieler Gebot
+            aucPlayers[i][2] = 1;                       //Spieler noch aktiv? 1 = ja, 0 = nein
         }
+
+        do {
+
+            /*
+            Spielogik
+             */
+            //for Schleife zur Ueberpruefung der aktiven Spieleranzahl
+            for (int i = 0; i < aucPlayers.length; i++) {
+                activCount += aucPlayers[i][2];
+            }
+        } while (activCount > 1);
 
         //PLATZHALTER:
         this.price = 0;
         this.winner = players[0];
+    }
+
+    /**
+     * Setzt das Gebot eines Spielers
+     *
+     * @param activePlayers
+     * @param i
+     * @param bid
+     */
+    private void setBid(int[][] activePlayers, int i, int bid) {
+
+        activePlayers[i][1] = bid;
     }
 
     /**
@@ -55,28 +80,11 @@ public class Auction {
      * @param activePlayers
      * @return
      */
-    public int[][] playerExit(int[][] activePlayers, int id) {
+    private int[][] playerExit(int[][] activePlayers, int i) {
 
-        //neues und kleineres Spieler Array
-        int playerNumb = activePlayers.length;
-        int[][] refreshedPlayers = new int[playerNumb][2];
+        activePlayers[i][2] = 0;
 
-        //geht jeden Platz des neuen Arrays durch
-        for (int i = 0; i < refreshedPlayers.length; i++) {
-            //verschiebt nach und nach die aktiven Spieler in das neue Array
-            for (int j = 0; j < activePlayers.length; j++) {
-                if (activePlayers[j][0] != -1) {
-                    if (activePlayers[j][0] != id) {
-                        refreshedPlayers[i][0] = activePlayers[j][0];
-                        activePlayers[j][0] = -1;
-                        refreshedPlayers[i][1] = activePlayers[j][1];
-                        break;
-                    }
-                }
-            }
-        }
-
-        return refreshedPlayers;
+        return activePlayers;
     }
 
     /**
@@ -85,7 +93,7 @@ public class Auction {
      * @param activePlayers
      * @return playerID
      */
-    public int getHighestBid(int[][] activePlayers) {
+    private int getHighestBid(int[][] activePlayers) {
 
         int playerID = -1;
         int highestBid = -1;
@@ -98,20 +106,6 @@ public class Auction {
         }
 
         return playerID;
-    }
-
-    /**
-     * @return the price
-     */
-    public int getPrice() {
-        return price;
-    }
-
-    /**
-     * @return the winner
-     */
-    public Player getWinner() {
-        return winner;
     }
 
 }
