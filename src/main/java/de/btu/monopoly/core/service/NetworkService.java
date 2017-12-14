@@ -16,6 +16,7 @@ public class NetworkService {
     public static void registerKryoClasses(Kryo kryo) {
         kryo.register(BroadcastPlayerChoiceRequest.class);
         kryo.register(BroadcastRandomSeedRequest.class);
+        kryo.register(ChangeUsercolorRequest.class);
         kryo.register(ChangeUsernameRequest.class);
         kryo.register(GamestartResponse.class);
         kryo.register(GamestartRequest.class);
