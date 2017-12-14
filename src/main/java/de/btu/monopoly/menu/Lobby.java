@@ -12,7 +12,7 @@ public class Lobby {
     private boolean ki = false;
     private static String[][] users;
     private String playerName;
-    private String playerColor;
+    private String playerColor = "0xffffffff";
     private GameClient playerClient;
     private int playerID = -1;
     private long randomSeed;
