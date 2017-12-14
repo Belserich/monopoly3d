@@ -83,7 +83,7 @@ public class LobbyService extends Listener {
      * @param id die der Spieler besitzt (users[i][0])
      */
     public static void changeName(String name, int id) {
-        changeUsernameRequest(id);
+        changeUsernameRequest(name, id);
     }
 
     /**
@@ -103,7 +103,9 @@ public class LobbyService extends Listener {
      * @param id die der Spieler besitzt (users[i][0])
      */
     public static void changeColor(Color color, int id) {
-        changeColorRequest(lobby.getPlayerId());
+        String colString = color.toString();
+        lobby.setPlayerColor(colString);
+        changeColorRequest(colString, lobby.getPlayerId());
     }
 
     /**
@@ -167,18 +169,18 @@ public class LobbyService extends Listener {
 
     }
 
-    private static void changeUsernameRequest(int id) {
+    private static void changeUsernameRequest(String name, int id) {
         LOGGER.finer(lobby.getPlayerName() + " sendet ChangeUsernameRequest");
         ChangeUsernameRequest req = new ChangeUsernameRequest();
-        req.setUserName(lobby.getPlayerName());
+        req.setUserName(name);
         req.setUserId(id);
         lobby.getPlayerClient().sendTCP(req);
     }
 
-    private static void changeColorRequest(int id) {
+    private static void changeColorRequest(String colorString, int id) {
         LOGGER.finer(lobby.getPlayerName() + " sendet ChangeUsercolorRequest");
         ChangeUsercolorRequest req = new ChangeUsercolorRequest();
-        req.setUserColor(lobby.getPlayerColor());
+        req.setUserColor(colorString);
         req.setUserId(id);
         lobby.getPlayerClient().sendTCP(req);
     }
