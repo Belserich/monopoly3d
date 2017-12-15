@@ -29,6 +29,7 @@ import javafx.scene.layout.BackgroundPosition;
 import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 
 /**
@@ -55,6 +56,9 @@ public class LobbyController implements Initializable {
 
     @FXML
     private GridPane grid;
+
+    @FXML
+    private StackPane stackPane;
 
     @FXML
     private ColorPicker playerColor1;
@@ -89,9 +93,10 @@ public class LobbyController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        Image image = new Image("https://cdn.vox-cdn.com/thumbor/LuyPPsKiSwRkL0i87Ur-8GDhSDM=/0x0:1144x566/1200x800/filters:focal(481x192:663x374)/cdn.vox-cdn.com/uploads/chorus_image/image/52679863/Screen_Shot_2017_01_10_at_10.41.40_AM.0.png");
+        Image image = new Image(
+                "https://images-na.ssl-images-amazon.com/images/S/sgp-catalog-images/region_US/di3a2-ACJM5H51YKB-Full-Image_GalleryBackground-en-US-1489722831648._RI_SX940_.jpg");
         grid.setBackground(new Background(new BackgroundImage(image, BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT)));
-
+        // stackPane.setBackground(new Background(new BackgroundImage(new Image("https://images-na.ssl-images-amazon.com/images/S/sgp-catalog-images/region_US/di3a2-ACJM5H51YKB-Full-Image_GalleryBackground-en-US-1489722831648._RI_SX940_.jpg"), BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT)));
         try {
             // Anzeigen der IP Adresse
             lobbyLabelIp.setText(InetAddress.getLocalHost().getHostAddress());
@@ -303,6 +308,7 @@ public class LobbyController implements Initializable {
             LobbyService.addKI(kiNameTextField.getText() + " ("
                     + (String) difficultyComboBox.getSelectionModel().getSelectedItem()
                     + ")", difficulty);
+            kiNameTextField.setText("");
         } else {
             // Fehlermeldung in ComboBox
             difficultyComboBox.setPromptText("Bitte auswählen!");

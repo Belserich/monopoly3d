@@ -17,8 +17,8 @@
 <GridPane fx:id="grid" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="1080.0" minWidth="1920.0" prefHeight="1080.0" prefWidth="1921.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.btu.monopoly.ui.controller.MenuController">
    <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="100.0" />
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="1.0" prefWidth="100.0" />
       <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" percentWidth="30.0" />
-      <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" percentWidth="8.0" prefWidth="100.0" />
    </columnConstraints>
    <rowConstraints>
       <RowConstraints minHeight="10.0" percentHeight="9.0" vgrow="SOMETIMES" />
@@ -35,11 +35,11 @@
       <RowConstraints minHeight="10.0" percentHeight="9.0" prefHeight="30.0" vgrow="SOMETIMES" />
    </rowConstraints>
    <children>
-      <Label alignment="CENTER" contentDisplay="RIGHT" text="Monopoly - Hauptmenü" textFill="WHITE" translateX="350.0">
+      <Label alignment="CENTER" contentDisplay="RIGHT" text="Monopoly" translateX="150.0" translateY="-50.0" GridPane.halignment="LEFT" GridPane.rowIndex="10" GridPane.valignment="CENTER">
          <font>
-            <Font size="53.0" />
+            <Font name="System Bold" size="96.0" />
          </font></Label>
-      <StackPane fx:id="stackPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="20.0" prefWidth="400.0" GridPane.columnIndex="1" GridPane.rowSpan="12">
+      <StackPane fx:id="stackPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="20.0" prefWidth="400.0" GridPane.columnIndex="2" GridPane.rowSpan="12">
          <children>
             <GridPane>
               <columnConstraints>
@@ -59,13 +59,14 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <JFXButton fx:id="startGameButton" contentDisplay="RIGHT" onAction="#startGameButtonAction" prefHeight="80.0" prefWidth="200.0" ripplerFill="RED" style="-fx-background-color: #212121;" text="Spiel starten" textFill="WHITE" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
+                  <JFXButton fx:id="startGameButton" contentDisplay="RIGHT" onAction="#startGameButtonAction" prefHeight="80.0" prefWidth="200.0" ripplerFill="RED" style="-fx-background-color: #212121;" text="Spiel erstellen" textFill="WHITE" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
                   <JFXButton fx:id="closeButton" onAction="#closeButtonAction" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #212121;" text="Schließen" textFill="WHITE" GridPane.halignment="CENTER" GridPane.rowIndex="9" GridPane.valignment="CENTER" />
                   <JFXButton fx:id="joinGameButton" onAction="#joinGameButtonAction" prefHeight="80.0" prefWidth="200.0" style="-fx-background-color: #212121;" text="Spiel beitreten" textFill="WHITE" GridPane.halignment="CENTER" GridPane.rowIndex="6" GridPane.valignment="CENTER" />
                </children>
             </GridPane>
          </children>
       </StackPane>
+      <StackPane prefHeight="150.0" prefWidth="200.0" style="-fx-background-color: #212121;" GridPane.columnIndex="1" GridPane.rowSpan="12" />
 
 
    </children>
