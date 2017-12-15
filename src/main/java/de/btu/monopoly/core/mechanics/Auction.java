@@ -19,8 +19,7 @@ public class Auction {
      * @param property Die Strasse die versteigert werden soll
      * @param players Spieler die an der Auktion teilnehmen
      */
-    public Auction(PropertyField property, Player[] players) {
-        this.property = property;
+    public Auction(Player[] players) {
         this.players = players;
     }
 
