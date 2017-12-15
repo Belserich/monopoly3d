@@ -35,10 +35,6 @@
       <RowConstraints minHeight="10.0" percentHeight="9.0" prefHeight="30.0" vgrow="SOMETIMES" />
    </rowConstraints>
    <children>
-      <Label alignment="CENTER" contentDisplay="RIGHT" text="Monopoly" translateX="150.0" translateY="-50.0" GridPane.halignment="LEFT" GridPane.rowIndex="10" GridPane.valignment="CENTER">
-         <font>
-            <Font name="System Bold" size="96.0" />
-         </font></Label>
       <StackPane fx:id="stackPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="20.0" prefWidth="400.0" GridPane.columnIndex="2" GridPane.rowSpan="12">
          <children>
             <GridPane>

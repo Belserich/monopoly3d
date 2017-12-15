@@ -39,36 +39,36 @@
          </font></Label>
       <Label fx:id="name1Label" text="frei" GridPane.columnIndex="1" GridPane.rowIndex="1">
          <font>
-            <Font size="26.0" />
+            <Font size="30.0" />
          </font></Label>
       <Label fx:id="name2Label" text="frei" GridPane.columnIndex="1" GridPane.rowIndex="2">
          <font>
-            <Font size="26.0" />
+            <Font size="30.0" />
          </font></Label>
       <Label fx:id="name3Label" text="frei" GridPane.columnIndex="1" GridPane.rowIndex="3">
          <font>
-            <Font size="26.0" />
+            <Font size="30.0" />
          </font></Label>
       <Label fx:id="name4Label" text="frei" GridPane.columnIndex="1" GridPane.rowIndex="4">
          <font>
-            <Font size="26.0" />
+            <Font size="30.0" />
          </font></Label>
       <Label fx:id="name5Label" text="frei" GridPane.columnIndex="1" GridPane.rowIndex="5">
          <font>
-            <Font size="26.0" />
+            <Font size="30.0" />
          </font></Label>
       <Label fx:id="name6Label" text="frei" GridPane.columnIndex="1" GridPane.rowIndex="6">
          <font>
-            <Font size="26.0" />
+            <Font size="30.0" />
          </font></Label>
-      <JFXColorPicker fx:id="playerColor1" disable="true" onAction="#pushColorPick0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-      <JFXColorPicker fx:id="playerColor2" disable="true" onAction="#pushColorPick1" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-      <JFXColorPicker fx:id="playerColor3" disable="true" onAction="#pushColorPick2" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-      <JFXColorPicker fx:id="playerColor4" disable="true" onAction="#pushColorPick3" GridPane.columnIndex="2" GridPane.rowIndex="4" />
-      <JFXColorPicker fx:id="playerColor5" disable="true" onAction="#pushColorPick4" GridPane.columnIndex="2" GridPane.rowIndex="5" />
-      <JFXColorPicker fx:id="playerColor6" disable="true" onAction="#pushColorPick5" GridPane.columnIndex="2" GridPane.rowIndex="6" />
+      <JFXColorPicker fx:id="playerColor1" disable="true" onAction="#pushColorPick0" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+      <JFXColorPicker fx:id="playerColor2" disable="true" onAction="#pushColorPick1" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+      <JFXColorPicker fx:id="playerColor3" disable="true" onAction="#pushColorPick2" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
+      <JFXColorPicker fx:id="playerColor4" disable="true" onAction="#pushColorPick3" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
+      <JFXColorPicker fx:id="playerColor5" disable="true" onAction="#pushColorPick4" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="5" />
+      <JFXColorPicker fx:id="playerColor6" disable="true" onAction="#pushColorPick5" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="6" />
       <JFXButton fx:id="kiButton" minHeight="80.0" minWidth="200.0" onAction="#kiButtonAction" style="-fx-background-color: #212121;" text="KI hinzufügen" textFill="WHITE" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.valignment="CENTER" />
-      <JFXComboBox fx:id="difficultyComboBox" focusColor="BLACK" prefHeight="39.0" prefWidth="218.0" promptText="Ki Schwierigkeit" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
+      <JFXComboBox fx:id="difficultyComboBox" focusColor="BLACK" prefHeight="40.0" prefWidth="220.0" promptText="Ki Schwierigkeit" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
       <JFXTextField fx:id="kiNameTextField" focusColor="BLACK" maxHeight="39.0" maxWidth="218.0" prefHeight="39.0" prefWidth="218.0" promptText="Name" unFocusColor="BLACK" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER" />
       <Label fx:id="lobbyLabelIp" text="IP Adresse" textOverrun="CLIP" GridPane.columnIndex="2">
          <font>
