@@ -14,6 +14,15 @@ public class AuctionService {
     private static int[][] aucPlayers;
 
     /**
+     * Initialisierung des "Auktionshauses"
+     *
+     * @param players
+     */
+    public static void initAuction(Player[] players) {
+        auc = new Auction(players);
+    }
+
+    /**
      * Startet die Auktion, ermittelt den Höchstbietenden und übergibt den Gewinner, sowie den Preis an deren Klassenvariablen
      */
     public static void startAuction(PropertyField prop) {
