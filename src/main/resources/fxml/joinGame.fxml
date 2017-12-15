@@ -13,10 +13,10 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane fx:id="joinGrid" minHeight="1080.0" minWidth="1920.0" style="-fx-background-color: #0d47a1;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.btu.monopoly.ui.controller.JoinGameController">
+<GridPane fx:id="grid" minHeight="1080.0" minWidth="1920.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.btu.monopoly.ui.controller.JoinGameController">
   <columnConstraints>
     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="100.0" />
-      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="30.0" prefWidth="100.0" />
+      <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="30.0" prefWidth="100.0" />
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="8.0" prefWidth="100.0" />
   </columnConstraints>
   <rowConstraints>
@@ -29,20 +29,12 @@
       <RowConstraints minHeight="10.0" percentHeight="60.0" prefHeight="30.0" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
-      <Label fx:id="ipLabel" text="Gib hier die Adresse des Hosts ein:  " textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-      <Label fx:id="nameLabel" text="Gib hier deinen Namen ein:" textFill="WHITE" GridPane.columnIndex="1" />
+      <Label fx:id="ipLabel" text="Gib hier die Adresse des Hosts ein:  " GridPane.columnIndex="1" GridPane.rowIndex="2" />
+      <Label fx:id="nameLabel" text="Gib hier deinen Namen ein:" GridPane.columnIndex="1" />
       <Label fx:id="errorLabel" alignment="CENTER" textFill="RED" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER" />
-      <JFXTextField fx:id="nameTextField" focusColor="WHITE" promptText="Name" unFocusColor="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="1">
-         <effect>
-            <ColorAdjust brightness="1.0" />
-         </effect>
-      </JFXTextField>
-      <JFXTextField fx:id="ipAdressTextField" focusColor="WHITE" promptText="IP Adresse" unFocusColor="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="3">
-         <effect>
-            <ColorAdjust brightness="1.0" />
-         </effect>
-      </JFXTextField>
-      <JFXButton fx:id="searchButton" minHeight="60.0" minWidth="200.0" onAction="#searchButtonAction" style="-fx-background-color: #5472d3;" text="Beitreten" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.valignment="CENTER" />
-      <JFXButton fx:id="backButton" minHeight="40.0" minWidth="200.0" onAction="#backButtonAction" style="-fx-background-color: #5472d3;" text="Zurück" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="6" GridPane.valignment="CENTER" />
+      <JFXTextField fx:id="nameTextField" focusColor="BLACK" promptText="Name" unFocusColor="BLACK" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+      <JFXTextField fx:id="ipAdressTextField" focusColor="BLACK" promptText="IP Adresse" unFocusColor="BLACK" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+      <JFXButton fx:id="searchButton" minHeight="60.0" minWidth="200.0" onAction="#searchButtonAction" style="-fx-background-color: #212121;" text="Beitreten" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.valignment="CENTER" />
+      <JFXButton fx:id="backButton" minHeight="40.0" minWidth="200.0" onAction="#backButtonAction" style="-fx-background-color: #212121;" text="Zurück" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="6" GridPane.valignment="CENTER" />
    </children>
 </GridPane>

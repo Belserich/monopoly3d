@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="1080.0" minWidth="1920.0" style="-fx-background-color: #0d47a1;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.btu.monopoly.ui.controller.MenuController">
+<GridPane fx:id="grid" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="1080.0" minWidth="1920.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.btu.monopoly.ui.controller.MenuController">
    <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="80.0" />
       <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" percentWidth="20.0" />
@@ -37,9 +37,9 @@
          <font>
             <Font size="53.0" />
          </font></Label>
-      <JFXButton fx:id="joinGameButton" onAction="#joinGameButtonAction" prefHeight="80.0" prefWidth="200.0" style="-fx-background-color: #5472d3;" text="Spiel beitreten" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-      <JFXButton fx:id="startGameButton" contentDisplay="RIGHT" onAction="#startGameButtonAction" prefHeight="80.0" prefWidth="200.0" ripplerFill="RED" style="-fx-background-color: #5472d3;" text="Spiel starten" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-      <JFXButton fx:id="closeButton" onAction="#closeButtonAction" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #5472d3;" text="Schließen" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+      <JFXButton fx:id="joinGameButton" onAction="#joinGameButtonAction" prefHeight="80.0" prefWidth="200.0" style="-fx-background-color: #212121;" text="Spiel beitreten" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+      <JFXButton fx:id="startGameButton" contentDisplay="RIGHT" onAction="#startGameButtonAction" prefHeight="80.0" prefWidth="200.0" ripplerFill="RED" style="-fx-background-color: #212121;" text="Spiel starten" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+      <JFXButton fx:id="closeButton" onAction="#closeButtonAction" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #212121;" text="Schließen" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="7" />
 
 
    </children>

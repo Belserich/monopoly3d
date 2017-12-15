@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane fx:id="LobbyGrid" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="1080.0" minWidth="1920.0" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #0d47a1;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.btu.monopoly.ui.controller.LobbyController">
+<GridPane fx:id="grid" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="1080.0" minWidth="1920.0" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.btu.monopoly.ui.controller.LobbyController">
   <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="5.0" prefWidth="100.0" />
     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -32,31 +32,31 @@
       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
-      <Label fx:id="lobbyLabel" text="Lobby:" textFill="WHITE" textOverrun="CLIP" GridPane.columnIndex="1">
+      <Label fx:id="lobbyLabel" text="Lobby:" textOverrun="CLIP" GridPane.columnIndex="1">
          <font>
             <Font size="56.0" />
          </font></Label>
-      <Label fx:id="name1Label" text="frei" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="1">
+      <Label fx:id="name1Label" text="frei" GridPane.columnIndex="1" GridPane.rowIndex="1">
          <font>
             <Font size="26.0" />
          </font></Label>
-      <Label fx:id="name2Label" text="frei" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="2">
+      <Label fx:id="name2Label" text="frei" GridPane.columnIndex="1" GridPane.rowIndex="2">
          <font>
             <Font size="26.0" />
          </font></Label>
-      <Label fx:id="name3Label" text="frei" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="3">
+      <Label fx:id="name3Label" text="frei" GridPane.columnIndex="1" GridPane.rowIndex="3">
          <font>
             <Font size="26.0" />
          </font></Label>
-      <Label fx:id="name4Label" text="frei" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="4">
+      <Label fx:id="name4Label" text="frei" GridPane.columnIndex="1" GridPane.rowIndex="4">
          <font>
             <Font size="26.0" />
          </font></Label>
-      <Label fx:id="name5Label" text="frei" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="5">
+      <Label fx:id="name5Label" text="frei" GridPane.columnIndex="1" GridPane.rowIndex="5">
          <font>
             <Font size="26.0" />
          </font></Label>
-      <Label fx:id="name6Label" text="frei" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="6">
+      <Label fx:id="name6Label" text="frei" GridPane.columnIndex="1" GridPane.rowIndex="6">
          <font>
             <Font size="26.0" />
          </font></Label>
@@ -66,20 +66,14 @@
       <JFXColorPicker fx:id="playerColor4" disable="true" onAction="#pushColorPick3" GridPane.columnIndex="2" GridPane.rowIndex="4" />
       <JFXColorPicker fx:id="playerColor5" disable="true" onAction="#pushColorPick4" GridPane.columnIndex="2" GridPane.rowIndex="5" />
       <JFXColorPicker fx:id="playerColor6" disable="true" onAction="#pushColorPick5" GridPane.columnIndex="2" GridPane.rowIndex="6" />
-      <JFXButton fx:id="playButton" minHeight="80.0" minWidth="200.0" onAction="#playButtonAction" style="-fx-background-color: #5472d3;" text="Spiel starten" textFill="WHITE" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
-      <JFXButton fx:id="leaveLobbyButton" minHeight="80.0" minWidth="200.0" onAction="#leaveLobbyButtonAction" style="-fx-background-color: #5472d3;" text="Lobby verlassen" textFill="WHITE" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="6" GridPane.valignment="CENTER" />
-      <JFXButton fx:id="kiButton" minHeight="80.0" minWidth="200.0" onAction="#kiButtonAction" style="-fx-background-color: #5472d3;" text="KI hinzufügen" textFill="WHITE" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.valignment="CENTER" />
-      <JFXComboBox fx:id="difficultyComboBox" prefHeight="39.0" prefWidth="218.0" promptText="Ki Schwierigkeit" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
-         <effect>
-            <ColorAdjust brightness="1.0" />
-         </effect></JFXComboBox>
-      <JFXTextField fx:id="kiNameTextField" focusColor="WHITE" maxHeight="39.0" maxWidth="218.0" prefHeight="39.0" prefWidth="218.0" promptText="Name" unFocusColor="WHITE" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER">
-         <effect>
-            <ColorAdjust brightness="1.0" />
-         </effect></JFXTextField>
+      <JFXButton fx:id="playButton" minHeight="80.0" minWidth="200.0" onAction="#playButtonAction" style="-fx-background-color: #212121;" text="Spiel starten" textFill="WHITE" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
+      <JFXButton fx:id="leaveLobbyButton" minHeight="80.0" minWidth="200.0" onAction="#leaveLobbyButtonAction" style="-fx-background-color: #212121;" text="Lobby verlassen" textFill="WHITE" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="6" GridPane.valignment="CENTER" />
+      <JFXButton fx:id="kiButton" minHeight="80.0" minWidth="200.0" onAction="#kiButtonAction" style="-fx-background-color: #212121;" text="KI hinzufügen" textFill="WHITE" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.valignment="CENTER" />
+      <JFXComboBox fx:id="difficultyComboBox" focusColor="BLACK" prefHeight="39.0" prefWidth="218.0" promptText="Ki Schwierigkeit" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
+      <JFXTextField fx:id="kiNameTextField" focusColor="BLACK" maxHeight="39.0" maxWidth="218.0" prefHeight="39.0" prefWidth="218.0" promptText="Name" unFocusColor="BLACK" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER" />
       <Label fx:id="lobbyLabelIp" text="IP Adresse" textFill="WHITE" textOverrun="CLIP" GridPane.columnIndex="2">
          <font>
-            <Font size="56.0" />
+            <Font size="44.0" />
          </font>
       </Label>
    </children>
