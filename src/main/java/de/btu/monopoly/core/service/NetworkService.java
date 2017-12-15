@@ -1,5 +1,14 @@
 package de.btu.monopoly.core.service;
 
+import de.btu.monopoly.net.networkClasses.Lobby.RefreshLobbyResponse;
+import de.btu.monopoly.net.networkClasses.Lobby.ChangeUsernameRequest;
+import de.btu.monopoly.net.networkClasses.Lobby.BroadcastRandomSeedRequest;
+import de.btu.monopoly.net.networkClasses.Lobby.JoinRequest;
+import de.btu.monopoly.net.networkClasses.Lobby.JoinImpossibleResponse;
+import de.btu.monopoly.net.networkClasses.Lobby.JoinResponse;
+import de.btu.monopoly.net.networkClasses.Lobby.GamestartRequest;
+import de.btu.monopoly.net.networkClasses.Lobby.GamestartResponse;
+import de.btu.monopoly.net.networkClasses.Lobby.AddKiRequest;
 import com.esotericsoftware.kryo.Kryo;
 import de.btu.monopoly.core.mechanics.Trade;
 import de.btu.monopoly.core.mechanics.TradeOffer;
