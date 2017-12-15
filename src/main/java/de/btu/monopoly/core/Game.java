@@ -406,7 +406,13 @@ public class Game {
     }
 
     private void betPhase(PropertyField property) {
-        AuctionService.startAuction(property);
+
+        Thread t = new Thread() {
+            @Override
+            public void run() {
+                AuctionService.startAuction(property);
+            }
+        };
     }
 
     public GameBoard getBoard() {
