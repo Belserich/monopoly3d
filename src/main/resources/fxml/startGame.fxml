@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane fx:id="createLobbyGrid" minHeight="1080.0" minWidth="1920.0" style="-fx-background-color: #0d47a1;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.btu.monopoly.ui.controller.startGameController">
+<GridPane fx:id="createLobbyGrid" minHeight="1080.0" minWidth="1920.0" style="-fx-background-color: #0d47a1;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.btu.monopoly.ui.controller.StartGameController">
    <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="100.0" />
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="30.0" />

@@ -105,7 +105,7 @@ public class LobbyService extends Listener {
     public static void changeColor(Color color, int id) {
         String colString = color.toString();
         lobby.setPlayerColor(colString);
-        changeColorRequest(colString, lobby.getPlayerId());
+        changeColorRequest(colString, id);
     }
 
     /**
