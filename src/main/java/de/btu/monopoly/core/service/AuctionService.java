@@ -1,6 +1,7 @@
 package de.btu.monopoly.core.service;
 
 import de.btu.monopoly.core.mechanics.Auction;
+import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.player.Player;
 
 /**
@@ -9,10 +10,13 @@ import de.btu.monopoly.data.player.Player;
  */
 public class AuctionService {
 
+    private static Auction auc;
+    private static int[][] aucPlayers;
+
     /**
      * Startet die Auktion, ermittelt den Höchstbietenden und übergibt den Gewinner, sowie den Preis an deren Klassenvariablen
      */
-    public static void startAuction(Auction auc) {
+    public static void startAuction(PropertyField prop) {
 
         Player[] players = auc.getPlayers();
         int playerNumb = players.length;
@@ -39,11 +43,11 @@ public class AuctionService {
      * @param i
      * @param bid
      */
-    private boolean setBid(int[][] aucPlayers, int i, int bid) {
+    private boolean setBid(int i, int bid) {
 
         boolean isBidOk = true;
 
-        if (bid > getHighestBid(aucPlayers)) {
+        if (bid > getHighestBid()) {
             aucPlayers[i][1] = bid;
         } else {
             isBidOk = false;
@@ -58,7 +62,7 @@ public class AuctionService {
      * @param aucPlayers
      * @return
      */
-    private int[][] playerExit(int[][] aucPlayers, int i) {
+    private int[][] playerExit(int i) {
 
         aucPlayers[i][2] = 0;
 
@@ -71,7 +75,7 @@ public class AuctionService {
      * @param aucPlayers
      * @return playerID
      */
-    private int getHighestBid(int[][] aucPlayers) {
+    private int getHighestBid() {
 
         int highestBid = -1;
 
@@ -90,7 +94,7 @@ public class AuctionService {
      * @param aucPlayers
      * @return playerID
      */
-    private int getHighestBidder(int[][] aucPlayers) {
+    private int getHighestBidder() {
 
         int playerID = -1;
         int highestBid = -1;
@@ -110,7 +114,7 @@ public class AuctionService {
      * @param aucPlayers
      * @return stillActive
      */
-    private boolean auctionStillActive(int[][] aucPlayers) {
+    private boolean auctionStillActive() {
 
         int activCount = 0;
         boolean stillActive = false;
