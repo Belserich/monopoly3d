@@ -42,4 +42,8 @@ public class Auction {
         return this.property;
     }
 
+    public void setProperty(PropertyField prop) {
+        this.property = prop;
+    }
+
 }
