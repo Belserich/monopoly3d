@@ -3,6 +3,7 @@ package de.btu.monopoly.core.service;
 import de.btu.monopoly.core.mechanics.Auction;
 import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.player.Player;
+import de.btu.monopoly.input.IOService;
 
 /**
  *
@@ -24,11 +25,14 @@ public class AuctionService {
 
     /**
      * Startet die Auktion, ermittelt den Höchstbietenden und übergibt den Gewinner, sowie den Preis an deren Klassenvariablen
+     *
+     * @param prop
      */
     public static void startAuction(PropertyField prop) {
 
         Player[] players = auc.getPlayers();
         int playerNumb = players.length;
+        auc.setProperty(prop);
 
         /*
         Erstelle ein int[][] welches die ID's und Gebote der Spieler speichert
@@ -40,9 +44,12 @@ public class AuctionService {
             aucPlayers[i][2] = 1;                       //Spieler noch aktiv? 1 = ja, 0 = nein
         }
 
-        /*
-            Spielogik
-         */
+        while (auctionStillActive()) {
+            IOService.sleep(500);
+        }
+
+        FieldService.buyPropertyField(auc.getWinner(), auc.getProperty(), auc.getPropPrice());
+
     }
 
     /**
@@ -120,10 +127,9 @@ public class AuctionService {
     /**
      * Ueberprueft ob die Auktion noch genug Bieter hat
      *
-     * @param aucPlayers
      * @return stillActive
      */
-    private boolean auctionStillActive() {
+    public static boolean auctionStillActive() {
 
         int activCount = 0;
         boolean stillActive = false;
