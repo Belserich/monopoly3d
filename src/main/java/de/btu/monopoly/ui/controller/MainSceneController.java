@@ -5,8 +5,6 @@
  */
 package de.btu.monopoly.ui.controller;
 
-import de.btu.monopoly.core.Game;
-import de.btu.monopoly.core.GameBoard;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.menu.Lobby;
 import de.btu.monopoly.net.client.GameClient;
@@ -23,7 +21,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.effect.BlendMode;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
@@ -37,7 +34,7 @@ import javafx.stage.Stage;
  */
 public class MainSceneController implements Initializable {
 
-  // TODO  
+    // TODO
 //    private Game game;
 //    private GameBoard board;
     private Player[] players;
@@ -137,13 +134,12 @@ public class MainSceneController implements Initializable {
     @FXML
     private Pane schlossAllee;
 
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-      // TODO
+        // TODO
 //        game = new Game(players, client, 0);
-//        board = game.getBoard(); 
+//        board = game.getBoard();
         // User aus Lobby holen
         if (Lobby.getUsers() != null) {
             if (Lobby.getUsers().length >= 1) {
@@ -162,7 +158,7 @@ public class MainSceneController implements Initializable {
             if (Lobby.getUsers().length >= 4) {
                 player3Button.setText(Lobby.getUsers()[3][1]);
             } else {
-                player3Button.setBlendMode(BlendMode.valueOf(""));
+                player3Button.setText("");
             }
             if (Lobby.getUsers().length >= 5) {
                 player4Button.setText(Lobby.getUsers()[4][1]);
@@ -200,7 +196,7 @@ public class MainSceneController implements Initializable {
 
         //TODO
 //        if(players[0].getPosition()== Integer.parseInt(board.getFields()[0].toString())){
-//       
+//
 //    }
 //        goField.setId(board.getFields()[0].toString());
 //        badStr.setId(board.getFields()[1].toString());
