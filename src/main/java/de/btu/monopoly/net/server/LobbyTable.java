@@ -32,6 +32,13 @@ public class LobbyTable extends Listener {
         this.server = server;
     }
 
+    /**
+     * Registriert einen neuen User in der Lobby und verteilt die Liste neu
+     *
+     * @param name des neuen Users
+     * @param connection des Clients, welcher den neuen User besitzt
+     * @param kiLevel des Users (0 falls menschlich, 1-3 KI-Stufen)
+     */
     public void registerUser(String name, Connection connection, int kiLevel) {
         LOGGER.finer("User wird registriert");
         String[][] tempusers;
@@ -64,12 +71,18 @@ public class LobbyTable extends Listener {
         users = tempusers;
 
         if (kiLevel == 0) {
-            joinRespone(playerID, connection);
+            joinRespone(playerID, connection);  //sendet (menschl.) Spieler seine erzeugte ID zu
         }
         playerID++;
-        refreshLobbyResponse();
+        refreshLobbyResponse();                 //verteilt die neue Users[][]
     }
 
+    /**
+     * aendert den Namen eines Users und verteilt die aktualisierte Liste
+     *
+     * @param id des Users
+     * @param name neuer Name des Users
+     */
     public void changeUserName(int id, String name) {
         LOGGER.finer("Username wird geändert");
         String idstr = Integer.toString(id);
@@ -78,10 +91,15 @@ public class LobbyTable extends Listener {
                 users[i][1] = name;
             }
         }
-
         refreshLobbyResponse();
     }
 
+    /**
+     * aendert die Farbe eines Users und verteilt die aktualisierte Liste
+     *
+     * @param id des Users
+     * @param userColor neue Farbe des Users
+     */
     private void changeUserColor(int id, String userColor) {
         LOGGER.finer("Usercolor wird geändert");
         String idstr = Integer.toString(id);
@@ -94,29 +112,35 @@ public class LobbyTable extends Listener {
         refreshLobbyResponse();
     }
 
-    public void deleteUser(Connection con) {
+    /**
+     * entfernt einen User aus der Liste und verteilt die aktualisierte Liste
+     *
+     * @param con
+     */
+    public void deleteUser(Connection con, int userID) {
         LOGGER.finer("User wird entfernt");
         String connectionString = con.toString();
-        int userToDelete = -1;
 
-        // lokalisieren
-        for (int i = 0; i < users.length; i++) {
-            if (users[i][2].equals(connectionString)) {
-                userToDelete = i;
+        // lokalisieren, falls keineID, dann Connection
+        if (userID == -1) {
+            for (int i = 0; i < users.length; i++) {
+                if (users[i][2].equals(connectionString)) {
+                    userID = i;
+                }
             }
-        }
-        if (userToDelete == -1) {
-            LOGGER.warning("deleteUser fehlgeschlagen: nicht lokalisierbar");
+            if (userID == -1) {
+                LOGGER.warning("deleteUser fehlgeschlagen: nicht lokalisierbar");
+            }
         }
 
         //loeschen
         String[][] tempusers = new String[users.length - 1][3];
-        for (int j = 0; j < userToDelete; j++) {
+        for (int j = 0; j < userID; j++) {
             tempusers[j][0] = users[j][0];
             tempusers[j][1] = users[j][1];
             tempusers[j][2] = users[j][2];
         }
-        for (int k = userToDelete + 1; k < users.length; k++) {
+        for (int k = userID + 1; k < users.length; k++) {
             tempusers[k - 1][0] = users[k][0];
             tempusers[k - 1][1] = users[k][1];
             tempusers[k - 1][2] = users[k][2];
@@ -126,10 +150,6 @@ public class LobbyTable extends Listener {
         users = tempusers;
 
         refreshLobbyResponse();
-    }
-
-    public void createGameTable() {
-        //TODO evtl für Auktion!!!
     }
 
     // RESPONSES:____________________________________________
@@ -149,6 +169,7 @@ public class LobbyTable extends Listener {
     }
 
     public void gamestartResponse() {
+
         GamestartResponse gares = new GamestartResponse();
         server.sendToAllTCP(gares);
         Thread.currentThread().interrupt();
@@ -185,7 +206,6 @@ public class LobbyTable extends Listener {
                 LOGGER.finer("GamestartRequest erhalten");
                 gameStarted = true;
                 gamestartResponse();
-                createGameTable();
             } else if (object instanceof BroadcastRandomSeedRequest) {
                 BroadcastRandomSeedRequest req = (BroadcastRandomSeedRequest) object;
                 randomSeed = req.getSeed();
@@ -195,7 +215,7 @@ public class LobbyTable extends Listener {
 
     @Override
     public void disconnected(Connection connection) {
-        deleteUser(connection);
+        deleteUser(connection, -1);
     }
 
     public void shuffle() { //TODO ausprobieren und implementieren

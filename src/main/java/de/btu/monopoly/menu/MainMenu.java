@@ -7,7 +7,7 @@ package de.btu.monopoly.menu;
 
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.server.GameServer;
-import de.btu.monopoly.ui.controller.startGameController;
+import de.btu.monopoly.ui.controller.StartGameController;
 import java.util.logging.Logger;
 
 /**
@@ -30,7 +30,7 @@ public class MainMenu {
         client.connect(localHost);
         LOGGER.info("Die ServerIP ist " + server.getServerIP());
 
-        startGameController.client = client;
+        StartGameController.client = client;
     }
 
     public void joinGame(String ip) {

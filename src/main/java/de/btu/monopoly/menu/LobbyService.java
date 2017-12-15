@@ -29,6 +29,12 @@ public class LobbyService extends Listener {
     private static final Logger LOGGER = Logger.getLogger(LobbyService.class.getCanonicalName());
     private static Lobby lobby;
 
+    /**
+     * Methode die aufgerufen wird um der Lobby beizutreten
+     *
+     * @param client des Spielers der beitreten will
+     * @param host gibt an, ob der Spieler der Host ist
+     */
     public static void joinLobby(GameClient client, boolean host) {
         LOGGER.setLevel(Level.FINER);
         // Spielernamen voreintragen
@@ -52,6 +58,12 @@ public class LobbyService extends Listener {
         joinRequest();
     }
 
+    /**
+     * Fuegt der Lobby einen Computerspieler hinzu
+     *
+     * @param name des Computerspielers
+     * @param kiLevel des Computerspielers [1,3]
+     */
     public static void addKI(String name, int kiLevel) {
         if (kiLevel < 1 || kiLevel > 3) {
             LOGGER.warning("kein gültiges KI Level eingegeben!");
@@ -64,23 +76,62 @@ public class LobbyService extends Listener {
 
     }
 
+    /**
+     * aendert den Namen eines Spielers (nur fuer KI vorgesehen)
+     *
+     * @param name neuer Name des Spielers (KI)
+     * @param id die der Spieler besitzt (users[i][0])
+     */
+    public static void changeName(String name, int id) {
+        changeUsernameRequest(name, id);
+    }
+
+    /**
+     * aendert den Namen des Spielers
+     *
+     * @param name neuer Name des Spielers
+     */
     public static void changeName(String name) {
         lobby.setPlayerName(name);
-        changeUsernameRequest();
+        changeName(name, lobby.getPlayerId());
     }
 
+    /**
+     * aendert die Farbe eines Spielers (nur fuer KI vorgesehen)
+     *
+     * @param color neue Farbe des Spielers
+     * @param id die der Spieler besitzt (users[i][0])
+     */
+    public static void changeColor(Color color, int id) {
+        String colString = color.toString();
+        lobby.setPlayerColor(colString);
+        changeColorRequest(colString, id);
+    }
+
+    /**
+     * aendert die Farbe des Spielers
+     *
+     * @param color neue Farbe des Spielers
+     */
     public static void changeColor(Color color) {
-        lobby.setPlayerColor(color.toString());
-        changeColorRequest();
+        changeColor(color, lobby.getPlayerId());
     }
 
-    public static void startGame() {//TODO
+    /**
+     * erstellt eine Gameinstanz und startet das Spiel
+     */
+    public static void startGame() {
         Game controller = new Game(generatePlayerArray(), lobby.getPlayerClient(), lobby.getRandomSeed());
         lobby.getPlayerClient().setGame(controller);
         controller.init();
         controller.start();
     }
 
+    /**
+     * erzeugt aus dem users[][] ein Player[], welches fuer das Spiel benoetigt wird
+     *
+     * @return Player[] fuer den Parameter der Game Instanz
+     */
     private static Player[] generatePlayerArray() {
         String[][] users = lobby.getUsers();
         Player[] players = new Player[users.length];
@@ -96,10 +147,12 @@ public class LobbyService extends Listener {
             }
             players[i] = player;
         }
-
         return players;
     }
 
+    /**
+     * erzeugt den Randomseed, welcher fur das Spiel benoetigt wird
+     */
     private static void generateRandomSeed() {
         long seed = new Random().nextLong();
         BroadcastRandomSeedRequest req = new BroadcastRandomSeedRequest();
@@ -116,19 +169,19 @@ public class LobbyService extends Listener {
 
     }
 
-    private static void changeUsernameRequest() {
+    private static void changeUsernameRequest(String name, int id) {
         LOGGER.finer(lobby.getPlayerName() + " sendet ChangeUsernameRequest");
         ChangeUsernameRequest req = new ChangeUsernameRequest();
-        req.setUserName(lobby.getPlayerName());
-        req.setUserId(lobby.getPlayerId());
+        req.setUserName(name);
+        req.setUserId(id);
         lobby.getPlayerClient().sendTCP(req);
     }
 
-    private static void changeColorRequest() {
+    private static void changeColorRequest(String colorString, int id) {
         LOGGER.finer(lobby.getPlayerName() + " sendet ChangeUsercolorRequest");
         ChangeUsercolorRequest req = new ChangeUsercolorRequest();
-        req.setUserColor(lobby.getPlayerColor());
-        req.setUserId(lobby.getPlayerId());
+        req.setUserColor(colorString);
+        req.setUserId(id);
         lobby.getPlayerClient().sendTCP(req);
     }
 
@@ -138,6 +191,7 @@ public class LobbyService extends Listener {
     }
 
     //LISTENER:______________________________________________________________
+    @Override
     public void received(Connection connection, Object object) {
 
         if (object instanceof FrameworkMessage) {
@@ -174,7 +228,7 @@ public class LobbyService extends Listener {
                 System.out.println("Eingabe machen für Spielstart");
             }
 
-        } else if (object instanceof GamestartResponse) { //TODO elegantere Loesung
+        } else if (object instanceof GamestartResponse) {
             LOGGER.finer("GamestartResponse wird verarbeitet");
 
             Thread t = new Thread() {

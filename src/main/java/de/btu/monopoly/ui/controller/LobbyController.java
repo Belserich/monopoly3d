@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.URL;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -58,7 +59,11 @@ public class LobbyController implements Initializable {
     @FXML
     private ColorPicker playerColor6;
 
+    // ID des eigenen Spielers
     private int id = -1;
+
+    // ID von KIs
+    private ArrayList<Integer> kiID = new ArrayList<Integer>();
 
     @FXML
     private Button playButton;
@@ -232,22 +237,27 @@ public class LobbyController implements Initializable {
             switch (Lobby.getUsers().length) {
                 case 1: {
                     playerColor2.setDisable(false);
+                    kiID.add(1);
                     break;
                 }
                 case 2: {
                     playerColor3.setDisable(false);
+                    kiID.add(2);
                     break;
                 }
                 case 3: {
                     playerColor4.setDisable(false);
+                    kiID.add(3);
                     break;
                 }
                 case 4: {
                     playerColor5.setDisable(false);
+                    kiID.add(4);
                     break;
                 }
                 case 5: {
                     playerColor6.setDisable(false);
+                    kiID.add(5);
                     break;
                 }
 
@@ -282,33 +292,64 @@ public class LobbyController implements Initializable {
                     + (String) difficultyComboBox.getSelectionModel().getSelectedItem()
                     + ")", difficulty);
         } else {
+            // Fehlermeldung in ComboBox
             difficultyComboBox.setPromptText("Bitte auswählen!");
         }
     }
 
     // Farben aktualisieren
     @FXML
-    private void pushColorPick(ActionEvent event) throws IOException, InterruptedException {
+    private void pushColorPick0(ActionEvent event) throws IOException, InterruptedException {
 
         // Nur die aktiven Farben werden gesendet
         if (!playerColor1.isDisabled()) {
             LobbyService.changeColor(playerColor1.getValue());
         }
-        if (!playerColor2.isDisabled()) {
+
+    }
+
+    @FXML
+    private void pushColorPick1(ActionEvent event) throws IOException, InterruptedException {
+        if (kiID.contains(1)) {
+            LobbyService.changeColor(playerColor2.getValue(), 1);
+        } else {
             LobbyService.changeColor(playerColor2.getValue());
         }
-        if (!playerColor3.isDisabled()) {
+    }
+
+    @FXML
+    private void pushColorPick2(ActionEvent event) throws IOException, InterruptedException {
+        if (kiID.contains(2)) {
+            LobbyService.changeColor(playerColor3.getValue(), 2);
+        } else {
             LobbyService.changeColor(playerColor3.getValue());
         }
-        if (!playerColor4.isDisabled()) {
+    }
+
+    @FXML
+    private void pushColorPick3(ActionEvent event) throws IOException, InterruptedException {
+        if (kiID.contains(3)) {
+            LobbyService.changeColor(playerColor4.getValue(), 3);
+        } else {
             LobbyService.changeColor(playerColor4.getValue());
         }
-        if (!playerColor5.isDisabled()) {
+    }
+
+    @FXML
+    private void pushColorPick4(ActionEvent event) throws IOException, InterruptedException {
+        if (kiID.contains(4)) {
+            LobbyService.changeColor(playerColor5.getValue(), 4);
+        } else {
             LobbyService.changeColor(playerColor5.getValue());
         }
-        if (!playerColor6.isDisabled()) {
+    }
+
+    @FXML
+    private void pushColorPick5(ActionEvent event) throws IOException, InterruptedException {
+        if (kiID.contains(5)) {
+            LobbyService.changeColor(playerColor6.getValue(), 5);
+        } else {
             LobbyService.changeColor(playerColor6.getValue());
         }
-
     }
 }
