@@ -114,10 +114,6 @@ public class LobbyTable extends Listener {
         refreshLobbyResponse();
     }
 
-    public void createGameTable() {
-        //TODO evtl für Auktion!!!
-    }
-
     // RESPONSES:____________________________________________
     public void joinRespone(int id, Connection connection) {
         JoinResponse joinres = new JoinResponse();
@@ -168,8 +164,9 @@ public class LobbyTable extends Listener {
             } else if (object instanceof GamestartRequest) {
                 LOGGER.finer("GamestartRequest erhalten");
                 gameStarted = true;
+                shuffle();
+                refreshLobbyResponse();
                 gamestartResponse();
-                createGameTable();
             } else if (object instanceof BroadcastRandomSeedRequest) {
                 BroadcastRandomSeedRequest req = (BroadcastRandomSeedRequest) object;
                 randomSeed = req.getSeed();

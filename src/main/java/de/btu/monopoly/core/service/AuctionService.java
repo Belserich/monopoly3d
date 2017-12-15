@@ -1,5 +1,7 @@
 package de.btu.monopoly.core.service;
 
+import com.esotericsoftware.kryonet.Connection;
+import com.esotericsoftware.kryonet.Listener;
 import de.btu.monopoly.core.mechanics.Auction;
 import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.player.Player;
@@ -9,7 +11,7 @@ import de.btu.monopoly.input.IOService;
  *
  * @author patrick
  */
-public class AuctionService {
+public class AuctionService extends Listener {
 
     private static Auction auc;
     private static int[][] aucPlayers;
@@ -35,7 +37,8 @@ public class AuctionService {
         auc.setProperty(prop);
 
         /*
-        Erstelle ein int[][] welches die ID's und Gebote der Spieler speichert
+         * Erstelle ein int[][] welches die ID's und Gebote der Spieler speichert
+         *
          */
         int[][] aucPlayers = new int[playerNumb][3];
         for (int i = 0; i < playerNumb; i++) {
@@ -44,6 +47,7 @@ public class AuctionService {
             aucPlayers[i][2] = 1;                       //Spieler noch aktiv? 1 = ja, 0 = nein
         }
 
+        // joinAuction() <- schickt ein leeres Paket (JoinAuctionRequest) an den Server
         while (auctionStillActive()) {
             IOService.sleep(500);
         }
@@ -55,7 +59,6 @@ public class AuctionService {
     /**
      * Setzt das Gebot eines Spielers, falls dieses hoeher ist als das aktuell hoechste Gebot
      *
-     * @param aucPlayers
      * @param i
      * @param bid
      */
@@ -64,7 +67,7 @@ public class AuctionService {
         boolean isBidOk = true;
 
         if (bid > getHighestBid()) {
-            aucPlayers[i][1] = bid;
+            aucPlayers[i][1] = bid; //kommt weg, dafür wird ein Paket (UserBidRequest) an den Server gesendet(ID,amount)
         } else {
             isBidOk = false;
         }
@@ -75,14 +78,16 @@ public class AuctionService {
     /**
      * Diese Methode ermoeglicht es einem Spieler, die Auktion zu verlassen.
      *
-     * @param aucPlayers
-     * @return
+     * @param playerID
      */
-    private int[][] playerExit(int i) {
+    private void playerExit(int playerID) { //sendet nur ein Paket (ExitAuctionRequest) an den Server mit (ID)
+        for (int i = 0; i < aucPlayers.length; i++) {
+            if (aucPlayers[i][0] == playerID) {
+                aucPlayers[i][2] = 0;
+                return;
+            }
+        }
 
-        aucPlayers[i][2] = 0;
-
-        return aucPlayers;
     }
 
     /**
@@ -142,6 +147,11 @@ public class AuctionService {
         }
 
         return stillActive;
+    }
+
+    @Override
+    public void received(Connection connection, Object object) {
+
     }
 
 }

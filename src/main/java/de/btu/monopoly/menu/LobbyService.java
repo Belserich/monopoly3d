@@ -13,7 +13,7 @@ import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.input.InputHandler;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.networkClasses.*;
-
+import de.btu.monopoly.net.server.AuctionTable;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Random;
@@ -36,7 +36,7 @@ public class LobbyService extends Listener {
         try {
             ipName = InetAddress.getLocalHost().getHostAddress();
         } catch (UnknownHostException ex) {
-            LOGGER.warning("Eigene IP konnte nicht ausgelesen werden " + ex);
+            LOGGER.log(Level.WARNING, "Eigene IP konnte nicht ausgelesen werden {0}", ex);
         }
 
         // Lobby init
@@ -55,7 +55,7 @@ public class LobbyService extends Listener {
         try {
             Thread.sleep(500);
         } catch (InterruptedException ex) {
-            LOGGER.warning("Fehler: " + ex);
+            LOGGER.log(Level.WARNING, "Fehler: {0}", ex);
             Thread.currentThread().interrupt();
         }
         System.out.println("Name?:");
@@ -89,6 +89,7 @@ public class LobbyService extends Listener {
     public static void startGame() {//TODO
         Game controller = new Game(generatePlayerArray(), lobby.getPlayerClient(), lobby.getRandomSeed());
         lobby.getPlayerClient().setGame(controller);
+
         controller.init();
         controller.start();
     }
@@ -108,7 +109,10 @@ public class LobbyService extends Listener {
             }
             players[i] = player;
         }
-
+        // AuctionTable bekommt Player[]
+        if (lobby.isHost()) {
+            AuctionTable.setPlayers(players);
+        }
         return players;
     }
 
@@ -121,7 +125,7 @@ public class LobbyService extends Listener {
 
     // REQUESTS:__________________________________an LobbyTable
     private static void joinRequest() {
-        LOGGER.finer(lobby.getPlayerName() + " sendet JoinRequest");
+        LOGGER.log(Level.FINER, "{0} sendet JoinRequest", lobby.getPlayerName());
         JoinRequest req = new JoinRequest();
         req.setName(lobby.getPlayerName());
         lobby.getPlayerClient().sendTCP(req);
@@ -129,7 +133,7 @@ public class LobbyService extends Listener {
     }
 
     private static void changeUsernameRequest() {
-        LOGGER.finer(lobby.getPlayerName() + " sendet RefreshRequest");
+        LOGGER.log(Level.FINER, "{0} sendet RefreshRequest", lobby.getPlayerName());
         ChangeUsernameRequest req = new ChangeUsernameRequest();
         req.setUserName(lobby.getPlayerName());
         req.setUserId(lobby.getPlayerId());
@@ -137,11 +141,12 @@ public class LobbyService extends Listener {
     }
 
     private static void gamestartRequest() {
-        LOGGER.finer(lobby.getPlayerName() + " sendet GamestartRequest");
+        LOGGER.log(Level.FINER, "{0} sendet GamestartRequest", lobby.getPlayerName());
         lobby.getPlayerClient().sendTCP(new GamestartRequest());
     }
 
     //LISTENER:______________________________________________________________
+    @Override
     public void received(Connection connection, Object object) {
 
         if (object instanceof FrameworkMessage) {

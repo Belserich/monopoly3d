@@ -11,8 +11,9 @@ import de.btu.monopoly.data.player.Player;
 public class Auction {
 
     private Player[] players;
-
     private PropertyField property;
+    private Player winner;
+    private int propPrice;
 
     /**
      *
@@ -43,6 +44,34 @@ public class Auction {
 
     public void setProperty(PropertyField prop) {
         this.property = prop;
+    }
+
+    /**
+     * @return the winner
+     */
+    public Player getWinner() {
+        return winner;
+    }
+
+    /**
+     * @param winner the winner to set
+     */
+    public void setWinner(Player winner) {
+        this.winner = winner;
+    }
+
+    /**
+     * @return the propPrice
+     */
+    public int getPropPrice() {
+        return propPrice;
+    }
+
+    /**
+     * @param propPrice the propPrice to set
+     */
+    public void setPropPrice(int propPrice) {
+        this.propPrice = propPrice;
     }
 
 }
