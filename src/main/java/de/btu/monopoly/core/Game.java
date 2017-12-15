@@ -1,6 +1,5 @@
 package de.btu.monopoly.core;
 
-import de.btu.monopoly.core.mechanics.Auction;
 import de.btu.monopoly.core.mechanics.Trade;
 import de.btu.monopoly.core.mechanics.TradeOffer;
 import de.btu.monopoly.core.service.AuctionService;
@@ -70,6 +69,7 @@ public class Game {
             GameBoardParser.setCardLoadout0(stack);
             GameBoardParser.setCardLoadout1(stack);
             board = GameBoardParser.parse("/data/field_data.xml");
+            AuctionService.initAuction(players);
         } catch (IOException | SAXException | ParserConfigurationException ex) {
             LOGGER.log(Level.WARNING, "Fehler beim initialisieren des Boards / der Karten.", ex);
         }
@@ -406,8 +406,7 @@ public class Game {
     }
 
     private void betPhase(PropertyField property) {
-        Auction auc = new Auction(property, players);
-        AuctionService.startAuction(auc);
+        AuctionService.startAuction(property);
     }
 
     public GameBoard getBoard() {
