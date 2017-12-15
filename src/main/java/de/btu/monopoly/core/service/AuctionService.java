@@ -37,8 +37,7 @@ public class AuctionService extends Listener {
         auc.setProperty(prop);
 
         /*
-         * Erstelle ein int[][] welches die ID's und Gebote der Spieler speichert
-         *
+         * Erstelle ein int[][] welches die ID's und Gebote der Spieler speichert TODO das kommt weg!
          */
         int[][] aucPlayers = new int[playerNumb][3];
         for (int i = 0; i < playerNumb; i++) {
@@ -47,7 +46,7 @@ public class AuctionService extends Listener {
             aucPlayers[i][2] = 1;                       //Spieler noch aktiv? 1 = ja, 0 = nein
         }
 
-        // joinAuction() <- schickt ein leeres Paket (JoinAuctionRequest) an den Server
+        // TODO schick ein leeres Paket (JoinAuctionRequest) an den Server
         while (auctionStillActive()) {
             IOService.sleep(500);
         }
@@ -67,7 +66,7 @@ public class AuctionService extends Listener {
         boolean isBidOk = true;
 
         if (bid > getHighestBid()) {
-            aucPlayers[i][1] = bid; //kommt weg, dafür wird ein Paket (UserBidRequest) an den Server gesendet(ID,amount)
+            aucPlayers[i][1] = bid; //TODO: Zeile kommt weg, dafür wird ein Paket (UserBidRequest) an den Server gesendet(ID,amount)
         } else {
             isBidOk = false;
         }
@@ -80,7 +79,7 @@ public class AuctionService extends Listener {
      *
      * @param playerID
      */
-    private void playerExit(int playerID) { //sendet nur ein Paket (ExitAuctionRequest) an den Server mit (ID)
+    private void playerExit(int playerID) { //TODO: sendet nur ein Paket (ExitAuctionRequest) an den Server mit (ID)
         for (int i = 0; i < aucPlayers.length; i++) {
             if (aucPlayers[i][0] == playerID) {
                 aucPlayers[i][2] = 0;
@@ -151,7 +150,8 @@ public class AuctionService extends Listener {
 
     @Override
     public void received(Connection connection, Object object) {
-
+        //TODO instanceof wi bei LobbyService nur mit:
+        //BroadcastAuctionResponse - entnimmt aucPlayers[][] und aktualisiert es hier!
     }
 
 }

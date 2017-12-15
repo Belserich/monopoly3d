@@ -5,21 +5,12 @@
  */
 package de.btu.monopoly.net.server;
 
-import de.btu.monopoly.net.networkClasses.Lobby.BroadcastRandomSeedRequest;
-import de.btu.monopoly.net.networkClasses.Lobby.ChangeUsernameRequest;
-import de.btu.monopoly.net.networkClasses.Lobby.RefreshLobbyResponse;
-import de.btu.monopoly.net.networkClasses.Lobby.JoinRequest;
-import de.btu.monopoly.net.networkClasses.Lobby.JoinImpossibleResponse;
-import de.btu.monopoly.net.networkClasses.Lobby.JoinResponse;
-import de.btu.monopoly.net.networkClasses.Lobby.GamestartRequest;
-import de.btu.monopoly.net.networkClasses.Lobby.GamestartResponse;
-import de.btu.monopoly.net.networkClasses.Lobby.AddKiRequest;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.FrameworkMessage;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 import de.btu.monopoly.core.service.NetworkService;
-import de.btu.monopoly.net.networkClasses.*;
+import de.btu.monopoly.net.networkClasses.Lobby.*;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.logging.Logger;
@@ -144,7 +135,6 @@ public class LobbyTable extends Listener {
         refreshLobbyResponse();
         GamestartResponse gares = new GamestartResponse();
         server.sendToAllTCP(gares);
-//        Thread.currentThread().interrupt();
     }
 
     // LISTENER:_____________________________________________

@@ -5,15 +5,6 @@
  */
 package de.btu.monopoly.menu;
 
-import de.btu.monopoly.net.networkClasses.Lobby.RefreshLobbyResponse;
-import de.btu.monopoly.net.networkClasses.Lobby.ChangeUsernameRequest;
-import de.btu.monopoly.net.networkClasses.Lobby.BroadcastRandomSeedRequest;
-import de.btu.monopoly.net.networkClasses.Lobby.JoinRequest;
-import de.btu.monopoly.net.networkClasses.Lobby.JoinImpossibleResponse;
-import de.btu.monopoly.net.networkClasses.Lobby.JoinResponse;
-import de.btu.monopoly.net.networkClasses.Lobby.GamestartResponse;
-import de.btu.monopoly.net.networkClasses.Lobby.GamestartRequest;
-import de.btu.monopoly.net.networkClasses.Lobby.AddKiRequest;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.FrameworkMessage;
 import com.esotericsoftware.kryonet.Listener;
@@ -21,7 +12,7 @@ import de.btu.monopoly.core.Game;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.input.InputHandler;
 import de.btu.monopoly.net.client.GameClient;
-import de.btu.monopoly.net.networkClasses.*;
+import de.btu.monopoly.net.networkClasses.Lobby.*;
 import de.btu.monopoly.net.server.AuctionTable;
 import java.net.InetAddress;
 import java.net.UnknownHostException;

@@ -5,9 +5,12 @@
  */
 package de.btu.monopoly.net.server;
 
+import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
+import de.btu.monopoly.core.service.NetworkService;
 import de.btu.monopoly.data.player.Player;
+import de.btu.monopoly.net.networkClasses.BroadcastAuctionResponse;
 import java.util.logging.Logger;
 
 /**
@@ -33,6 +36,7 @@ public class AuctionTable extends Listener {
     }
 
     private void generateAuctionPlayerList() {
+        aucPlayers = new int[players.length][3];
         for (int i = 0; i < players.length; i++) {
             aucPlayers[i][0] = players[i].getId();
             aucPlayers[i][1] = 0;
@@ -54,6 +58,15 @@ public class AuctionTable extends Listener {
     }
 
     private void broadcastList() {
+        BroadcastAuctionResponse res = new BroadcastAuctionResponse();
+        res.setAucPlayers(aucPlayers);
+        server.sendToAllTCP(res);
+        NetworkService.logSendMessage(res);
+    }
+
+    //LISTENER:____________________________________________________________________
+    @Override
+    public void received(Connection connection, Object object) {
 
     }
 
