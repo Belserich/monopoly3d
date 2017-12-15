@@ -17,7 +17,7 @@ import javafx.scene.control.TextField;
  *
  * @author augat
  */
-public class startGameController implements Initializable {
+public class StartGameController implements Initializable {
 
     public static GameClient client;
 

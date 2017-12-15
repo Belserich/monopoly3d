@@ -35,10 +35,11 @@ import javafx.stage.Stage;
  *
  * @author Eleonora kostova
  */
-public class mainSceneController implements Initializable {
+public class MainSceneController implements Initializable {
 
-    private Game game;
-    private GameBoard board;
+  // TODO  
+//    private Game game;
+//    private GameBoard board;
     private Player[] players;
     public static GameClient client;
 
@@ -139,8 +140,10 @@ public class mainSceneController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        game = new Game(players, client, 0);
-        board = game.getBoard(); 
+
+      // TODO
+//        game = new Game(players, client, 0);
+//        board = game.getBoard(); 
         // User aus Lobby holen
         if (Lobby.getUsers() != null) {
             if (Lobby.getUsers().length >= 1) {
@@ -175,14 +178,26 @@ public class mainSceneController implements Initializable {
 
         // Farben festlegen
         if (Lobby.getUsers() != null) {
-            player0Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[0][4]), CornerRadii.EMPTY, Insets.EMPTY)));
-            player1Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[1][4]), CornerRadii.EMPTY, Insets.EMPTY)));
-            player2Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[2][4]), CornerRadii.EMPTY, Insets.EMPTY)));
-            player3Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[3][4]), CornerRadii.EMPTY, Insets.EMPTY)));
-            player4Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[4][4]), CornerRadii.EMPTY, Insets.EMPTY)));
-            player5Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[5][4]), CornerRadii.EMPTY, Insets.EMPTY)));
-
+            if (Lobby.getUsers().length >= 1) {
+                player0Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[0][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+            }
+            if (Lobby.getUsers().length >= 2) {
+                player1Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[1][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+            }
+            if (Lobby.getUsers().length >= 3) {
+                player2Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[2][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+            }
+            if (Lobby.getUsers().length >= 4) {
+                player3Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[3][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+            }
+            if (Lobby.getUsers().length >= 5) {
+                player4Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[4][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+            }
+            if (Lobby.getUsers().length >= 6) {
+                player5Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[5][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+            }
         }
+
         //TODO
 //        if(players[0].getPosition()== Integer.parseInt(board.getFields()[0].toString())){
 //       

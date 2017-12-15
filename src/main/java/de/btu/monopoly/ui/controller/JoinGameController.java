@@ -17,7 +17,7 @@ import javafx.scene.control.TextField;
  *
  * @author augat
  */
-public class joinGameController implements Initializable {
+public class JoinGameController implements Initializable {
 
     @FXML
     private TextField nameTextField;
