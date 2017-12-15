@@ -67,7 +67,17 @@ public class AuctionTable extends Listener {
     //LISTENER:____________________________________________________________________
     @Override
     public void received(Connection connection, Object object) {
-
+        if (object instanceof JoinAuctionRequest) {
+            generateAuctionPlayerList();
+            broadcastList();
+        } else if (object instanceof BidRequest) {
+            BidRequest req = (BidRequest) object;
+            setBid(req.getID, req.getAmount);
+            broadcastList();
+        } else if (object instanceof ExitAuctionRequest) {
+            ExitAuctionRequest req = (ExitAuctionRequest) object;
+            exitPlayer(req.getID);
+        }
     }
 
 }
