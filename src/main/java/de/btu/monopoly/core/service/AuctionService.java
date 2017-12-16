@@ -61,7 +61,7 @@ public class AuctionService extends Listener {
     /**
      * Setzt das Gebot eines Spielers, falls dieses hoeher ist als das aktuell hoechste Gebot
      *
-     * @param i
+     * @param playerID
      * @param bid
      */
     public static boolean setBid(int playerID, int bid) {
@@ -96,7 +96,6 @@ public class AuctionService extends Listener {
     /**
      * Das hoechste Gebot aller Bieter wird ermittelt. Es wird die ID des Spielers mit dem hoechsten Gebot zurueck gegeben
      *
-     * @param aucPlayers
      * @return playerID
      */
     public static int getHighestBid() {
@@ -115,7 +114,6 @@ public class AuctionService extends Listener {
     /**
      * Das hoechste Gebot aller Bieter wird ermittelt. Es wird die ID des Spielers mit dem hoechsten Gebot zurueck gegeben
      *
-     * @param aucPlayers
      * @return playerID
      */
     public static int getHighestBidder() {
