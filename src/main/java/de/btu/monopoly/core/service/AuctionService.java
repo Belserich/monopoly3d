@@ -5,9 +5,9 @@ import com.esotericsoftware.kryonet.Listener;
 import de.btu.monopoly.core.mechanics.Auction;
 import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.player.Player;
-import de.btu.monopoly.input.IOService;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.networkClasses.*;
+import java.util.Scanner;
 
 /**
  *
@@ -38,7 +38,18 @@ public class AuctionService extends Listener {
 
         auc.getClient().sendTCP(new JoinAuctionRequest());
         while (auctionStillActive()) {
-            IOService.sleep(500);
+            // IOService.sleep(500); TODO es bleibt nur das.
+            System.out.println("Wähle [1] für bieten [2] für aussteigen");
+            Scanner scanner = new Scanner(System.in);
+            switch (scanner.nextInt()) {
+                case 1:
+                    System.out.println("Wähle dein Gebot");
+                    setBid(auc.getClient().getPlayerOnClient().getId(), scanner.nextInt());
+                    break;
+                case 2:
+                    playerExit(auc.getClient().getPlayerOnClient().getId());
+                    break;
+            }
         }
 
         FieldService.buyPropertyField(auc.getWinner(), auc.getProperty(), auc.getPropPrice());
@@ -51,7 +62,7 @@ public class AuctionService extends Listener {
      * @param i
      * @param bid
      */
-    private boolean setBid(int playerID, int bid) {
+    public static boolean setBid(int playerID, int bid) {
 
         boolean isBidOk = true;
 
@@ -72,7 +83,7 @@ public class AuctionService extends Listener {
      *
      * @param playerID
      */
-    private void playerExit(int playerID) {
+    public static void playerExit(int playerID) {
 
         ExitAuctionRequest exReq = new ExitAuctionRequest();
         exReq.setPlayerID(playerID);
@@ -86,7 +97,7 @@ public class AuctionService extends Listener {
      * @param aucPlayers
      * @return playerID
      */
-    private int getHighestBid() {
+    public static int getHighestBid() {
 
         int highestBid = -1;
 
@@ -105,7 +116,7 @@ public class AuctionService extends Listener {
      * @param aucPlayers
      * @return playerID
      */
-    private int getHighestBidder() {
+    public static int getHighestBidder() {
 
         int playerID = -1;
         int highestBid = -1;

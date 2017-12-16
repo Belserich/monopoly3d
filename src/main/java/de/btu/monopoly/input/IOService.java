@@ -14,6 +14,7 @@ import de.btu.monopoly.ki.HardKi;
 import de.btu.monopoly.ki.MediumKi;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.networkClasses.BroadcastPlayerChoiceRequest;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -94,6 +95,28 @@ public class IOService {
         return choice;
     }
 
+    public static void betSequence(Player[] players, int[][] aucPlayers) {
+//        Player[] kiPlayer = players;
+//        Collections.shuffle(Arrays.asList(kiPlayer));
+//        Player rndKi = null;
+//        for (int i = 0; i < kiPlayer.length; i++) {
+//            rndKi = (kiPlayer[i].getKiLevel() > 0) ? kiPlayer[i] : rndKi;
+//        }
+//        switch (rndKi.getKiLevel()) {
+//            case 1:
+//                EasyKi.processBetSequence();
+//                break;
+//            case 2:
+//                MediumKi.processBetSequence();
+//                break;
+//            case 3:
+//                HardKi.processBetSequence();
+//                break;
+//            default:
+//                LOGGER.warning("Illegale KI-Stufe in BetSequence registriert");
+//        }
+    }
+
     /**
      * @param aClient the client to set
      */
@@ -101,7 +124,7 @@ public class IOService {
         client = aClient;
     }
 
-    private static int getClientChoice(Player player, int max) {
+    public static int getClientChoice(Player player, int max) {
         boolean isChoiceFromThisClient = player == client.getPlayerOnClient();
         if (isChoiceFromThisClient) {
             int choice = InputHandler.getUserInput(max);
@@ -129,7 +152,7 @@ public class IOService {
         try {
             Thread.sleep(millis);
         } catch (InterruptedException ex) {
-            LOGGER.warning("FEHLER: " + ex);
+            LOGGER.log(Level.WARNING, "FEHLER: {0}", ex);
             Thread.currentThread().interrupt();
         }
     }

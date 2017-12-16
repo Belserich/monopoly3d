@@ -55,4 +55,8 @@ public class EasyKi {
         return 1;
     }
 
+    public static void processBetSequence() {
+
+    }
+
 }
