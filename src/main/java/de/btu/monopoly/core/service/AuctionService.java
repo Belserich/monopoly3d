@@ -5,6 +5,7 @@ import com.esotericsoftware.kryonet.Listener;
 import de.btu.monopoly.core.mechanics.Auction;
 import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.player.Player;
+import de.btu.monopoly.input.IOService;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.networkClasses.*;
 import java.util.Scanner;
@@ -37,6 +38,7 @@ public class AuctionService extends Listener {
         auc.setProperty(prop);
 
         auc.getClient().sendTCP(new JoinAuctionRequest());
+        IOService.sleep(500);
         while (auctionStillActive()) {
             // IOService.sleep(500); TODO es bleibt nur das.
             System.out.println("Wähle [1] für bieten [2] für aussteigen");
