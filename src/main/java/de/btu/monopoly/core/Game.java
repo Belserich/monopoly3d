@@ -69,7 +69,7 @@ public class Game {
             GameBoardParser.setCardLoadout0(stack);
             GameBoardParser.setCardLoadout1(stack);
             board = GameBoardParser.parse("/data/field_data.xml");
-            AuctionService.initAuction(players);
+            AuctionService.initAuction(players, client);
         } catch (IOException | SAXException | ParserConfigurationException ex) {
             LOGGER.log(Level.WARNING, "Fehler beim initialisieren des Boards / der Karten.", ex);
         }

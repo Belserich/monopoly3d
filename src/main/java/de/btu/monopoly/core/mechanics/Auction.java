@@ -2,6 +2,7 @@ package de.btu.monopoly.core.mechanics;
 
 import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.player.Player;
+import de.btu.monopoly.net.client.GameClient;
 
 /**
  * Auktions Klasse Auktionen zum ersteigern von Grundstuecken, welche zuvor nicht gekauft wurden.
@@ -13,6 +14,7 @@ public class Auction {
     private Player[] players;
     private PropertyField property;
     private Player winner;
+    private GameClient client;
     private int propPrice;
 
     /**
@@ -20,8 +22,9 @@ public class Auction {
      * @param property Die Strasse die versteigert werden soll
      * @param players Spieler die an der Auktion teilnehmen
      */
-    public Auction(Player[] players) {
+    public Auction(Player[] players, GameClient client) {
         this.players = players;
+        this.client = client;
     }
 
     /**
@@ -72,6 +75,13 @@ public class Auction {
      */
     public void setPropPrice(int propPrice) {
         this.propPrice = propPrice;
+    }
+
+    /**
+     * @return the client
+     */
+    public GameClient getClient() {
+        return client;
     }
 
 }

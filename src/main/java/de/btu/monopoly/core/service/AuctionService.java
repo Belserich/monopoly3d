@@ -6,6 +6,8 @@ import de.btu.monopoly.core.mechanics.Auction;
 import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.input.IOService;
+import de.btu.monopoly.net.client.GameClient;
+import de.btu.monopoly.net.networkClasses.*;
 
 /**
  *
@@ -21,8 +23,8 @@ public class AuctionService extends Listener {
      *
      * @param players
      */
-    public static void initAuction(Player[] players) {
-        auc = new Auction(players);
+    public static void initAuction(Player[] players, GameClient client) {
+        auc = new Auction(players, client);
     }
 
     /**
@@ -32,21 +34,9 @@ public class AuctionService extends Listener {
      */
     public static void startAuction(PropertyField prop) {
 
-        Player[] players = auc.getPlayers();
-        int playerNumb = players.length;
         auc.setProperty(prop);
 
-        /*
-         * Erstelle ein int[][] welches die ID's und Gebote der Spieler speichert TODO das kommt weg!
-         */
-        int[][] aucPlayers = new int[playerNumb][3];
-        for (int i = 0; i < playerNumb; i++) {
-            aucPlayers[i][0] = players[i].getId();      //Speicher Spieler ID
-            aucPlayers[i][1] = 0;                       //Speichert Spieler Gebot
-            aucPlayers[i][2] = 1;                       //Spieler noch aktiv? 1 = ja, 0 = nein
-        }
-
-        // TODO schick ein leeres Paket (JoinAuctionRequest) an den Server
+        auc.getClient().sendTCP(new JoinAuctionRequest());
         while (auctionStillActive()) {
             IOService.sleep(500);
         }
@@ -61,12 +51,15 @@ public class AuctionService extends Listener {
      * @param i
      * @param bid
      */
-    private boolean setBid(int i, int bid) {
+    private boolean setBid(int playerID, int bid) {
 
         boolean isBidOk = true;
 
         if (bid > getHighestBid()) {
-            aucPlayers[i][1] = bid; //TODO: Zeile kommt weg, dafür wird ein Paket (UserBidRequest) an den Server gesendet(ID,amount)
+            BidRequest bidReq = new BidRequest();
+            bidReq.setBid(bid);
+            bidReq.setPlayerID(playerID);
+            auc.getClient().sendTCP(bidReq);
         } else {
             isBidOk = false;
         }
@@ -79,13 +72,11 @@ public class AuctionService extends Listener {
      *
      * @param playerID
      */
-    private void playerExit(int playerID) { //TODO: sendet nur ein Paket (ExitAuctionRequest) an den Server mit (ID)
-        for (int i = 0; i < aucPlayers.length; i++) {
-            if (aucPlayers[i][0] == playerID) {
-                aucPlayers[i][2] = 0;
-                return;
-            }
-        }
+    private void playerExit(int playerID) {
+
+        ExitAuctionRequest exReq = new ExitAuctionRequest();
+        exReq.setPlayerID(playerID);
+        auc.getClient().sendTCP(exReq);
 
     }
 
