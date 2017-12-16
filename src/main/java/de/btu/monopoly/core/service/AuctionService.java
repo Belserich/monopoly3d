@@ -141,8 +141,9 @@ public class AuctionService extends Listener {
 
     @Override
     public void received(Connection connection, Object object) {
-        //TODO instanceof wi bei LobbyService nur mit:
-        //BroadcastAuctionResponse - entnimmt aucPlayers[][] und aktualisiert es hier!
+        if (object instanceof BroadcastAuctionResponse) {
+            aucPlayers = ((BroadcastAuctionResponse) object).getAucPlayers();
+        }
     }
 
 }
