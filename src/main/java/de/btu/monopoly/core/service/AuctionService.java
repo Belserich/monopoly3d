@@ -35,9 +35,9 @@ public class AuctionService extends Listener {
      */
     public static void startAuction(PropertyField prop) {
 
-        auc.setProperty(prop);
+        getAuc().setProperty(prop);
 
-        auc.getClient().sendTCP(new JoinAuctionRequest());
+        getAuc().getClient().sendTCP(new JoinAuctionRequest());
         IOService.sleep(500);
         while (auctionStillActive()) {
             // IOService.sleep(500); TODO es bleibt nur das.
@@ -46,15 +46,15 @@ public class AuctionService extends Listener {
             switch (scanner.nextInt()) {
                 case 1:
                     System.out.println("Wähle dein Gebot");
-                    setBid(auc.getClient().getPlayerOnClient().getId(), scanner.nextInt());
+                    setBid(getAuc().getClient().getPlayerOnClient().getId(), scanner.nextInt());
                     break;
                 case 2:
-                    playerExit(auc.getClient().getPlayerOnClient().getId());
+                    playerExit(getAuc().getClient().getPlayerOnClient().getId());
                     break;
             }
         }
 
-        FieldService.buyPropertyField(auc.getWinner(), auc.getProperty(), auc.getPropPrice());
+        FieldService.buyPropertyField(getAuc().getWinner(), getAuc().getProperty(), getAuc().getPropPrice());
 
     }
 
@@ -72,7 +72,7 @@ public class AuctionService extends Listener {
             BidRequest bidReq = new BidRequest();
             bidReq.setBid(bid);
             bidReq.setPlayerID(playerID);
-            auc.getClient().sendTCP(bidReq);
+            getAuc().getClient().sendTCP(bidReq);
         } else {
             isBidOk = false;
         }
@@ -89,7 +89,7 @@ public class AuctionService extends Listener {
 
         ExitAuctionRequest exReq = new ExitAuctionRequest();
         exReq.setPlayerID(playerID);
-        auc.getClient().sendTCP(exReq);
+        getAuc().getClient().sendTCP(exReq);
 
     }
 
@@ -102,9 +102,9 @@ public class AuctionService extends Listener {
 
         int highestBid = -1;
 
-        for (int i = 0; i < aucPlayers.length; i++) {
-            if (highestBid < aucPlayers[i][1] && aucPlayers[i][1] != 0) {
-                highestBid = aucPlayers[i][1];
+        for (int i = 0; i < getAucPlayers().length; i++) {
+            if (highestBid < getAucPlayers()[i][1] && getAucPlayers()[i][1] != 0) {
+                highestBid = getAucPlayers()[i][1];
             }
         }
 
@@ -121,9 +121,9 @@ public class AuctionService extends Listener {
         int playerID = -1;
         int highestBid = -1;
 
-        for (int i = 0; i < aucPlayers.length; i++) {
-            if (highestBid < aucPlayers[i][1] && aucPlayers[i][1] != 0) {
-                playerID = aucPlayers[i][0];
+        for (int i = 0; i < getAucPlayers().length; i++) {
+            if (highestBid < getAucPlayers()[i][1] && getAucPlayers()[i][1] != 0) {
+                playerID = getAucPlayers()[i][0];
             }
         }
 
@@ -139,8 +139,8 @@ public class AuctionService extends Listener {
 
         int activCount = 0;
         boolean stillActive = false;
-        for (int i = 0; i < aucPlayers.length; i++) {
-            activCount += aucPlayers[i][2];
+        for (int i = 0; i < getAucPlayers().length; i++) {
+            activCount += getAucPlayers()[i][2];
         }
 
         if (activCount > 1) {
@@ -155,6 +155,20 @@ public class AuctionService extends Listener {
         if (object instanceof BroadcastAuctionResponse) {
             aucPlayers = ((BroadcastAuctionResponse) object).getAucPlayers();
         }
+    }
+
+    /**
+     * @return the auc
+     */
+    public static Auction getAuc() {
+        return auc;
+    }
+
+    /**
+     * @return the aucPlayers
+     */
+    public static int[][] getAucPlayers() {
+        return aucPlayers;
     }
 
 }
