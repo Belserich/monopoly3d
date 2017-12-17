@@ -139,7 +139,7 @@
                            </font>
                         </Label>
                         <Label alignment="CENTER" prefHeight="19.0" prefWidth="98.0" text="Wasserwerk" GridPane.columnIndex="6" GridPane.rowIndex="2" />
-                        <Label alignment="CENTER" prefHeight="30.0" prefWidth="103.0" style="-fx-border-color: black;" text="NordBahnhof" GridPane.columnIndex="4" GridPane.rowIndex="2">
+                        <Label alignment="CENTER" prefHeight="30.0" prefWidth="103.0" style="-fx-border-color: black; -fx-background-color: white;" text="NordBhf." GridPane.columnIndex="4" GridPane.rowIndex="2">
                            <font>
                               <Font name="System Bold" size="10.0" />
                            </font>
@@ -171,7 +171,10 @@
                               <Font name="System Bold" size="10.0" />
                            </font>
                         </Label>
-                        <Pane fx:id="einkommenSt" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black;" GridPane.columnIndex="5" GridPane.rowIndex="1" />
+                        <Pane fx:id="einkommenSt" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black;" GridPane.columnIndex="5" GridPane.rowIndex="1">
+                           <children>
+                              <Label alignment="CENTER" contentDisplay="CENTER" layoutX="6.0" layoutY="10.0" text="Einkommen-&#10;steuer&#10;100 €" textAlignment="CENTER" />
+                           </children></Pane>
                         <Pane fx:id="suedBahnhof" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black;" GridPane.columnIndex="4" GridPane.rowIndex="1" />
                         <Pane fx:id="turmStr" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black;" GridPane.columnIndex="6" GridPane.rowIndex="1" />
                         <Label alignment="CENTER" layoutX="637.0" layoutY="7.0" prefHeight="30.0" prefWidth="103.0" style="-fx-background-color: blueviolet; -fx-border-color: black;" text="Turmstrasse" GridPane.columnIndex="6">
@@ -199,11 +202,11 @@
                            </font>
                         </Label>
                         <Label alignment="CENTER" prefHeight="17.0" prefWidth="84.0" text="Ereignisfeld" GridPane.columnIndex="2" />
-                        <Label alignment="CENTER" text="Gemeinschaftsfeld" GridPane.columnIndex="7">
+                        <Label alignment="CENTER" style="-fx-background-color: white;" text="Gemeinschaft" GridPane.columnIndex="7">
                            <font>
-                              <Font size="10.0" />
+                              <Font name="System Bold" size="10.0" />
                            </font></Label>
-                        <Label alignment="CENTER" prefHeight="30.0" prefWidth="103.0" style="-fx-border-color: black;" text="Südbahnhof" GridPane.columnIndex="4">
+                        <Label alignment="CENTER" prefHeight="30.0" prefWidth="103.0" style="-fx-border-color: black; -fx-background-color: white;" text="SüdBhf." GridPane.columnIndex="4">
                            <font>
                               <Font name="System Bold" size="10.0" />
                            </font>
@@ -254,7 +257,7 @@
                 <RowConstraints minHeight="10.0" percentHeight="15.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <GridPane>
+                  <GridPane fx:id="gridPark" stylesheets="@../styles/Styles.css">
                     <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="10.0" prefWidth="100.0" />
                       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="90.0" prefWidth="100.0" />
@@ -263,7 +266,7 @@
                       <RowConstraints minHeight="10.0" percentHeight="100.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <Pane fx:id="parkplatz" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black;" GridPane.columnIndex="1" />
+                        <Pane fx:id="parkplatz" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black;" styleClass="parkBackground" stylesheets="@../styles/Styles.css" GridPane.columnIndex="1" />
                      </children>
                   </GridPane>
                   <GridPane GridPane.rowIndex="1">
@@ -295,7 +298,6 @@
                            <children>
                               <TextFlow layoutX="104.0" layoutY="70.0" prefHeight="83.0" prefWidth="31.0" />
                            </children></Pane>
-                        <Pane prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black;" GridPane.columnIndex="2" GridPane.rowIndex="4" />
                         <Pane prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black;" GridPane.columnIndex="2" GridPane.rowIndex="7" />
                         <Pane fx:id="wienerStr" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black;" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                         <Pane fx:id="besuch1" layoutX="182.0" layoutY="681.0" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black; -fx-background-color: brown;" GridPane.columnIndex="2" GridPane.rowIndex="6">
@@ -352,9 +354,18 @@
                               </Label>
                            </children>
                         </Pane>
+                        <Pane fx:id="besuch111111111" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black; -fx-background-color: white;" GridPane.columnIndex="2" GridPane.rowIndex="4">
+                           <children>
+                              <Label alignment="CENTER" layoutX="-31.0" layoutY="8.0" prefHeight="42.0" prefWidth="91.0" rotate="90.0" text="WestBhf.">
+                                 <font>
+                                    <Font name="System Bold" size="10.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </Pane>
                      </children>
                   </GridPane>
-                  <GridPane prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black;" GridPane.rowIndex="2">
+                  <GridPane prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: ;" GridPane.rowIndex="2">
                     <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="10.0" prefWidth="100.0" />
                       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="90.0" prefWidth="100.0" />
@@ -362,6 +373,9 @@
                     <rowConstraints>
                       <RowConstraints minHeight="10.0" percentHeight="100.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
+                     <children>
+                        <Pane fx:id="besuch" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black;" styleClass="bescuhBackground" stylesheets="@../styles/Styles.css" GridPane.columnIndex="1" />
+                     </children>
                   </GridPane>
                </children>
             </GridPane>
@@ -376,7 +390,7 @@
                         <RowConstraints minHeight="10.0" percentHeight="100.0" prefHeight="30.0" vgrow="SOMETIMES" />
                      </rowConstraints>
                      <children>
-                        <Pane fx:id="jailField" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black;" />
+                        <Pane fx:id="jailField" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black;" styleClass="jailBachground" stylesheets="@../styles/Styles.css" />
                      </children>
                   </GridPane>
                   <GridPane GridPane.rowIndex="1">
@@ -402,16 +416,85 @@
                         <Pane fx:id="hauptStr" layoutX="40.0" layoutY="681.0" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black;" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                         <Pane fx:id="bahnhofStr" layoutX="40.0" layoutY="94.0" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black;" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                         <Pane fx:id="hauptBahnhof" layoutX="40.0" layoutY="262.0" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black;" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                        <Pane fx:id="zusatzSt" layoutX="40.0" layoutY="346.0" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black;" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+                        <Pane fx:id="zusatzSt" layoutX="40.0" layoutY="346.0" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black;" GridPane.columnIndex="1" GridPane.rowIndex="7">
+                           <children>
+                              <Label alignment="CENTER" contentDisplay="CENTER" layoutX="14.0" layoutY="19.0" text="Zusatzsteuer&#10;100 €" textAlignment="CENTER" />
+                           </children></Pane>
                         <Pane fx:id="parkStr" layoutX="40.0" layoutY="597.0" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black;" GridPane.columnIndex="1" GridPane.rowIndex="6" />
                         <Pane fx:id="ereignis3" layoutX="40.0" layoutY="346.0" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black; -fx-background-color: rosybrown;" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                        <Pane prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black;" GridPane.rowIndex="4" />
-                        <Pane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: green; -fx-border-color: black;" />
-                        <Pane layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: green; -fx-border-color: black;" GridPane.rowIndex="1" />
-                        <Pane layoutX="10.0" layoutY="94.0" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: green; -fx-border-color: black;" GridPane.rowIndex="3" />
-                        <Pane layoutX="10.0" layoutY="262.0" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: darkblue; -fx-border-color: black;" GridPane.rowIndex="6" />
-                        <Pane layoutX="10.0" layoutY="513.0" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: darkblue; -fx-border-color: black;" GridPane.rowIndex="8" />
                         <Pane fx:id="gemeinschaft3" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black; -fx-background-color: yellow;" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <Pane fx:id="besuch1111111" prefHeight="200.0" prefWidth="200.0" rotate="180.0" style="-fx-border-color: black; -fx-background-color: green;" GridPane.rowIndex="1">
+                           <children>
+                              <Label alignment="CENTER" layoutX="-31.0" layoutY="8.0" prefHeight="42.0" prefWidth="91.0" rotate="90.0" text="HauptStr.">
+                                 <font>
+                                    <Font name="System Bold" size="10.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </Pane>
+                        <Pane fx:id="besuch11111111" layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" rotate="180.0" style="-fx-border-color: black; -fx-background-color: green;">
+                           <children>
+                              <Label alignment="CENTER" layoutX="-31.0" layoutY="8.0" prefHeight="42.0" prefWidth="91.0" rotate="90.0" text="Rathhaus">
+                                 <font>
+                                    <Font name="System Bold" size="10.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </Pane>
+                        <Pane fx:id="besuch11111112" layoutX="10.0" layoutY="94.0" prefHeight="200.0" prefWidth="200.0" rotate="180.0" style="-fx-border-color: black; -fx-background-color: green;" GridPane.rowIndex="3">
+                           <children>
+                              <Label alignment="CENTER" layoutX="-31.0" layoutY="8.0" prefHeight="42.0" prefWidth="91.0" rotate="90.0" text="BahnhofStr.">
+                                 <font>
+                                    <Font name="System Bold" size="10.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </Pane>
+                        <Pane fx:id="besuch1111111111" prefHeight="200.0" prefWidth="200.0" rotate="180.0" style="-fx-border-color: black; -fx-background-color: white;" GridPane.rowIndex="4">
+                           <children>
+                              <Label alignment="CENTER" layoutX="-31.0" layoutY="8.0" prefHeight="42.0" prefWidth="91.0" rotate="90.0" text="HauptBhf.">
+                                 <font>
+                                    <Font name="System Bold" size="10.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </Pane>
+                        <Pane fx:id="besuch11111111111" layoutX="10.0" layoutY="346.0" prefHeight="200.0" prefWidth="200.0" rotate="180.0" style="-fx-border-color: black; -fx-background-color: white;" GridPane.rowIndex="2">
+                           <children>
+                              <Label alignment="CENTER" layoutX="-31.0" layoutY="8.0" prefHeight="42.0" prefWidth="91.0" rotate="90.0" text="Gemeischaft">
+                                 <font>
+                                    <Font name="System Bold" size="10.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </Pane>
+                        <Pane fx:id="besuch111111111111" layoutX="10.0" layoutY="178.0" prefHeight="200.0" prefWidth="200.0" rotate="180.0" style="-fx-border-color: black; -fx-background-color: white;" GridPane.rowIndex="5">
+                           <children>
+                              <Label alignment="CENTER" layoutX="-31.0" layoutY="8.0" prefHeight="42.0" prefWidth="91.0" rotate="90.0" text="Ereignisfeld">
+                                 <font>
+                                    <Font name="System Bold" size="10.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </Pane>
+                        <Pane fx:id="besuch1111111111111" layoutX="10.0" layoutY="430.0" prefHeight="200.0" prefWidth="200.0" rotate="180.0" style="-fx-border-color: black; -fx-background-color: lightblue;" GridPane.rowIndex="6">
+                           <children>
+                              <Label alignment="CENTER" layoutX="-31.0" layoutY="8.0" prefHeight="42.0" prefWidth="91.0" rotate="90.0" text="ParkStr.">
+                                 <font>
+                                    <Font name="System Bold" size="10.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </Pane>
+                        <Pane fx:id="besuch11111111111111" layoutX="10.0" layoutY="513.0" prefHeight="200.0" prefWidth="200.0" rotate="180.0" style="-fx-border-color: black; -fx-background-color: lightblue;" GridPane.rowIndex="8">
+                           <children>
+                              <Label alignment="CENTER" layoutX="-31.0" layoutY="8.0" prefHeight="42.0" prefWidth="91.0" rotate="90.0" text="Schlossallee">
+                                 <font>
+                                    <Font name="System Bold" size="10.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </Pane>
                      </children>
                   </GridPane>
                   <GridPane GridPane.rowIndex="2">
@@ -423,14 +506,14 @@
                         <RowConstraints minHeight="10.0" percentHeight="100.0" prefHeight="30.0" vgrow="SOMETIMES" />
                      </rowConstraints>
                      <children>
-                        <Pane fx:id="goField" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black;">
+                        <Pane fx:id="goField" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black;" styleClass="losBackground" stylesheets="@../styles/Styles.css">
                            <children>
-                              <Circle fx:id="player0" fill="WHITE" layoutX="39.0" layoutY="45.0" radius="11.0" stroke="BLACK" strokeType="INSIDE" />
-                              <Circle fx:id="player1" fill="WHITE" layoutX="58.0" layoutY="53.0" radius="11.0" stroke="BLACK" strokeType="INSIDE" />
-                              <Circle fx:id="player2" fill="WHITE" layoutX="85.0" layoutY="61.0" radius="11.0" stroke="BLACK" strokeType="INSIDE" />
-                              <Circle fx:id="player3" fill="WHITE" layoutX="52.0" layoutY="78.0" radius="11.0" stroke="BLACK" strokeType="INSIDE" />
-                              <Circle fx:id="player4" fill="WHITE" layoutX="72.0" layoutY="89.0" radius="11.0" stroke="BLACK" strokeType="INSIDE" />
-                              <Circle fx:id="player5" fill="WHITE" layoutX="71.0" layoutY="33.0" radius="11.0" stroke="BLACK" strokeType="INSIDE" />
+                              <Circle fx:id="player0" fill="WHITE" layoutX="36.0" layoutY="41.0" radius="11.0" stroke="BLACK" strokeType="INSIDE" />
+                              <Circle fx:id="player1" fill="WHITE" layoutX="61.0" layoutY="50.0" radius="11.0" stroke="BLACK" strokeType="INSIDE" />
+                              <Circle fx:id="player2" fill="WHITE" layoutX="90.0" layoutY="51.0" radius="11.0" stroke="BLACK" strokeType="INSIDE" />
+                              <Circle fx:id="player3" fill="WHITE" layoutX="36.0" layoutY="70.0" radius="11.0" stroke="BLACK" strokeType="INSIDE" />
+                              <Circle fx:id="player4" fill="WHITE" layoutX="67.0" layoutY="74.0" radius="11.0" stroke="BLACK" strokeType="INSIDE" />
+                              <Circle fx:id="player5" fill="WHITE" layoutX="69.0" layoutY="23.0" radius="11.0" stroke="BLACK" strokeType="INSIDE" />
                            </children></Pane>
                      </children>
                   </GridPane>
