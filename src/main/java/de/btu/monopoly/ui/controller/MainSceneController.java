@@ -14,6 +14,8 @@ import de.btu.monopoly.ui.SceneManager;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -100,6 +102,8 @@ public class MainSceneController implements Initializable {
     @FXML
     private Pane ereignis1;
     @FXML
+    private Pane elisenStr;
+    @FXML
     private Pane postStr;
     @FXML
     private Pane besuch;
@@ -125,6 +129,8 @@ public class MainSceneController implements Initializable {
     private Pane parkplatz;
     @FXML
     private Pane theaterStr;
+    @FXML
+    private Pane ereignis2;
     @FXML
     private Pane museumStr;
     @FXML
@@ -236,5 +242,156 @@ public class MainSceneController implements Initializable {
             }
         }
 
+    }
+
+    //TODO muss optimiert werden
+    @FXML
+    public void movePlayerAction(ActionEvent event) throws Exception {
+        Task task = new Task<Void>() {
+
+            @Override
+            protected Void call() throws Exception {
+                if (client.getPlayerOnClient().getPosition() == 0) {
+                    getPaneId(Lobby.getUsers(), goField, 0);
+                }
+                if (client.getPlayerOnClient().getPosition() == 1) {
+                    getPaneId(Lobby.getUsers(), badStr, 1);
+                }
+                if (client.getPlayerOnClient().getPosition() == 2) {
+                    getPaneId(Lobby.getUsers(), gemenschaft1, 2);
+                }
+                if (client.getPlayerOnClient().getPosition() == 3) {
+                    getPaneId(Lobby.getUsers(), turmStr, 3);
+                }
+                if (client.getPlayerOnClient().getPosition() == 4) {
+                    getPaneId(Lobby.getUsers(), einkommenSt, 4);
+                }
+                if (client.getPlayerOnClient().getPosition() == 5) {
+                    getPaneId(Lobby.getUsers(), suedBahnhof, 5);
+                }
+                if (client.getPlayerOnClient().getPosition() == 6) {
+                    getPaneId(Lobby.getUsers(), chauseeStr, 6);
+                }
+                if (client.getPlayerOnClient().getPosition() == 7) {
+                    getPaneId(Lobby.getUsers(), ereignis1, 7);
+                }
+                if (client.getPlayerOnClient().getPosition() == 8) {
+                    getPaneId(Lobby.getUsers(), elisenStr, 8);
+                }
+                if (client.getPlayerOnClient().getPosition() == 9) {
+                    getPaneId(Lobby.getUsers(), postStr, 9);
+                }
+                if (client.getPlayerOnClient().getPosition() == 10) {
+                    getPaneId(Lobby.getUsers(), besuch, 10);
+                }
+                if (client.getPlayerOnClient().getPosition() == 11) {
+                    getPaneId(Lobby.getUsers(), seeStr, 11);
+                }
+                if (client.getPlayerOnClient().getPosition() == 12) {
+                    getPaneId(Lobby.getUsers(), elWerk, 12);
+                }
+                if (client.getPlayerOnClient().getPosition() == 13) {
+                    getPaneId(Lobby.getUsers(), hafenStr, 13);
+                }
+                if (client.getPlayerOnClient().getPosition() == 14) {
+                    getPaneId(Lobby.getUsers(), neueStr, 14);
+                }
+                if (client.getPlayerOnClient().getPosition() == 15) {
+                    getPaneId(Lobby.getUsers(), westBahnhof, 15);
+                }
+                if (client.getPlayerOnClient().getPosition() == 16) {
+                    getPaneId(Lobby.getUsers(), muenchenerStr, 16);
+                }
+                if (client.getPlayerOnClient().getPosition() == 17) {
+                    getPaneId(Lobby.getUsers(), gemeinschaft2, 17);
+                }
+                if (client.getPlayerOnClient().getPosition() == 18) {
+                    getPaneId(Lobby.getUsers(), wienerStr, 18);
+                }
+                if (client.getPlayerOnClient().getPosition() == 19) {
+                    getPaneId(Lobby.getUsers(), berlinerStr, 19);
+                }
+                if (client.getPlayerOnClient().getPosition() == 20) {
+                    getPaneId(Lobby.getUsers(), parkplatz, 20);
+                }
+                if (client.getPlayerOnClient().getPosition() == 21) {
+                    getPaneId(Lobby.getUsers(), theaterStr, 21);
+                }
+                if (client.getPlayerOnClient().getPosition() == 22) {
+                    getPaneId(Lobby.getUsers(), ereignis2, 22);
+                }
+                if (client.getPlayerOnClient().getPosition() == 23) {
+                    getPaneId(Lobby.getUsers(), museumStr, 23);
+                }
+                if (client.getPlayerOnClient().getPosition() == 24) {
+                    getPaneId(Lobby.getUsers(), opernplatz, 24);
+                }
+                if (client.getPlayerOnClient().getPosition() == 25) {
+                    getPaneId(Lobby.getUsers(), nordBahnhof, 25);
+                }
+                if (client.getPlayerOnClient().getPosition() == 26) {
+                    getPaneId(Lobby.getUsers(), lessingStr, 26);
+                }
+                if (client.getPlayerOnClient().getPosition() == 27) {
+                    getPaneId(Lobby.getUsers(), schillerStr, 27);
+                }
+                if (client.getPlayerOnClient().getPosition() == 28) {
+                    getPaneId(Lobby.getUsers(), wasserWerk, 28);
+                }
+                if (client.getPlayerOnClient().getPosition() == 29) {
+                    getPaneId(Lobby.getUsers(), goetheStr, 29);
+                }
+                if (client.getPlayerOnClient().getPosition() == 30) {
+                    getPaneId(Lobby.getUsers(), jailField, 30);
+                }
+                if (client.getPlayerOnClient().getPosition() == 31) {
+                    getPaneId(Lobby.getUsers(), rathhausPlatz, 31);
+                }
+                if (client.getPlayerOnClient().getPosition() == 32) {
+                    getPaneId(Lobby.getUsers(), hauptStr, 32);
+                }
+                if (client.getPlayerOnClient().getPosition() == 33) {
+                    getPaneId(Lobby.getUsers(), gemeinschat3, 33);
+                }
+                if (client.getPlayerOnClient().getPosition() == 34) {
+                    getPaneId(Lobby.getUsers(), bahnhofStr, 34);
+                }
+                if (client.getPlayerOnClient().getPosition() == 35) {
+                    getPaneId(Lobby.getUsers(), hauptBahnhof, 35);
+                }
+                if (client.getPlayerOnClient().getPosition() == 36) {
+                    getPaneId(Lobby.getUsers(), ereignis3, 36);
+                }
+                if (client.getPlayerOnClient().getPosition() == 37) {
+                    getPaneId(Lobby.getUsers(), parkStr, 37);
+                }
+                if (client.getPlayerOnClient().getPosition() == 38) {
+                    getPaneId(Lobby.getUsers(), zusatzSt, 38);
+                }
+                if (client.getPlayerOnClient().getPosition() == 39) {
+                    getPaneId(Lobby.getUsers(), schlossAllee, 39);
+                }
+
+                return null;
+            }
+        };
+        Platform.runLater(task);
+
+    }
+
+    public void getPaneId(String[][] user, Pane pane, int id) {
+        if (user[0][1] == client.getPlayerOnClient().getName()) {
+            pane.setShape(player0);
+        } else if (user[1][1] == client.getPlayerOnClient().getName()) {
+            pane.setShape(player1);
+        } else if (user[2][1] == client.getPlayerOnClient().getName()) {
+            pane.setShape(player2);
+        } else if (user[3][1] == client.getPlayerOnClient().getName()) {
+            pane.setShape(player3);
+        } else if (user[4][1] == client.getPlayerOnClient().getName()) {
+            pane.setShape(player4);
+        } else if (user[5][1] == client.getPlayerOnClient().getName()) {
+            pane.setShape(player5);
+        }
     }
 }
