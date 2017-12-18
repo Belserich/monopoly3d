@@ -13,7 +13,7 @@ public class Lobby {
     private static String[][] users;
     private String playerName;
     private String playerColor = "0xffffffff";
-    private GameClient playerClient;
+    private static GameClient playerClient;
     private int playerID = -1;
     private long randomSeed;
 
@@ -62,7 +62,7 @@ public class Lobby {
     /**
      * @return the playerClient
      */
-    public GameClient getPlayerClient() {
+    public static GameClient getPlayerClient() {
         return playerClient;
     }
 
