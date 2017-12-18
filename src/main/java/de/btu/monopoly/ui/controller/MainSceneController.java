@@ -165,14 +165,13 @@ public class MainSceneController implements Initializable {
 
         //Bilder hinzufuegen
         /*Background*/
-        Image image = new Image(
-                "https://images-na.ssl-images-amazon.com/images/S/sgp-catalog-images/region_US/di3a2-ACJM5H51YKB-Full-Image_GalleryBackground-en-US-1489722831648._RI_SX940_.jpg");
+        Image image = new Image(getClass().getResourceAsStream("/images/Lobby_Background.jpg"));
         grid.setBackground(new Background(new BackgroundImage(image, BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT)));
         grid2.setBackground(new Background(new BackgroundImage(image, BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT)));
 
         /*Mitte*/
         middlePane = new StackPane();
-        Image image2 = new Image("https://upload.wikimedia.org/wikipedia/en/f/f9/Monopoly_pack_logo.png");
+        Image image2 = new Image("/images/Monopoly_Logo.png");
         middlePane.setBackground(new Background(new BackgroundImage(image2, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT)));
         PopupPane.add(middlePane, 0, 1);
 
@@ -183,31 +182,36 @@ public class MainSceneController implements Initializable {
             }
             if (Lobby.getUsers().length >= 2) {
                 player1Button.setText(Lobby.getUsers()[1][1]);
-            } else {
+            }
+            else {
                 player1Button.setVisible(false);
                 player1.setVisible(false);
             }
             if (Lobby.getUsers().length >= 3) {
                 player2Button.setText(Lobby.getUsers()[2][1]);
-            } else {
+            }
+            else {
                 player2Button.setVisible(false);
                 player2.setVisible(false);
             }
             if (Lobby.getUsers().length >= 4) {
                 player3Button.setText(Lobby.getUsers()[3][1]);
-            } else {
+            }
+            else {
                 player3Button.setVisible(false);
                 player3.setVisible(false);
             }
             if (Lobby.getUsers().length >= 5) {
                 player4Button.setText(Lobby.getUsers()[4][1]);
-            } else {
+            }
+            else {
                 player4Button.setVisible(false);
                 player4.setVisible(false);
             }
             if (Lobby.getUsers().length >= 6) {
                 player5Button.setText(Lobby.getUsers()[5][1]);
-            } else {
+            }
+            else {
                 player5Button.setVisible(false);
                 player5.setVisible(false);
             }
@@ -381,15 +385,20 @@ public class MainSceneController implements Initializable {
     public void getPaneId(String[][] user, Pane pane, int id) {
         if (user[0][1] == client.getPlayerOnClient().getName()) {
             pane.setShape(player0);
-        } else if (user[1][1] == client.getPlayerOnClient().getName()) {
+        }
+        else if (user[1][1] == client.getPlayerOnClient().getName()) {
             pane.setShape(player1);
-        } else if (user[2][1] == client.getPlayerOnClient().getName()) {
+        }
+        else if (user[2][1] == client.getPlayerOnClient().getName()) {
             pane.setShape(player2);
-        } else if (user[3][1] == client.getPlayerOnClient().getName()) {
+        }
+        else if (user[3][1] == client.getPlayerOnClient().getName()) {
             pane.setShape(player3);
-        } else if (user[4][1] == client.getPlayerOnClient().getName()) {
+        }
+        else if (user[4][1] == client.getPlayerOnClient().getName()) {
             pane.setShape(player4);
-        } else if (user[5][1] == client.getPlayerOnClient().getName()) {
+        }
+        else if (user[5][1] == client.getPlayerOnClient().getName()) {
             pane.setShape(player5);
         }
     }
@@ -398,25 +407,30 @@ public class MainSceneController implements Initializable {
     private void player0ButtonAction(ActionEvent event) throws IOException, InterruptedException {
 
     }
+
     @FXML
     private void player1ButtonAction(ActionEvent event) throws IOException, InterruptedException {
 
     }
+
     @FXML
     private void player2ButtonAction(ActionEvent event) throws IOException, InterruptedException {
 
     }
+
     @FXML
     private void player3ButtonAction(ActionEvent event) throws IOException, InterruptedException {
 
     }
+
     @FXML
     private void player4ButtonAction(ActionEvent event) throws IOException, InterruptedException {
 
     }
+
     @FXML
     private void player5ButtonAction(ActionEvent event) throws IOException, InterruptedException {
 
     }
-    
+
 }

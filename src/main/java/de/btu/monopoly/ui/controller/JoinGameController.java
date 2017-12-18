@@ -44,9 +44,9 @@ public class JoinGameController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        Image image = new Image("https://i.imgur.com/tiR1cea.jpg");
+        Image image = new Image(getClass().getResourceAsStream("/images/Main_Background.png"));
         grid.setBackground(new Background(new BackgroundImage(image, BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
-        stackPane.setBackground(new Background(new BackgroundImage(new Image("https://images-na.ssl-images-amazon.com/images/S/sgp-catalog-images/region_US/di3a2-ACJM5H51YKB-Full-Image_GalleryBackground-en-US-1489722831648._RI_SX940_.jpg"), BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT)));
+        stackPane.setBackground(new Background(new BackgroundImage(new Image(getClass().getResourceAsStream("/images/Lobby_Background.jpg")), BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT)));
     }
 
     // Button back
@@ -71,7 +71,8 @@ public class JoinGameController implements Initializable {
         if (GuiMessages.getConnectionError() == false) {
             // Wechselt die Scene auf Lobby
             SceneManager.changeSceneToLobby(new FXMLLoader(getClass().getResource("/fxml/Lobby.fxml")));
-        } else {
+        }
+        else {
             errorLabel.setText("Keine Verbindung möglich.");
         }
 
