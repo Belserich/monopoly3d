@@ -18,7 +18,7 @@ import de.btu.monopoly.net.networkClasses.*;
  */
 public class AuctionTable extends Listener {
 
-    private Server server;
+    private final Server server;
     private static Player[] players;
     private static int[][] aucPlayers;
 
@@ -43,16 +43,18 @@ public class AuctionTable extends Listener {
     }
 
     private void setBid(int id, int amount) {
-        for (int i = 0; i < aucPlayers.length; i++) {
-            aucPlayers[i][1] = (aucPlayers[i][0] == id) ? amount : aucPlayers[i][1];
+        for (int[] aucPlayer : aucPlayers) {
+            aucPlayer[1] = (aucPlayer[0] == id) ? amount : aucPlayer[1];
         }
+        broadcastList();
     }
 
     private void exitPlayer(int id) {
-        for (int i = 0; i < aucPlayers.length; i++) {
-            aucPlayers[i][2] = (aucPlayers[i][0] == id) ? 1 : aucPlayers[i][2];
+        for (int[] aucPlayer : aucPlayers) {
+            aucPlayer[2] = (aucPlayer[0] == id) ? 0 : aucPlayer[2];
         }
-
+        System.out.println("Ausgestiegen" + aucPlayers[1][2]);
+        broadcastList();
     }
 
     private void broadcastList() {
