@@ -48,22 +48,22 @@ public class AuctionService extends Listener {
             switch (scanner.nextInt()) {
                 case 1:
                     System.out.println("Wähle dein Gebot");
-                    setBid(auc.getClient().getPlayerOnClient().getId(), scanner.nextInt());
+                    setBid(getAuc().getClient().getPlayerOnClient().getId(), scanner.nextInt());
                     break;
                 case 2:
-                    playerExit(auc.getClient().getPlayerOnClient().getId());
+                    playerExit(getAuc().getClient().getPlayerOnClient().getId());
                     break;
             }
         }
 
-        FieldService.buyPropertyField(auc.getWinner(), auc.getProperty(), auc.getPropPrice());
+        FieldService.buyPropertyField(getAuc().getWinner(), getAuc().getProperty(), getAuc().getPropPrice());
 
     }
 
     /**
      * Setzt das Gebot eines Spielers, falls dieses hoeher ist als das aktuell hoechste Gebot
      *
-     * @param i
+     * @param playerID
      * @param bid
      */
     public static boolean setBid(int playerID, int bid) {
@@ -100,16 +100,15 @@ public class AuctionService extends Listener {
     /**
      * Das hoechste Gebot aller Bieter wird ermittelt. Es wird die ID des Spielers mit dem hoechsten Gebot zurueck gegeben
      *
-     * @param aucPlayers
      * @return playerID
      */
     public static int getHighestBid() {
 
         int highestBid = -1;
 
-        for (int i = 0; i < aucPlayers.length; i++) {
-            if (highestBid < aucPlayers[i][1] && aucPlayers[i][1] != 0) {
-                highestBid = aucPlayers[i][1];
+        for (int i = 0; i < getAucPlayers().length; i++) {
+            if (highestBid < getAucPlayers()[i][1] && getAucPlayers()[i][1] != 0) {
+                highestBid = getAucPlayers()[i][1];
             }
         }
 
@@ -119,7 +118,6 @@ public class AuctionService extends Listener {
     /**
      * Das hoechste Gebot aller Bieter wird ermittelt. Es wird die ID des Spielers mit dem hoechsten Gebot zurueck gegeben
      *
-     * @param aucPlayers
      * @return playerID
      */
     public static int getHighestBidder() {
@@ -127,9 +125,9 @@ public class AuctionService extends Listener {
         int playerID = -1;
         int highestBid = -1;
 
-        for (int i = 0; i < aucPlayers.length; i++) {
-            if (highestBid < aucPlayers[i][1] && aucPlayers[i][1] != 0) {
-                playerID = aucPlayers[i][0];
+        for (int i = 0; i < getAucPlayers().length; i++) {
+            if (highestBid < getAucPlayers()[i][1] && getAucPlayers()[i][1] != 0) {
+                playerID = getAucPlayers()[i][0];
             }
         }
 
@@ -145,8 +143,8 @@ public class AuctionService extends Listener {
 
         int activCount = 0;
         boolean stillActive = false;
-        for (int i = 0; i < aucPlayers.length; i++) {
-            activCount += aucPlayers[i][2];
+        for (int i = 0; i < getAucPlayers().length; i++) {
+            activCount += getAucPlayers()[i][2];
         }
 
         if (activCount > 1) {
@@ -163,6 +161,20 @@ public class AuctionService extends Listener {
             aucPlayers = ((BroadcastAuctionResponse) object).getAucPlayers();
             NetworkService.logClientReceiveMessage(object, auc.getPlayerName());
         }
+    }
+
+    /**
+     * @return the auc
+     */
+    public static Auction getAuc() {
+        return auc;
+    }
+
+    /**
+     * @return the aucPlayers
+     */
+    public static int[][] getAucPlayers() {
+        return aucPlayers;
     }
 
 }
