@@ -72,12 +72,14 @@ public class AuctionTable extends Listener {
             NetworkService.logServerReceiveMessage(object);
             generateAuctionPlayerList();
             broadcastList();
-        } else if (object instanceof BidRequest) {
+        }
+        else if (object instanceof BidRequest) {
             NetworkService.logServerReceiveMessage(object);
             BidRequest req = (BidRequest) object;
             setBid(req.getPlayerID(), req.getBid());
             broadcastList();
-        } else if (object instanceof ExitAuctionRequest) {
+        }
+        else if (object instanceof ExitAuctionRequest) {
             NetworkService.logServerReceiveMessage(object);
             ExitAuctionRequest req = (ExitAuctionRequest) object;
             exitPlayer(req.getPlayerID());

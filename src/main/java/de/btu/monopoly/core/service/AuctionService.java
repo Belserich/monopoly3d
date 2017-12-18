@@ -76,7 +76,8 @@ public class AuctionService extends Listener {
             bidReq.setPlayerID(playerID);
             auc.getClient().sendTCP(bidReq);
             NetworkService.logClientSendMessage(bidReq, auc.getPlayerName());
-        } else {
+        }
+        else {
             isBidOk = false;
         }
 

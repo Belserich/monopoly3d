@@ -8,7 +8,6 @@ package de.btu.monopoly.input;
 import de.btu.monopoly.core.service.FieldService;
 import de.btu.monopoly.data.field.Field;
 import de.btu.monopoly.data.player.Player;
-
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -37,12 +36,11 @@ public class InputHandler {
             } catch (NumberFormatException ex) {
                 LOGGER.log(Level.WARNING, "Fehler: falsche Eingabe!");
             }
-        
+
             if (output < 1 || output > max) {
                 LOGGER.log(Level.INFO, "Deine Eingabe liegt nicht im Wertebereich! Bitte erneut versuchen.");
             }
-        }
-        while (output < 1 || output > max);
+        } while (output < 1 || output > max);
         return output;
     }
 

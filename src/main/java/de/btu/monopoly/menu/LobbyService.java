@@ -72,7 +72,8 @@ public class LobbyService extends Listener {
     public static void addKI(String name, int kiLevel) {
         if (kiLevel < 1 || kiLevel > 3) {
             LOGGER.warning("kein gültiges KI Level eingegeben!");
-        } else {
+        }
+        else {
             AddKiRequest req = new AddKiRequest();
             req.setKiLevel(kiLevel);
             req.setName(name);
@@ -156,12 +157,14 @@ public class LobbyService extends Listener {
             NetworkService.logClientReceiveMessage(object, lobby.getPlayerName());
             LOGGER.info("Spiel wurde bereits gestartet");
             Thread.interrupted();
-        } else if (object instanceof JoinResponse) {
+        }
+        else if (object instanceof JoinResponse) {
             NetworkService.logClientReceiveMessage(object, lobby.getPlayerName());
             JoinResponse joinres = (JoinResponse) object;
             lobby.setPlayerId(joinres.getId());
             lobby.setRandomSeed(joinres.getSeed());
-        } else if (object instanceof RefreshLobbyResponse) {
+        }
+        else if (object instanceof RefreshLobbyResponse) {
             NetworkService.logClientReceiveMessage(object, lobby.getPlayerName());
             RefreshLobbyResponse refres = (RefreshLobbyResponse) object;
             lobby.setUsers(refres.getUsers());
@@ -176,7 +179,8 @@ public class LobbyService extends Listener {
                 System.out.println("Eingabe machen für Spielstart");
             }
 
-        } else if (object instanceof GamestartResponse) {
+        }
+        else if (object instanceof GamestartResponse) {
             NetworkService.logClientReceiveMessage(object, lobby.getPlayerName());
 
             Thread t = new Thread() {
