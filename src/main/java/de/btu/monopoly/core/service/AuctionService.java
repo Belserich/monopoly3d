@@ -36,8 +36,10 @@ public class AuctionService extends Listener {
     public static void startAuction(PropertyField prop) {
 
         auc.setProperty(prop);
+        JoinAuctionRequest jaReq = new JoinAuctionRequest();
+        auc.getClient().sendTCP(jaReq);
+        NetworkService.logClientSendMessage(jaReq, auc.getPlayerName());
 
-        auc.getClient().sendTCP(new JoinAuctionRequest());
         IOService.sleep(500);
         while (auctionStillActive()) {
             // IOService.sleep(500); TODO es bleibt nur das.
@@ -73,6 +75,7 @@ public class AuctionService extends Listener {
             bidReq.setBid(bid);
             bidReq.setPlayerID(playerID);
             auc.getClient().sendTCP(bidReq);
+            NetworkService.logClientSendMessage(bidReq, auc.getPlayerName());
         } else {
             isBidOk = false;
         }
@@ -90,6 +93,7 @@ public class AuctionService extends Listener {
         ExitAuctionRequest exReq = new ExitAuctionRequest();
         exReq.setPlayerID(playerID);
         auc.getClient().sendTCP(exReq);
+        NetworkService.logClientSendMessage(exReq, auc.getPlayerName());
 
     }
 
@@ -154,8 +158,10 @@ public class AuctionService extends Listener {
 
     @Override
     public void received(Connection connection, Object object) {
+
         if (object instanceof BroadcastAuctionResponse) {
             aucPlayers = ((BroadcastAuctionResponse) object).getAucPlayers();
+            NetworkService.logClientReceiveMessage(object, auc.getPlayerName());
         }
     }
 

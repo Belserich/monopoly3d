@@ -11,7 +11,6 @@ import com.esotericsoftware.kryonet.Server;
 import de.btu.monopoly.core.service.NetworkService;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.net.networkClasses.*;
-import java.util.logging.Logger;
 
 /**
  *
@@ -19,7 +18,6 @@ import java.util.logging.Logger;
  */
 public class AuctionTable extends Listener {
 
-    private static final Logger LOGGER = Logger.getLogger(AuctionTable.class.getCanonicalName());
     private Server server;
     private static Player[] players;
     private static int[][] aucPlayers;
@@ -61,20 +59,24 @@ public class AuctionTable extends Listener {
         BroadcastAuctionResponse res = new BroadcastAuctionResponse();
         res.setAucPlayers(aucPlayers);
         server.sendToAllTCP(res);
-        NetworkService.logSendMessage(res);
+        NetworkService.logServerSendMessage(res);
     }
 
     //LISTENER:____________________________________________________________________
     @Override
     public void received(Connection connection, Object object) {
+
         if (object instanceof JoinAuctionRequest) {
+            NetworkService.logServerReceiveMessage(object);
             generateAuctionPlayerList();
             broadcastList();
         } else if (object instanceof BidRequest) {
+            NetworkService.logServerReceiveMessage(object);
             BidRequest req = (BidRequest) object;
             setBid(req.getPlayerID(), req.getBid());
             broadcastList();
         } else if (object instanceof ExitAuctionRequest) {
+            NetworkService.logServerReceiveMessage(object);
             ExitAuctionRequest req = (ExitAuctionRequest) object;
             exitPlayer(req.getPlayerID());
         }

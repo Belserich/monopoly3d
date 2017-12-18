@@ -16,6 +16,7 @@ public class Auction {
     private Player winner;
     private GameClient client;
     private int propPrice;
+    private String playerName;
 
     /**
      *
@@ -25,6 +26,7 @@ public class Auction {
     public Auction(Player[] players, GameClient client) {
         this.players = players;
         this.client = client;
+        this.playerName = client.getPlayerOnClient().getName();
     }
 
     /**
@@ -82,6 +84,13 @@ public class Auction {
      */
     public GameClient getClient() {
         return client;
+    }
+
+    /**
+     * @return the playerName
+     */
+    public String getPlayerName() {
+        return playerName;
     }
 
 }

@@ -6,9 +6,9 @@
 package de.btu.monopoly.menu;
 
 import com.esotericsoftware.kryonet.Connection;
-import com.esotericsoftware.kryonet.FrameworkMessage;
 import com.esotericsoftware.kryonet.Listener;
 import de.btu.monopoly.core.Game;
+import de.btu.monopoly.core.service.NetworkService;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.input.InputHandler;
 import de.btu.monopoly.net.client.GameClient;
@@ -62,7 +62,7 @@ public class LobbyService extends Listener {
         changeName(InputHandler.askForString());
 
         if (lobby.isHost()) {
-            addKI("Computergegner", 1);
+//            addKI("Computergegner", 1);
             System.out.println("Eingabe machen für Spielstart");
             InputHandler.askForString();
             gamestartRequest();
@@ -77,6 +77,7 @@ public class LobbyService extends Listener {
             req.setKiLevel(kiLevel);
             req.setName(name);
             lobby.getPlayerClient().sendTCP(req);
+            NetworkService.logClientSendMessage(req, lobby.getPlayerName());
         }
 
     }
@@ -121,46 +122,47 @@ public class LobbyService extends Listener {
         BroadcastRandomSeedRequest req = new BroadcastRandomSeedRequest();
         req.setSeed(seed);
         lobby.getPlayerClient().sendTCP(req);
+        NetworkService.logClientSendMessage(req, lobby.getPlayerName());
     }
 
     // REQUESTS:__________________________________an LobbyTable
     private static void joinRequest() {
-        LOGGER.log(Level.FINER, "{0} sendet JoinRequest", lobby.getPlayerName());
         JoinRequest req = new JoinRequest();
         req.setName(lobby.getPlayerName());
         lobby.getPlayerClient().sendTCP(req);
+        NetworkService.logClientSendMessage(req, lobby.getPlayerName());
 
     }
 
     private static void changeUsernameRequest() {
-        LOGGER.log(Level.FINER, "{0} sendet RefreshRequest", lobby.getPlayerName());
         ChangeUsernameRequest req = new ChangeUsernameRequest();
         req.setUserName(lobby.getPlayerName());
         req.setUserId(lobby.getPlayerId());
         lobby.getPlayerClient().sendTCP(req);
+        NetworkService.logClientSendMessage(req, lobby.getPlayerName());
     }
 
     private static void gamestartRequest() {
-        LOGGER.log(Level.FINER, "{0} sendet GamestartRequest", lobby.getPlayerName());
-        lobby.getPlayerClient().sendTCP(new GamestartRequest());
+        GamestartRequest gaReq = new GamestartRequest();
+        lobby.getPlayerClient().sendTCP(gaReq);
+        NetworkService.logClientSendMessage(gaReq, lobby.getPlayerName());
     }
 
     //LISTENER:______________________________________________________________
     @Override
     public void received(Connection connection, Object object) {
 
-        if (object instanceof FrameworkMessage) {
-            // TODO LOG
-        } else if (object instanceof JoinImpossibleResponse) {
+        if (object instanceof JoinImpossibleResponse) {
+            NetworkService.logClientReceiveMessage(object, lobby.getPlayerName());
             LOGGER.info("Spiel wurde bereits gestartet");
             Thread.interrupted();
         } else if (object instanceof JoinResponse) {
-            LOGGER.finer("JoinResponse wird verarbeitet");
+            NetworkService.logClientReceiveMessage(object, lobby.getPlayerName());
             JoinResponse joinres = (JoinResponse) object;
             lobby.setPlayerId(joinres.getId());
             lobby.setRandomSeed(joinres.getSeed());
         } else if (object instanceof RefreshLobbyResponse) {
-            LOGGER.finer("RefreshLobbyResponse wird verarbeitet");
+            NetworkService.logClientReceiveMessage(object, lobby.getPlayerName());
             RefreshLobbyResponse refres = (RefreshLobbyResponse) object;
             lobby.setUsers(refres.getUsers());
 
@@ -174,8 +176,8 @@ public class LobbyService extends Listener {
                 System.out.println("Eingabe machen für Spielstart");
             }
 
-        } else if (object instanceof GamestartResponse) { //TODO elegantere Loesung
-            LOGGER.finer("GamestartResponse wird verarbeitet");
+        } else if (object instanceof GamestartResponse) {
+            NetworkService.logClientReceiveMessage(object, lobby.getPlayerName());
 
             Thread t = new Thread() {
                 @Override
@@ -185,9 +187,8 @@ public class LobbyService extends Listener {
             };
             t.setName("Game");
             t.start();
-        } else {
-            LOGGER.log(Level.WARNING, "Falsches packet angekommen! {0}", object.getClass());
         }
+
     }
 
 }

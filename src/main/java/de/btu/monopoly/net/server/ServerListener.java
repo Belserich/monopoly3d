@@ -21,25 +21,25 @@ import de.btu.monopoly.net.networkClasses.PlayerTradeResponse;
 public class ServerListener extends Listener {
 
     private Server server;
-    
+
     public ServerListener(Server server) {
         this.server = server;
     }
-    
+
     @Override
     public void received(Connection connection, Object object) {
         super.received(connection, object);
 
         if (!(object instanceof FrameworkMessage)) {
-            NetworkService.logReceiveMessage(object);
-            
+
             if (object instanceof BroadcastPlayerChoiceRequest) {
+                NetworkService.logServerReceiveMessage(object);
                 server.sendToAllExceptTCP(connection.getID(), object);
-            }
-            else if (object instanceof PlayerTradeRequest) {
+            } else if (object instanceof PlayerTradeRequest) {
+                NetworkService.logServerReceiveMessage(object);
                 server.sendToAllExceptTCP(connection.getID(), object);
-            }
-            else if (object instanceof  PlayerTradeResponse) {
+            } else if (object instanceof PlayerTradeResponse) {
+                NetworkService.logServerReceiveMessage(object);
                 server.sendToAllExceptTCP(connection.getID(), object);
             }
         }

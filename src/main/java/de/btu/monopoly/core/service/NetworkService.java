@@ -47,11 +47,19 @@ public class NetworkService {
         kryo.register(int[][].class);
     }
 
-    public static void logReceiveMessage(Object obj) {
-        LOGGER.info("<- " + obj.getClass().getSimpleName());
+    public static void logServerReceiveMessage(Object obj) {
+        LOGGER.info("S <- " + obj.getClass().getSimpleName());
     }
 
-    public static void logSendMessage(Object obj) {
-        LOGGER.info("-> " + obj.getClass().getSimpleName());
+    public static void logServerSendMessage(Object obj) {
+        LOGGER.info("S -> " + obj.getClass().getSimpleName());
+    }
+
+    public static void logClientReceiveMessage(Object obj, String name) {
+        LOGGER.info("C <- " + obj.getClass().getSimpleName() + "(" + name + ")");
+    }
+
+    public static void logClientSendMessage(Object obj, String name) {
+        LOGGER.info("C -> " + obj.getClass().getSimpleName() + "(" + name + ")");
     }
 }

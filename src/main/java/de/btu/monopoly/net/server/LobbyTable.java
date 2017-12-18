@@ -6,7 +6,6 @@
 package de.btu.monopoly.net.server;
 
 import com.esotericsoftware.kryonet.Connection;
-import com.esotericsoftware.kryonet.FrameworkMessage;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 import de.btu.monopoly.core.service.NetworkService;
@@ -120,14 +119,14 @@ public class LobbyTable extends Listener {
         joinres.setId(id);
         joinres.setSeed(randomSeed);
         connection.sendTCP(joinres);
-        NetworkService.logSendMessage(joinres);
+        NetworkService.logServerSendMessage(joinres);
     }
 
     public void refreshLobbyResponse() {
         RefreshLobbyResponse refres = new RefreshLobbyResponse();
         refres.setUsers(users);
         server.sendToAllTCP(refres);
-        NetworkService.logSendMessage(refres);
+        NetworkService.logServerSendMessage(refres);
     }
 
     public void gamestartResponse() {
@@ -135,42 +134,46 @@ public class LobbyTable extends Listener {
         refreshLobbyResponse();
         GamestartResponse gares = new GamestartResponse();
         server.sendToAllTCP(gares);
+        NetworkService.logServerSendMessage(gares);
     }
 
     // LISTENER:_____________________________________________
     @Override
     public void received(Connection connection, Object object) {
-        super.received(connection, object);
+//        super.received(connection, object);
 
-        if (!(object instanceof FrameworkMessage)) {
-            NetworkService.logReceiveMessage(object);
-
-            if (object instanceof JoinRequest) {
-                if (!gameStarted) {
-                    JoinRequest joinreq = (JoinRequest) object;
-                    registerUser(joinreq.getName(), connection, 0);
-                } else {
-                    connection.sendTCP(new JoinImpossibleResponse());
-                }
-            } else if (object instanceof AddKiRequest) {
-                LOGGER.finer("AddKiRequest erhalten");
-                AddKiRequest akr = (AddKiRequest) object;
-                registerUser(akr.getName(), connection, akr.getKiLevel());
-            } else if (object instanceof ChangeUsernameRequest) {
-                LOGGER.finer("ChangeUsernameRequest erhalten");
-                ChangeUsernameRequest chanreq = (ChangeUsernameRequest) object;
-                changeUserName(chanreq.getUserId(), chanreq.getUserName());
-            } else if (object instanceof GamestartRequest) {
-                LOGGER.finer("GamestartRequest erhalten");
-                gameStarted = true;
-                shuffle();
-                refreshLobbyResponse();
-                gamestartResponse();
-            } else if (object instanceof BroadcastRandomSeedRequest) {
-                BroadcastRandomSeedRequest req = (BroadcastRandomSeedRequest) object;
-                randomSeed = req.getSeed();
+        if (object instanceof JoinRequest) {
+            NetworkService.logServerReceiveMessage(object);
+            if (!gameStarted) {
+                JoinRequest joinreq = (JoinRequest) object;
+                registerUser(joinreq.getName(), connection, 0);
+            } else {
+                connection.sendTCP(new JoinImpossibleResponse());
+                NetworkService.logServerSendMessage(new JoinImpossibleResponse());
             }
+        } else if (object instanceof AddKiRequest) {
+            NetworkService.logServerReceiveMessage(object);
+            LOGGER.finer("AddKiRequest erhalten");
+            AddKiRequest akr = (AddKiRequest) object;
+            registerUser(akr.getName(), connection, akr.getKiLevel());
+        } else if (object instanceof ChangeUsernameRequest) {
+            NetworkService.logServerReceiveMessage(object);
+            LOGGER.finer("ChangeUsernameRequest erhalten");
+            ChangeUsernameRequest chanreq = (ChangeUsernameRequest) object;
+            changeUserName(chanreq.getUserId(), chanreq.getUserName());
+        } else if (object instanceof GamestartRequest) {
+            NetworkService.logServerReceiveMessage(object);
+            LOGGER.finer("GamestartRequest erhalten");
+            gameStarted = true;
+            shuffle();
+            refreshLobbyResponse();
+            gamestartResponse();
+        } else if (object instanceof BroadcastRandomSeedRequest) {
+            NetworkService.logServerReceiveMessage(object);
+            BroadcastRandomSeedRequest req = (BroadcastRandomSeedRequest) object;
+            randomSeed = req.getSeed();
         }
+
     }
 
     @Override
