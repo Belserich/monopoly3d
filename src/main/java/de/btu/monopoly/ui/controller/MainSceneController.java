@@ -5,14 +5,12 @@
  */
 package de.btu.monopoly.ui.controller;
 
-import de.btu.monopoly.core.Game;
-import de.btu.monopoly.core.GameBoard;
+import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.menu.Lobby;
 import de.btu.monopoly.net.client.GameClient;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import javafx.animation.FillTransition;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
@@ -162,14 +160,52 @@ public class MainSceneController implements Initializable {
     @FXML
     private Pane schlossAllee;
 
-    private final Pane[] FELDER = {goField, badStr, gemenschaft1, turmStr, einkommenSt, suedBahnhof,
-        chauseeStr, ereignis1, elisenStr, postStr, besuch, seeStr, elWerk, hafenStr, neueStr, westBahnhof, muenchenerStr,
-        gemeinschaft2, wienerStr, berlinerStr, parkplatz, theaterStr, ereignis2, museumStr, opernplatz, nordBahnhof,
-        lessingStr, schillerStr, wasserWerk, goetheStr, jailField, rathhausPlatz, hauptStr, gemeinschat3, bahnhofStr,
-        hauptBahnhof, ereignis3, parkStr, zusatzSt, schlossAllee};
+    private Pane[] Felder;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
+        Felder = new Pane[40];
+        Felder[0] = goField;
+        Felder[1] = badStr;
+        Felder[2] = gemenschaft1;
+        Felder[3] = turmStr;
+        Felder[4] = einkommenSt;
+        Felder[5] = suedBahnhof;
+        Felder[6] = chauseeStr;
+        Felder[7] = ereignis1;
+        Felder[8] = elisenStr;
+        Felder[9] = postStr;
+        Felder[10] = besuch;
+        Felder[11] = seeStr;
+        Felder[12] = elWerk;
+        Felder[13] = hafenStr;
+        Felder[14] = neueStr;
+        Felder[15] = westBahnhof;
+        Felder[16] = muenchenerStr;
+        Felder[17] = gemeinschaft2;
+        Felder[18] = wienerStr;
+        Felder[19] = berlinerStr;
+        Felder[20] = parkplatz;
+        Felder[21] = theaterStr;
+        Felder[22] = ereignis2;
+        Felder[23] = museumStr;
+        Felder[24] = opernplatz;
+        Felder[25] = nordBahnhof;
+        Felder[26] = lessingStr;
+        Felder[27] = wasserWerk;
+        Felder[28] = schillerStr;
+        Felder[29] = goetheStr;
+        Felder[30] = jailField;
+        Felder[31] = rathhausPlatz;
+        Felder[32] = hauptStr;
+        Felder[33] = gemeinschat3;
+        Felder[34] = bahnhofStr;
+        Felder[35] = hauptBahnhof;
+        Felder[36] = ereignis3;
+        Felder[37] = parkStr;
+        Felder[38] = zusatzSt;
+        Felder[39] = schlossAllee;
 
         //Bilder hinzufuegen
         /*Background*/
@@ -253,7 +289,7 @@ public class MainSceneController implements Initializable {
                 player5.setFill(Color.web(Lobby.getUsers()[5][4]));
             }
         }
-       
+
     }
 
     //TODO muss optimiert werden
@@ -261,48 +297,30 @@ public class MainSceneController implements Initializable {
     public void movePlayerAction() {
 
     }
-//if (client.getPlayerOnClient().getPosition() == i) {
-//                        getPaneId(Lobby.getUsers(), felder[i], i);
-//                    }
 
-    @FXML
     public void playerUpdate() {
-        client = Lobby.getPlayerClient();
-
-        Task task = new Task<Void>() {
-
+        Player[] players = Lobby.getPlayerClient().getGame().getPlayers();
+        Task task = new Task() {
             @Override
-            protected Void call() throws Exception {
-        System.out.println(FELDER.length);
-        System.out.println(client.getGame().getPlayers().length);
-        for (int i = 0; i < FELDER.length; i++) {
-            for (int j = 0; j < client.getGame().getPlayers().length; j++) {
-                if (client.getGame().getPlayers()[j].getPosition() == i) {
-
-                    if (client.getGame().getPlayers()[j] == client.getGame().getPlayers()[0]) {
-                        System.out.println(FELDER[i]);
-                        System.out.println(player0);
-                        FELDER[i].setShape(player0);
-                    }
-                    if (client.getGame().getPlayers()[j] == client.getGame().getPlayers()[1]) {
-                        FELDER[i].setShape(player1);
-                    }
-                    if (client.getGame().getPlayers()[j] == client.getGame().getPlayers()[2]) {
-                        FELDER[i].setShape(player2);
-                    }
-                    if (client.getGame().getPlayers()[j] == client.getGame().getPlayers()[3]) {
-                        FELDER[i].setShape(player3);
-                    }
-                    if (client.getGame().getPlayers()[j] == client.getGame().getPlayers()[4]) {
-                        FELDER[i].setShape(player4);
-                    }
-                    if (client.getGame().getPlayers()[j] == client.getGame().getPlayers()[5]) {
-                        FELDER[i].setShape(player5);
-                    }
+            protected Object call() throws Exception {
+                if (players.length >= 1) {
+                    Felder[players[0].getPosition()].getChildren().add(player0);
                 }
-            }
-        }
-
+                if (players.length >= 2) {
+                    Felder[players[1].getPosition()].getChildren().add(player1);
+                }
+                if (players.length >= 3) {
+                    Felder[players[2].getPosition()].getChildren().add(player2);
+                }
+                if (players.length >= 4) {
+                    Felder[players[3].getPosition()].getChildren().add(player3);
+                }
+                if (players.length >= 5) {
+                    Felder[players[4].getPosition()].getChildren().add(player4);
+                }
+                if (players.length >= 6) {
+                    Felder[players[5].getPosition()].getChildren().add(player5);
+                }
                 return null;
             }
         };

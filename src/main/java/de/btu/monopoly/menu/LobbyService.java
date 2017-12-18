@@ -243,7 +243,7 @@ public class LobbyService extends Listener {
             // Scene bei anderen Spielern öffnen
             try {
                 SceneManager.openGameLayout();
-                System.out.print("Testitestitest");
+
             } catch (IOException ex) {
                 LOGGER.warning("Scene konnte nicht geladen werden" + ex);
             }
