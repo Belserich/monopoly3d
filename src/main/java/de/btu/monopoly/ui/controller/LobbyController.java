@@ -253,65 +253,78 @@ public class LobbyController implements Initializable {
     private void kiButtonAction(ActionEvent event) {
 
         if (difficultyComboBox.getSelectionModel().getSelectedItem() != null) {
-            // Colorpicker aktivieren
-            switch (Lobby.getUsers().length) {
-                case 1: {
-                    playerColor2.setDisable(false);
-                    kiID.add(1);
-                    break;
-                }
-                case 2: {
-                    playerColor3.setDisable(false);
-                    kiID.add(2);
-                    break;
-                }
-                case 3: {
-                    playerColor4.setDisable(false);
-                    kiID.add(3);
-                    break;
-                }
-                case 4: {
-                    playerColor5.setDisable(false);
-                    kiID.add(4);
-                    break;
-                }
-                case 5: {
-                    playerColor6.setDisable(false);
-                    kiID.add(5);
-                    break;
-                }
+            if (Lobby.getUsers().length < 6) {
+                if (kiNameTextField.getText() != "") {
+                    // Colorpicker aktivieren
+                    switch (Lobby.getUsers().length) {
+                        case 1: {
+                            playerColor2.setDisable(false);
+                            kiID.add(1);
+                            break;
+                        }
+                        case 2: {
+                            playerColor3.setDisable(false);
+                            kiID.add(2);
+                            break;
+                        }
+                        case 3: {
+                            playerColor4.setDisable(false);
+                            kiID.add(3);
+                            break;
+                        }
+                        case 4: {
+                            playerColor5.setDisable(false);
+                            kiID.add(4);
+                            break;
+                        }
+                        case 5: {
+                            playerColor6.setDisable(false);
+                            kiID.add(5);
+                            break;
+                        }
 
-                default: {
+                        default: {
 
+                        }
+
+                    }
+
+                    // Schwierigkeit auslesen
+                    int difficulty = -1;
+
+                    switch ((String) difficultyComboBox.getSelectionModel().getSelectedItem()) {
+                        case "Einfach": {
+                            difficulty = 1;
+                            break;
+                        }
+                        case "Mittel": {
+                            difficulty = 1;
+                            break;
+                        }
+                        case "Schwer": {
+                            difficulty = 1;
+                            break;
+                        }
+                        default: {
+
+                        }
+                    }
+
+                    // KI hinzufügen
+                    LobbyService.addKI(kiNameTextField.getText() + " ("
+                            + (String) difficultyComboBox.getSelectionModel().getSelectedItem()
+                            + ")", difficulty);
+                    kiNameTextField.setText("");
+                }
+                else {
+                    // Fehlermeldung in ComboBox
+                    kiNameTextField.setPromptText("Bitte einen Namen eingeben!");
                 }
             }
-
-            // Schwierigkeit auslesen
-            int difficulty = -1;
-
-            switch ((String) difficultyComboBox.getSelectionModel().getSelectedItem()) {
-                case "Einfach": {
-                    difficulty = 1;
-                    break;
-                }
-                case "Mittel": {
-                    difficulty = 1;
-                    break;
-                }
-                case "Schwer": {
-                    difficulty = 1;
-                    break;
-                }
-                default: {
-
-                }
+            else {
+                kiNameTextField.setPromptText("Maximale KI Anzahl!");
             }
 
-            // KI hinzufügen
-            LobbyService.addKI(kiNameTextField.getText() + " ("
-                    + (String) difficultyComboBox.getSelectionModel().getSelectedItem()
-                    + ")", difficulty);
-            kiNameTextField.setText("");
         }
         else {
             // Fehlermeldung in ComboBox
