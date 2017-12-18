@@ -4,11 +4,14 @@ package de.btu.monopoly;
 import de.btu.monopoly.core.Game;
 import de.btu.monopoly.core.GameBoard;
 import de.btu.monopoly.core.mechanics.Auction;
+import de.btu.monopoly.core.service.AuctionService;
 import de.btu.monopoly.data.card.CardManager;
 import de.btu.monopoly.data.field.*;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.net.client.GameClient;
+import de.btu.monopoly.net.networkClasses.BroadcastAuctionResponse;
 import de.btu.monopoly.net.server.GameServer;
+import java.util.Arrays;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -26,18 +29,30 @@ public class AuctionTest {
     private static GameClient client;
     private static CardManager cm;
 
+    public AuctionTest() {
+
+        players = new Player[4];
+        for (int i = 0; i < 2; i++) {
+            Player player = new Player("root " + (i + 1), i, 1500);
+            players[i] = player;
+        }
+        server = new GameServer(59687);
+        server.startServer();
+        String localHost = System.getProperty("myapplication.ip");
+        client = new GameClient(59687, 5000);
+        client.connect(localHost);
+        client.setPlayerOnClient(players[0]);
+        game = new Game(players, client, 42);
+        game.init();
+    }
+
     @Test
     public void testAuctionEnter() {
         // initialisierung
-        server = new GameServer(59687);
-        server.startServer();
-        client = new GameClient(59687, 5000);
-        String localHost = System.getProperty("myapplication.ip");
-        client.connect(localHost);
 
         Auction auc = new Auction(players, client);
         //Nullpointer?!
-        Assert.assertTrue("Spieler nicht in Auktion", players.equals(auc.getPlayers()));
+        Assert.assertTrue("Spieler nicht in Auktion", Arrays.equals(AuctionService.getAucPlayers(), BroadcastAuctionResponse.getAucPlayers()));
     }
 
 }
