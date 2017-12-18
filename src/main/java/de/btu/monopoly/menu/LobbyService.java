@@ -13,6 +13,7 @@ import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.networkClasses.*;
 import de.btu.monopoly.ui.SceneManager;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Random;
@@ -67,7 +68,8 @@ public class LobbyService extends Listener {
     public static void addKI(String name, int kiLevel) {
         if (kiLevel < 1 || kiLevel > 3) {
             LOGGER.warning("kein gültiges KI Level eingegeben!");
-        } else {
+        }
+        else {
             AddKiRequest req = new AddKiRequest();
             req.setKiLevel(kiLevel);
             req.setName(name);
@@ -129,7 +131,8 @@ public class LobbyService extends Listener {
     }
 
     /**
-     * erzeugt aus dem users[][] ein Player[], welches fuer das Spiel benoetigt wird
+     * erzeugt aus dem users[][] ein Player[], welches fuer das Spiel benoetigt
+     * wird
      *
      * @return Player[] fuer den Parameter der Game Instanz
      */
@@ -197,15 +200,18 @@ public class LobbyService extends Listener {
 
         if (object instanceof FrameworkMessage) {
             // TODO LOG
-        } else if (object instanceof JoinImpossibleResponse) {
+        }
+        else if (object instanceof JoinImpossibleResponse) {
             LOGGER.info("Spiel wurde bereits gestartet");
             Thread.interrupted();
-        } else if (object instanceof JoinResponse) {
+        }
+        else if (object instanceof JoinResponse) {
             LOGGER.finer("JoinResponse wird verarbeitet");
             JoinResponse joinres = (JoinResponse) object;
             lobby.setPlayerId(joinres.getId());
             lobby.setRandomSeed(joinres.getSeed());
-        } else if (object instanceof RefreshLobbyResponse) {
+        }
+        else if (object instanceof RefreshLobbyResponse) {
             LOGGER.finer("RefreshLobbyResponse wird verarbeitet");
             RefreshLobbyResponse refres = (RefreshLobbyResponse) object;
             lobby.setUsers(refres.getUsers());
@@ -216,7 +222,8 @@ public class LobbyService extends Listener {
                 // Kann später entfernt werden wenn Farben implementiert sind
                 SceneManager.updateLobbyColors();
             } catch (InterruptedException ex) {
-                Logger.getLogger(LobbyService.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.warning("Lobby konnte nicht geupdated werden" + ex);
+                Thread.interrupted();
             }
 
             //TODO kommt in GUI weg:
@@ -229,8 +236,17 @@ public class LobbyService extends Listener {
                 System.out.println("Eingabe machen für Spielstart");
             }
 
-        } else if (object instanceof GamestartResponse) {
+        }
+        else if (object instanceof GamestartResponse) {
             LOGGER.finer("GamestartResponse wird verarbeitet");
+
+            // Scene bei anderen Spielern öffnen
+            try {
+                SceneManager.openGameLayout();
+                System.out.print("Testitestitest");
+            } catch (IOException ex) {
+                LOGGER.warning("Scene konnte nicht geladen werden" + ex);
+            }
 
             Thread t = new Thread() {
                 @Override
@@ -240,7 +256,8 @@ public class LobbyService extends Listener {
             };
             t.setName("Game");
             t.start();
-        } else {
+        }
+        else {
             LOGGER.log(Level.WARNING, "Falsches packet angekommen! {0}", object.getClass());
         }
     }

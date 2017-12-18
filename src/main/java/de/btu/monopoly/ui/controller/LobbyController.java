@@ -163,32 +163,38 @@ public class LobbyController implements Initializable {
                 if (Lobby.getUsers() != null) {
                     if (Lobby.getUsers().length >= 1) {
                         name1Label.setText(Lobby.getUsers()[0][1]);
-                    } else {
+                    }
+                    else {
                         name1Label.setText("frei");
                     }
                     if (Lobby.getUsers().length >= 2) {
                         name2Label.setText(Lobby.getUsers()[1][1]);
-                    } else {
+                    }
+                    else {
                         name2Label.setText("frei");
                     }
                     if (Lobby.getUsers().length >= 3) {
                         name3Label.setText(Lobby.getUsers()[2][1]);
-                    } else {
+                    }
+                    else {
                         name3Label.setText("frei");
                     }
                     if (Lobby.getUsers().length >= 4) {
                         name4Label.setText(Lobby.getUsers()[3][1]);
-                    } else {
+                    }
+                    else {
                         name4Label.setText("frei");
                     }
                     if (Lobby.getUsers().length >= 5) {
                         name5Label.setText(Lobby.getUsers()[4][1]);
-                    } else {
+                    }
+                    else {
                         name5Label.setText("frei");
                     }
                     if (Lobby.getUsers().length >= 6) {
                         name6Label.setText(Lobby.getUsers()[5][1]);
-                    } else {
+                    }
+                    else {
                         name6Label.setText("frei");
                     }
 
@@ -227,9 +233,16 @@ public class LobbyController implements Initializable {
     @FXML
     private void playButtonAction(ActionEvent event) throws IOException, InterruptedException {
         SceneManager.openGameLayout();
-        // Spiel starten
-        // LobbyService.startGame();
 
+        // Spiel starten
+        Thread game = new Thread() {
+            ;
+        @Override
+            public void run() {
+                LobbyService.startGame();
+            }
+        };
+        game.start();
     }
 
     // Lobby verlassen
@@ -307,7 +320,8 @@ public class LobbyController implements Initializable {
                     + (String) difficultyComboBox.getSelectionModel().getSelectedItem()
                     + ")", difficulty);
             kiNameTextField.setText("");
-        } else {
+        }
+        else {
             // Fehlermeldung in ComboBox
             difficultyComboBox.setPromptText("Bitte auswählen!");
         }
@@ -328,7 +342,8 @@ public class LobbyController implements Initializable {
     private void pushColorPick1(ActionEvent event) throws IOException, InterruptedException {
         if (kiID.contains(1)) {
             LobbyService.changeColor(playerColor2.getValue(), 1);
-        } else {
+        }
+        else {
             LobbyService.changeColor(playerColor2.getValue());
         }
     }
@@ -337,7 +352,8 @@ public class LobbyController implements Initializable {
     private void pushColorPick2(ActionEvent event) throws IOException, InterruptedException {
         if (kiID.contains(2)) {
             LobbyService.changeColor(playerColor3.getValue(), 2);
-        } else {
+        }
+        else {
             LobbyService.changeColor(playerColor3.getValue());
         }
     }
@@ -346,7 +362,8 @@ public class LobbyController implements Initializable {
     private void pushColorPick3(ActionEvent event) throws IOException, InterruptedException {
         if (kiID.contains(3)) {
             LobbyService.changeColor(playerColor4.getValue(), 3);
-        } else {
+        }
+        else {
             LobbyService.changeColor(playerColor4.getValue());
         }
     }
@@ -355,7 +372,8 @@ public class LobbyController implements Initializable {
     private void pushColorPick4(ActionEvent event) throws IOException, InterruptedException {
         if (kiID.contains(4)) {
             LobbyService.changeColor(playerColor5.getValue(), 4);
-        } else {
+        }
+        else {
             LobbyService.changeColor(playerColor5.getValue());
         }
     }
@@ -364,7 +382,8 @@ public class LobbyController implements Initializable {
     private void pushColorPick5(ActionEvent event) throws IOException, InterruptedException {
         if (kiID.contains(5)) {
             LobbyService.changeColor(playerColor6.getValue(), 5);
-        } else {
+        }
+        else {
             LobbyService.changeColor(playerColor6.getValue());
         }
     }

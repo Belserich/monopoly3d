@@ -36,7 +36,7 @@ public class SceneManager extends Stage {
     public static void changeScene(FXMLLoader loader) throws IOException {
 
         Parent root = loader.load();
-
+        System.out.println("Lustig");
         scene.setRoot(root);
 
     }
