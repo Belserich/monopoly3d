@@ -21,6 +21,8 @@ public class AuctionTable extends Listener {
     private final Server server;
     private static Player[] players;
     private static int[][] aucPlayers;
+    private static int highestBid;
+    private static int highestBidder;
 
     /**
      * @param aPlayers the players to set
@@ -40,6 +42,8 @@ public class AuctionTable extends Listener {
             aucPlayers[i][1] = 0;
             aucPlayers[i][2] = players[i].isBankrupt() ? 0 : 1;
         }
+        highestBid = 0;
+        highestBidder = -1;
     }
 
     private void setBid(int id, int amount) {
@@ -47,6 +51,8 @@ public class AuctionTable extends Listener {
             aucPlayer[1] = (aucPlayer[0] == id) ? amount : aucPlayer[1];
         }
         broadcastList();
+        highestBid = amount;
+        highestBidder = id;
     }
 
     private void exitPlayer(int id) {
@@ -60,6 +66,8 @@ public class AuctionTable extends Listener {
     private void broadcastList() {
         BroadcastAuctionResponse res = new BroadcastAuctionResponse();
         res.setAucPlayers(aucPlayers);
+        res.setHighestBid(highestBid);
+        res.setHighestBidder(highestBidder);
         server.sendToAllTCP(res);
         NetworkService.logServerSendMessage(res);
     }

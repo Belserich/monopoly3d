@@ -12,6 +12,8 @@ package de.btu.monopoly.net.networkClasses;
 public class BroadcastAuctionResponse {
 
     private int[][] aucPlayers;
+    private int highestBid;
+    private int highestBidder;
 
     /**
      * @return the aucPlayers
@@ -25,6 +27,34 @@ public class BroadcastAuctionResponse {
      */
     public void setAucPlayers(int[][] aucPlayers) {
         this.aucPlayers = aucPlayers;
+    }
+
+    /**
+     * @return the highestBid
+     */
+    public int getHighestBid() {
+        return highestBid;
+    }
+
+    /**
+     * @param highestBid the highestBid to set
+     */
+    public void setHighestBid(int highestBid) {
+        this.highestBid = highestBid;
+    }
+
+    /**
+     * @return the highestBidder
+     */
+    public int getHighestBidder() {
+        return highestBidder;
+    }
+
+    /**
+     * @param highestBidder the highestBidder to set
+     */
+    public void setHighestBidder(int highestBidder) {
+        this.highestBidder = highestBidder;
     }
 
 }

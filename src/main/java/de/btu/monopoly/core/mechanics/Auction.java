@@ -12,10 +12,12 @@ import de.btu.monopoly.net.client.GameClient;
 public class Auction {
 
     private Player[] players;
+    private int[][] aucPlayers;
     private PropertyField property;
     private Player winner;
+    private int highestBidder;
+    private int highestBid;
     private GameClient client;
-    private int propPrice;
     private String playerName;
 
     /**
@@ -66,17 +68,17 @@ public class Auction {
     }
 
     /**
-     * @return the propPrice
+     * @return the highestBid
      */
-    public int getPropPrice() {
-        return propPrice;
+    public int getHighestBid() {
+        return highestBid;
     }
 
     /**
-     * @param propPrice the propPrice to set
+     * @param highestBid the highestBid to set
      */
-    public void setPropPrice(int propPrice) {
-        this.propPrice = propPrice;
+    public void setHighestBid(int highestBid) {
+        this.highestBid = highestBid;
     }
 
     /**
@@ -91,6 +93,34 @@ public class Auction {
      */
     public String getPlayerName() {
         return playerName;
+    }
+
+    /**
+     * @return the aucPlayers
+     */
+    public int[][] getAucPlayers() {
+        return aucPlayers;
+    }
+
+    /**
+     * @param aucPlayers the aucPlayers to set
+     */
+    public void setAucPlayers(int[][] aucPlayers) {
+        this.aucPlayers = aucPlayers;
+    }
+
+    /**
+     * @return the highestBidder
+     */
+    public int getHighestBidder() {
+        return highestBidder;
+    }
+
+    /**
+     * @param highestBidder the highestBidder to set
+     */
+    public void setHighestBidder(int highestBidder) {
+        this.highestBidder = highestBidder;
     }
 
 }

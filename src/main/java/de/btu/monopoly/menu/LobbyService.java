@@ -62,7 +62,7 @@ public class LobbyService extends Listener {
         changeName(InputHandler.askForString());
 
         if (lobby.isHost()) {
-//            addKI("Computergegner", 1);
+            addKI("Computergegner", 1);
             System.out.println("Eingabe machen für Spielstart");
             InputHandler.askForString();
             gamestartRequest();

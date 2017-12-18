@@ -7,6 +7,7 @@ package de.btu.monopoly.input;
 
 import de.btu.monopoly.core.Game;
 import de.btu.monopoly.core.GameBoard;
+import de.btu.monopoly.core.mechanics.Auction;
 import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.ki.EasyKi;
@@ -14,6 +15,8 @@ import de.btu.monopoly.ki.HardKi;
 import de.btu.monopoly.ki.MediumKi;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.networkClasses.BroadcastPlayerChoiceRequest;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -95,26 +98,27 @@ public class IOService {
         return choice;
     }
 
-    public static void betSequence(Player[] players, int[][] aucPlayers) {
-//        Player[] kiPlayer = players;
-//        Collections.shuffle(Arrays.asList(kiPlayer));
-//        Player rndKi = null;
-//        for (int i = 0; i < kiPlayer.length; i++) {
-//            rndKi = (kiPlayer[i].getKiLevel() > 0) ? kiPlayer[i] : rndKi;
-//        }
-//        switch (rndKi.getKiLevel()) {
-//            case 1:
-//                EasyKi.processBetSequence();
-//                break;
-//            case 2:
+    public static void betSequence(Auction auc) {
+        Player[] kiPlayers = auc.getPlayers();
+        Collections.shuffle(Arrays.asList(kiPlayers));
+        Player rndKi = null;
+        for (Player ki : kiPlayers) {
+            rndKi = (ki.getKiLevel() > 0) ? ki : rndKi;
+        }
+        LOGGER.log(Level.FINE, "{0} (KI) nimmt an Auktion teil.", rndKi.getName());
+        switch (rndKi.getKiLevel()) {
+            case 1:
+                EasyKi.processBetSequence(rndKi);
+                break;
+            case 2:
 //                MediumKi.processBetSequence();
-//                break;
-//            case 3:
+                break;
+            case 3:
 //                HardKi.processBetSequence();
-//                break;
-//            default:
-//                LOGGER.warning("Illegale KI-Stufe in BetSequence registriert");
-//        }
+                break;
+            default:
+                LOGGER.warning("Illegale KI-Stufe in BetSequence registriert");
+        }
     }
 
     /**
