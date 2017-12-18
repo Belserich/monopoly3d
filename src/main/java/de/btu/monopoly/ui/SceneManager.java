@@ -64,4 +64,10 @@ public class SceneManager extends Stage {
 
     }
 
+    public static void openGameLayout() throws IOException {
+        if (controller != null) {
+            controller.loadGameLayout();
+        }
+    }
+
 }

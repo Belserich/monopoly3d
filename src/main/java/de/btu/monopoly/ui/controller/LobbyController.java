@@ -226,12 +226,9 @@ public class LobbyController implements Initializable {
     // Spiel starten
     @FXML
     private void playButtonAction(ActionEvent event) throws IOException, InterruptedException {
-
-        // Wechselt die Scene auf Game
-        SceneManager.changeScene(new FXMLLoader(getClass().getResource("/fxml/mainScene.fxml")));
-
+        SceneManager.openGameLayout();
         // Spiel starten
-//        LobbyService.startGame();
+        // LobbyService.startGame();
     }
 
     // Lobby verlassen
@@ -369,5 +366,10 @@ public class LobbyController implements Initializable {
         } else {
             LobbyService.changeColor(playerColor6.getValue());
         }
+    }
+
+    public void loadGameLayout() throws IOException {
+        // Wechselt die Scene auf Game
+        SceneManager.changeScene(new FXMLLoader(getClass().getResource("/fxml/mainScene.fxml")));
     }
 }

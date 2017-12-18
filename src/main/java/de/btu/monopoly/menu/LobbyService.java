@@ -121,6 +121,7 @@ public class LobbyService extends Listener {
      * erstellt eine Gameinstanz und startet das Spiel
      */
     public static void startGame() {
+
         Game controller = new Game(generatePlayerArray(), lobby.getPlayerClient(), lobby.getRandomSeed());
         lobby.getPlayerClient().setGame(controller);
         controller.init();
