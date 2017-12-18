@@ -398,4 +398,25 @@ public class MainSceneController implements Initializable {
     private void player0ButtonAction(ActionEvent event) throws IOException, InterruptedException {
 
     }
+    @FXML
+    private void player1ButtonAction(ActionEvent event) throws IOException, InterruptedException {
+
+    }
+    @FXML
+    private void player2ButtonAction(ActionEvent event) throws IOException, InterruptedException {
+
+    }
+    @FXML
+    private void player3ButtonAction(ActionEvent event) throws IOException, InterruptedException {
+
+    }
+    @FXML
+    private void player4ButtonAction(ActionEvent event) throws IOException, InterruptedException {
+
+    }
+    @FXML
+    private void player5ButtonAction(ActionEvent event) throws IOException, InterruptedException {
+
+    }
+    
 }
