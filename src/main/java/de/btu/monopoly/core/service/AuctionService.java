@@ -56,7 +56,9 @@ public class AuctionService extends Listener {
             }
         }
 
-        FieldService.buyPropertyField(getAuc().getWinner(), getAuc().getProperty(), getAuc().getPropPrice());
+        if (auc.getWinner() != null) {
+            FieldService.buyPropertyField(getAuc().getWinner(), getAuc().getProperty(), getAuc().getPropPrice());
+        }
 
     }
 
@@ -68,16 +70,17 @@ public class AuctionService extends Listener {
      */
     public static boolean setBid(int playerID, int bid) {
 
-        boolean isBidOk = true;
+        boolean isBidOk = false;
 
-        if (bid > getHighestBid()) {
-            BidRequest bidReq = new BidRequest();
-            bidReq.setBid(bid);
-            bidReq.setPlayerID(playerID);
-            auc.getClient().sendTCP(bidReq);
-            NetworkService.logClientSendMessage(bidReq, auc.getPlayerName());
-        } else {
-            isBidOk = false;
+        if (PlayerService.checkLiquidity(getPlayer(playerID), bid)) {
+            if (bid > getHighestBid()) {
+                isBidOk = true;
+                BidRequest bidReq = new BidRequest();
+                bidReq.setBid(bid);
+                bidReq.setPlayerID(playerID);
+                auc.getClient().sendTCP(bidReq);
+                NetworkService.logClientSendMessage(bidReq, auc.getPlayerName());
+            }
         }
 
         return isBidOk;
@@ -195,4 +198,22 @@ public class AuctionService extends Listener {
         return aucPlayers;
     }
 
+    /**
+     * Holt aus der ID den Player
+     *
+     * @param playerID
+     * @return
+     */
+    public static Player getPlayer(int playerID) {
+
+        Player[] players = auc.getPlayers();
+        Player retPlayer = null;
+
+        for (Player player : players) {
+            if (player.getId() == playerID) {
+                retPlayer = player;
+            }
+        }
+        return retPlayer;
+    }
 }
