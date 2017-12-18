@@ -56,10 +56,6 @@ public class AuctionService extends Listener {
                     break;
             }
         }
-        System.out.println(auc.getWinner());
-        System.out.println(auc.getPropPrice());
-        System.out.println(auc.getProperty());
-
         FieldService.buyPropertyField(auc.getWinner(), auc.getProperty(), auc.getPropPrice());
 
     }
