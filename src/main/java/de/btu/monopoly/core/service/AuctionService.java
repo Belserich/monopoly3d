@@ -176,8 +176,8 @@ public class AuctionService extends Listener {
             for (int i = 0; i < aucPlayers.length; i++) {
 
                 System.out.println("ID[" + aucPlayers[i][0] + "] " + aucPlayers[i][1] + "€ - aktiv:" + aucPlayers[i][2]);
-                System.out.println(auc.getWinner() + " - " + auc.getPropPrice() + "€");
             }
+            System.out.println(auc.getWinner() + " - " + auc.getPropPrice() + "€");
         }
     }
 
