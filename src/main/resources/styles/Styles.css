@@ -3,22 +3,22 @@
 }
 .losBackground{
     -fx-background-image: url("https://www.pearl.de/produkt-infos/monopoly/los.jpg") ;
-
-    -fx-background-size: contain;
+    -fx-background-position: center;
+    -fx-background-size: stretch;
 }
 .bescuhBackground{
     -fx-background-image: url("http://www.brettspiele-report.de/images/monopoly/monopoly_eckfelder_jail_gefaengnis.jpg") ;
-
-    -fx-background-size: contain;
+    -fx-background-position: center;
+    -fx-background-size: stretch;
 
 }
 .parkBackground{
     -fx-background-image: url("http://www.ln-online.de/var/storage/images/ln/nachrichten/wirtschaft/wirtschaft-im-norden/neue-idee-e-autos-parken-kostenlos/41096489-2-ger-DE/Neue-Idee-E-Autos-parken-kostenlos_ArtikelQuer.jpg") ;
-
-    -fx-background-size: contain;
+    -fx-background-position: center;
+    -fx-background-size: stretch;
 }
 .jailBachground{
     -fx-background-image: url("https://www.rhein-zeitung.de/cms_media/module_img/1044/522467_1_popup_522467_1_org_knast.jpg") ;
-
-    -fx-background-size: contain;
+    -fx-background-position: center;
+    -fx-background-size: stretch;
 }
