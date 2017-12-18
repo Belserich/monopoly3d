@@ -21,7 +21,7 @@ import java.util.logging.Logger;
 public class LobbyTable extends Listener {
 
     private static final Logger LOGGER = Logger.getLogger(LobbyTable.class.getCanonicalName());
-    private Server server;
+    private final Server server;
     private String[][] users;
     private boolean gameStarted = false;
     private long randomSeed;
@@ -71,9 +71,9 @@ public class LobbyTable extends Listener {
     public void changeUserName(int id, String name) {
         LOGGER.finer("Username wird geändert");
         String idstr = Integer.toString(id);
-        for (int i = 0; i < users.length; i++) {
-            if (users[i][0].equals(idstr)) {
-                users[i][1] = name;
+        for (String[] user : users) {
+            if (user[0].equals(idstr)) {
+                user[1] = name;
             }
         }
 

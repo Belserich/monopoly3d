@@ -23,6 +23,7 @@ public class AuctionService extends Listener {
      * Initialisierung des "Auktionshauses"
      *
      * @param players
+     * @param client
      */
     public static void initAuction(Player[] players, GameClient client) {
         auc = new Auction(players, client);
@@ -55,8 +56,11 @@ public class AuctionService extends Listener {
                     break;
             }
         }
+        System.out.println(auc.getWinner());
+        System.out.println(auc.getPropPrice());
+        System.out.println(auc.getProperty());
 
-        FieldService.buyPropertyField(getAuc().getWinner(), getAuc().getProperty(), getAuc().getPropPrice());
+        FieldService.buyPropertyField(auc.getWinner(), auc.getProperty(), auc.getPropPrice());
 
     }
 
@@ -65,6 +69,7 @@ public class AuctionService extends Listener {
      *
      * @param playerID
      * @param bid
+     * @return true wenn Gebot hoeher gesetzt
      */
     public static boolean setBid(int playerID, int bid) {
 
@@ -107,9 +112,9 @@ public class AuctionService extends Listener {
 
         int highestBid = -1;
 
-        for (int i = 0; i < getAucPlayers().length; i++) {
-            if (highestBid < getAucPlayers()[i][1] && getAucPlayers()[i][1] != 0) {
-                highestBid = getAucPlayers()[i][1];
+        for (int[] aucPlayer : getAucPlayers()) {
+            if (highestBid < aucPlayer[1] && aucPlayer[1] != 0) {
+                highestBid = aucPlayer[1];
             }
         }
 
@@ -126,9 +131,9 @@ public class AuctionService extends Listener {
         int playerID = -1;
         int highestBid = -1;
 
-        for (int i = 0; i < getAucPlayers().length; i++) {
-            if (highestBid < getAucPlayers()[i][1] && getAucPlayers()[i][1] != 0) {
-                playerID = getAucPlayers()[i][0];
+        for (int[] aucPlayer : getAucPlayers()) {
+            if (highestBid < aucPlayer[1] && aucPlayer[1] != 0) {
+                playerID = aucPlayer[0];
             }
         }
 
@@ -144,8 +149,8 @@ public class AuctionService extends Listener {
 
         int activCount = 0;
         boolean stillActive = false;
-        for (int i = 0; i < getAucPlayers().length; i++) {
-            activCount += getAucPlayers()[i][2];
+        for (int[] aucPlayer : getAucPlayers()) {
+            activCount += aucPlayer[2];
         }
 
         if (activCount > 1) {
@@ -174,9 +179,8 @@ public class AuctionService extends Listener {
 
             //kommt weg:
             System.out.println("Lobby: \nStraße: " + auc.getProperty() + "\nPreis:  " + auc.getPropPrice() + "\nAuktionäre:");
-            for (int i = 0; i < aucPlayers.length; i++) {
-
-                System.out.println("ID[" + aucPlayers[i][0] + "] " + aucPlayers[i][1] + "€ - aktiv:" + aucPlayers[i][2]);
+            for (int[] aucPlayer : aucPlayers) {
+                System.out.println("ID[" + aucPlayer[0] + "] " + aucPlayer[1] + "€ - aktiv:" + aucPlayer[2]);
             }
             System.out.println(auc.getWinner() + " - " + auc.getPropPrice() + "€");
         }
