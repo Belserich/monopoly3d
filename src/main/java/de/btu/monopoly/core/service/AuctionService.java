@@ -160,6 +160,24 @@ public class AuctionService extends Listener {
         if (object instanceof BroadcastAuctionResponse) {
             aucPlayers = ((BroadcastAuctionResponse) object).getAucPlayers();
             NetworkService.logClientReceiveMessage(object, auc.getPlayerName());
+            for (int[] aucPlayer : aucPlayers) {
+                if (aucPlayer[1] > auc.getPropPrice()) {
+                    auc.setPropPrice(aucPlayer[1]);
+                    for (Player player : auc.getPlayers()) {
+                        if (player.getId() == aucPlayer[0]) {
+                            auc.setWinner(player);
+                        }
+                    }
+                }
+            }
+
+            //kommt weg:
+            System.out.println("Lobby: \nStraße: " + auc.getProperty() + "\nPreis:  " + auc.getPropPrice() + "\nAuktionäre:");
+            for (int i = 0; i < aucPlayers.length; i++) {
+
+                System.out.println("ID[" + aucPlayers[i][0] + "] " + aucPlayers[i][1] + "€ - aktiv:" + aucPlayers[i][2]);
+                System.out.println(auc.getWinner() + " - " + auc.getPropPrice() + "€");
+            }
         }
     }
 
