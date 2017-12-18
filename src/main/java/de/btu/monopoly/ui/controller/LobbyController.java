@@ -232,17 +232,10 @@ public class LobbyController implements Initializable {
     // Spiel starten
     @FXML
     private void playButtonAction(ActionEvent event) throws IOException, InterruptedException {
-        SceneManager.openGameLayout();
 
         // Spiel starten
-        Thread game = new Thread() {
-            ;
-        @Override
-            public void run() {
-                LobbyService.startGame();
-            }
-        };
-        game.start();
+        LobbyService.gamestartRequest();
+
     }
 
     // Lobby verlassen

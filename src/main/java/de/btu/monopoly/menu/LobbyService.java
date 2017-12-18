@@ -189,7 +189,7 @@ public class LobbyService extends Listener {
         lobby.getPlayerClient().sendTCP(req);
     }
 
-    private static void gamestartRequest() {
+    public static void gamestartRequest() {
         LOGGER.finer(lobby.getPlayerName() + " sendet GamestartRequest");
         lobby.getPlayerClient().sendTCP(new GamestartRequest());
     }
