@@ -1,7 +1,6 @@
 package de.btu.monopoly;
 
 //Imports
-
 import de.btu.monopoly.core.Game;
 import de.btu.monopoly.core.GameBoard;
 import de.btu.monopoly.core.service.FieldService;
@@ -38,6 +37,7 @@ public class MonopolyUnitTest {
             players[i] = player;
         }
         client = new GameClient(59687, 5000);
+        client.setPlayerOnClient(players[0]);
         game = new Game(players, client, 42);
         game.init();
     }
