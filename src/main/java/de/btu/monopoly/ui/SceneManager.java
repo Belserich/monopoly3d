@@ -6,6 +6,7 @@
 package de.btu.monopoly.ui;
 
 import de.btu.monopoly.ui.controller.LobbyController;
+import de.btu.monopoly.ui.controller.MainSceneController;
 import java.io.IOException;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -20,7 +21,8 @@ public class SceneManager extends Stage {
 
     private Stage stage;
     private static Scene scene;
-    private static LobbyController controller;
+    private static LobbyController LobbyController;
+    private static MainSceneController GameController;
 
     public SceneManager() throws IOException {
         stage = this;
@@ -36,7 +38,6 @@ public class SceneManager extends Stage {
     public static void changeScene(FXMLLoader loader) throws IOException {
 
         Parent root = loader.load();
-        System.out.println("Lustig");
         scene.setRoot(root);
 
     }
@@ -44,30 +45,43 @@ public class SceneManager extends Stage {
     public static void changeSceneToLobby(FXMLLoader loader) throws IOException {
 
         Parent root = loader.load();
-        controller = loader.getController();
+        LobbyController = loader.getController();
+
+        scene.setRoot(root);
+
+    }
+
+    public static void changeSceneToGame(FXMLLoader loader) throws IOException {
+
+        Parent root = loader.load();
+        GameController = loader.getController();
 
         scene.setRoot(root);
 
     }
 
     public static void updateLobby() throws InterruptedException {
-        if (controller != null) {
-            controller.updateNames();
+        if (LobbyController != null) {
+            LobbyController.updateNames();
         }
 
     }
 
     public static void updateLobbyColors() throws InterruptedException {
-        if (controller != null) {
-            controller.updateColors();
+        if (LobbyController != null) {
+            LobbyController.updateColors();
         }
 
     }
 
     public static void openGameLayout() throws IOException {
-        if (controller != null) {
-            controller.loadGameLayout();
+        if (LobbyController != null) {
+            LobbyController.loadGameLayout();
         }
+    }
+
+    public static void movePlayerUpdate() {
+        GameController.playerUpdate();
     }
 
 }

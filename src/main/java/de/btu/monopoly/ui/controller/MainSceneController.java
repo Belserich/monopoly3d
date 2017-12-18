@@ -433,4 +433,11 @@ public class MainSceneController implements Initializable {
 
     }
 
+    public void playerUpdate() {
+//        for (int i = 0; i < client.getGame().getPlayers().length; i++) {
+//            client.getGame().getPlayers()[i].getPosition();
+//        }
+
+    }
+
 }

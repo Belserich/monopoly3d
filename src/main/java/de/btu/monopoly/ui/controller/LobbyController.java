@@ -382,6 +382,6 @@ public class LobbyController implements Initializable {
 
     public void loadGameLayout() throws IOException {
         // Wechselt die Scene auf Game
-        SceneManager.changeScene(new FXMLLoader(getClass().getResource("/fxml/mainScene.fxml")));
+        SceneManager.changeSceneToGame(new FXMLLoader(getClass().getResource("/fxml/mainScene.fxml")));
     }
 }
