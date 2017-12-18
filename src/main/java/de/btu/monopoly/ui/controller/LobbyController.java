@@ -229,6 +229,7 @@ public class LobbyController implements Initializable {
         SceneManager.openGameLayout();
         // Spiel starten
         // LobbyService.startGame();
+
     }
 
     // Lobby verlassen

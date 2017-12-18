@@ -5,12 +5,8 @@
  */
 package de.btu.monopoly.ui.controller;
 
-import de.btu.monopoly.core.Game;
-import de.btu.monopoly.core.GameBoard;
-import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.menu.Lobby;
 import de.btu.monopoly.net.client.GameClient;
-import de.btu.monopoly.ui.SceneManager;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -18,13 +14,9 @@ import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -35,11 +27,9 @@ import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.ImagePattern;
-import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
-import javafx.stage.Stage;
 
 /**
  *
@@ -49,6 +39,7 @@ public class MainSceneController implements Initializable {
 
     GameClient client;
     Lobby lobby;
+    StackPane middlePane;
 
     @FXML
     private GridPane grid;
@@ -56,6 +47,8 @@ public class MainSceneController implements Initializable {
     private GridPane grid2;
     @FXML
     private GridPane gridMiddle;
+    @FXML
+    private GridPane PopupPane;
 
     //Spieler Figur
     @FXML
@@ -178,8 +171,10 @@ public class MainSceneController implements Initializable {
         grid2.setBackground(new Background(new BackgroundImage(image, BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT)));
 
         /*Mitte*/
+        middlePane = new StackPane();
         Image image2 = new Image("https://upload.wikimedia.org/wikipedia/en/f/f9/Monopoly_pack_logo.png");
-        gridMiddle.setBackground(new Background(new BackgroundImage(image2, BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
+        middlePane.setBackground(new Background(new BackgroundImage(image2, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT)));
+        PopupPane.add(middlePane, 0, 1);
 
         // User aus Lobby holen
         if (Lobby.getUsers() != null) {
@@ -397,5 +392,10 @@ public class MainSceneController implements Initializable {
         } else if (user[5][1] == client.getPlayerOnClient().getName()) {
             pane.setShape(player5);
         }
+    }
+
+    @FXML
+    private void player0ButtonAction(ActionEvent event) throws IOException, InterruptedException {
+
     }
 }
