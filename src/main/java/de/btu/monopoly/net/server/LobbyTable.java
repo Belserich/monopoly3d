@@ -21,7 +21,7 @@ import java.util.logging.Logger;
 public class LobbyTable extends Listener {
 
     private static final Logger LOGGER = Logger.getLogger(LobbyTable.class.getCanonicalName());
-    private Server server;
+    private final Server server;
     private String[][] users;
     private boolean gameStarted = false;
     private long randomSeed;
@@ -41,7 +41,8 @@ public class LobbyTable extends Listener {
         if (users == null) {
             tempusers = new String[1][4];
             slot = 0;
-        } else {
+        }
+        else {
             tempusers = new String[users.length + 1][4];
             slot = users.length;
             // altes Array in neues uebernehmen
@@ -70,9 +71,9 @@ public class LobbyTable extends Listener {
     public void changeUserName(int id, String name) {
         LOGGER.finer("Username wird geändert");
         String idstr = Integer.toString(id);
-        for (int i = 0; i < users.length; i++) {
-            if (users[i][0].equals(idstr)) {
-                users[i][1] = name;
+        for (String[] user : users) {
+            if (user[0].equals(idstr)) {
+                user[1] = name;
             }
         }
 
@@ -147,28 +148,33 @@ public class LobbyTable extends Listener {
             if (!gameStarted) {
                 JoinRequest joinreq = (JoinRequest) object;
                 registerUser(joinreq.getName(), connection, 0);
-            } else {
+            }
+            else {
                 connection.sendTCP(new JoinImpossibleResponse());
                 NetworkService.logServerSendMessage(new JoinImpossibleResponse());
             }
-        } else if (object instanceof AddKiRequest) {
+        }
+        else if (object instanceof AddKiRequest) {
             NetworkService.logServerReceiveMessage(object);
             LOGGER.finer("AddKiRequest erhalten");
             AddKiRequest akr = (AddKiRequest) object;
             registerUser(akr.getName(), connection, akr.getKiLevel());
-        } else if (object instanceof ChangeUsernameRequest) {
+        }
+        else if (object instanceof ChangeUsernameRequest) {
             NetworkService.logServerReceiveMessage(object);
             LOGGER.finer("ChangeUsernameRequest erhalten");
             ChangeUsernameRequest chanreq = (ChangeUsernameRequest) object;
             changeUserName(chanreq.getUserId(), chanreq.getUserName());
-        } else if (object instanceof GamestartRequest) {
+        }
+        else if (object instanceof GamestartRequest) {
             NetworkService.logServerReceiveMessage(object);
             LOGGER.finer("GamestartRequest erhalten");
             gameStarted = true;
             shuffle();
             refreshLobbyResponse();
             gamestartResponse();
-        } else if (object instanceof BroadcastRandomSeedRequest) {
+        }
+        else if (object instanceof BroadcastRandomSeedRequest) {
             NetworkService.logServerReceiveMessage(object);
             BroadcastRandomSeedRequest req = (BroadcastRandomSeedRequest) object;
             randomSeed = req.getSeed();

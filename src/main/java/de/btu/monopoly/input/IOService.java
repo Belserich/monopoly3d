@@ -132,13 +132,15 @@ public class IOService {
             packet.setChoice(choice);
             client.sendTCP(packet);
             return choice;
-        } else {
+        }
+        else {
             do {
                 BroadcastPlayerChoiceRequest[] packets = client.getPlayerChoiceObjects();
                 if (packets.length > 1) {
                     LOGGER.warning("Fehler: Mehr als ein choice-Packet registriert!");
                     return -1;
-                } else if (packets.length == 1) {
+                }
+                else if (packets.length == 1) {
                     int retVal = packets[0].getChoice();
                     client.clearPlayerChoiceObjects();
                     return retVal;

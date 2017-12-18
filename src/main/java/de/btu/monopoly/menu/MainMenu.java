@@ -19,6 +19,7 @@ public class MainMenu {
 
     protected static final int CREATE_GAME = 1;
     protected static final int JOIN_GAME = 2;
+    private final int PORT = 443;
 
     public static final Logger LOGGER = Logger.getLogger(MainMenu.class.getCanonicalName());
 
@@ -28,16 +29,17 @@ public class MainMenu {
         int choice = InputHandler.getUserInput(2);
         if (choice == CREATE_GAME) {
             createGame();
-        } else if (choice == JOIN_GAME) {
+        }
+        else if (choice == JOIN_GAME) {
             joinGame();
         }
     }
 
     public void createGame() {
         // Server und Client starten und verbinden
-        GameServer server = new GameServer(59687);
+        GameServer server = new GameServer(PORT);
         server.startServer();
-        GameClient client = new GameClient(59687, 5000);
+        GameClient client = new GameClient(PORT, 5000);
         String localHost = System.getProperty("myapp.ip");
         client.connect(localHost);
         LOGGER.info("Die ServerIP ist " + server.getServerIP());
@@ -48,7 +50,7 @@ public class MainMenu {
 
     public void joinGame() {
         // Client starten und verbinden
-        GameClient client = new GameClient(59687, 5000);
+        GameClient client = new GameClient(PORT, 5000);
         LOGGER.fine("Geben sie die IP-Adresse des Servers ein");
         client.connect(InputHandler.askForString()); // while Schleife bis mit Server verbunden (evtl. begrenzte Versuche)
 
