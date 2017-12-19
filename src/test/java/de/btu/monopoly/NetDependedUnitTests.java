@@ -137,7 +137,7 @@ public class NetDependedUnitTests {
         clearGame();
     }
 
-//    @Test
+    @Test
     public void testKiJailOption() {
         initGame();
         // KI ins Gefängnis setzen

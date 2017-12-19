@@ -60,7 +60,7 @@ public class EasyKi {
     }
 
     public static void processBetSequence(Player ki) {
-        IOService.sleep(1000);
+        IOService.sleep(2000);
         int originPrice = AuctionService.getAuc().getProperty().getPrice();
         int actualPrice = AuctionService.getHighestBid();
         double percentage = ((double) actualPrice / ((double) originPrice / 100));

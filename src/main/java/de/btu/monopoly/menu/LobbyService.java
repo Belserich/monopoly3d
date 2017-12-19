@@ -51,12 +51,7 @@ public class LobbyService extends Listener {
         joinRequest();
 
         //TODO kommt in GUI weg:
-//        try {
-//            Thread.sleep(500);
-//        } catch (InterruptedException ex) {
-//            LOGGER.log(Level.WARNING, "Fehler: {0}", ex);
-//            Thread.currentThread().interrupt();
-//        }
+//        IOService.sleep(500);
 //        System.out.println("Name?:");
 //        changeName(InputHandler.askForString());
 //

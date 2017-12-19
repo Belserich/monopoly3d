@@ -50,9 +50,9 @@ public class AuctionTable extends Listener {
         for (int[] aucPlayer : aucPlayers) {
             aucPlayer[1] = (aucPlayer[0] == id) ? amount : aucPlayer[1];
         }
-        broadcastList();
         highestBid = amount;
         highestBidder = id;
+        broadcastList();
     }
 
     private void exitPlayer(int id) {
@@ -85,7 +85,7 @@ public class AuctionTable extends Listener {
             NetworkService.logServerReceiveMessage(object);
             BidRequest req = (BidRequest) object;
             setBid(req.getPlayerID(), req.getBid());
-            broadcastList();
+//            broadcastList();
         }
         else if (object instanceof ExitAuctionRequest) {
             NetworkService.logServerReceiveMessage(object);

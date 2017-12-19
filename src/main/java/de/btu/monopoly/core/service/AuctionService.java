@@ -38,9 +38,9 @@ public class AuctionService extends Listener {
         JoinAuctionRequest jaReq = new JoinAuctionRequest();
         NetworkService.logClientSendMessage(jaReq, auc.getPlayerName());
         auc.getClient().sendTCP(jaReq);
+        IOService.sleepDeep(1500); // TODO @GUI es bleibt nur das in der Schleife darunter.
 //
 //        while (auctionStillActive()) {
-        IOService.sleepDeep(1500); // TODO es bleibt nur das in dieser Schleife.
 //            System.out.println("Wähle [1] für bieten [2] für aussteigen");
 //            Scanner scanner = new Scanner(System.in);
 //            switch (scanner.nextInt()) {
@@ -151,24 +151,17 @@ public class AuctionService extends Listener {
             auc.setAucPlayers(((BroadcastAuctionResponse) object).getAucPlayers());
             auc.setHighestBid(((BroadcastAuctionResponse) object).getHighestBid());
             auc.setHighestBidder(((BroadcastAuctionResponse) object).getHighestBidder());
-//            for (int[] aucPlayer : auc.getAucPlayers()) {
-//                if (aucPlayer[1] > auc.getPropPrice()) {
-//                    auc.setPropPrice(aucPlayer[1]);
-//                    for (Player player : auc.getPlayers()) {
-//                        if (player.getId() == aucPlayer[0]) {
-//                            auc.setWinner(player);
-//                        }
-//                    }
-//                }
-//            }
-            IOService.betSequence(auc);
-            IOService.sleep(100);
-            //kommt weg:
-            System.out.println("Lobby: \nStraße: " + auc.getProperty() + "\nPreis:  " + auc.getHighestBid() + "\nAuktionäre:");
+            IOService.sleepDeep(100);
+
+            //@GUI kommt weg:
+            System.out.println("<AUKTION>: \n  Straße: " + auc.getProperty() + "\n  Auktionäre:");
             for (int[] aucPlayer : auc.getAucPlayers()) {
-                System.out.println("ID[" + aucPlayer[0] + "] " + aucPlayer[1] + "€ - aktiv:" + aucPlayer[2]);
+                System.out.println("     ID[" + aucPlayer[0] + "] " + aucPlayer[1] + "€ - aktiv:" + aucPlayer[2]);
             }
-            System.out.println("Höchstes Gebot: " + auc.getHighestBid() + "€ von aucID " + getHighestBidder());
+            System.out.println("  Höchstes Gebot: " + auc.getHighestBid() + "€ von aucID " + getHighestBidder());
+
+            //Das nicht
+            IOService.betSequence(auc);
         }
     }
 
