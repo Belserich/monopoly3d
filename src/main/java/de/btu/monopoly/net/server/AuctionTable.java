@@ -68,8 +68,8 @@ public class AuctionTable extends Listener {
         res.setAucPlayers(aucPlayers);
         res.setHighestBid(highestBid);
         res.setHighestBidder(highestBidder);
-        server.sendToAllTCP(res);
         NetworkService.logServerSendMessage(res);
+        server.sendToAllTCP(res);
     }
 
     //LISTENER:____________________________________________________________________
