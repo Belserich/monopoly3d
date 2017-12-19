@@ -163,4 +163,15 @@ public class IOService {
         }
     }
 
+    public static void sleepDeep(int millis) {
+        try {
+            for (int i = 0; i < millis / 10; i++) {
+                Thread.sleep(10);
+            }
+        } catch (InterruptedException ex) {
+            LOGGER.log(Level.WARNING, "FEHLER: {0}", ex);
+            Thread.currentThread().interrupt();
+        }
+    }
+
 }

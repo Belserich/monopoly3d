@@ -162,12 +162,7 @@ public class NetDependedUnitTests {
         Assert.assertTrue("Auktion nicht initialisiert", AuctionService.getAuc() != null);
 
         AuctionService.startAuction((PropertyField) fm.getFields()[1]);
-
-        AuctionService.setBid(0, 55);
-        IOService.sleep(500);
-
-//        //Nullpointer?!
-//        Assert.assertTrue("Spieler nicht in Auktion", AuctionService.getAuc().getAucPlayers() != null);
+        Assert.assertTrue("Spieler nicht in Auktion", AuctionService.getAuc().getAucPlayers() != null);
         clearGame();
     }
 
