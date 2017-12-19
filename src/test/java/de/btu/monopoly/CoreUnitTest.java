@@ -11,7 +11,6 @@ import de.btu.monopoly.data.card.CardManager;
 import de.btu.monopoly.data.field.*;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.net.client.GameClient;
-import de.btu.monopoly.net.server.GameServer;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -19,17 +18,16 @@ import org.junit.Test;
  *
  * @author Patrick Kalweit
  */
-public class MonopolyUnitTest {
+public class CoreUnitTest {
 
     private static Game game;
     private static GameBoard board;
     private static Player[] players;
     private static FieldManager fm;
-    private static GameServer server;
     private static GameClient client;
     private static CardManager cm;
 
-    public MonopolyUnitTest() {
+    public CoreUnitTest() {
 
         players = new Player[4];
         for (int i = 0; i < 4; i++) {
@@ -40,21 +38,6 @@ public class MonopolyUnitTest {
         client.setPlayerOnClient(players[0]);
         game = new Game(players, client, 42);
         game.init();
-    }
-
-    @Test
-    public void testNetwork() {
-
-        // initialisierung
-        server = new GameServer(59687);
-        server.startServer();
-        client = new GameClient(59687, 5000);
-        String localHost = System.getProperty("myapplication.ip");
-        client.connect(localHost);
-        Assert.assertTrue("Server nicht initialisiert", server != null);
-        Assert.assertTrue("Client nicht initialisiert", client != null);
-        Assert.assertTrue("2. Client nicht initialisiert", client != null);
-
     }
 
     @Test

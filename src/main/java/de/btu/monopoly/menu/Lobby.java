@@ -5,6 +5,7 @@
  */
 package de.btu.monopoly.menu;
 
+import de.btu.monopoly.core.Game;
 import de.btu.monopoly.net.client.GameClient;
 
 /**
@@ -20,25 +21,26 @@ public class Lobby {
     private GameClient playerClient;
     private int playerID = -1;
     private long randomSeed;
+    private Game controller;
 
     /**
      * @return the host
      */
-    protected boolean isHost() {
+    public boolean isHost() {
         return host;
     }
 
     /**
      * @param host the host to set
      */
-    protected void setHost(boolean host) {
+    public void setHost(boolean host) {
         this.host = host;
     }
 
     /**
      * @return the users
      */
-    protected String[][] getUsers() {
+    public String[][] getUsers() {
         return users;
     }
 
@@ -117,5 +119,19 @@ public class Lobby {
      */
     public void setRandomSeed(long randomSeed) {
         this.randomSeed = randomSeed;
+    }
+
+    /**
+     * @return the controller
+     */
+    public Game getController() {
+        return controller;
+    }
+
+    /**
+     * @param controller the controller to set
+     */
+    public void setController(Game controller) {
+        this.controller = controller;
     }
 }

@@ -119,23 +119,23 @@ public class LobbyTable extends Listener {
         JoinResponse joinres = new JoinResponse();
         joinres.setId(id);
         joinres.setSeed(randomSeed);
-        connection.sendTCP(joinres);
         NetworkService.logServerSendMessage(joinres);
+        connection.sendTCP(joinres);
     }
 
     public void refreshLobbyResponse() {
         RefreshLobbyResponse refres = new RefreshLobbyResponse();
         refres.setUsers(users);
-        server.sendToAllTCP(refres);
         NetworkService.logServerSendMessage(refres);
+        server.sendToAllTCP(refres);
     }
 
     public void gamestartResponse() {
         shuffle();
         refreshLobbyResponse();
         GamestartResponse gares = new GamestartResponse();
-        server.sendToAllTCP(gares);
         NetworkService.logServerSendMessage(gares);
+        server.sendToAllTCP(gares);
     }
 
     // LISTENER:_____________________________________________
@@ -150,8 +150,8 @@ public class LobbyTable extends Listener {
                 registerUser(joinreq.getName(), connection, 0);
             }
             else {
-                connection.sendTCP(new JoinImpossibleResponse());
                 NetworkService.logServerSendMessage(new JoinImpossibleResponse());
+                connection.sendTCP(new JoinImpossibleResponse());
             }
         }
         else if (object instanceof AddKiRequest) {

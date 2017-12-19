@@ -10,7 +10,6 @@ import com.esotericsoftware.kryonet.Listener;
 import de.btu.monopoly.core.Game;
 import de.btu.monopoly.core.service.NetworkService;
 import de.btu.monopoly.data.player.Player;
-import de.btu.monopoly.input.InputHandler;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.networkClasses.Lobby.*;
 import de.btu.monopoly.net.server.AuctionTable;
@@ -40,7 +39,7 @@ public class LobbyService extends Listener {
         }
 
         // Lobby init
-        lobby = new Lobby();
+        setLobby(new Lobby());
         lobby.setHost(host);
         lobby.setPlayerName(ipName);
         lobby.setPlayerClient(client);
@@ -52,21 +51,21 @@ public class LobbyService extends Listener {
         joinRequest();
 
         //TODO kommt in GUI weg:
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException ex) {
-            LOGGER.log(Level.WARNING, "Fehler: {0}", ex);
-            Thread.currentThread().interrupt();
-        }
-        System.out.println("Name?:");
-        changeName(InputHandler.askForString());
-
-        if (lobby.isHost()) {
-            addKI("Computergegner", 1);
-            System.out.println("Eingabe machen für Spielstart");
-            InputHandler.askForString();
-            gamestartRequest();
-        }
+//        try {
+//            Thread.sleep(500);
+//        } catch (InterruptedException ex) {
+//            LOGGER.log(Level.WARNING, "Fehler: {0}", ex);
+//            Thread.currentThread().interrupt();
+//        }
+//        System.out.println("Name?:");
+//        changeName(InputHandler.askForString());
+//
+//        if (lobby.isHost()) {
+//            addKI("Computergegner", 1);
+//            System.out.println("Eingabe machen für Spielstart");
+//            InputHandler.askForString();
+//            gamestartRequest();
+//        }
     }
 
     public static void addKI(String name, int kiLevel) {
@@ -88,8 +87,9 @@ public class LobbyService extends Listener {
         changeUsernameRequest();
     }
 
-    public static void startGame() {//TODO
+    public static void startGame() {
         Game controller = new Game(generatePlayerArray(), lobby.getPlayerClient(), lobby.getRandomSeed());
+        lobby.setController(controller);
         lobby.getPlayerClient().setGame(controller);
 
         controller.init();
@@ -118,7 +118,7 @@ public class LobbyService extends Listener {
         return players;
     }
 
-    private static void generateRandomSeed() {
+    public static void generateRandomSeed() {
         long seed = new Random().nextLong();
         BroadcastRandomSeedRequest req = new BroadcastRandomSeedRequest();
         req.setSeed(seed);
@@ -126,12 +126,16 @@ public class LobbyService extends Listener {
         NetworkService.logClientSendMessage(req, lobby.getPlayerName());
     }
 
+    public static Lobby getLobby() {
+        return lobby;
+    }
+
     // REQUESTS:__________________________________an LobbyTable
-    private static void joinRequest() {
+    public static void joinRequest() {
         JoinRequest req = new JoinRequest();
         req.setName(lobby.getPlayerName());
-        lobby.getPlayerClient().sendTCP(req);
         NetworkService.logClientSendMessage(req, lobby.getPlayerName());
+        lobby.getPlayerClient().sendTCP(req);
 
     }
 
@@ -139,14 +143,14 @@ public class LobbyService extends Listener {
         ChangeUsernameRequest req = new ChangeUsernameRequest();
         req.setUserName(lobby.getPlayerName());
         req.setUserId(lobby.getPlayerId());
-        lobby.getPlayerClient().sendTCP(req);
         NetworkService.logClientSendMessage(req, lobby.getPlayerName());
+        lobby.getPlayerClient().sendTCP(req);
     }
 
-    private static void gamestartRequest() {
+    public static void gamestartRequest() {
         GamestartRequest gaReq = new GamestartRequest();
-        lobby.getPlayerClient().sendTCP(gaReq);
         NetworkService.logClientSendMessage(gaReq, lobby.getPlayerName());
+        lobby.getPlayerClient().sendTCP(gaReq);
     }
 
     //LISTENER:______________________________________________________________
@@ -193,6 +197,13 @@ public class LobbyService extends Listener {
             t.start();
         }
 
+    }
+
+    /**
+     * @param aLobby the lobby to set
+     */
+    public static void setLobby(Lobby aLobby) {
+        lobby = aLobby;
     }
 
 }
