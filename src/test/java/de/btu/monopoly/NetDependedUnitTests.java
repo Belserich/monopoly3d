@@ -66,6 +66,7 @@ public class NetDependedUnitTests {
         players = game.getPlayers();
         fm = board.getFieldManager();
         cm = board.getCardManager();
+        IOService.sleep(100);
     }
 
     private void clearGame() {
@@ -79,6 +80,7 @@ public class NetDependedUnitTests {
         players = null;
         fm = null;
         cm = null;
+        System.out.println("\nCLEAR GAME ---- ALLES ZURUECKGESETZT!!!\n");
     }
 
     @Test
@@ -135,6 +137,19 @@ public class NetDependedUnitTests {
     @Test
     public void testKiJailOption() {
         initGame();
+        // KI ins Gefängnis setzen
+        Player ki = players[1];
+        ki.setInJail(true);
+        ki.setPosition(10);
+
+        //KI sollte sich freikaufen
+        int choice = IOService.jailChoice(ki);
+        Assert.assertTrue("KI hat nicht bezahlt", choice == 2);
+
+        //KI sollte sich freiwuerfeln
+        ki.getBank().withdraw(ki.getMoney());
+        choice = IOService.jailChoice(ki);
+        Assert.assertTrue("KI hat nicht bezahlt", choice == 1);
 
         clearGame();
     }
