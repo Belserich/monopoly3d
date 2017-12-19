@@ -55,8 +55,12 @@ public class NetDependedUnitTests {
         IOService.sleep(100);
         LobbyService.addKI("Gegner", 1);
         IOService.sleep(100);
-        LobbyService.gamestartRequest();
-        IOService.sleep(100);
+
+        Game controller = new Game(LobbyService.generatePlayerArray(), lobby.getPlayerClient(), lobby.getRandomSeed());
+        lobby.setController(controller);
+        lobby.getPlayerClient().setGame(controller);
+        controller.init();
+
         game = LobbyService.getLobby().getController();
         board = game.getBoard();
         players = game.getPlayers();
@@ -64,15 +68,17 @@ public class NetDependedUnitTests {
         cm = board.getCardManager();
     }
 
-    @Test
-    public void testInitGame() {
-        initGame();
-        Assert.assertTrue("Game nicht initialisiert", game != null);
-        Assert.assertTrue("board nicht initialisiert", board != null);
-        Assert.assertTrue("players nicht initialisiert", players != null);
-        Assert.assertTrue("FieldManager nicht initialisiert", fm != null);
-        Assert.assertTrue("CardManager nicht initialisiert", cm != null);
-
+    private void clearGame() {
+        client.disconnect();
+        server.stopServer();
+        lobby = null;
+        server = null;
+        client = null;
+        game = null;
+        board = null;
+        players = null;
+        fm = null;
+        cm = null;
     }
 
     @Test
@@ -80,6 +86,8 @@ public class NetDependedUnitTests {
         initNetwork();
         Assert.assertTrue("Server nicht initialisiert", server != null);
         Assert.assertTrue("Client nicht initialisiert", client != null);
+        IOService.sleep(200);
+        clearGame();
     }
 
     @Test
@@ -104,10 +112,31 @@ public class NetDependedUnitTests {
         Assert.assertTrue("KI-Stufe nicht gesetzt", Integer.parseInt(LobbyService.getLobby().getUsers()[1][3]) == 1);
         Assert.assertTrue("KI-Name nicht gesetzt", "Gegner".equals(LobbyService.getLobby().getUsers()[1][1]));
 
-        LobbyService.gamestartRequest();
-        IOService.sleep(100);
+        Game controller = new Game(LobbyService.generatePlayerArray(), lobby.getPlayerClient(), lobby.getRandomSeed());
+        lobby.setController(controller);
+        lobby.getPlayerClient().setGame(controller);
         Assert.assertTrue("Game nicht erstellt", LobbyService.getLobby().getController() != null);
         Assert.assertTrue("PlayerOnClient nicht erstellt", LobbyService.getLobby().getPlayerClient() != null);
+
+        clearGame();
+    }
+
+    @Test
+    public void testInitGame() {
+        initGame();
+        Assert.assertTrue("Game nicht initialisiert", game != null);
+        Assert.assertTrue("board nicht initialisiert", board != null);
+        Assert.assertTrue("players nicht initialisiert", players != null);
+        Assert.assertTrue("FieldManager nicht initialisiert", fm != null);
+        Assert.assertTrue("CardManager nicht initialisiert", cm != null);
+        clearGame();
+    }
+
+    @Test
+    public void testKiJailOption() {
+        initGame();
+
+        clearGame();
     }
 
 }

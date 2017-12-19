@@ -96,7 +96,7 @@ public class LobbyService extends Listener {
         controller.start();
     }
 
-    private static Player[] generatePlayerArray() {
+    public static Player[] generatePlayerArray() {
         String[][] users = lobby.getUsers();
         Player[] players = new Player[users.length];
         for (int i = 0; i < users.length; i++) {
