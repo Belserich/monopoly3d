@@ -8,7 +8,6 @@ import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.input.IOService;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.networkClasses.*;
-import java.util.Scanner;
 
 /**
  *
@@ -40,22 +39,22 @@ public class AuctionService extends Listener {
         NetworkService.logClientSendMessage(jaReq, auc.getPlayerName());
         auc.getClient().sendTCP(jaReq);
         IOService.sleep(200);
-
-        while (auctionStillActive()) {
-            // IOService.sleep(500); TODO es bleibt nur das in dieser Schleife.
-            System.out.println("Wähle [1] für bieten [2] für aussteigen");
-            Scanner scanner = new Scanner(System.in);
-            switch (scanner.nextInt()) {
-                case 1:
-                    System.out.println("Wähle dein Gebot");
-                    setBid(getAuc().getClient().getPlayerOnClient().getId(), scanner.nextInt());
-                    break;
-                case 2:
-                    playerExit(getAuc().getClient().getPlayerOnClient().getId());
-                    break;
-            }
-        }
-        sellProperty();
+//
+//        while (auctionStillActive()) {
+//            IOService.sleep(500); // TODO es bleibt nur das in dieser Schleife.
+//            System.out.println("Wähle [1] für bieten [2] für aussteigen");
+//            Scanner scanner = new Scanner(System.in);
+//            switch (scanner.nextInt()) {
+//                case 1:
+//                    System.out.println("Wähle dein Gebot");
+//                    setBid(getAuc().getClient().getPlayerOnClient().getId(), scanner.nextInt());
+//                    break;
+//                case 2:
+//                    playerExit(getAuc().getClient().getPlayerOnClient().getId());
+//                    break;
+//            }
+//        }
+//        sellProperty();
     }
 
     private static void sellProperty() {
@@ -164,7 +163,7 @@ public class AuctionService extends Listener {
 //                }
 //            }
             IOService.betSequence(auc);
-
+            IOService.sleep(100);
             //kommt weg:
             System.out.println("Lobby: \nStraße: " + auc.getProperty() + "\nPreis:  " + auc.getHighestBid() + "\nAuktionäre:");
             for (int[] aucPlayer : auc.getAucPlayers()) {

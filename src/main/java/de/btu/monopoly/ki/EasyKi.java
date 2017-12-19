@@ -63,7 +63,7 @@ public class EasyKi {
         IOService.sleep(1000);
         int originPrice = AuctionService.getAuc().getProperty().getPrice();
         int actualPrice = AuctionService.getHighestBid();
-        double percentage = (actualPrice / (originPrice / 100));
+        double percentage = ((double) actualPrice / ((double) originPrice / 100));
         int newPrice = actualPrice;
         int aucID = -1;
         for (int i = 0; i < AuctionService.getAuc().getAucPlayers().length; i++) {

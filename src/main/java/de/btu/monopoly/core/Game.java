@@ -124,7 +124,7 @@ public class Game {
         }
     }
 
-    private void jailPhase(Player player) {
+    public void jailPhase(Player player) {
         int choice;
         do {
             LOGGER.info(String.format(" %s ist im Gefängnis und kann: %n[1] - 3-mal Würfeln, um mit einem Pasch freizukommen "
@@ -159,7 +159,8 @@ public class Game {
         int[] result = PlayerService.roll(player);
         if (result[0] == result[1]) {
             PlayerService.freeFromJail(player);
-        } else {
+        }
+        else {
             player.addDayInJail();
             if (player.getDaysInJail() >= 3) {
                 LOGGER.info("Drei Runden ohne Pasch, Spieler muss zahlen.");
@@ -173,7 +174,8 @@ public class Game {
         if (PlayerService.takeMoney(player, 50)) {
             LOGGER.info(String.format("%s hat 50 gezahlt und ist frei!", player.getName()));
             PlayerService.freeFromJail(player);
-        } else {
+        }
+        else {
             LOGGER.info(String.format("%s hat kein Geld um sich freizukaufen.", player.getName()));
         }
     }
@@ -181,7 +183,8 @@ public class Game {
     public void processJailCardOption(Player player) {
         if (board.getCardManager().useJailCard(player)) {
             LOGGER.info(String.format("%s hat eine Gefängnis-Frei-Karte benutzt.", player.getName()));
-        } else {
+        }
+        else {
             LOGGER.info(String.format("%s hat keine Gefängnis-Frei-Karten mehr.", player.getName()));
         }
     }
@@ -198,7 +201,8 @@ public class Game {
         if (doubletCount >= 3) {
             LOGGER.info(String.format("%s hat seinen 3. Pasch und geht nicht über LOS, direkt ins Gefängnis!", player.getName()));
             FieldService.toJail(player);
-        } else {
+        }
+        else {
             board.getFieldManager().movePlayer(player, rollResult[0] + rollResult[1]);
         }
         return rollResult;
@@ -245,9 +249,11 @@ public class Game {
             LOGGER.info(String.format("%s steht auf %s. Wähle eine Aktion!%n[1] Kaufen %n[2] Nicht kaufen",
                     player.getName(), prop.getName()));
             processBuyPropertyFieldOption(player, prop);
-        } else if (other == player) { // PropertyField im eigenen Besitz
+        }
+        else if (other == player) { // PropertyField im eigenen Besitz
             LOGGER.fine(String.format("%s steht auf seinem eigenen Grundstück.", player.getName()));
-        } else { // PropertyField nicht in eigenem Besitz
+        }
+        else { // PropertyField nicht in eigenem Besitz
             LOGGER.info(String.format("%s steht auf %s. Dieses Grundstück gehört von %s.",
                     player.getName(), prop.getName(), other.getName()));
             PlayerService.takeAndGiveMoneyUnchecked(player, other, FieldService.getRent(prop, rollResult));
@@ -289,7 +295,8 @@ public class Game {
             choice = IOService.actionSequence(player, board);
             if (choice == 6) {
                 processPlayerTradeOption(player);
-            } else if (choice > 1 && choice < 6) {
+            }
+            else if (choice > 1 && choice < 6) {
                 Field[] ownedFields = board.getFieldManager().getOwnedPropertyFields(player).toArray(Field[]::new);
                 Field currField = board.getFields()[InputHandler.askForField(player, ownedFields) - 1]; // Wahl der Strasse
 
