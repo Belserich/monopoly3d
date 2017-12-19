@@ -38,7 +38,7 @@ public class AuctionService extends Listener {
         JoinAuctionRequest jaReq = new JoinAuctionRequest();
         NetworkService.logClientSendMessage(jaReq, auc.getPlayerName());
         auc.getClient().sendTCP(jaReq);
-        IOService.sleepDeep(1500); // TODO @GUI es bleibt nur das in der Schleife darunter.
+        IOService.sleepDeep(1500); // TODO @GUI es bleibt nur das in der Schleife darunter. (@Console aktiviere Z.42-56)
 //
 //        while (auctionStillActive()) {
 //            System.out.println("Wähle [1] für bieten [2] für aussteigen");

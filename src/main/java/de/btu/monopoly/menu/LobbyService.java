@@ -50,7 +50,7 @@ public class LobbyService extends Listener {
 
         joinRequest();
 
-        //TODO kommt in GUI weg:
+        //TODO @GUI kommt weg:  (@Console Z.54-63)
 //        IOService.sleep(500);
 //        System.out.println("Name?:");
 //        changeName(InputHandler.askForString());

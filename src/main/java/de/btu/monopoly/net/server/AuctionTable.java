@@ -59,7 +59,6 @@ public class AuctionTable extends Listener {
         for (int[] aucPlayer : aucPlayers) {
             aucPlayer[2] = (aucPlayer[0] == id) ? 0 : aucPlayer[2];
         }
-        System.out.println("Ausgestiegen" + aucPlayers[1][2]);
         broadcastList();
     }
 
@@ -85,7 +84,6 @@ public class AuctionTable extends Listener {
             NetworkService.logServerReceiveMessage(object);
             BidRequest req = (BidRequest) object;
             setBid(req.getPlayerID(), req.getBid());
-//            broadcastList();
         }
         else if (object instanceof ExitAuctionRequest) {
             NetworkService.logServerReceiveMessage(object);
