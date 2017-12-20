@@ -101,20 +101,22 @@ public class IOService {
     public static void betSequence(Auction auc) {
         Player[] kiPlayers = auc.getPlayers();
         Collections.shuffle(Arrays.asList(kiPlayers));
-        Player rndKi = null;
+        Player rndKi = kiPlayers[0];
         for (Player ki : kiPlayers) {
             rndKi = (ki.getKiLevel() > 0) ? ki : rndKi;
         }
         LOGGER.log(Level.FINE, "{0} (KI) nimmt an Auktion teil.", rndKi.getName());
         switch (rndKi.getKiLevel()) {
+            case 0:
+                break;
             case 1:
                 EasyKi.processBetSequence(rndKi);
                 break;
             case 2:
-//                MediumKi.processBetSequence();
+                MediumKi.processBetSequence();
                 break;
             case 3:
-//                HardKi.processBetSequence();
+                HardKi.processBetSequence();
                 break;
             default:
                 LOGGER.warning("Illegale KI-Stufe in BetSequence registriert");

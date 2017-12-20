@@ -9,12 +9,16 @@ import de.btu.monopoly.input.IOService;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.networkClasses.*;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author patrick
  */
 public class AuctionService extends Listener {
+
+    private static final Logger LOGGER = Logger.getLogger(AuctionService.class.getCanonicalName());
 
     private static Auction auc;
 
@@ -42,15 +46,17 @@ public class AuctionService extends Listener {
         IOService.sleepDeep(1500); // TODO @GUI es bleibt nur das in der Schleife darunter. (@Console aktiviere Z.42-56)
 
         while (auctionStillActive()) {
-            System.out.println("Wähle [1] für bieten [2] für aussteigen");
+            LOGGER.finest("Wähle [1] für bieten [2] für aussteigen");
             Scanner scanner = new Scanner(System.in);
             switch (scanner.nextInt()) {
                 case 1:
-                    System.out.println("Wähle dein Gebot");
+                    LOGGER.finest("Wähle dein Gebot");
                     setBid(getAuc().getClient().getPlayerOnClient().getId(), scanner.nextInt());
                     break;
                 case 2:
                     playerExit(getAuc().getClient().getPlayerOnClient().getId());
+                    break;
+                default:
                     break;
             }
         }
@@ -78,15 +84,13 @@ public class AuctionService extends Listener {
     public static boolean setBid(int playerID, int bid) {
 
         boolean isBidOk = false;
-        if (PlayerService.checkLiquidity(getPlayer(playerID), bid)) {
-            if (bid > getHighestBid()) {
-                isBidOk = true;
-                BidRequest bidReq = new BidRequest();
-                bidReq.setBid(bid);
-                bidReq.setPlayerID(playerID);
-                NetworkService.logClientSendMessage(bidReq, auc.getPlayerName());
-                auc.getClient().sendTCP(bidReq);
-            }
+        if (PlayerService.checkLiquidity(getPlayer(playerID), bid) && bid > getHighestBid()) {
+            isBidOk = true;
+            BidRequest bidReq = new BidRequest();
+            bidReq.setBid(bid);
+            bidReq.setPlayerID(playerID);
+            NetworkService.logClientSendMessage(bidReq, auc.getPlayerName());
+            auc.getClient().sendTCP(bidReq);
         }
 
         return isBidOk;
@@ -155,11 +159,11 @@ public class AuctionService extends Listener {
             IOService.sleepDeep(100);
 
             //@GUI kommt weg:
-            System.out.println("<AUKTION>: \n  Straße: " + auc.getProperty() + "\n  Auktionäre:");
+            LOGGER.log(Level.FINER, "<AUKTION>: \n  Stra\u00dfe: {0}\n  Auktion\u00e4re:", auc.getProperty());
             for (int[] aucPlayer : auc.getAucPlayers()) {
-                System.out.println("     ID[" + aucPlayer[0] + "] " + aucPlayer[1] + "€ - aktiv:" + aucPlayer[2]);
+                LOGGER.log(Level.FINER, "     ID[{0}] {1}\u20ac - aktiv:{2}", new Object[]{aucPlayer[0], aucPlayer[1], aucPlayer[2]});
             }
-            System.out.println("  Höchstes Gebot: " + auc.getHighestBid() + "€ von aucID " + getHighestBidder());
+            LOGGER.log(Level.FINER, "  H\u00f6chstes Gebot: {0}\u20ac von aucID {1}", new Object[]{auc.getHighestBid(), getHighestBidder()});
 
             //Das nicht
             IOService.betSequence(auc);

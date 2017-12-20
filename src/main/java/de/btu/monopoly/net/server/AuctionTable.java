@@ -24,15 +24,15 @@ public class AuctionTable extends Listener {
     private static int highestBid;
     private static int highestBidder;
 
+    public AuctionTable(Server server) {
+        this.server = server;
+    }
+
     /**
      * @param aPlayers the players to set
      */
     public static void setPlayers(Player[] aPlayers) {
         players = aPlayers;
-    }
-
-    AuctionTable(Server server) {
-        this.server = server;
     }
 
     private void generateAuctionPlayerList() {
