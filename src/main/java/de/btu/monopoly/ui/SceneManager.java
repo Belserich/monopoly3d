@@ -6,6 +6,9 @@
 package de.btu.monopoly.ui;
 
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXComboBox;
+import de.btu.monopoly.data.field.Field;
+import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.input.IOService;
 import de.btu.monopoly.menu.Lobby;
 import de.btu.monopoly.ui.controller.LobbyController;
@@ -89,6 +92,9 @@ public class SceneManager extends Stage {
         GameController.playerUpdate();
     }
 
+    // -----------------------------------------------------------------------
+    // Popups
+    // -----------------------------------------------------------------------
     public static int buyPropertyPopup() {
 
         GridPane gridpane = new GridPane();
@@ -219,6 +225,15 @@ public class SceneManager extends Stage {
                 return 6;
             }
         }
+
+        return -1;
+    }
+
+    public static int askForFieldPopup(Player player, Field[] fields) {
+
+        Label label = new Label("Wähle ein Feld:");
+
+        JFXComboBox fieldBox = new JFXComboBox();
 
         return -1;
     }
