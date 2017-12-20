@@ -42,6 +42,20 @@ public class MainSceneController implements Initializable {
     GameClient client;
     StackPane middlePane;
 
+    //Geld Labels
+    @FXML
+    private Label geld0;
+    @FXML
+    private Label geld1;
+    @FXML
+    private Label geld2;
+    @FXML
+    private Label geld3;
+    @FXML
+    private Label geld4;
+    @FXML
+    private Label geld5;
+
     @FXML
     private GridPane grid;
     @FXML
@@ -304,32 +318,32 @@ public class MainSceneController implements Initializable {
 
     public void geldUpdate() {
         Player[] players = Lobby.getPlayerClient().getGame().getPlayers();
-        
+
         Task task = new Task() {
             @Override
             protected Object call() throws Exception {
                 if (players.length >= 1) {
-                     Label geld0 = new Label("Geld: " + players[0].getMoney());
+                    geld0.setText("Geld: " + players[0].getMoney());
                     player0Geld.add(geld0, 0, 0);
                 }
                 if (players.length >= 2) {
-                    Label geld1 = new Label("Geld: " + players[1].getMoney());
+                    geld1.setText("Geld: " + players[1].getMoney());
                     player1Geld.add(geld1, 0, 0);
                 }
                 if (players.length >= 3) {
-                    Label geld2 = new Label("Geld: " + players[2].getMoney());
+                    geld2.setText("Geld: " + players[2].getMoney());
                     player2Geld.add(geld2, 0, 0);
                 }
                 if (players.length >= 4) {
-                    Label geld3 = new Label("Geld: " + players[3].getMoney());
+                    geld3.setText("Geld: " + players[3].getMoney());
                     player3Geld.add(geld3, 0, 0);
                 }
                 if (players.length >= 5) {
-                    Label geld4 = new Label("Geld: " + players[4].getMoney());
+                    geld4.setText("Geld: " + players[4].getMoney());
                     player4Geld.add(geld4, 0, 0);
                 }
                 if (players.length >= 6) {
-                    Label geld5 = new Label("Geld: " + players[5].getMoney());
+                    geld5.setText("Geld: " + players[5].getMoney());
                     player5Geld.add(geld5, 0, 0);
                 }
                 return null;
@@ -347,28 +361,21 @@ public class MainSceneController implements Initializable {
 
                 if (players.length >= 1) {
                     Felder[players[0].getPosition()].getChildren().add(player0);
-
                 }
                 if (players.length >= 2) {
-
                     Felder[players[1].getPosition()].getChildren().add(player1);
-
                 }
                 if (players.length >= 3) {
                     Felder[players[2].getPosition()].getChildren().add(player2);
-
                 }
                 if (players.length >= 4) {
                     Felder[players[3].getPosition()].getChildren().add(player3);
-
                 }
                 if (players.length >= 5) {
                     Felder[players[4].getPosition()].getChildren().add(player4);
-
                 }
                 if (players.length >= 6) {
                     Felder[players[5].getPosition()].getChildren().add(player5);
-
                 }
                 return null;
             }
