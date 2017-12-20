@@ -8,7 +8,6 @@ package de.btu.monopoly.ui;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import de.btu.monopoly.data.field.Field;
-import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.input.IOService;
 import de.btu.monopoly.menu.Lobby;
@@ -261,7 +260,17 @@ public class SceneManager extends Stage {
         }
         GameController.resetPopup(gridPane);
 
-        return Lobby.getPlayerClient().getGame().getBoard().getFieldManager().getPropertyId((PropertyField) fields[fieldBox.getSelectionModel().getSelectedIndex()]);
+        int id = 0;
+        for (Field field : Lobby.getPlayerClient().getGame().getBoard().getFieldManager().getFields()) {
+
+            id++;
+            if (field == fields[fieldBox.getSelectionModel().getSelectedIndex()]) {
+                return id;
+
+            }
+        }
+
+        return -1;
     }
 
 }
