@@ -6,6 +6,7 @@
 package de.btu.monopoly.ui;
 
 import com.jfoenix.controls.JFXButton;
+import de.btu.monopoly.input.IOService;
 import de.btu.monopoly.menu.Lobby;
 import de.btu.monopoly.ui.controller.LobbyController;
 import de.btu.monopoly.ui.controller.MainSceneController;
@@ -88,7 +89,7 @@ public class SceneManager extends Stage {
         GameController.playerUpdate();
     }
 
-    public static int buyPropertyPopup() throws InterruptedException {
+    public static int buyPropertyPopup() {
 
         GridPane gridpane = new GridPane();
         Label label = new Label("Möchtest du die " + Lobby.getPlayerClient().getGame().getBoard().getFields()[Lobby.getPlayerClient().getPlayerOnClient().getPosition()].getName() + " kaufen?");
@@ -105,7 +106,7 @@ public class SceneManager extends Stage {
         gridpane.add(dontBuyButton, 1, 1);
 
         GameController.setPopup(gridpane);
-
+        IOService.sleep(50);
         while (!buyButton.isPressed() || !dontBuyButton.isPressed()) {
 
             if (buyButton.isPressed()) {
@@ -121,7 +122,7 @@ public class SceneManager extends Stage {
         return -1;
     }
 
-    public static int jailChoicePopup() throws InterruptedException {
+    public static int jailChoicePopup() {
 
         GridPane gridpane = new GridPane();
 
@@ -143,7 +144,7 @@ public class SceneManager extends Stage {
         GameController.setPopup(gridpane);
 
         while (!rollButton.isPressed() || !payButton.isPressed() || !cardButton.isPressed()) {
-            Thread.sleep(50);
+            IOService.sleep(50);
             if (rollButton.isPressed()) {
                 GameController.resetPopup(gridpane);
                 return 1;
@@ -161,7 +162,7 @@ public class SceneManager extends Stage {
         return -1;
     }
 
-    public static int actionSequencePopup() throws InterruptedException {
+    public static int actionSequencePopup() {
 
         GridPane gridpane = new GridPane();
 
@@ -192,7 +193,7 @@ public class SceneManager extends Stage {
         GameController.setPopup(gridpane);
 
         while (!nothingButton.isPressed() || !buyHouseButton.isPressed() || !removeHouseButton.isPressed() || !addMortgageButton.isPressed() || !removeMortgageButton.isPressed() || !tradeButton.isPressed()) {
-            Thread.sleep(50);
+            IOService.sleep(50);
             if (nothingButton.isPressed()) {
                 GameController.resetPopup(gridpane);
                 return 1;
