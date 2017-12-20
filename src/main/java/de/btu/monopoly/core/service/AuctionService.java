@@ -30,6 +30,7 @@ public class AuctionService extends Listener {
      */
     public static void initAuction(Player[] players, GameClient client) {
         auc = new Auction(players, client);
+        LOGGER.setLevel(Level.FINEST);
     }
 
     /**
