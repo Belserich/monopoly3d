@@ -5,12 +5,15 @@
  */
 package de.btu.monopoly.ui;
 
+import com.jfoenix.controls.JFXButton;
 import de.btu.monopoly.ui.controller.LobbyController;
 import de.btu.monopoly.ui.controller.MainSceneController;
 import java.io.IOException;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 /**
@@ -82,6 +85,40 @@ public class SceneManager extends Stage {
 
     public static void movePlayerUpdate() {
         GameController.playerUpdate();
+    }
+
+    public static int buyPropertyPopup() throws InterruptedException {
+
+        GridPane gridpane = new GridPane();
+
+        Label label = new Label("Möchtest du die Straße kaufen?");
+
+        JFXButton buyButton = new JFXButton();
+        JFXButton dontBuyButton = new JFXButton();
+
+        buyButton.setText("Kaufen");
+
+        dontBuyButton.setText("Nicht kaufen");
+
+        gridpane.add(label, 0, 0);
+        gridpane.add(buyButton, 1, 0);
+        gridpane.add(dontBuyButton, 1, 1);
+
+        GameController.setPopup(gridpane);
+
+        while (!buyButton.isPressed() || !dontBuyButton.isPressed()) {
+            Thread.sleep(50);
+            if (buyButton.isPressed()) {
+                GameController.resetPopup(gridpane);
+                return 1;
+            }
+            if (dontBuyButton.isPressed()) {
+                GameController.resetPopup(gridpane);
+                return 2;
+            }
+        }
+
+        return -1;
     }
 
 }

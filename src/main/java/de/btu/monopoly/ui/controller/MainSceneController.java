@@ -358,4 +358,30 @@ public class MainSceneController implements Initializable {
 
     }
 
+    public void setPopup(GridPane gridpane) {
+
+        Task task = new Task() {
+            @Override
+            protected Object call() throws Exception {
+                PopupPane.getChildren().remove(middlePane);
+                PopupPane.add(gridpane, 0, 1);
+                return null;
+            }
+        };
+        Platform.runLater(task);
+
+    }
+
+    public void resetPopup(GridPane gridpane) {
+        Task task = new Task() {
+            @Override
+            protected Object call() throws Exception {
+                PopupPane.getChildren().remove(gridpane);
+                PopupPane.add(middlePane, 0, 1);
+                return null;
+            }
+        };
+        Platform.runLater(task);
+    }
+
 }

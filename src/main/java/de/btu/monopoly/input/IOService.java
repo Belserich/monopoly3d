@@ -14,6 +14,7 @@ import de.btu.monopoly.ki.HardKi;
 import de.btu.monopoly.ki.MediumKi;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.networkClasses.BroadcastPlayerChoiceRequest;
+import de.btu.monopoly.ui.SceneManager;
 import java.util.logging.Logger;
 
 /**
@@ -48,13 +49,14 @@ public class IOService {
         return choice;
     }
 
-    public static int buyPropertyChoice(Player player, PropertyField prop) {
+    public static int buyPropertyChoice(Player player, PropertyField prop) throws InterruptedException {
         int choice = -1;
         switch (player.getKiLevel()) {
             case 0:
                 //TODO GUI
                 // while not -1 ->Gui
-                choice = getClientChoice(player, 2);
+                choice = SceneManager.buyPropertyPopup();
+                // choice = getClientChoice(player, 2);
                 break;
             case 1:
                 choice = EasyKi.buyPropOption(player, prop);
@@ -109,13 +111,15 @@ public class IOService {
             packet.setChoice(choice);
             client.sendTCP(packet);
             return choice;
-        } else {
+        }
+        else {
             do {
                 BroadcastPlayerChoiceRequest[] packets = client.getPlayerChoiceObjects();
                 if (packets.length > 1) {
                     LOGGER.warning("Fehler: Mehr als ein choice-Packet registriert!");
                     return -1;
-                } else if (packets.length == 1) {
+                }
+                else if (packets.length == 1) {
                     int retVal = packets[0].getChoice();
                     client.clearPlayerChoiceObjects();
                     return retVal;
