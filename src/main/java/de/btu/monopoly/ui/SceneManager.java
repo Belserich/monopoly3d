@@ -242,12 +242,13 @@ public class SceneManager extends Stage {
         JFXComboBox fieldBox = new JFXComboBox();
         Button button = new Button();
 
-        fieldBox.setPromptText("Bitte Objekt auswählen:");
         button.setText("Eingabe");
 
         for (Field field : fields) {
             fieldBox.getItems().add(field.getName());
         }
+
+        fieldBox.getSelectionModel().selectFirst();
 
         gridPane.add(label, 0, 0);
         gridPane.add(fieldBox, 2, 0);
@@ -258,6 +259,7 @@ public class SceneManager extends Stage {
         while (!button.isPressed()) {
             IOService.sleep(50);
         }
+
         GameController.resetPopup(gridPane);
 
         int id = 0;
