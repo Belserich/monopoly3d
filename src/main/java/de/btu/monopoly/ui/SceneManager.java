@@ -8,6 +8,7 @@ package de.btu.monopoly.ui;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import de.btu.monopoly.data.field.Field;
+import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.input.IOService;
 import de.btu.monopoly.menu.Lobby;
@@ -17,6 +18,7 @@ import java.io.IOException;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
@@ -116,9 +118,9 @@ public class SceneManager extends Stage {
         gridpane.add(dontBuyButton, 1, 1);
 
         GameController.setPopup(gridpane);
-        IOService.sleep(50);
-        while (!buyButton.isPressed() || !dontBuyButton.isPressed()) {
 
+        while (!buyButton.isPressed() || !dontBuyButton.isPressed()) {
+            IOService.sleep(50);
             if (buyButton.isPressed()) {
                 GameController.resetPopup(gridpane);
                 return 1;
@@ -235,11 +237,31 @@ public class SceneManager extends Stage {
 
     public static int askForFieldPopup(Player player, Field[] fields) {
 
+        GridPane gridPane = new GridPane();
+
         Label label = new Label("Wähle ein Feld:");
-
         JFXComboBox fieldBox = new JFXComboBox();
+        Button button = new Button();
 
-        return -1;
+        fieldBox.setPromptText("Bitte Objekt auswählen:");
+        button.setText("Eingabe");
+
+        for (Field field : fields) {
+            fieldBox.getItems().add(field.getName());
+        }
+
+        gridPane.add(label, 0, 0);
+        gridPane.add(fieldBox, 2, 0);
+        gridPane.add(button, 1, 0);
+
+        GameController.setPopup(gridPane);
+
+        while (!button.isPressed()) {
+            IOService.sleep(50);
+        }
+        GameController.resetPopup(gridPane);
+
+        return Lobby.getPlayerClient().getGame().getBoard().getFieldManager().getPropertyId((PropertyField) fields[fieldBox.getSelectionModel().getSelectedIndex()]);
     }
 
 }

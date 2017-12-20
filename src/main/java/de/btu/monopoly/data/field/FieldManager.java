@@ -177,7 +177,7 @@ public class FieldManager {
         if (balanceCheck(street, 0, 1)) {
             if (street.getHouseCount() > 0) {
                 sellHouseUnchecked(street);
-                
+
                 return true;
             }
             else {
@@ -253,7 +253,7 @@ public class FieldManager {
      * @param prop betroffenes Feld
      * @return Anzahl der PropertyField Felder vor diesem +1
      */
-    private int getPropertyId(PropertyField prop) {
+    public int getPropertyId(PropertyField prop) {
         int propertyId = -1;
         for (Field field : fields) {
             if (field instanceof PropertyField) {
