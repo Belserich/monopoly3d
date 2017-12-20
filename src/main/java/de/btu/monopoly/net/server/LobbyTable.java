@@ -6,11 +6,10 @@
 package de.btu.monopoly.net.server;
 
 import com.esotericsoftware.kryonet.Connection;
-import com.esotericsoftware.kryonet.FrameworkMessage;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 import de.btu.monopoly.core.service.NetworkService;
-import de.btu.monopoly.net.networkClasses.*;
+import de.btu.monopoly.net.networkClasses.Lobby.*;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.logging.Logger;
@@ -22,7 +21,7 @@ import java.util.logging.Logger;
 public class LobbyTable extends Listener {
 
     private static final Logger LOGGER = Logger.getLogger(LobbyTable.class.getCanonicalName());
-    private Server server;
+    private final Server server;
     private String[][] users;
     private boolean gameStarted = false;
     private long randomSeed;
@@ -42,7 +41,8 @@ public class LobbyTable extends Listener {
         if (users == null) {
             tempusers = new String[1][4];
             slot = 0;
-        } else {
+        }
+        else {
             tempusers = new String[users.length + 1][4];
             slot = users.length;
             // altes Array in neues uebernehmen
@@ -71,9 +71,9 @@ public class LobbyTable extends Listener {
     public void changeUserName(int id, String name) {
         LOGGER.finer("Username wird geändert");
         String idstr = Integer.toString(id);
-        for (int i = 0; i < users.length; i++) {
-            if (users[i][0].equals(idstr)) {
-                users[i][1] = name;
+        for (String[] user : users) {
+            if (user[0].equals(idstr)) {
+                user[1] = name;
             }
         }
 
@@ -114,67 +114,72 @@ public class LobbyTable extends Listener {
         refreshLobbyResponse();
     }
 
-    public void createGameTable() {
-        //TODO evtl für Auktion!!!
-    }
-
     // RESPONSES:____________________________________________
     public void joinRespone(int id, Connection connection) {
         JoinResponse joinres = new JoinResponse();
         joinres.setId(id);
         joinres.setSeed(randomSeed);
+        NetworkService.logServerSendMessage(joinres);
         connection.sendTCP(joinres);
-        NetworkService.logSendMessage(joinres);
     }
 
     public void refreshLobbyResponse() {
         RefreshLobbyResponse refres = new RefreshLobbyResponse();
         refres.setUsers(users);
+        NetworkService.logServerSendMessage(refres);
         server.sendToAllTCP(refres);
-        NetworkService.logSendMessage(refres);
     }
 
     public void gamestartResponse() {
         shuffle();
         refreshLobbyResponse();
         GamestartResponse gares = new GamestartResponse();
+        NetworkService.logServerSendMessage(gares);
         server.sendToAllTCP(gares);
-//        Thread.currentThread().interrupt();
     }
 
     // LISTENER:_____________________________________________
     @Override
     public void received(Connection connection, Object object) {
-        super.received(connection, object);
+//        super.received(connection, object);
 
-        if (!(object instanceof FrameworkMessage)) {
-            NetworkService.logReceiveMessage(object);
-
-            if (object instanceof JoinRequest) {
-                if (!gameStarted) {
-                    JoinRequest joinreq = (JoinRequest) object;
-                    registerUser(joinreq.getName(), connection, 0);
-                } else {
-                    connection.sendTCP(new JoinImpossibleResponse());
-                }
-            } else if (object instanceof AddKiRequest) {
-                LOGGER.finer("AddKiRequest erhalten");
-                AddKiRequest akr = (AddKiRequest) object;
-                registerUser(akr.getName(), connection, akr.getKiLevel());
-            } else if (object instanceof ChangeUsernameRequest) {
-                LOGGER.finer("ChangeUsernameRequest erhalten");
-                ChangeUsernameRequest chanreq = (ChangeUsernameRequest) object;
-                changeUserName(chanreq.getUserId(), chanreq.getUserName());
-            } else if (object instanceof GamestartRequest) {
-                LOGGER.finer("GamestartRequest erhalten");
-                gameStarted = true;
-                gamestartResponse();
-                createGameTable();
-            } else if (object instanceof BroadcastRandomSeedRequest) {
-                BroadcastRandomSeedRequest req = (BroadcastRandomSeedRequest) object;
-                randomSeed = req.getSeed();
+        if (object instanceof JoinRequest) {
+            NetworkService.logServerReceiveMessage(object);
+            if (!gameStarted) {
+                JoinRequest joinreq = (JoinRequest) object;
+                registerUser(joinreq.getName(), connection, 0);
+            }
+            else {
+                NetworkService.logServerSendMessage(new JoinImpossibleResponse());
+                connection.sendTCP(new JoinImpossibleResponse());
             }
         }
+        else if (object instanceof AddKiRequest) {
+            NetworkService.logServerReceiveMessage(object);
+            LOGGER.finer("AddKiRequest erhalten");
+            AddKiRequest akr = (AddKiRequest) object;
+            registerUser(akr.getName(), connection, akr.getKiLevel());
+        }
+        else if (object instanceof ChangeUsernameRequest) {
+            NetworkService.logServerReceiveMessage(object);
+            LOGGER.finer("ChangeUsernameRequest erhalten");
+            ChangeUsernameRequest chanreq = (ChangeUsernameRequest) object;
+            changeUserName(chanreq.getUserId(), chanreq.getUserName());
+        }
+        else if (object instanceof GamestartRequest) {
+            NetworkService.logServerReceiveMessage(object);
+            LOGGER.finer("GamestartRequest erhalten");
+            gameStarted = true;
+            shuffle();
+            refreshLobbyResponse();
+            gamestartResponse();
+        }
+        else if (object instanceof BroadcastRandomSeedRequest) {
+            NetworkService.logServerReceiveMessage(object);
+            BroadcastRandomSeedRequest req = (BroadcastRandomSeedRequest) object;
+            randomSeed = req.getSeed();
+        }
+
     }
 
     @Override

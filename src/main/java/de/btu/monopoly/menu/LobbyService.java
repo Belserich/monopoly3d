@@ -6,14 +6,15 @@
 package de.btu.monopoly.menu;
 
 import com.esotericsoftware.kryonet.Connection;
-import com.esotericsoftware.kryonet.FrameworkMessage;
 import com.esotericsoftware.kryonet.Listener;
 import de.btu.monopoly.core.Game;
+import de.btu.monopoly.core.service.NetworkService;
 import de.btu.monopoly.data.player.Player;
+import de.btu.monopoly.input.IOService;
 import de.btu.monopoly.input.InputHandler;
 import de.btu.monopoly.net.client.GameClient;
-import de.btu.monopoly.net.networkClasses.*;
-
+import de.btu.monopoly.net.networkClasses.Lobby.*;
+import de.btu.monopoly.net.server.AuctionTable;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Random;
@@ -36,11 +37,11 @@ public class LobbyService extends Listener {
         try {
             ipName = InetAddress.getLocalHost().getHostAddress();
         } catch (UnknownHostException ex) {
-            LOGGER.warning("Eigene IP konnte nicht ausgelesen werden " + ex);
+            LOGGER.log(Level.WARNING, "Eigene IP konnte nicht ausgelesen werden {0}", ex);
         }
 
         // Lobby init
-        lobby = new Lobby();
+        setLobby(new Lobby());
         lobby.setHost(host);
         lobby.setPlayerName(ipName);
         lobby.setPlayerClient(client);
@@ -51,13 +52,8 @@ public class LobbyService extends Listener {
 
         joinRequest();
 
-        //TODO kommt in GUI weg:
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException ex) {
-            LOGGER.warning("Fehler: " + ex);
-            Thread.currentThread().interrupt();
-        }
+        //TODO @GUI kommt weg:  (@Console Z.54-63)
+        IOService.sleep(500);
         System.out.println("Name?:");
         changeName(InputHandler.askForString());
 
@@ -72,11 +68,13 @@ public class LobbyService extends Listener {
     public static void addKI(String name, int kiLevel) {
         if (kiLevel < 1 || kiLevel > 3) {
             LOGGER.warning("kein gültiges KI Level eingegeben!");
-        } else {
+        }
+        else {
             AddKiRequest req = new AddKiRequest();
             req.setKiLevel(kiLevel);
             req.setName(name);
             lobby.getPlayerClient().sendTCP(req);
+            NetworkService.logClientSendMessage(req, lobby.getPlayerName());
         }
 
     }
@@ -86,14 +84,16 @@ public class LobbyService extends Listener {
         changeUsernameRequest();
     }
 
-    public static void startGame() {//TODO
+    public static void startGame() {
         Game controller = new Game(generatePlayerArray(), lobby.getPlayerClient(), lobby.getRandomSeed());
+        lobby.setController(controller);
         lobby.getPlayerClient().setGame(controller);
+
         controller.init();
         controller.start();
     }
 
-    private static Player[] generatePlayerArray() {
+    public static Player[] generatePlayerArray() {
         String[][] users = lobby.getUsers();
         Player[] players = new Player[users.length];
         for (int i = 0; i < users.length; i++) {
@@ -108,54 +108,65 @@ public class LobbyService extends Listener {
             }
             players[i] = player;
         }
-
+        // AuctionTable bekommt Player[]
+        if (lobby.isHost()) {
+            AuctionTable.setPlayers(players);
+        }
         return players;
     }
 
-    private static void generateRandomSeed() {
+    public static void generateRandomSeed() {
         long seed = new Random().nextLong();
         BroadcastRandomSeedRequest req = new BroadcastRandomSeedRequest();
         req.setSeed(seed);
         lobby.getPlayerClient().sendTCP(req);
+        NetworkService.logClientSendMessage(req, lobby.getPlayerName());
+    }
+
+    public static Lobby getLobby() {
+        return lobby;
     }
 
     // REQUESTS:__________________________________an LobbyTable
-    private static void joinRequest() {
-        LOGGER.finer(lobby.getPlayerName() + " sendet JoinRequest");
+    public static void joinRequest() {
         JoinRequest req = new JoinRequest();
         req.setName(lobby.getPlayerName());
+        NetworkService.logClientSendMessage(req, lobby.getPlayerName());
         lobby.getPlayerClient().sendTCP(req);
 
     }
 
     private static void changeUsernameRequest() {
-        LOGGER.finer(lobby.getPlayerName() + " sendet RefreshRequest");
         ChangeUsernameRequest req = new ChangeUsernameRequest();
         req.setUserName(lobby.getPlayerName());
         req.setUserId(lobby.getPlayerId());
+        NetworkService.logClientSendMessage(req, lobby.getPlayerName());
         lobby.getPlayerClient().sendTCP(req);
     }
 
-    private static void gamestartRequest() {
-        LOGGER.finer(lobby.getPlayerName() + " sendet GamestartRequest");
-        lobby.getPlayerClient().sendTCP(new GamestartRequest());
+    public static void gamestartRequest() {
+        GamestartRequest gaReq = new GamestartRequest();
+        NetworkService.logClientSendMessage(gaReq, lobby.getPlayerName());
+        lobby.getPlayerClient().sendTCP(gaReq);
     }
 
     //LISTENER:______________________________________________________________
+    @Override
     public void received(Connection connection, Object object) {
 
-        if (object instanceof FrameworkMessage) {
-            // TODO LOG
-        } else if (object instanceof JoinImpossibleResponse) {
+        if (object instanceof JoinImpossibleResponse) {
+            NetworkService.logClientReceiveMessage(object, lobby.getPlayerName());
             LOGGER.info("Spiel wurde bereits gestartet");
             Thread.interrupted();
-        } else if (object instanceof JoinResponse) {
-            LOGGER.finer("JoinResponse wird verarbeitet");
+        }
+        else if (object instanceof JoinResponse) {
+            NetworkService.logClientReceiveMessage(object, lobby.getPlayerName());
             JoinResponse joinres = (JoinResponse) object;
             lobby.setPlayerId(joinres.getId());
             lobby.setRandomSeed(joinres.getSeed());
-        } else if (object instanceof RefreshLobbyResponse) {
-            LOGGER.finer("RefreshLobbyResponse wird verarbeitet");
+        }
+        else if (object instanceof RefreshLobbyResponse) {
+            NetworkService.logClientReceiveMessage(object, lobby.getPlayerName());
             RefreshLobbyResponse refres = (RefreshLobbyResponse) object;
             lobby.setUsers(refres.getUsers());
 
@@ -169,8 +180,9 @@ public class LobbyService extends Listener {
                 System.out.println("Eingabe machen für Spielstart");
             }
 
-        } else if (object instanceof GamestartResponse) { //TODO elegantere Loesung
-            LOGGER.finer("GamestartResponse wird verarbeitet");
+        }
+        else if (object instanceof GamestartResponse) {
+            NetworkService.logClientReceiveMessage(object, lobby.getPlayerName());
 
             Thread t = new Thread() {
                 @Override
@@ -180,9 +192,15 @@ public class LobbyService extends Listener {
             };
             t.setName("Game");
             t.start();
-        } else {
-            LOGGER.log(Level.WARNING, "Falsches packet angekommen! {0}", object.getClass());
         }
+
+    }
+
+    /**
+     * @param aLobby the lobby to set
+     */
+    public static void setLobby(Lobby aLobby) {
+        lobby = aLobby;
     }
 
 }

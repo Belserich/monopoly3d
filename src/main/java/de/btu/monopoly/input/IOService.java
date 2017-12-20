@@ -7,6 +7,7 @@ package de.btu.monopoly.input;
 
 import de.btu.monopoly.core.Game;
 import de.btu.monopoly.core.GameBoard;
+import de.btu.monopoly.core.mechanics.Auction;
 import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.ki.EasyKi;
@@ -14,6 +15,9 @@ import de.btu.monopoly.ki.HardKi;
 import de.btu.monopoly.ki.MediumKi;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.networkClasses.BroadcastPlayerChoiceRequest;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -94,6 +98,29 @@ public class IOService {
         return choice;
     }
 
+    public static void betSequence(Auction auc) {
+        Player[] kiPlayers = auc.getPlayers();
+        Collections.shuffle(Arrays.asList(kiPlayers));
+        Player rndKi = null;
+        for (Player ki : kiPlayers) {
+            rndKi = (ki.getKiLevel() > 0) ? ki : rndKi;
+        }
+        LOGGER.log(Level.FINE, "{0} (KI) nimmt an Auktion teil.", rndKi.getName());
+        switch (rndKi.getKiLevel()) {
+            case 1:
+                EasyKi.processBetSequence(rndKi);
+                break;
+            case 2:
+//                MediumKi.processBetSequence();
+                break;
+            case 3:
+//                HardKi.processBetSequence();
+                break;
+            default:
+                LOGGER.warning("Illegale KI-Stufe in BetSequence registriert");
+        }
+    }
+
     /**
      * @param aClient the client to set
      */
@@ -101,7 +128,7 @@ public class IOService {
         client = aClient;
     }
 
-    private static int getClientChoice(Player player, int max) {
+    public static int getClientChoice(Player player, int max) {
         boolean isChoiceFromThisClient = player == client.getPlayerOnClient();
         if (isChoiceFromThisClient) {
             int choice = InputHandler.getUserInput(max);
@@ -109,13 +136,15 @@ public class IOService {
             packet.setChoice(choice);
             client.sendTCP(packet);
             return choice;
-        } else {
+        }
+        else {
             do {
                 BroadcastPlayerChoiceRequest[] packets = client.getPlayerChoiceObjects();
                 if (packets.length > 1) {
                     LOGGER.warning("Fehler: Mehr als ein choice-Packet registriert!");
                     return -1;
-                } else if (packets.length == 1) {
+                }
+                else if (packets.length == 1) {
                     int retVal = packets[0].getChoice();
                     client.clearPlayerChoiceObjects();
                     return retVal;
@@ -129,7 +158,18 @@ public class IOService {
         try {
             Thread.sleep(millis);
         } catch (InterruptedException ex) {
-            LOGGER.warning("FEHLER: " + ex);
+            LOGGER.log(Level.WARNING, "FEHLER: {0}", ex);
+            Thread.currentThread().interrupt();
+        }
+    }
+
+    public static void sleepDeep(int millis) {
+        try {
+            for (int i = 0; i < millis / 10; i++) {
+                Thread.sleep(10);
+            }
+        } catch (InterruptedException ex) {
+            LOGGER.log(Level.WARNING, "FEHLER: {0}", ex);
             Thread.currentThread().interrupt();
         }
     }

@@ -17,23 +17,23 @@ import de.btu.monopoly.net.networkClasses.PlayerTradeRequest;
  * @author Christian Prinz
  */
 public class ClientListener extends Listener {
-    
+
     private UiInteractionThread thread;
-    
+
     public ClientListener(UiInteractionThread thread) {
         this.thread = thread;
     }
-    
+
     public synchronized void received(Connection connection, Object object) {
         super.received(connection, object);
-        
+
         if (!(object instanceof FrameworkMessage)) {
-            NetworkService.logReceiveMessage(object);
-            
+
             if (object instanceof BroadcastPlayerChoiceRequest) {
+                NetworkService.logServerReceiveMessage(object);
                 thread.receivedPlayerChoiceObjects.add((BroadcastPlayerChoiceRequest) object);
-            }
-            else if (object instanceof PlayerTradeRequest) {
+            } else if (object instanceof PlayerTradeRequest) {
+                NetworkService.logServerReceiveMessage(object);
                 thread.tradeRequestObjects.add((PlayerTradeRequest) object);
             }
         }

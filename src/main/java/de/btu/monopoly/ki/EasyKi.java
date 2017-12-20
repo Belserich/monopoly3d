@@ -6,6 +6,7 @@
 package de.btu.monopoly.ki;
 
 import de.btu.monopoly.core.GameBoard;
+import de.btu.monopoly.core.service.AuctionService;
 import de.btu.monopoly.core.service.PlayerService;
 import de.btu.monopoly.data.card.CardAction;
 import de.btu.monopoly.data.card.CardStack;
@@ -27,9 +28,11 @@ public class EasyKi {
         CardStack stack = player.getCardStack();
         if (stack.countCardsOfAction(CardAction.JAIL) > 0) {
             choice = 3;
-        } else if (player.getMoney() > 100) {
+        }
+        else if (player.getMoney() > 100) {
             choice = 2;
-        } else {
+        }
+        else {
             choice = 1;
         }
         IOService.sleep(3000);
@@ -41,7 +44,8 @@ public class EasyKi {
         int percentage = PlayerService.getRng().nextInt(100);
         if (percentage <= 50) {
             choice = 1;
-        } else {
+        }
+        else {
             choice = 2;
         }
         IOService.sleep(3000);
@@ -55,4 +59,28 @@ public class EasyKi {
         return 1;
     }
 
+    public static void processBetSequence(Player ki) {
+        IOService.sleep(2000);
+        int originPrice = AuctionService.getAuc().getProperty().getPrice();
+        int actualPrice = AuctionService.getHighestBid();
+        double percentage = ((double) actualPrice / ((double) originPrice / 100));
+        int newPrice = actualPrice;
+        int aucID = -1;
+        for (int i = 0; i < AuctionService.getAuc().getAucPlayers().length; i++) {
+            if (AuctionService.getAuc().getAucPlayers()[i][0] == ki.getId()) {
+                aucID = i;
+            }
+        }
+        // wenn die KI noch an der Auktion teilnimmt und nicht Höchstbietender ist
+        if (AuctionService.getAuc().getAucPlayers()[aucID][2] != 0 && AuctionService.getHighestBidder() != ki.getId()) {
+            // wenn sie genuegend Geld hat und noch nicht 80% des Strassenpreises erreicht sind
+            if (PlayerService.checkLiquidity(ki, actualPrice) && percentage < 80) {
+                newPrice += (int) (originPrice * 0.1);
+                AuctionService.setBid(ki.getId(), newPrice);
+            }
+            else {
+                AuctionService.playerExit(ki.getId());
+            }
+        }
+    }
 }
