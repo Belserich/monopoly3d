@@ -26,7 +26,7 @@ public class IOService {
     private static final Logger LOGGER = Logger.getLogger(IOService.class.getCanonicalName());
     private static GameClient client;
 
-    public static int jailChoice(Player player) throws InterruptedException {
+    public static int jailChoice(Player player) {
         int choice = -1;
         switch (player.getKiLevel()) {
             case 0:
@@ -50,7 +50,7 @@ public class IOService {
         return choice;
     }
 
-    public static int buyPropertyChoice(Player player, PropertyField prop) throws InterruptedException {
+    public static int buyPropertyChoice(Player player, PropertyField prop) {
         int choice = -1;
         switch (player.getKiLevel()) {
             case 0:
@@ -75,7 +75,7 @@ public class IOService {
     }
 
     // wird noch zu void, wenn GUI fertig
-    public static int actionSequence(Player player, GameBoard board) throws InterruptedException {
+    public static int actionSequence(Player player, GameBoard board) {
         int choice = 1; //kommt weg
         switch (player.getKiLevel()) {
             case 0:

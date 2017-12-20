@@ -98,7 +98,7 @@ public class Game {
         LOGGER.info(String.format("%s hat das Spiel gewonnen!", board.getActivePlayers().get(0).getName()));
     }
 
-    private void turn(Player player) throws InterruptedException {
+    private void turn(Player player) {
         int[] rollResult;
         int doubletCounter = 0;
 
@@ -124,7 +124,7 @@ public class Game {
         }
     }
 
-    private void jailPhase(Player player) throws InterruptedException {
+    private void jailPhase(Player player) {
         int choice;
         do {
             LOGGER.info(String.format(" %s ist im Gefängnis und kann: %n[1] - 3-mal Würfeln, um mit einem Pasch freizukommen "
@@ -208,7 +208,7 @@ public class Game {
         return rollResult;
     }
 
-    public void fieldPhase(Player player, int[] rollResult) throws InterruptedException {
+    public void fieldPhase(Player player, int[] rollResult) {
         GameBoard.FieldType type = GameBoard.FIELD_STRUCTURE[player.getPosition()];
         switch (type) {
             case TAX: // Steuerfeld
@@ -243,7 +243,7 @@ public class Game {
         }
     }
 
-    private void processPlayerOnPropertyField(Player player, PropertyField prop, int[] rollResult) throws InterruptedException {
+    private void processPlayerOnPropertyField(Player player, PropertyField prop, int[] rollResult) {
         Player other = prop.getOwner();
         if (other == null) { // Feld frei
             LOGGER.info(String.format("%s steht auf %s. Wähle eine Aktion!%n[1] Kaufen %n[2] Nicht kaufen",
@@ -260,7 +260,7 @@ public class Game {
         }
     }
 
-    private void processBuyPropertyFieldOption(Player player, PropertyField prop) throws InterruptedException {
+    private void processBuyPropertyFieldOption(Player player, PropertyField prop) {
         int choice = IOService.buyPropertyChoice(player, prop);
 
         switch (choice) {
@@ -284,7 +284,7 @@ public class Game {
         }
     }
 
-    private void actionPhase(Player player) throws InterruptedException {
+    private void actionPhase(Player player) {
 
         int choice;
         do {
