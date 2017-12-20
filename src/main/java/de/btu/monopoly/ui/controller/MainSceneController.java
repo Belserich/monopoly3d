@@ -400,10 +400,10 @@ public class MainSceneController implements Initializable {
         player0Pane.add(exit, 4, 7);
 
         setPopup(player0Pane);
-        //TODO funktioniert noch nicht
-        if (exit.isPressed()) {
+
+        exit.setOnAction(e -> {
             resetPopup(player0Pane);
-        }
+        });
     }
 
     @FXML
@@ -418,12 +418,12 @@ public class MainSceneController implements Initializable {
         player1Pane.add(player, 2, 0);
         player1Pane.add(geld, 2, 5);
         player1Pane.add(exit, 4, 7);
-        
+
         setPopup(player1Pane);
 
-        if (exit.isPressed()) {
+        exit.setOnAction(e -> {
             resetPopup(player1Pane);
-        }
+        });
     }
 
     @FXML
@@ -438,12 +438,12 @@ public class MainSceneController implements Initializable {
         player2Pane.add(player, 2, 0);
         player2Pane.add(geld, 2, 5);
         player2Pane.add(exit, 4, 7);
-        
+
         setPopup(player2Pane);
 
-        if (exit.isPressed()) {
+        exit.setOnAction(e -> {
             resetPopup(player2Pane);
-        }
+        });
     }
 
     @FXML
@@ -458,12 +458,12 @@ public class MainSceneController implements Initializable {
         player3Pane.add(player, 2, 0);
         player3Pane.add(geld, 2, 5);
         player3Pane.add(exit, 4, 7);
-        
+
         setPopup(player3Pane);
 
-        if (exit.isPressed()) {
+        exit.setOnAction(e -> {
             resetPopup(player3Pane);
-        }
+        });
     }
 
     @FXML
@@ -478,12 +478,12 @@ public class MainSceneController implements Initializable {
         player4Pane.add(player, 2, 0);
         player4Pane.add(geld, 2, 5);
         player4Pane.add(exit, 4, 7);
-        
+
         setPopup(player4Pane);
 
-        if (exit.isPressed()) {
+        exit.setOnAction(e -> {
             resetPopup(player4Pane);
-        }
+        });
     }
 
     @FXML
@@ -498,12 +498,13 @@ public class MainSceneController implements Initializable {
         player5Pane.add(player, 2, 0);
         player5Pane.add(geld, 2, 5);
         player5Pane.add(exit, 4, 7);
-        
+
         setPopup(player5Pane);
 
-        if (exit.isPressed()) {
+        exit.setOnAction(e -> {
             resetPopup(player5Pane);
-        }
+        });
+
     }
 
     public void setPopup(GridPane gridpane) {
