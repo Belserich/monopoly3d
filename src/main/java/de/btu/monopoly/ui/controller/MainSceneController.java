@@ -18,6 +18,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -46,10 +47,19 @@ public class MainSceneController implements Initializable {
     @FXML
     private GridPane grid2;
     @FXML
-    private GridPane gridMiddle;
-    @FXML
     private GridPane PopupPane;
-
+    @FXML
+    private GridPane player0Geld;
+    @FXML
+    private GridPane player1Geld;
+    @FXML
+    private GridPane player2Geld;
+    @FXML
+    private GridPane player3Geld;
+    @FXML
+    private GridPane player4Geld;
+    @FXML
+    private GridPane player5Geld;
     //Spieler Figur
     @FXML
     private Circle player0;
@@ -292,9 +302,40 @@ public class MainSceneController implements Initializable {
 
     }
 
-    //TODO muss optimiert werden
-    @FXML
-    public void movePlayerAction() {
+    public void geldUpdate() {
+        Player[] players = Lobby.getPlayerClient().getGame().getPlayers();
+        
+        Task task = new Task() {
+            @Override
+            protected Object call() throws Exception {
+                if (players.length >= 1) {
+                     Label geld0 = new Label("Geld: " + players[0].getMoney());
+                    player0Geld.add(geld0, 0, 0);
+                }
+                if (players.length >= 2) {
+                    Label geld1 = new Label("Geld: " + players[1].getMoney());
+                    player1Geld.add(geld1, 0, 0);
+                }
+                if (players.length >= 3) {
+                    Label geld2 = new Label("Geld: " + players[2].getMoney());
+                    player2Geld.add(geld2, 0, 0);
+                }
+                if (players.length >= 4) {
+                    Label geld3 = new Label("Geld: " + players[3].getMoney());
+                    player3Geld.add(geld3, 0, 0);
+                }
+                if (players.length >= 5) {
+                    Label geld4 = new Label("Geld: " + players[4].getMoney());
+                    player4Geld.add(geld4, 0, 0);
+                }
+                if (players.length >= 6) {
+                    Label geld5 = new Label("Geld: " + players[5].getMoney());
+                    player5Geld.add(geld5, 0, 0);
+                }
+                return null;
+            }
+        };
+        Platform.runLater(task);
 
     }
 
@@ -303,23 +344,31 @@ public class MainSceneController implements Initializable {
         Task task = new Task() {
             @Override
             protected Object call() throws Exception {
+
                 if (players.length >= 1) {
                     Felder[players[0].getPosition()].getChildren().add(player0);
+
                 }
                 if (players.length >= 2) {
+
                     Felder[players[1].getPosition()].getChildren().add(player1);
+
                 }
                 if (players.length >= 3) {
                     Felder[players[2].getPosition()].getChildren().add(player2);
+
                 }
                 if (players.length >= 4) {
                     Felder[players[3].getPosition()].getChildren().add(player3);
+
                 }
                 if (players.length >= 5) {
                     Felder[players[4].getPosition()].getChildren().add(player4);
+
                 }
                 if (players.length >= 6) {
                     Felder[players[5].getPosition()].getChildren().add(player5);
+
                 }
                 return null;
             }

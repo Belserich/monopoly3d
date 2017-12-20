@@ -84,6 +84,10 @@ public class SceneManager extends Stage {
         }
     }
 
+    public static void geldPlayerUpdate() {
+        GameController.geldUpdate();
+    }
+
     public static void movePlayerUpdate() {
         GameController.playerUpdate();
     }
