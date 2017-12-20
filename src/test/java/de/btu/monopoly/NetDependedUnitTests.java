@@ -18,6 +18,7 @@ import de.btu.monopoly.menu.LobbyService;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.server.GameServer;
 import org.junit.Assert;
+import org.junit.Test;
 
 /**
  *
@@ -33,6 +34,10 @@ public class NetDependedUnitTests {
     private Player[] players;
     private FieldManager fm;
     private CardManager cm;
+
+    public NetDependedUnitTests() {
+        GlobalSettings.setRunAsTest(true);
+    }
 
     private void initNetwork() {
         server = new GameServer(443);
@@ -86,7 +91,7 @@ public class NetDependedUnitTests {
         IOService.sleep(100);
     }
 
-//    @Test
+    @Test
     public void testInitNetwork() {
         initNetwork();
         Assert.assertTrue("Server nicht initialisiert", server != null);
@@ -94,7 +99,7 @@ public class NetDependedUnitTests {
         clearGame();
     }
 
-//    @Test
+    @Test
     public void testInitLobby() {
         initLobby();
         LobbyService.setLobby(lobby);
@@ -125,7 +130,7 @@ public class NetDependedUnitTests {
         clearGame();
     }
 
-//    @Test
+    @Test
     public void testInitGame() {
         initGame();
         Assert.assertTrue("Game nicht initialisiert", game != null);
@@ -136,7 +141,7 @@ public class NetDependedUnitTests {
         clearGame();
     }
 
-//    @Test
+    @Test
     public void testKiJailOption() {
         initGame();
         // KI ins Gefängnis setzen
@@ -146,16 +151,16 @@ public class NetDependedUnitTests {
 
         //KI sollte sich freikaufen
         game.jailPhase(ki);
-        Assert.assertTrue("blalala", !ki.isInJail());
+        Assert.assertTrue("KI hat nicht bezahlt", !ki.isInJail());
 
         //KI sollte sich freiwuerfeln
         ki.getBank().withdraw(ki.getMoney());
         int choice = IOService.jailChoice(ki);
-        Assert.assertTrue("KI hat nicht bezahlt", choice == 1);
+        Assert.assertTrue("KI will sich nicht freiwürfeln", choice == 1);
         clearGame();
     }
 
-//    @Test //kann erst aktiviert werden, wenn di Consolenaufforderungen aus Auctionservice entfernt wurden
+    @Test //kann erst aktiviert werden, wenn di Consolenaufforderungen aus Auctionservice entfernt wurden
     public void testAuctionEnter() {
         initGame();
         Assert.assertTrue("Auktion nicht initialisiert", AuctionService.getAuc() != null);

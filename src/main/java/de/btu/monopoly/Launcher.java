@@ -6,16 +6,15 @@
 package de.btu.monopoly;
 
 import de.btu.monopoly.menu.MainMenu;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.LogManager;
-import java.util.logging.Logger;
 
 /**
  *
@@ -45,15 +44,20 @@ public class Launcher extends Application {
      */
     public static void main(String[] args) throws Exception {
         configLoggers();
-        initGame();
-        // launch(args);
+        GlobalSettings.setRunInConsole(true);
+        if (GlobalSettings.isRunInConsole()) {
+            initGame();
+        }
+        else {
+            launch(args);
+        }
     }
 
     public static void initGame() {
         MainMenu mainMenu = new MainMenu();
         mainMenu.start();
     }
-    
+
     private static void configLoggers() {
         try {
             LogManager.getLogManager().readConfiguration(Launcher.class.getResourceAsStream("/data/config/logging.properties"));

@@ -7,6 +7,7 @@ package de.btu.monopoly.menu;
 
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
+import de.btu.monopoly.GlobalSettings;
 import de.btu.monopoly.core.Game;
 import de.btu.monopoly.core.service.NetworkService;
 import de.btu.monopoly.data.player.Player;
@@ -28,6 +29,8 @@ import java.util.logging.Logger;
 public class LobbyService extends Listener {
 
     private static final Logger LOGGER = Logger.getLogger(LobbyService.class.getCanonicalName());
+    private static final boolean isRunAsTest = GlobalSettings.isRunAsTest();
+    private static final boolean isRunInConsole = GlobalSettings.isRunInConsole();
     private static Lobby lobby;
 
     public static void joinLobby(GameClient client, boolean host) {
@@ -52,16 +55,17 @@ public class LobbyService extends Listener {
 
         joinRequest();
 
-        //TODO @GUI kommt weg:  (@Console Z.54-63)
         IOService.sleep(500);
-        System.out.println("Name?:");
-        changeName(InputHandler.askForString());
+        if (isRunInConsole && !isRunAsTest) { // nur fuer @Console
+            System.out.println("Name?:");
+            changeName(InputHandler.askForString());
 
-        if (lobby.isHost()) {
-            addKI("Computergegner", 1);
-            System.out.println("Eingabe machen für Spielstart");
-            InputHandler.askForString();
-            gamestartRequest();
+            if (lobby.isHost()) {
+                addKI("Computergegner", 1);
+                System.out.println("Eingabe machen für Spielstart");
+                InputHandler.askForString();
+                gamestartRequest();
+            }
         }
     }
 

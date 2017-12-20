@@ -2,6 +2,7 @@ package de.btu.monopoly.core.service;
 
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
+import de.btu.monopoly.GlobalSettings;
 import de.btu.monopoly.core.mechanics.Auction;
 import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.player.Player;
@@ -19,7 +20,8 @@ import java.util.logging.Logger;
 public class AuctionService extends Listener {
 
     private static final Logger LOGGER = Logger.getLogger(AuctionService.class.getCanonicalName());
-
+    private static final boolean isRunAsTest = GlobalSettings.isRunAsTest();
+    private static final boolean isRunInConsole = GlobalSettings.isRunInConsole();
     private static Auction auc;
 
     /**
@@ -44,24 +46,29 @@ public class AuctionService extends Listener {
         JoinAuctionRequest jaReq = new JoinAuctionRequest();
         NetworkService.logClientSendMessage(jaReq, auc.getPlayerName());
         auc.getClient().sendTCP(jaReq);
-        IOService.sleepDeep(1500); // TODO @GUI es bleibt nur das in der Schleife darunter. (@Console aktiviere Z.42-56)
 
-        while (auctionStillActive()) {
-            LOGGER.finest("Wähle [1] für bieten [2] für aussteigen");
-            Scanner scanner = new Scanner(System.in);
-            switch (scanner.nextInt()) {
-                case 1:
-                    LOGGER.finest("Wähle dein Gebot");
-                    setBid(getAuc().getClient().getPlayerOnClient().getId(), scanner.nextInt());
-                    break;
-                case 2:
-                    playerExit(getAuc().getClient().getPlayerOnClient().getId());
-                    break;
-                default:
-                    break;
+        IOService.sleepDeep(1500);
+        if (!isRunAsTest) { // nicht fuer Test
+            while (auctionStillActive()) {
+                IOService.sleepDeep(500);
+                if (isRunInConsole) { // nur fuer @Console
+                    LOGGER.finest("Wähle [1] für bieten [2] für aussteigen");
+                    Scanner scanner = new Scanner(System.in);
+                    switch (scanner.nextInt()) {
+                        case 1:
+                            LOGGER.finest("Wähle dein Gebot");
+                            setBid(getAuc().getClient().getPlayerOnClient().getId(), scanner.nextInt());
+                            break;
+                        case 2:
+                            playerExit(getAuc().getClient().getPlayerOnClient().getId());
+                            break;
+                        default:
+                            break;
+                    }
+                }
             }
+            sellProperty();
         }
-        sellProperty();
     }
 
     private static void sellProperty() {
