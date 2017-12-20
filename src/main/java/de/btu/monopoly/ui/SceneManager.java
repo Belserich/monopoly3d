@@ -161,4 +161,65 @@ public class SceneManager extends Stage {
         return -1;
     }
 
+    public static int actionSequencePopup() throws InterruptedException {
+
+        GridPane gridpane = new GridPane();
+
+        Label label = new Label("Was möchtest du noch tun?");
+
+        JFXButton nothingButton = new JFXButton();
+        JFXButton buyHouseButton = new JFXButton();
+        JFXButton removeHouseButton = new JFXButton();
+        JFXButton addMortgageButton = new JFXButton();
+        JFXButton removeMortgageButton = new JFXButton();
+        JFXButton tradeButton = new JFXButton();
+
+        nothingButton.setText("Nichts");
+        buyHouseButton.setText("Haus kaufen");
+        removeHouseButton.setText("Haus verkaufen");
+        addMortgageButton.setText("Hypothek aufnehmen");
+        removeMortgageButton.setText("Hypothek abbezahlen");
+        tradeButton.setText("Handeln");
+
+        gridpane.add(label, 0, 0);
+        gridpane.add(nothingButton, 1, 0);
+        gridpane.add(buyHouseButton, 1, 1);
+        gridpane.add(removeHouseButton, 1, 2);
+        gridpane.add(addMortgageButton, 1, 3);
+        gridpane.add(removeMortgageButton, 1, 4);
+        gridpane.add(tradeButton, 1, 5);
+
+        GameController.setPopup(gridpane);
+
+        while (!nothingButton.isPressed() || !buyHouseButton.isPressed() || !removeHouseButton.isPressed() || !addMortgageButton.isPressed() || !removeMortgageButton.isPressed() || !tradeButton.isPressed()) {
+            Thread.sleep(50);
+            if (nothingButton.isPressed()) {
+                GameController.resetPopup(gridpane);
+                return 1;
+            }
+            if (buyHouseButton.isPressed()) {
+                GameController.resetPopup(gridpane);
+                return 2;
+            }
+            if (removeHouseButton.isPressed()) {
+                GameController.resetPopup(gridpane);
+                return 3;
+            }
+            if (addMortgageButton.isPressed()) {
+                GameController.resetPopup(gridpane);
+                return 4;
+            }
+            if (removeMortgageButton.isPressed()) {
+                GameController.resetPopup(gridpane);
+                return 5;
+            }
+            if (tradeButton.isPressed()) {
+                GameController.resetPopup(gridpane);
+                return 6;
+            }
+        }
+
+        return -1;
+    }
+
 }

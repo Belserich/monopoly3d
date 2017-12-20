@@ -284,7 +284,7 @@ public class Game {
         }
     }
 
-    private void actionPhase(Player player) {
+    private void actionPhase(Player player) throws InterruptedException {
 
         int choice;
         do {

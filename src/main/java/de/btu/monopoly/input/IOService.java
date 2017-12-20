@@ -75,12 +75,13 @@ public class IOService {
     }
 
     // wird noch zu void, wenn GUI fertig
-    public static int actionSequence(Player player, GameBoard board) {
+    public static int actionSequence(Player player, GameBoard board) throws InterruptedException {
         int choice = 1; //kommt weg
         switch (player.getKiLevel()) {
             case 0:
                 //TODO GUI
-                choice = getClientChoice(player, 6);
+                choice = SceneManager.actionSequencePopup();
+                //choice = getClientChoice(player, 6);
                 break;
             case 1:
                 choice = EasyKi.processActionSequence(player, board);
