@@ -93,6 +93,7 @@ public class FieldManager {
     public Field movePlayer(Player player, int amount) {
         int pos = PlayerService.movePlayer(player, amount);
         SceneManager.movePlayerUpdate();
+        SceneManager.geldPlayerUpdate();
         if (pos >= fields.length) {
             pos %= fields.length;
             player.setPosition(pos);
@@ -176,6 +177,7 @@ public class FieldManager {
         if (balanceCheck(street, 0, 1)) {
             if (street.getHouseCount() > 0) {
                 sellHouseUnchecked(street);
+                
                 return true;
             }
             else {
