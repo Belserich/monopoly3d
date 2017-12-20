@@ -10,6 +10,8 @@ import com.esotericsoftware.kryonet.Listener;
 import de.btu.monopoly.core.Game;
 import de.btu.monopoly.core.service.NetworkService;
 import de.btu.monopoly.data.player.Player;
+import de.btu.monopoly.input.IOService;
+import de.btu.monopoly.input.InputHandler;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.networkClasses.Lobby.*;
 import de.btu.monopoly.net.server.AuctionTable;
@@ -51,16 +53,16 @@ public class LobbyService extends Listener {
         joinRequest();
 
         //TODO @GUI kommt weg:  (@Console Z.54-63)
-//        IOService.sleep(500);
-//        System.out.println("Name?:");
-//        changeName(InputHandler.askForString());
-//
-//        if (lobby.isHost()) {
-//            addKI("Computergegner", 1);
-//            System.out.println("Eingabe machen für Spielstart");
-//            InputHandler.askForString();
-//            gamestartRequest();
-//        }
+        IOService.sleep(500);
+        System.out.println("Name?:");
+        changeName(InputHandler.askForString());
+
+        if (lobby.isHost()) {
+            addKI("Computergegner", 1);
+            System.out.println("Eingabe machen für Spielstart");
+            InputHandler.askForString();
+            gamestartRequest();
+        }
     }
 
     public static void addKI(String name, int kiLevel) {

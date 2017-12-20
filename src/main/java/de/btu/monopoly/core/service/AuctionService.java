@@ -8,6 +8,7 @@ import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.input.IOService;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.networkClasses.*;
+import java.util.Scanner;
 
 /**
  *
@@ -39,21 +40,21 @@ public class AuctionService extends Listener {
         NetworkService.logClientSendMessage(jaReq, auc.getPlayerName());
         auc.getClient().sendTCP(jaReq);
         IOService.sleepDeep(1500); // TODO @GUI es bleibt nur das in der Schleife darunter. (@Console aktiviere Z.42-56)
-//
-//        while (auctionStillActive()) {
-//            System.out.println("Wähle [1] für bieten [2] für aussteigen");
-//            Scanner scanner = new Scanner(System.in);
-//            switch (scanner.nextInt()) {
-//                case 1:
-//                    System.out.println("Wähle dein Gebot");
-//                    setBid(getAuc().getClient().getPlayerOnClient().getId(), scanner.nextInt());
-//                    break;
-//                case 2:
-//                    playerExit(getAuc().getClient().getPlayerOnClient().getId());
-//                    break;
-//            }
-//        }
-//        sellProperty();
+
+        while (auctionStillActive()) {
+            System.out.println("Wähle [1] für bieten [2] für aussteigen");
+            Scanner scanner = new Scanner(System.in);
+            switch (scanner.nextInt()) {
+                case 1:
+                    System.out.println("Wähle dein Gebot");
+                    setBid(getAuc().getClient().getPlayerOnClient().getId(), scanner.nextInt());
+                    break;
+                case 2:
+                    playerExit(getAuc().getClient().getPlayerOnClient().getId());
+                    break;
+            }
+        }
+        sellProperty();
     }
 
     private static void sellProperty() {
