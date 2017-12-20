@@ -26,13 +26,14 @@ public class IOService {
     private static final Logger LOGGER = Logger.getLogger(IOService.class.getCanonicalName());
     private static GameClient client;
 
-    public static int jailChoice(Player player) {
+    public static int jailChoice(Player player) throws InterruptedException {
         int choice = -1;
         switch (player.getKiLevel()) {
             case 0:
                 //TODO GUI
                 // while not -1 ->Gui
-                getClientChoice(player, 3);
+                choice = SceneManager.jailChoicePopup();
+                //getClientChoice(player, 3);
                 break;
             case 1:
                 choice = EasyKi.jailOption(player);

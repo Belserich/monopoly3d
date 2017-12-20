@@ -48,7 +48,8 @@ public class Game {
     private static long SEED;
 
     /**
-     * Die fachliche Komponente des Spiels als Einheit, bestehend aus einem Spielbrett, den Spielern sowie Zuschauern.
+     * Die fachliche Komponente des Spiels als Einheit, bestehend aus einem
+     * Spielbrett, den Spielern sowie Zuschauern.
      *
      * @param players Spieler
      *
@@ -81,7 +82,7 @@ public class Game {
         getIS_RUNNING().set(true);
     }
 
-    public void start() {
+    public void start() throws InterruptedException {
         LOGGER.setLevel(Level.ALL);
         LOGGER.info("Spiel beginnt.");
 
@@ -97,7 +98,7 @@ public class Game {
         LOGGER.info(String.format("%s hat das Spiel gewonnen!", board.getActivePlayers().get(0).getName()));
     }
 
-    private void turn(Player player) {
+    private void turn(Player player) throws InterruptedException {
         int[] rollResult;
         int doubletCounter = 0;
 
@@ -123,7 +124,7 @@ public class Game {
         }
     }
 
-    private void jailPhase(Player player) {
+    private void jailPhase(Player player) throws InterruptedException {
         int choice;
         do {
             LOGGER.info(String.format(" %s ist im Gefängnis und kann: %n[1] - 3-mal Würfeln, um mit einem Pasch freizukommen "
@@ -158,7 +159,8 @@ public class Game {
         int[] result = PlayerService.roll(player);
         if (result[0] == result[1]) {
             PlayerService.freeFromJail(player);
-        } else {
+        }
+        else {
             player.addDayInJail();
             if (player.getDaysInJail() >= 3) {
                 LOGGER.info("Drei Runden ohne Pasch, Spieler muss zahlen.");
@@ -172,7 +174,8 @@ public class Game {
         if (PlayerService.takeMoney(player, 50)) {
             LOGGER.info(String.format("%s hat 50 gezahlt und ist frei!", player.getName()));
             PlayerService.freeFromJail(player);
-        } else {
+        }
+        else {
             LOGGER.info(String.format("%s hat kein Geld um sich freizukaufen.", player.getName()));
         }
     }
@@ -180,7 +183,8 @@ public class Game {
     public void processJailCardOption(Player player) {
         if (board.getCardManager().useJailCard(player)) {
             LOGGER.info(String.format("%s hat eine Gefängnis-Frei-Karte benutzt.", player.getName()));
-        } else {
+        }
+        else {
             LOGGER.info(String.format("%s hat keine Gefängnis-Frei-Karten mehr.", player.getName()));
         }
     }
@@ -197,13 +201,14 @@ public class Game {
         if (doubletCount >= 3) {
             LOGGER.info(String.format("%s hat seinen 3. Pasch und geht nicht über LOS, direkt ins Gefängnis!", player.getName()));
             FieldService.toJail(player);
-        } else {
+        }
+        else {
             board.getFieldManager().movePlayer(player, rollResult[0] + rollResult[1]);
         }
         return rollResult;
     }
 
-    public void fieldPhase(Player player, int[] rollResult) {
+    public void fieldPhase(Player player, int[] rollResult) throws InterruptedException {
         GameBoard.FieldType type = GameBoard.FIELD_STRUCTURE[player.getPosition()];
         switch (type) {
             case TAX: // Steuerfeld
@@ -238,22 +243,24 @@ public class Game {
         }
     }
 
-    private void processPlayerOnPropertyField(Player player, PropertyField prop, int[] rollResult) {
+    private void processPlayerOnPropertyField(Player player, PropertyField prop, int[] rollResult) throws InterruptedException {
         Player other = prop.getOwner();
         if (other == null) { // Feld frei
             LOGGER.info(String.format("%s steht auf %s. Wähle eine Aktion!%n[1] Kaufen %n[2] Nicht kaufen",
                     player.getName(), prop.getName()));
             processBuyPropertyFieldOption(player, prop);
-        } else if (other == player) { // PropertyField im eigenen Besitz
+        }
+        else if (other == player) { // PropertyField im eigenen Besitz
             LOGGER.fine(String.format("%s steht auf seinem eigenen Grundstück.", player.getName()));
-        } else { // PropertyField nicht in eigenem Besitz
+        }
+        else { // PropertyField nicht in eigenem Besitz
             LOGGER.info(String.format("%s steht auf %s. Dieses Grundstück gehört von %s.",
                     player.getName(), prop.getName(), other.getName()));
             PlayerService.takeAndGiveMoneyUnchecked(player, other, FieldService.getRent(prop, rollResult));
         }
     }
 
-    private void processBuyPropertyFieldOption(Player player, PropertyField prop) {
+    private void processBuyPropertyFieldOption(Player player, PropertyField prop) throws InterruptedException {
         int choice = IOService.buyPropertyChoice(player, prop);
 
         switch (choice) {
@@ -288,7 +295,8 @@ public class Game {
             choice = IOService.actionSequence(player, board);
             if (choice == 6) {
                 processPlayerTradeOption(player);
-            } else if (choice > 1 && choice < 6) {
+            }
+            else if (choice > 1 && choice < 6) {
                 Field[] ownedFields = board.getFieldManager().getOwnedPropertyFields(player).toArray(Field[]::new);
                 Field currField = board.getFields()[InputHandler.askForField(player, ownedFields) - 1]; // Wahl der Strasse
 

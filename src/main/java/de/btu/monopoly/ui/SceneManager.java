@@ -121,4 +121,44 @@ public class SceneManager extends Stage {
         return -1;
     }
 
+    public static int jailChoicePopup() throws InterruptedException {
+
+        GridPane gridpane = new GridPane();
+
+        Label label = new Label("Du bist im Gefängnis. Was möchtest du tun?");
+
+        JFXButton rollButton = new JFXButton();
+        JFXButton payButton = new JFXButton();
+        JFXButton cardButton = new JFXButton();
+
+        rollButton.setText("Würfeln");
+        payButton.setText("Bezahlen");
+        cardButton.setText("Frei-Karte nutzen");
+
+        gridpane.add(label, 0, 0);
+        gridpane.add(rollButton, 1, 0);
+        gridpane.add(payButton, 1, 1);
+        gridpane.add(cardButton, 1, 2);
+
+        GameController.setPopup(gridpane);
+
+        while (!rollButton.isPressed() || !payButton.isPressed() || !cardButton.isPressed()) {
+            Thread.sleep(50);
+            if (rollButton.isPressed()) {
+                GameController.resetPopup(gridpane);
+                return 1;
+            }
+            if (payButton.isPressed()) {
+                GameController.resetPopup(gridpane);
+                return 2;
+            }
+            if (cardButton.isPressed()) {
+                GameController.resetPopup(gridpane);
+                return 3;
+            }
+        }
+
+        return -1;
+    }
+
 }

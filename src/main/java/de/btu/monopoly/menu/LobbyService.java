@@ -122,7 +122,7 @@ public class LobbyService extends Listener {
     /**
      * erstellt eine Gameinstanz und startet das Spiel
      */
-    public static void startGame() {
+    public static void startGame() throws InterruptedException {
 
         Game controller = new Game(generatePlayerArray(), lobby.getPlayerClient(), lobby.getRandomSeed());
         lobby.getPlayerClient().setGame(controller);
@@ -251,7 +251,11 @@ public class LobbyService extends Listener {
             Thread t = new Thread() {
                 @Override
                 public void run() {
-                    startGame();
+                    try {
+                        startGame();
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(LobbyService.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
             };
             t.setName("Game");
