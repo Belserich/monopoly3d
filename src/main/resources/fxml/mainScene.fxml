@@ -59,6 +59,7 @@
           <RowConstraints minHeight="10.0" percentHeight="37.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
+            <Label fx:id="moneyPlayer1" alignment="CENTER_RIGHT" text="Label" GridPane.halignment="CENTER" GridPane.valignment="BOTTOM" />
             <JFXButton fx:id="player0Button" onAction="#player0ButtonAction" prefHeight="80.0" prefWidth="150.0" text="frei" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
             <GridPane GridPane.rowIndex="1">
               <columnConstraints>

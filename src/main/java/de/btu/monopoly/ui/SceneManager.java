@@ -6,6 +6,7 @@
 package de.btu.monopoly.ui;
 
 import com.jfoenix.controls.JFXButton;
+import de.btu.monopoly.menu.Lobby;
 import de.btu.monopoly.ui.controller.LobbyController;
 import de.btu.monopoly.ui.controller.MainSceneController;
 import java.io.IOException;
@@ -90,8 +91,7 @@ public class SceneManager extends Stage {
     public static int buyPropertyPopup() throws InterruptedException {
 
         GridPane gridpane = new GridPane();
-
-        Label label = new Label("Möchtest du die Straße kaufen?");
+        Label label = new Label("Möchtest du die " + Lobby.getPlayerClient().getGame().getBoard().getFields()[Lobby.getPlayerClient().getPlayerOnClient().getPosition()].getName() + " kaufen?");
 
         JFXButton buyButton = new JFXButton();
         JFXButton dontBuyButton = new JFXButton();
@@ -107,7 +107,7 @@ public class SceneManager extends Stage {
         GameController.setPopup(gridpane);
 
         while (!buyButton.isPressed() || !dontBuyButton.isPressed()) {
-            Thread.sleep(50);
+
             if (buyButton.isPressed()) {
                 GameController.resetPopup(gridpane);
                 return 1;
