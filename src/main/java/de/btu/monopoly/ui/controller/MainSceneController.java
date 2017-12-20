@@ -5,6 +5,7 @@
  */
 package de.btu.monopoly.ui.controller;
 
+import com.jfoenix.controls.JFXButton;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.menu.Lobby;
 import de.btu.monopoly.net.client.GameClient;
@@ -17,6 +18,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
+import javafx.scene.AccessibleAction;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -386,32 +388,122 @@ public class MainSceneController implements Initializable {
 
     @FXML
     private void player0ButtonAction(ActionEvent event) throws IOException, InterruptedException {
+        Player[] players = Lobby.getPlayerClient().getGame().getPlayers();
+        GridPane player0Pane = new GridPane();
+        Label geld = new Label(players[0].getName() + " hat in Konto: " + players[0].getMoney());
+        JFXButton player = new JFXButton();
+        JFXButton exit = new JFXButton("Exit");
+        player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[0][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+        player.setText(Lobby.getUsers()[0][1]);
+        player0Pane.add(player, 2, 0);
+        player0Pane.add(geld, 2, 5);
+        player0Pane.add(exit, 4, 7);
 
+        setPopup(player0Pane);
+        //TODO funktioniert noch nicht
+        if (exit.isPressed()) {
+            resetPopup(player0Pane);
+        }
     }
 
     @FXML
     private void player1ButtonAction(ActionEvent event) throws IOException, InterruptedException {
+        Player[] players = Lobby.getPlayerClient().getGame().getPlayers();
+        GridPane player1Pane = new GridPane();
+        Label geld = new Label(players[1].getName() + " hat in Konto: " + players[1].getMoney());
+        JFXButton player = new JFXButton();
+        JFXButton exit = new JFXButton("Exit");
+        player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[1][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+        player.setText(Lobby.getUsers()[1][1]);
+        player1Pane.add(player, 2, 0);
+        player1Pane.add(geld, 2, 5);
+        player1Pane.add(exit, 4, 7);
+        
+        setPopup(player1Pane);
 
+        if (exit.isPressed()) {
+            resetPopup(player1Pane);
+        }
     }
 
     @FXML
     private void player2ButtonAction(ActionEvent event) throws IOException, InterruptedException {
+        Player[] players = Lobby.getPlayerClient().getGame().getPlayers();
+        GridPane player2Pane = new GridPane();
+        Label geld = new Label(players[2].getName() + " hat in Konto: " + players[2].getMoney());
+        JFXButton player = new JFXButton();
+        JFXButton exit = new JFXButton("Exit");
+        player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[2][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+        player.setText(Lobby.getUsers()[2][1]);
+        player2Pane.add(player, 2, 0);
+        player2Pane.add(geld, 2, 5);
+        player2Pane.add(exit, 4, 7);
+        
+        setPopup(player2Pane);
 
+        if (exit.isPressed()) {
+            resetPopup(player2Pane);
+        }
     }
 
     @FXML
     private void player3ButtonAction(ActionEvent event) throws IOException, InterruptedException {
+        Player[] players = Lobby.getPlayerClient().getGame().getPlayers();
+        GridPane player3Pane = new GridPane();
+        Label geld = new Label(players[3].getName() + " hat in Konto: " + players[3].getMoney());
+        JFXButton player = new JFXButton();
+        JFXButton exit = new JFXButton("Exit");
+        player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[3][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+        player.setText(Lobby.getUsers()[3][1]);
+        player3Pane.add(player, 2, 0);
+        player3Pane.add(geld, 2, 5);
+        player3Pane.add(exit, 4, 7);
+        
+        setPopup(player3Pane);
 
+        if (exit.isPressed()) {
+            resetPopup(player3Pane);
+        }
     }
 
     @FXML
     private void player4ButtonAction(ActionEvent event) throws IOException, InterruptedException {
+        Player[] players = Lobby.getPlayerClient().getGame().getPlayers();
+        GridPane player4Pane = new GridPane();
+        Label geld = new Label(players[4].getName() + " hat in Konto: " + players[4].getMoney());
+        JFXButton player = new JFXButton();
+        JFXButton exit = new JFXButton("Exit");
+        player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[4][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+        player.setText(Lobby.getUsers()[4][1]);
+        player4Pane.add(player, 2, 0);
+        player4Pane.add(geld, 2, 5);
+        player4Pane.add(exit, 4, 7);
+        
+        setPopup(player4Pane);
 
+        if (exit.isPressed()) {
+            resetPopup(player4Pane);
+        }
     }
 
     @FXML
     private void player5ButtonAction(ActionEvent event) throws IOException, InterruptedException {
+        Player[] players = Lobby.getPlayerClient().getGame().getPlayers();
+        GridPane player5Pane = new GridPane();
+        Label geld = new Label(players[5].getName() + " hat in Konto: " + players[5].getMoney());
+        JFXButton player = new JFXButton();
+        JFXButton exit = new JFXButton("Exit");
+        player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[5][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+        player.setText(Lobby.getUsers()[5][1]);
+        player5Pane.add(player, 2, 0);
+        player5Pane.add(geld, 2, 5);
+        player5Pane.add(exit, 4, 7);
+        
+        setPopup(player5Pane);
 
+        if (exit.isPressed()) {
+            resetPopup(player5Pane);
+        }
     }
 
     public void setPopup(GridPane gridpane) {
