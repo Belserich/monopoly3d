@@ -308,44 +308,44 @@ public class MainSceneController implements Initializable {
         Felder[38] = zusatzSt;
         Felder[39] = schlossAllee;
 
-        BesitzanzeigeFelder = new Pane[36];
-        BesitzanzeigeFelder[0] = besitz1;
-        BesitzanzeigeFelder[1] = besitz2;
-        BesitzanzeigeFelder[2] = besitz3;
-        BesitzanzeigeFelder[3] = besitz4;
-        BesitzanzeigeFelder[4] = besitz5;
-        BesitzanzeigeFelder[5] = besitz6;
-        BesitzanzeigeFelder[6] = besitz7;
-        BesitzanzeigeFelder[7] = besitz8;
-        BesitzanzeigeFelder[8] = besitz9;
-        BesitzanzeigeFelder[9] = besitz11;
-        BesitzanzeigeFelder[10] = besitz12;
-        BesitzanzeigeFelder[11] = besitz13;
-        BesitzanzeigeFelder[12] = besitz14;
-        BesitzanzeigeFelder[13] = besitz15;
-        BesitzanzeigeFelder[14] = besitz16;
-        BesitzanzeigeFelder[15] = besitz17;
-        BesitzanzeigeFelder[16] = besitz18;
-        BesitzanzeigeFelder[17] = besitz19;
-        BesitzanzeigeFelder[18] = besitz21;
-        BesitzanzeigeFelder[19] = besitz22;
-        BesitzanzeigeFelder[20] = besitz23;
-        BesitzanzeigeFelder[21] = besitz24;
-        BesitzanzeigeFelder[22] = besitz25;
-        BesitzanzeigeFelder[23] = besitz26;
-        BesitzanzeigeFelder[24] = besitz27;
-        BesitzanzeigeFelder[25] = besitz28;
-        BesitzanzeigeFelder[26] = besitz29;
-        BesitzanzeigeFelder[27] = besitz31;
-        BesitzanzeigeFelder[28] = besitz32;
-        BesitzanzeigeFelder[29] = besitz33;
-        BesitzanzeigeFelder[30] = besitz34;
-        BesitzanzeigeFelder[31] = besitz35;
-        BesitzanzeigeFelder[32] = besitz36;
-        BesitzanzeigeFelder[33] = besitz37;
-        BesitzanzeigeFelder[34] = besitz38;
-        BesitzanzeigeFelder[35] = besitz39;
+        BesitzanzeigeFelder = new Pane[40];
 
+        BesitzanzeigeFelder[1] = besitz1;
+        BesitzanzeigeFelder[2] = besitz2;
+        BesitzanzeigeFelder[3] = besitz3;
+        BesitzanzeigeFelder[4] = besitz4;
+        BesitzanzeigeFelder[5] = besitz5;
+        BesitzanzeigeFelder[6] = besitz6;
+        BesitzanzeigeFelder[7] = besitz7;
+        BesitzanzeigeFelder[8] = besitz8;
+        BesitzanzeigeFelder[9] = besitz9;
+        BesitzanzeigeFelder[11] = besitz11;
+        BesitzanzeigeFelder[12] = besitz12;
+        BesitzanzeigeFelder[13] = besitz13;
+        BesitzanzeigeFelder[14] = besitz14;
+        BesitzanzeigeFelder[15] = besitz15;
+        BesitzanzeigeFelder[16] = besitz16;
+        BesitzanzeigeFelder[17] = besitz17;
+        BesitzanzeigeFelder[18] = besitz18;
+        BesitzanzeigeFelder[19] = besitz19;
+        BesitzanzeigeFelder[21] = besitz21;
+        BesitzanzeigeFelder[22] = besitz22;
+        BesitzanzeigeFelder[23] = besitz23;
+        BesitzanzeigeFelder[24] = besitz24;
+        BesitzanzeigeFelder[25] = besitz25;
+        BesitzanzeigeFelder[26] = besitz26;
+        BesitzanzeigeFelder[27] = besitz27;
+        BesitzanzeigeFelder[28] = besitz28;
+        BesitzanzeigeFelder[29] = besitz29;
+        BesitzanzeigeFelder[31] = besitz31;
+        BesitzanzeigeFelder[32] = besitz32;
+        BesitzanzeigeFelder[33] = besitz33;
+        BesitzanzeigeFelder[34] = besitz34;
+        BesitzanzeigeFelder[35] = besitz35;
+        BesitzanzeigeFelder[36] = besitz36;
+        BesitzanzeigeFelder[37] = besitz37;
+        BesitzanzeigeFelder[38] = besitz38;
+        BesitzanzeigeFelder[39] = besitz39;
         //Bilder hinzufuegen
         /*Background*/
         Image image = new Image(getClass().getResourceAsStream("/images/Lobby_Background.jpg"));
@@ -506,11 +506,12 @@ public class MainSceneController implements Initializable {
         for (Field field : fields) {
             if (field instanceof PropertyField) {
                 if (((PropertyField) field).getOwner() != null) {
-                    BesitzanzeigeFelder[counter].setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[((PropertyField) field).getOwner().getId()][4]), CornerRadii.EMPTY, Insets.EMPTY)));
-                    counter++;
+                    if (BesitzanzeigeFelder[counter] != null) {
+                        BesitzanzeigeFelder[counter].setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[((PropertyField) field).getOwner().getId()][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+                    }
                 }
-
             }
+            counter++;
         }
     }
 
