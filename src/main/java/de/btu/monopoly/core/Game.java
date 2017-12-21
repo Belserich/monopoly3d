@@ -15,6 +15,7 @@ import de.btu.monopoly.input.IOService;
 import de.btu.monopoly.input.InputHandler;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.networkClasses.PlayerTradeRequest;
+import de.btu.monopoly.ui.Logger.TextAreaHandler;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -59,6 +60,8 @@ public class Game {
         this.client = client;
         this.SEED = seed;
         IOService.setClient(client);
+        TextAreaHandler logHandler = new TextAreaHandler();
+        LOGGER.addHandler(logHandler);
     }
 
     public void init() {

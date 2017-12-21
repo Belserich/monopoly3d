@@ -5,6 +5,7 @@ import de.btu.monopoly.core.service.FieldService;
 import de.btu.monopoly.core.service.PlayerService;
 import de.btu.monopoly.data.Tradeable;
 import de.btu.monopoly.data.player.Player;
+import de.btu.monopoly.ui.Logger.TextAreaHandler;
 import de.btu.monopoly.ui.SceneManager;
 import java.util.Arrays;
 import java.util.List;
@@ -34,6 +35,8 @@ public class FieldManager {
     public FieldManager(Field[] fields) {
         this.fields = fields;
         Arrays.asList(fields).forEach(f -> f.fieldManager = this);
+        TextAreaHandler logHandler = new TextAreaHandler();
+        LOGGER.addHandler(logHandler);
     }
 
     /**

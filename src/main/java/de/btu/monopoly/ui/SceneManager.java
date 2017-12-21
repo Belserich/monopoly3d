@@ -44,6 +44,10 @@ public class SceneManager extends Stage {
         stage.show();
     }
 
+    public static void appendText(String message) {
+        GameController.appendText(message);
+    }
+
     public static void changeScene(FXMLLoader loader) throws IOException {
 
         Parent root = loader.load();

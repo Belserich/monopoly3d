@@ -6,6 +6,7 @@
 package de.btu.monopoly.ui.controller;
 
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXTextArea;
 import de.btu.monopoly.data.field.Field;
 import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.player.Player;
@@ -260,6 +261,9 @@ public class MainSceneController implements Initializable {
     @FXML
     private Pane besitz39;
 
+    @FXML
+    private JFXTextArea textArea;
+
     private Pane[] Felder;
     private Pane[] BesitzanzeigeFelder;
 
@@ -346,6 +350,7 @@ public class MainSceneController implements Initializable {
         BesitzanzeigeFelder[37] = besitz37;
         BesitzanzeigeFelder[38] = besitz38;
         BesitzanzeigeFelder[39] = besitz39;
+
         //Bilder hinzufuegen
         /*Background*/
         Image image = new Image(getClass().getResourceAsStream("/images/Lobby_Background.jpg"));
@@ -429,6 +434,17 @@ public class MainSceneController implements Initializable {
             }
         }
 
+    }
+
+    public void appendText(String message) {
+        Task task = new Task() {
+            @Override
+            protected Object call() throws Exception {
+                textArea.appendText(message);
+                return null;
+            }
+        };
+        Platform.runLater(task);
     }
 
     public void geldUpdate() {
