@@ -408,19 +408,19 @@
                       <RowConstraints minHeight="10.0" percentHeight="11.1" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <Pane fx:id="besitz19" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black;" GridPane.columnIndex="1" />
-                        <Pane fx:id="gemeinschaft2" layoutX="40.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black; -fx-background-color: yellow;" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                        <Pane fx:id="besitz16" layoutX="40.0" layoutY="178.0" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black;" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                        <Pane fx:id="besitz15" layoutX="40.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black;" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                        <Pane fx:id="besitz14" layoutX="40.0" layoutY="262.0" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black;" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                        <Pane fx:id="besitz13" layoutX="40.0" layoutY="94.0" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black;" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-                        <Pane fx:id="besitz12" layoutX="40.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black;" GridPane.columnIndex="1" GridPane.rowIndex="7" />
-                        <Pane fx:id="besitz11" layoutX="40.0" layoutY="346.0" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black;" GridPane.columnIndex="1" GridPane.rowIndex="8">
+                        <Pane fx:id="besitz19" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" />
+                        <Pane fx:id="gemeinschaft2" layoutX="40.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black; -fx-background-color: yellow;" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                        <Pane fx:id="besitz16" layoutX="40.0" layoutY="178.0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <Pane fx:id="besitz15" layoutX="40.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                        <Pane fx:id="besitz14" layoutX="40.0" layoutY="262.0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                        <Pane fx:id="besitz13" layoutX="40.0" layoutY="94.0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                        <Pane fx:id="besitz12" layoutX="40.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+                        <Pane fx:id="besitz11" layoutX="40.0" layoutY="346.0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="8">
                            <children>
                               <TextFlow layoutX="104.0" layoutY="70.0" prefHeight="83.0" prefWidth="31.0" />
                            </children></Pane>
-                        <Pane fx:id="wienerStr" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black;" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <Pane fx:id="hafenStr" layoutX="182.0" layoutY="681.0" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black; -fx-background-color: brown;" GridPane.columnIndex="2" GridPane.rowIndex="6">
+                        <Pane fx:id="wienerStr" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black;" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                        <Pane fx:id="hafenStr" layoutX="182.0" layoutY="681.0" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black; -fx-background-color: brown;" GridPane.columnIndex="3" GridPane.rowIndex="6">
                            <children>
                               <Label alignment="CENTER" layoutX="-31.0" layoutY="8.0" prefHeight="42.0" prefWidth="91.0" rotate="90.0" text="HafenStr.">
                                  <font>
@@ -429,7 +429,7 @@
                               </Label>
                            </children>
                         </Pane>
-                        <Pane fx:id="seeStr" layoutX="182.0" layoutY="513.0" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black; -fx-background-color: brown;" GridPane.columnIndex="2" GridPane.rowIndex="8">
+                        <Pane fx:id="seeStr" layoutX="182.0" layoutY="513.0" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black; -fx-background-color: brown;" GridPane.columnIndex="3" GridPane.rowIndex="8">
                            <children>
                               <Label alignment="CENTER" layoutX="-31.0" layoutY="8.0" prefHeight="42.0" prefWidth="91.0" rotate="90.0" text="SeeStr.">
                                  <font>
@@ -438,7 +438,7 @@
                               </Label>
                            </children>
                         </Pane>
-                        <Pane fx:id="neueStr" layoutX="182.0" layoutY="681.0" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black; -fx-background-color: brown;" GridPane.columnIndex="2" GridPane.rowIndex="5">
+                        <Pane fx:id="neueStr" layoutX="182.0" layoutY="681.0" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black; -fx-background-color: brown;" GridPane.columnIndex="3" GridPane.rowIndex="5">
                            <children>
                               <Label alignment="CENTER" layoutX="-31.0" layoutY="8.0" prefHeight="42.0" prefWidth="91.0" rotate="90.0" text="NeueStr.">
                                  <font>
@@ -447,7 +447,7 @@
                               </Label>
                            </children>
                         </Pane>
-                        <Pane fx:id="muenchenerStr" layoutX="182.0" layoutY="430.0" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black; -fx-background-color: orange;" GridPane.columnIndex="2" GridPane.rowIndex="3">
+                        <Pane fx:id="muenchenerStr" layoutX="182.0" layoutY="430.0" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black; -fx-background-color: orange;" GridPane.columnIndex="3" GridPane.rowIndex="3">
                            <children>
                               <Label alignment="CENTER" layoutX="-31.0" layoutY="8.0" prefHeight="42.0" prefWidth="91.0" rotate="90.0" text="MünchenerStr.">
                                  <font>
@@ -456,7 +456,7 @@
                               </Label>
                            </children>
                         </Pane>
-                        <Pane fx:id="wienerStr" layoutX="182.0" layoutY="262.0" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black; -fx-background-color: orange;" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                        <Pane fx:id="wienerStr" layoutX="182.0" layoutY="262.0" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black; -fx-background-color: orange;" GridPane.columnIndex="3" GridPane.rowIndex="1">
                            <children>
                               <Label alignment="CENTER" layoutX="-31.0" layoutY="8.0" prefHeight="42.0" prefWidth="91.0" rotate="90.0" text="WienerStr.">
                                  <font>
@@ -465,7 +465,7 @@
                               </Label>
                            </children>
                         </Pane>
-                        <Pane fx:id="berlinerStr" layoutX="182.0" layoutY="94.0" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black; -fx-background-color: orange;" GridPane.columnIndex="2">
+                        <Pane fx:id="berlinerStr" layoutX="182.0" layoutY="94.0" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black; -fx-background-color: orange;" GridPane.columnIndex="3">
                            <children>
                               <Label alignment="CENTER" layoutX="-31.0" layoutY="8.0" prefHeight="42.0" prefWidth="91.0" rotate="90.0" text="BerlinerStr.">
                                  <font>
@@ -474,7 +474,7 @@
                               </Label>
                            </children>
                         </Pane>
-                        <Pane fx:id="westBahnhof" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black; -fx-background-color: white;" GridPane.columnIndex="2" GridPane.rowIndex="4">
+                        <Pane fx:id="westBahnhof" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black; -fx-background-color: white;" GridPane.columnIndex="3" GridPane.rowIndex="4">
                            <children>
                               <Label alignment="CENTER" layoutX="-31.0" layoutY="8.0" prefHeight="42.0" prefWidth="91.0" rotate="90.0" text="WestBhf.">
                                  <font>
@@ -483,7 +483,7 @@
                               </Label>
                            </children>
                         </Pane>
-                        <Pane fx:id="gemeinschaft2" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black; -fx-background-color: white;" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                        <Pane fx:id="gemeinschaft2" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black; -fx-background-color: white;" GridPane.columnIndex="3" GridPane.rowIndex="2">
                            <children>
                               <Label alignment="CENTER" layoutX="-31.0" layoutY="8.0" prefHeight="42.0" prefWidth="91.0" rotate="90.0" text="Gemeischaft">
                                  <font>
@@ -492,7 +492,7 @@
                               </Label>
                            </children>
                         </Pane>
-                        <Pane fx:id="elWerk" layoutX="182.0" layoutY="178.0" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black; -fx-background-color: white;" GridPane.columnIndex="2" GridPane.rowIndex="7">
+                        <Pane fx:id="elWerk" layoutX="182.0" layoutY="178.0" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black; -fx-background-color: white;" GridPane.columnIndex="3" GridPane.rowIndex="7">
                            <children>
                               <Label alignment="CENTER" layoutX="-31.0" layoutY="8.0" prefHeight="42.0" prefWidth="91.0" rotate="90.0" text="Elwerk">
                                  <font>
@@ -503,6 +503,13 @@
                         </Pane>
                         <Pane fx:id="besitz17" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                         <Pane fx:id="besitz18" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Pane fx:id="berlinerStr" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black;" GridPane.columnIndex="2" />
+                        <Pane fx:id="muenchenerStr" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black;" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                        <Pane fx:id="westBahnhof" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black;" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+                        <Pane fx:id="neueStr" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black;" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+                        <Pane fx:id="hafenStr" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black;" GridPane.columnIndex="2" GridPane.rowIndex="6" />
+                        <Pane fx:id="elWerk" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black;" GridPane.columnIndex="2" GridPane.rowIndex="7" />
+                        <Pane fx:id="seeStr" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black;" GridPane.columnIndex="2" GridPane.rowIndex="8" />
                      </children>
                   </GridPane>
                   <GridPane prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: ;" GridPane.rowIndex="2">
