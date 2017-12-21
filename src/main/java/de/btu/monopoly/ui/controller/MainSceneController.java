@@ -6,6 +6,8 @@
 package de.btu.monopoly.ui.controller;
 
 import com.jfoenix.controls.JFXButton;
+import de.btu.monopoly.data.field.Field;
+import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.menu.Lobby;
 import de.btu.monopoly.net.client.GameClient;
@@ -18,7 +20,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
-import javafx.scene.AccessibleAction;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -186,7 +187,81 @@ public class MainSceneController implements Initializable {
     @FXML
     private Pane schlossAllee;
 
+    @FXML
+    private Pane besitz1;
+    @FXML
+    private Pane besitz2;
+    @FXML
+    private Pane besitz3;
+    @FXML
+    private Pane besitz4;
+    @FXML
+    private Pane besitz5;
+    @FXML
+    private Pane besitz6;
+    @FXML
+    private Pane besitz7;
+    @FXML
+    private Pane besitz8;
+    @FXML
+    private Pane besitz9;
+    @FXML
+    private Pane besitz11;
+    @FXML
+    private Pane besitz12;
+    @FXML
+    private Pane besitz13;
+    @FXML
+    private Pane besitz14;
+    @FXML
+    private Pane besitz15;
+    @FXML
+    private Pane besitz16;
+    @FXML
+    private Pane besitz17;
+    @FXML
+    private Pane besitz18;
+    @FXML
+    private Pane besitz19;
+    @FXML
+    private Pane besitz21;
+    @FXML
+    private Pane besitz22;
+    @FXML
+    private Pane besitz23;
+    @FXML
+    private Pane besitz24;
+    @FXML
+    private Pane besitz25;
+    @FXML
+    private Pane besitz26;
+    @FXML
+    private Pane besitz27;
+    @FXML
+    private Pane besitz28;
+    @FXML
+    private Pane besitz29;
+    @FXML
+    private Pane besitz31;
+    @FXML
+    private Pane besitz32;
+    @FXML
+    private Pane besitz33;
+    @FXML
+    private Pane besitz34;
+    @FXML
+    private Pane besitz35;
+    @FXML
+    private Pane besitz36;
+    @FXML
+    private Pane besitz37;
+    @FXML
+    private Pane besitz38;
+    @FXML
+    private Pane besitz39;
+
     private Pane[] Felder;
+    private Pane[] BesitzanzeigeFelder;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -232,6 +307,44 @@ public class MainSceneController implements Initializable {
         Felder[37] = parkStr;
         Felder[38] = zusatzSt;
         Felder[39] = schlossAllee;
+
+        BesitzanzeigeFelder = new Pane[36];
+        BesitzanzeigeFelder[0] = besitz1;
+        BesitzanzeigeFelder[1] = besitz2;
+        BesitzanzeigeFelder[2] = besitz3;
+        BesitzanzeigeFelder[3] = besitz4;
+        BesitzanzeigeFelder[4] = besitz5;
+        BesitzanzeigeFelder[5] = besitz6;
+        BesitzanzeigeFelder[6] = besitz7;
+        BesitzanzeigeFelder[7] = besitz8;
+        BesitzanzeigeFelder[8] = besitz9;
+        BesitzanzeigeFelder[9] = besitz11;
+        BesitzanzeigeFelder[10] = besitz12;
+        BesitzanzeigeFelder[11] = besitz13;
+        BesitzanzeigeFelder[12] = besitz14;
+        BesitzanzeigeFelder[13] = besitz15;
+        BesitzanzeigeFelder[14] = besitz16;
+        BesitzanzeigeFelder[15] = besitz17;
+        BesitzanzeigeFelder[16] = besitz18;
+        BesitzanzeigeFelder[17] = besitz19;
+        BesitzanzeigeFelder[18] = besitz21;
+        BesitzanzeigeFelder[19] = besitz22;
+        BesitzanzeigeFelder[20] = besitz23;
+        BesitzanzeigeFelder[21] = besitz24;
+        BesitzanzeigeFelder[22] = besitz25;
+        BesitzanzeigeFelder[23] = besitz26;
+        BesitzanzeigeFelder[24] = besitz27;
+        BesitzanzeigeFelder[25] = besitz28;
+        BesitzanzeigeFelder[26] = besitz29;
+        BesitzanzeigeFelder[27] = besitz31;
+        BesitzanzeigeFelder[28] = besitz32;
+        BesitzanzeigeFelder[29] = besitz33;
+        BesitzanzeigeFelder[30] = besitz34;
+        BesitzanzeigeFelder[31] = besitz35;
+        BesitzanzeigeFelder[32] = besitz36;
+        BesitzanzeigeFelder[33] = besitz37;
+        BesitzanzeigeFelder[34] = besitz38;
+        BesitzanzeigeFelder[35] = besitz39;
 
         //Bilder hinzufuegen
         /*Background*/
@@ -384,6 +497,21 @@ public class MainSceneController implements Initializable {
         };
         Platform.runLater(task);
 
+    }
+
+    public void propertyUpdate() {
+        Field[] fields = Lobby.getPlayerClient().getGame().getBoard().getFieldManager().getFields();
+        int counter = 0;
+
+        for (Field field : fields) {
+            if (field instanceof PropertyField) {
+                if (((PropertyField) field).getOwner() != null) {
+                    BesitzanzeigeFelder[counter].setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[((PropertyField) field).getOwner().getId()][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+                    counter++;
+                }
+
+            }
+        }
     }
 
     @FXML

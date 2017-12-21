@@ -97,6 +97,10 @@ public class SceneManager extends Stage {
         GameController.playerUpdate();
     }
 
+    public static void propertyUpdate() {
+        GameController.propertyUpdate();
+    }
+
     // -----------------------------------------------------------------------
     // Popups
     // -----------------------------------------------------------------------

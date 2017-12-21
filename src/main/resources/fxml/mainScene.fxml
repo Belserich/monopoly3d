@@ -278,6 +278,15 @@
                               <Font name="System Bold" size="10.0" />
                            </font>
                         </Label>
+                        <Pane fx:id="besitz21" prefHeight="200.0" prefWidth="200.0" />
+                        <Pane fx:id="besitz22" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" />
+                        <Pane fx:id="besitz23" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" />
+                        <Pane fx:id="besitz24" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" />
+                        <Pane fx:id="besitz25" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="4" />
+                        <Pane fx:id="besitz26" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="5" />
+                        <Pane fx:id="besitz27" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="6" />
+                        <Pane fx:id="besitz28" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="7" />
+                        <Pane fx:id="besitz29" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="8" />
                      </children>
                   </GridPane>
                   <GridPane layoutX="10.0" layoutY="10.0" style="-fx-background-color: white; -fx-border-color: black; -fx-background-size: stretch;" GridPane.rowIndex="2">
@@ -345,6 +354,15 @@
                               <Font name="System Bold" size="10.0" />
                            </font>
                         </Label>
+                        <Pane fx:id="besitz1" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="8" GridPane.rowIndex="2" />
+                        <Pane fx:id="besitz2" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="7" GridPane.rowIndex="2" />
+                        <Pane fx:id="besitz3" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="6" GridPane.rowIndex="2" />
+                        <Pane fx:id="besitz4" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="5" GridPane.rowIndex="2" />
+                        <Pane fx:id="besitz5" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.rowIndex="2" />
+                        <Pane fx:id="besitz6" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                        <Pane fx:id="besitz7" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                        <Pane fx:id="besitz8" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <Pane fx:id="besitz9" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="2" />
                      </children>
                   </GridPane>
                </children>
@@ -392,7 +410,7 @@
                      <children>
                         <Pane fx:id="besitz19" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black;" GridPane.columnIndex="1" />
                         <Pane fx:id="gemeinschaft2" layoutX="40.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black; -fx-background-color: yellow;" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                        <Pane fx:id="muenchenerStr" layoutX="40.0" layoutY="178.0" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black;" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <Pane fx:id="besitz16" layoutX="40.0" layoutY="178.0" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black;" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                         <Pane fx:id="besitz15" layoutX="40.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black;" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                         <Pane fx:id="besitz14" layoutX="40.0" layoutY="262.0" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black;" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                         <Pane fx:id="besitz13" layoutX="40.0" layoutY="94.0" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black;" GridPane.columnIndex="1" GridPane.rowIndex="6" />
@@ -483,8 +501,8 @@
                               </Label>
                            </children>
                         </Pane>
-                        <Pane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                        <Pane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Pane fx:id="besitz17" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <Pane fx:id="besitz18" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                      </children>
                   </GridPane>
                   <GridPane prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: ;" GridPane.rowIndex="2">
@@ -619,6 +637,15 @@
                            </children>
                         </Pane>
                         <Pane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: white; -fx-border-color: black;" GridPane.rowIndex="7" />
+                        <Pane fx:id="besitz31" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" />
+                        <Pane fx:id="besitz32" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                        <Pane fx:id="besitz33" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                        <Pane fx:id="besitz34" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                        <Pane fx:id="besitz35" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+                        <Pane fx:id="besitz36" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+                        <Pane fx:id="besitz37" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="6" />
+                        <Pane fx:id="besitz38" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="7" />
+                        <Pane fx:id="besitz39" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="8" />
                      </children>
                   </GridPane>
                   <GridPane GridPane.rowIndex="2">

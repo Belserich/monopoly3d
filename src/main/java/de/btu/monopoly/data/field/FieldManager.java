@@ -94,6 +94,7 @@ public class FieldManager {
         int pos = PlayerService.movePlayer(player, amount);
         SceneManager.movePlayerUpdate();
         SceneManager.geldPlayerUpdate();
+        SceneManager.propertyUpdate();
         if (pos >= fields.length) {
             pos %= fields.length;
             player.setPosition(pos);
