@@ -5,9 +5,12 @@
  */
 package de.btu.monopoly.menu;
 
+import de.btu.monopoly.GlobalSettings;
+import de.btu.monopoly.input.InputHandler;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.server.GameServer;
 import de.btu.monopoly.ui.controller.StartGameController;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -18,25 +21,49 @@ public class MainMenu {
 
     protected static final int CREATE_GAME = 1;
     protected static final int JOIN_GAME = 2;
-    
+    private final int PORT = 443;
+
     public static final Logger LOGGER = Logger.getLogger(MainMenu.class.getCanonicalName());
+
+    public void start() { //@GUI wird nicht verwendet
+        LOGGER.setLevel(Level.FINER);
+        LOGGER.fine("HAUPTMENÜ\n[1] Spiel starten\n[2] Spiel beitreten");
+        int choice = InputHandler.getUserInput(2);
+        if (choice == CREATE_GAME) {
+            createGame();
+        }
+        else if (choice == JOIN_GAME) {
+            joinGame("localhost");
+        }
+    }
 
     public void createGame() {
         // Server und Client starten und verbinden
-        GameServer server = new GameServer(59687);
+        GameServer server = new GameServer(PORT);
         server.startServer();
-        GameClient client = new GameClient(59687, 5000);
+        GameClient client = new GameClient(PORT, 5000);
         String localHost = System.getProperty("myapp.ip");
         client.connect(localHost);
         LOGGER.info("Die ServerIP ist " + server.getServerIP());
 
-        StartGameController.client = client;
+        if (GlobalSettings.isRunInConsole()) {
+            LobbyService.joinLobby(client, true);
+        }
+        else {
+            StartGameController.client = client;
+        }
     }
 
     public void joinGame(String ip) {
         // Client starten und verbinden
-        GameClient client = new GameClient(59687, 5000);
-        client.connect(ip); // while Schleife bis mit Server verbunden (evtl. begrenzte Versuche)
+        GameClient client = new GameClient(PORT, 5000);
+        if (GlobalSettings.isRunInConsole()) {
+            LOGGER.fine("Geben sie die IP-Adresse des Servers ein");
+            client.connect(InputHandler.askForString());
+        }
+        else {
+            client.connect(ip); // while Schleife bis mit Server verbunden (evtl. begrenzte Versuche)
+        }
 
         // Lobby als Client joinen
         LobbyService.joinLobby(client, false);

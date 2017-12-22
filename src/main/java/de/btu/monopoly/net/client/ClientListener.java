@@ -28,12 +28,13 @@ public class ClientListener extends Listener {
         super.received(connection, object);
 
         if (!(object instanceof FrameworkMessage)) {
-            NetworkService.logReceiveMessage(object);
 
             if (object instanceof BroadcastPlayerChoiceRequest) {
+                NetworkService.logServerReceiveMessage(object);
                 thread.receivedPlayerChoiceObjects.add((BroadcastPlayerChoiceRequest) object);
             }
             else if (object instanceof PlayerTradeRequest) {
+                NetworkService.logServerReceiveMessage(object);
                 thread.tradeRequestObjects.add((PlayerTradeRequest) object);
             }
         }

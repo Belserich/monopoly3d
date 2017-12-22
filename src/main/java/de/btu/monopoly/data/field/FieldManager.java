@@ -1,5 +1,6 @@
 package de.btu.monopoly.data.field;
 
+import de.btu.monopoly.GlobalSettings;
 import de.btu.monopoly.core.GameBoard;
 import de.btu.monopoly.core.service.FieldService;
 import de.btu.monopoly.core.service.PlayerService;
@@ -35,8 +36,10 @@ public class FieldManager {
     public FieldManager(Field[] fields) {
         this.fields = fields;
         Arrays.asList(fields).forEach(f -> f.fieldManager = this);
-        TextAreaHandler logHandler = new TextAreaHandler();
-        LOGGER.addHandler(logHandler);
+        if (!GlobalSettings.isRunAsTest() && !GlobalSettings.isRunInConsole()) {
+            TextAreaHandler logHandler = new TextAreaHandler();
+            LOGGER.addHandler(logHandler);
+        }
     }
 
     /**
@@ -57,8 +60,7 @@ public class FieldManager {
      * Gibt die Gesamtanzahl der Häuser und Hotels im Spielerbesitz zurück.
      *
      * @param player Spieler
-     * @return Gesamtanzahl der Häuser und Hotels im Spielerbesitz (Index 0 -
-     * Häuser, Index 1 - Hotels)
+     * @return Gesamtanzahl der Häuser und Hotels im Spielerbesitz (Index 0 - Häuser, Index 1 - Hotels)
      */
     public int[] getHouseAndHotelCount(Player player) {
         int[] retObj = new int[2];
@@ -95,21 +97,21 @@ public class FieldManager {
      */
     public Field movePlayer(Player player, int amount) {
         int pos = PlayerService.movePlayer(player, amount);
-        SceneManager.movePlayerUpdate();
-        SceneManager.geldPlayerUpdate();
-        SceneManager.propertyUpdate();
+        if (!GlobalSettings.isRunInConsole() && !GlobalSettings.isRunAsTest()) {
+            SceneManager.movePlayerUpdate();
+            SceneManager.geldPlayerUpdate();
+            SceneManager.propertyUpdate();
+        }
         if (pos >= fields.length) {
             pos %= fields.length;
             player.setPosition(pos);
             PlayerService.giveMoney(player, getGoField().getAmount());
-
         }
         return fields[pos];
     }
 
     /**
-     * Bewegt den Spieler zum nächsten Feld des angegebenen Typs. Wird für
-     * einige Karten benötigt.
+     * Bewegt den Spieler zum nächsten Feld des angegebenen Typs. Wird für einige Karten benötigt.
      *
      * @param player Spieler
      * @param nextFieldType Feldtyp
@@ -125,8 +127,7 @@ public class FieldManager {
     }
 
     /**
-     * Kauft ein Haus auf dem gewählten Feld, sofern es ein Straßenfeld ist und
-     * der Spieler genug Geld hat.
+     * Kauft ein Haus auf dem gewählten Feld, sofern es ein Straßenfeld ist und der Spieler genug Geld hat.
      *
      * @return true, wenn der Kauf erfolgreich war, false sonst
      */
@@ -153,8 +154,7 @@ public class FieldManager {
     }
 
     /**
-     * Kauft ein Haus auf dem gewählten Feld ohne auf die gegebenen Umstände zu
-     * prüfen.
+     * Kauft ein Haus auf dem gewählten Feld ohne auf die gegebenen Umstände zu prüfen.
      *
      * @param street Straßenfeld
      */
@@ -169,8 +169,7 @@ public class FieldManager {
     }
 
     /**
-     * Verkauft ein Haus auf dem gewählten Feld, sofern es ein Straßenfeld ist
-     * und bereits bebaut wurde.
+     * Verkauft ein Haus auf dem gewählten Feld, sofern es ein Straßenfeld ist und bereits bebaut wurde.
      *
      * @return true, wenn der Verkauf erfolgreich war, false sonst
      */
@@ -181,7 +180,6 @@ public class FieldManager {
         if (balanceCheck(street, 0, 1)) {
             if (street.getHouseCount() > 0) {
                 sellHouseUnchecked(street);
-
                 return true;
             }
             else {
@@ -192,8 +190,7 @@ public class FieldManager {
     }
 
     /**
-     * Verkauft ein Haus auf dem gewählten Feld ohne auf die gegebenen Umstände
-     * zu prüfen.
+     * Verkauft ein Haus auf dem gewählten Feld ohne auf die gegebenen Umstände zu prüfen.
      *
      * @param street Die betroffene Straße
      */
@@ -208,14 +205,12 @@ public class FieldManager {
     }
 
     /**
-     * Prüft auf gleichmäßige Bebauung eines Straßenzugs innerhalb bestimmter
-     * Toleranzgrenzen.
+     * Prüft auf gleichmäßige Bebauung eines Straßenzugs innerhalb bestimmter Toleranzgrenzen.
      *
      * @param street betroffene Straße
      * @param posTolerance obere Toleranzgrenze
      * @param negTolerance untere Toleranzgrenze
-     * @return ob die Straße innerhalb der Toleranzgrenzen gleichmäßig bebaut
-     * wurde
+     * @return ob die Straße innerhalb der Toleranzgrenzen gleichmäßig bebaut wurde
      */
     public boolean balanceCheck(StreetField street, int posTolerance, int negTolerance) {
         int hc = street.getHouseCount();
@@ -232,12 +227,10 @@ public class FieldManager {
     }
 
     /**
-     * Prüft ob alle Straßen des betroffenen Straßenzugs demselben Spieler
-     * gehören.
+     * Prüft ob alle Straßen des betroffenen Straßenzugs demselben Spieler gehören.
      *
      * @param prop betroffenes Grundstück
-     * @return ob alle Straßen des betroffenen Straßenzugs demselben Spieler
-     * gehören
+     * @return ob alle Straßen des betroffenen Straßenzugs demselben Spieler gehören
      */
     public boolean isComplete(PropertyField prop) {
         Player owner = prop.getOwner();
@@ -347,8 +340,7 @@ public class FieldManager {
     }
 
     /**
-     * Nimmt eine Hypothek fürs betroffene Feld auf, ohne auf den
-     * Hypotheksstatus zu prüfen.
+     * Nimmt eine Hypothek fürs betroffene Feld auf, ohne auf den Hypotheksstatus zu prüfen.
      *
      * @param prop betroffenes Feld
      */
@@ -382,8 +374,7 @@ public class FieldManager {
     }
 
     /**
-     * Zahlt die Hypothek auf einem Feld ab, ohne auf Zahlungsfähigkeit zu
-     * prüfen.
+     * Zahlt die Hypothek auf einem Feld ab, ohne auf Zahlungsfähigkeit zu prüfen.
      *
      * @param prop betroffenes Feld
      */

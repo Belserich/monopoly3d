@@ -5,6 +5,7 @@
  */
 package de.btu.monopoly.input;
 
+import de.btu.monopoly.GlobalSettings;
 import de.btu.monopoly.core.service.FieldService;
 import de.btu.monopoly.data.field.Field;
 import de.btu.monopoly.data.player.Player;
@@ -47,28 +48,27 @@ public class InputHandler {
     }
 
     /**
-     * Methode zum Auswaehen einer Strasse die Bearbeitet werden soll in der
-     * actionPhase()
+     * Methode zum Auswaehen einer Strasse die Bearbeitet werden soll in der actionPhase()
      *
      * @param player Spieler der eine Eingabe machen soll
      * @return ein int Wert zu auswaehen einer Strasse
      */
-//    public static int askForField(Player player, Field[] fields) {
-//        String mesg = player.getName() + "! Wähle ein Feld:\n";
-//        for (int i = 0; i < fields.length; i++) {
-//            mesg += String.format("[%d] - %s%n", i + 1, fields[i].getName());
-//        }
-//        LOGGER.log(Level.INFO, mesg);
-//        return getUserInput(39);
-//    }
     public static int askForField(Player player, Field[] fields) {
-
-        return SceneManager.askForFieldPopup(player, fields);
+        if (GlobalSettings.isRunInConsole()) {
+            String mesg = player.getName() + "! Wähle ein Feld:\n";
+            for (int i = 0; i < fields.length; i++) {
+                mesg += String.format("[%d] - %s%n", i + 1, fields[i].getName());
+            }
+            LOGGER.log(Level.INFO, mesg);
+            return getUserInput(39);
+        }
+        else {
+            return SceneManager.askForFieldPopup(player, fields);
+        }
     }
 
     public static String askForString() {
         Scanner scanner = new Scanner(System.in);
         return scanner.nextLine();
     }
-
 }

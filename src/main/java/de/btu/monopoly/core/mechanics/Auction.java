@@ -2,6 +2,7 @@ package de.btu.monopoly.core.mechanics;
 
 import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.player.Player;
+import de.btu.monopoly.net.client.GameClient;
 
 /**
  * Auktions Klasse Auktionen zum ersteigern von Grundstuecken, welche zuvor nicht gekauft wurden.
@@ -10,101 +11,46 @@ import de.btu.monopoly.data.player.Player;
  */
 public class Auction {
 
-    private int price;
-
     private Player[] players;
-
-    private Player winner;
-
+    private int[][] aucPlayers;
     private PropertyField property;
+    private Player winner;
+    private int highestBidder;
+    private int highestBid;
+    private GameClient client;
+    private String playerName;
 
     /**
      *
      * @param property Die Strasse die versteigert werden soll
      * @param players Spieler die an der Auktion teilnehmen
      */
-    public Auction(PropertyField property, Player[] players) {
-        this.property = property;
+    public Auction(Player[] players, GameClient client) {
         this.players = players;
+        this.client = client;
+        this.playerName = client.getPlayerOnClient().getName();
     }
 
     /**
-     * Startet die Auktion, ermittelt den Höchstbietenden und übergibt den Gewinner, sowie den Preis an deren Klassenvariablen
-     */
-    public void startAuction() {
-
-        int playerNumb = this.players.length;
-
-        /*
-        Erstelle ein int[][] welches die ID's und Gebote der Spieler speichert
-         */
-        int[][] aucPlayers = new int[playerNumb][2];
-        for (int i = 0; i < playerNumb; i++) {
-            aucPlayers[i][0] = players[i].getId();
-            aucPlayers[i][1] = 0;
-        }
-
-        //PLATZHALTER:
-        this.price = 0;
-        this.winner = players[0];
-    }
-
-    /**
-     * Diese Methode ermoeglicht es einem Spieler, die Auktion zu verlassen.
+     * gibt das Player[] zurueck
      *
-     * @param activePlayers
      * @return
      */
-    public int[][] playerExit(int[][] activePlayers, int id) {
-
-        //neues und kleineres Spieler Array
-        int playerNumb = activePlayers.length;
-        int[][] refreshedPlayers = new int[playerNumb][2];
-
-        //geht jeden Platz des neuen Arrays durch
-        for (int i = 0; i < refreshedPlayers.length; i++) {
-            //verschiebt nach und nach die aktiven Spieler in das neue Array
-            for (int j = 0; j < activePlayers.length; j++) {
-                if (activePlayers[j][0] != -1) {
-                    if (activePlayers[j][0] != id) {
-                        refreshedPlayers[i][0] = activePlayers[j][0];
-                        activePlayers[j][0] = -1;
-                        refreshedPlayers[i][1] = activePlayers[j][1];
-                        break;
-                    }
-                }
-            }
-        }
-
-        return refreshedPlayers;
+    public Player[] getPlayers() {
+        return this.players;
     }
 
     /**
-     * Das hoechste Gebot aller Bieter wird ermittelt. Es wird die ID des Spielers mit dem hoechsten Gebot zurueck gegeben
+     * gibt die Property zurueck
      *
-     * @param activePlayers
-     * @return playerID
+     * @return
      */
-    public int getHighestBid(int[][] activePlayers) {
-
-        int playerID = -1;
-        int highestBid = -1;
-
-        for (int i = 0; i < activePlayers.length; i++) {
-            if (highestBid < activePlayers[i][1] && activePlayers[i][1] != 0) {
-                playerID = activePlayers[i][0];
-                highestBid = activePlayers[i][1];
-            }
-        }
-
-        return playerID;
+    public PropertyField getProperty() {
+        return this.property;
     }
 
-    /**
-     * @return the price
-     */
-    public int getPrice() {
-        return price;
+    public void setProperty(PropertyField prop) {
+        this.property = prop;
     }
 
     /**
@@ -112,6 +58,69 @@ public class Auction {
      */
     public Player getWinner() {
         return winner;
+    }
+
+    /**
+     * @param winner the winner to set
+     */
+    public void setWinner(Player winner) {
+        this.winner = winner;
+    }
+
+    /**
+     * @return the highestBid
+     */
+    public int getHighestBid() {
+        return highestBid;
+    }
+
+    /**
+     * @param highestBid the highestBid to set
+     */
+    public void setHighestBid(int highestBid) {
+        this.highestBid = highestBid;
+    }
+
+    /**
+     * @return the client
+     */
+    public GameClient getClient() {
+        return client;
+    }
+
+    /**
+     * @return the playerName
+     */
+    public String getPlayerName() {
+        return playerName;
+    }
+
+    /**
+     * @return the aucPlayers
+     */
+    public int[][] getAucPlayers() {
+        return aucPlayers;
+    }
+
+    /**
+     * @param aucPlayers the aucPlayers to set
+     */
+    public void setAucPlayers(int[][] aucPlayers) {
+        this.aucPlayers = aucPlayers;
+    }
+
+    /**
+     * @return the highestBidder
+     */
+    public int getHighestBidder() {
+        return highestBidder;
+    }
+
+    /**
+     * @param highestBidder the highestBidder to set
+     */
+    public void setHighestBidder(int highestBidder) {
+        this.highestBidder = highestBidder;
     }
 
 }

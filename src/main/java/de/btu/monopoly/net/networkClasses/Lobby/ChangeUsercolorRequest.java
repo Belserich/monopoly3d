@@ -3,29 +3,29 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.btu.monopoly.net.networkClasses;
+package de.btu.monopoly.net.networkClasses.Lobby;
 
 /**
  *
  * @author Christian Prinz
  */
-public class ChangeUsernameRequest {
+public class ChangeUsercolorRequest {
 
-    private String userName;
+    private String userColor;
     private int userId;
 
     /**
-     * @return the userName
+     * @return the userColor
      */
-    public String getUserName() {
-        return userName;
+    public String getUserColor() {
+        return userColor;
     }
 
     /**
-     * @param userName the userName to set
+     * @param userColor the userColor to set
      */
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUserColor(String userColor) {
+        this.userColor = userColor;
     }
 
     /**
@@ -41,4 +41,5 @@ public class ChangeUsernameRequest {
     public void setUserId(int userId) {
         this.userId = userId;
     }
+
 }

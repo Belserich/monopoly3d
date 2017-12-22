@@ -1,12 +1,12 @@
 package de.btu.monopoly.net.client;
 
 import de.btu.monopoly.core.Game;
+import de.btu.monopoly.input.IOService;
 import de.btu.monopoly.net.networkClasses.BroadcastPlayerChoiceRequest;
 import de.btu.monopoly.net.networkClasses.PlayerTradeRequest;
 import de.btu.monopoly.net.networkClasses.PlayerTradeResponse;
 import java.util.Iterator;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.logging.Logger;
 import javax.swing.*;
 
 /**
@@ -43,24 +43,20 @@ public class UiInteractionThread extends Thread {
                 System.out.println("Trade response gesendet.");
             }
 
-            try {
-                Thread.sleep(200);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(this.getClass().getCanonicalName()).warning(this.getName() + " has been interrupted!");
-                this.interrupt();
-            }
+            IOService.sleep(200);
         }
     }
 
     private boolean getTradeChoice() {
-        int choice = -1;
+        int choice;
         do {
             String input = JOptionPane.showInputDialog("Du hast ein Tauschangebot erhalten! 0 - Ablehnen, 1 - Annehmen");
             try {
                 choice = Integer.parseInt(input);
                 if (choice == 0) {
                     return false;
-                } else if (choice == 1) {
+                }
+                else if (choice == 1) {
                     return true;
                 }
             } catch (NumberFormatException ex) {

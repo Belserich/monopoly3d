@@ -5,8 +5,10 @@
  */
 package de.btu.monopoly.input;
 
+import de.btu.monopoly.GlobalSettings;
 import de.btu.monopoly.core.Game;
 import de.btu.monopoly.core.GameBoard;
+import de.btu.monopoly.core.mechanics.Auction;
 import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.ki.EasyKi;
@@ -15,6 +17,9 @@ import de.btu.monopoly.ki.MediumKi;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.networkClasses.BroadcastPlayerChoiceRequest;
 import de.btu.monopoly.ui.SceneManager;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -30,10 +35,12 @@ public class IOService {
         int choice = -1;
         switch (player.getKiLevel()) {
             case 0:
-                //TODO GUI
-                // while not -1 ->Gui
-                choice = SceneManager.jailChoicePopup();
-                //getClientChoice(player, 3);
+                if (GlobalSettings.isRunInConsole()) {
+                    choice = getClientChoice(player, 3);
+                }
+                else {
+                    choice = SceneManager.jailChoicePopup();
+                }
                 break;
             case 1:
                 choice = EasyKi.jailOption(player);
@@ -54,10 +61,12 @@ public class IOService {
         int choice = -1;
         switch (player.getKiLevel()) {
             case 0:
-                //TODO GUI
-                // while not -1 ->Gui
-                choice = SceneManager.buyPropertyPopup();
-                // choice = getClientChoice(player, 2);
+                if (GlobalSettings.isRunInConsole()) {
+                    choice = getClientChoice(player, 2);
+                }
+                else {
+                    choice = SceneManager.buyPropertyPopup();
+                }
                 break;
             case 1:
                 choice = EasyKi.buyPropOption(player, prop);
@@ -79,9 +88,12 @@ public class IOService {
         int choice = 1; //kommt weg
         switch (player.getKiLevel()) {
             case 0:
-                //TODO GUI
-                choice = SceneManager.actionSequencePopup();
-                //choice = getClientChoice(player, 6);
+                if (GlobalSettings.isRunInConsole()) {
+                    choice = getClientChoice(player, 6);
+                }
+                else {
+                    choice = SceneManager.actionSequencePopup();
+                }
                 break;
             case 1:
                 choice = EasyKi.processActionSequence(player, board);
@@ -98,6 +110,31 @@ public class IOService {
         return choice;
     }
 
+    public static void betSequence(Auction auc) {
+        Player[] kiPlayers = auc.getPlayers();
+        Collections.shuffle(Arrays.asList(kiPlayers));
+        Player rndKi = kiPlayers[0];
+        for (Player ki : kiPlayers) {
+            rndKi = (ki.getKiLevel() > 0) ? ki : rndKi;
+        }
+        LOGGER.log(Level.FINE, "{0} (KI) nimmt an Auktion teil.", rndKi.getName());
+        switch (rndKi.getKiLevel()) {
+            case 0:
+                break;
+            case 1:
+                EasyKi.processBetSequence(rndKi);
+                break;
+            case 2:
+                MediumKi.processBetSequence();
+                break;
+            case 3:
+                HardKi.processBetSequence();
+                break;
+            default:
+                LOGGER.warning("Illegale KI-Stufe in BetSequence registriert");
+        }
+    }
+
     /**
      * @param aClient the client to set
      */
@@ -105,7 +142,7 @@ public class IOService {
         client = aClient;
     }
 
-    private static int getClientChoice(Player player, int max) {
+    public static int getClientChoice(Player player, int max) {
         boolean isChoiceFromThisClient = player == client.getPlayerOnClient();
         if (isChoiceFromThisClient) {
             int choice = InputHandler.getUserInput(max);
@@ -135,7 +172,18 @@ public class IOService {
         try {
             Thread.sleep(millis);
         } catch (InterruptedException ex) {
-            LOGGER.warning("FEHLER: " + ex);
+            LOGGER.log(Level.WARNING, "FEHLER: {0}", ex);
+            Thread.currentThread().interrupt();
+        }
+    }
+
+    public static void sleepDeep(int millis) {
+        try {
+            for (int i = 0; i < millis / 10; i++) {
+                Thread.sleep(10);
+            }
+        } catch (InterruptedException ex) {
+            LOGGER.log(Level.WARNING, "FEHLER: {0}", ex);
             Thread.currentThread().interrupt();
         }
     }

@@ -19,8 +19,7 @@ public class PlayerService {
     private static final Random rng = new Random(Game.getSEED());
 
     /**
-     * Setzt alle nötigen Attribute, wenn der Spieler ins Gefängnis kommt. Bitte
-     * {@code FieldManager.toJail()} benutzen.
+     * Setzt alle nötigen Attribute, wenn der Spieler ins Gefängnis kommt. Bitte {@code FieldManager.toJail()} benutzen.
      *
      * @param player Spieler
      */
@@ -43,13 +42,11 @@ public class PlayerService {
     }
 
     /**
-     * Setzt das Positionsindex für den Spieler. Bitte
-     * {@code FieldManager.movePlayer()} benutzen.
+     * Setzt das Positionsindex für den Spieler. Bitte {@code FieldManager.movePlayer()} benutzen.
      *
      * @param player Spieler
      * @param amount Anzahl der zu laufenden Felder
-     * @return Die neue Position des Spielers auf dem Feld( und darueber
-     * hinaus).
+     * @return Die neue Position des Spielers auf dem Feld( und darueber hinaus).
      */
     public static int movePlayer(Player player, int amount) {
         int pos = player.getPosition();
@@ -81,8 +78,7 @@ public class PlayerService {
     }
 
     /**
-     * Versucht, dem Spielerkonto Geld abzubuchen. Bricht ab, wenn der Spieler
-     * nicht genug Geld besitzt.
+     * Versucht, dem Spielerkonto Geld abzubuchen. Bricht ab, wenn der Spieler nicht genug Geld besitzt.
      *
      * @param player Spieler
      * @param amount Summe
@@ -133,7 +129,6 @@ public class PlayerService {
         Bank bank = player.getBank();
         bank.deposit(amount);
         LOGGER.info(bank.toString() + " (" + (amount >= 0 ? "+" : "-") + Math.abs(amount) + ")");
-
     }
 
     /**

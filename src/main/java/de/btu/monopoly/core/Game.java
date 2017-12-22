@@ -1,8 +1,9 @@
 package de.btu.monopoly.core;
 
-import de.btu.monopoly.core.mechanics.Auction;
+import de.btu.monopoly.GlobalSettings;
 import de.btu.monopoly.core.mechanics.Trade;
 import de.btu.monopoly.core.mechanics.TradeOffer;
+import de.btu.monopoly.core.service.AuctionService;
 import de.btu.monopoly.core.service.FieldService;
 import de.btu.monopoly.core.service.PlayerService;
 import de.btu.monopoly.data.card.Card;
@@ -49,8 +50,7 @@ public class Game {
     private static long SEED;
 
     /**
-     * Die fachliche Komponente des Spiels als Einheit, bestehend aus einem
-     * Spielbrett, den Spielern sowie Zuschauern.
+     * Die fachliche Komponente des Spiels als Einheit, bestehend aus einem Spielbrett, den Spielern sowie Zuschauern.
      *
      * @param players Spieler
      *
@@ -60,8 +60,11 @@ public class Game {
         this.client = client;
         this.SEED = seed;
         IOService.setClient(client);
-        TextAreaHandler logHandler = new TextAreaHandler();
-        LOGGER.addHandler(logHandler);
+        System.out.println(GlobalSettings.isRunInConsole());
+        if (!GlobalSettings.isRunAsTest() && !GlobalSettings.isRunInConsole()) {
+            TextAreaHandler logHandler = new TextAreaHandler();
+            LOGGER.addHandler(logHandler);
+        }
     }
 
     public void init() {
@@ -73,6 +76,7 @@ public class Game {
             GameBoardParser.setCardLoadout0(stack);
             GameBoardParser.setCardLoadout1(stack);
             board = GameBoardParser.parse("/data/field_data.xml");
+            AuctionService.initAuction(players, client);
         } catch (IOException | SAXException | ParserConfigurationException ex) {
             LOGGER.log(Level.WARNING, "Fehler beim initialisieren des Boards / der Karten.", ex);
         }
@@ -127,7 +131,7 @@ public class Game {
         }
     }
 
-    private void jailPhase(Player player) {
+    public void jailPhase(Player player) {
         int choice;
         do {
             LOGGER.info(String.format(" %s ist im Gefängnis und kann: %n[1] - 3-mal Würfeln, um mit einem Pasch freizukommen "
@@ -415,9 +419,9 @@ public class Game {
         return retObj;
     }
 
-    private void betPhase(PropertyField property) {
-        Auction auc = new Auction(property, players);
-        auc.startAuction();
+    //public fuer Tests, sonst nur private
+    public void betPhase(PropertyField property) {
+//        AuctionService.startAuction(property);
     }
 
     public GameBoard getBoard() {

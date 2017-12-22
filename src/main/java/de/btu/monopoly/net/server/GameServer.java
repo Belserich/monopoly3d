@@ -9,7 +9,6 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Server;
 import de.btu.monopoly.core.Game;
 import de.btu.monopoly.core.service.NetworkService;
-
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -28,6 +27,7 @@ public class GameServer {
     private Kryo kryo;
     private ServerListener serverL;
     private LobbyTable lobbyTable;
+    private AuctionTable auctionTable;
 
     public GameServer(int tcp) {
         this.tcpPort = tcp;
@@ -45,8 +45,10 @@ public class GameServer {
             server.bind(tcpPort);
             serverL = new ServerListener(server);
             lobbyTable = new LobbyTable(server);
+            auctionTable = new AuctionTable(server);
             server.addListener(serverL);
             server.addListener(lobbyTable);
+            server.addListener(auctionTable);
         } catch (IOException ex) {
             LOGGER.log(Level.WARNING, "Server konnte nicht gebunden werden {0}", ex);
         }
