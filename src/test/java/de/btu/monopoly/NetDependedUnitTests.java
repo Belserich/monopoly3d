@@ -163,7 +163,7 @@ public class NetDependedUnitTests {
         clearGame();
     }
 
-    @Test
+//    @Test
     public void testAuctionEnter() {
         initGame();
         Assert.assertTrue("Auktion nicht initialisiert", AuctionService.getAuc() != null);

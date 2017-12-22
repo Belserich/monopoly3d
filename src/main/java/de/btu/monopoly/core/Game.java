@@ -419,7 +419,6 @@ public class Game {
         return retObj;
     }
 
-    //public fuer Tests, sonst nur private
     public void betPhase(PropertyField property) {
 //        AuctionService.startAuction(property);
     }

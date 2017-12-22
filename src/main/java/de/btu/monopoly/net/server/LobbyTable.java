@@ -120,6 +120,9 @@ public class LobbyTable extends Listener {
         LOGGER.finer("User wird entfernt");
         String connectionString = con.toString();
 
+        if (users == null) {
+            return;
+        }
         // lokalisieren, falls keineID, dann Connection
         if (userID == -1) {
             for (int i = 0; i < users.length; i++) {

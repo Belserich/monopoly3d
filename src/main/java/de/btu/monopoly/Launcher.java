@@ -35,7 +35,7 @@ public class Launcher extends Application {
      */
     public static void main(String[] args) throws Exception {
         configLoggers();
-        GlobalSettings.setRunInConsole(false);
+        GlobalSettings.setRunInConsole(false); // Als Zusatz wurde in Game.java Z.424 die Auktion deaktiviert
         if (GlobalSettings.isRunInConsole()) {
             initGame();
         }
