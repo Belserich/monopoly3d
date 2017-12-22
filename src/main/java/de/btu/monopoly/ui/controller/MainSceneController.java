@@ -21,8 +21,10 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -34,6 +36,7 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
@@ -535,14 +538,22 @@ public class MainSceneController implements Initializable {
     private void player0ButtonAction(ActionEvent event) throws IOException, InterruptedException {
         Player[] players = Lobby.getPlayerClient().getGame().getPlayers();
         GridPane player0Pane = new GridPane();
+        ScrollPane scroll = new ScrollPane();
+        VBox box = new VBox();
+        player0Pane.setAlignment(Pos.CENTER);
+        scroll.setCenterShape(true);
+        scroll.setPrefSize(150, 200);
+        player0Pane.add(scroll, 0, 0);
+        scroll.setContent(box);
         Label geld = new Label(players[0].getName() + " hat in Konto: " + players[0].getMoney());
         JFXButton player = new JFXButton();
         JFXButton exit = new JFXButton("Exit");
         player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[0][4]), CornerRadii.EMPTY, Insets.EMPTY)));
         player.setText(Lobby.getUsers()[0][1]);
-        player0Pane.add(player, 2, 0);
-        player0Pane.add(geld, 2, 5);
-        player0Pane.add(exit, 4, 7);
+        box.getChildren().addAll(player, geld, exit);
+//       
+////        player0Pane.add(geld, 2, 5);
+//        player0Pane.add(exit, 4, 7);
 
         setPopup(player0Pane);
 
