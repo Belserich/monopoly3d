@@ -103,9 +103,9 @@ public class LobbyTable extends Listener {
     private void changeUserColor(int id, String userColor) {
         LOGGER.finer("Usercolor wird geändert");
         String idstr = Integer.toString(id);
-        for (int i = 0; i < users.length; i++) {
-            if (users[i][0].equals(idstr)) {
-                users[i][4] = userColor;
+        for (String[] user : users) {
+            if (user[0].equals(idstr)) {
+                user[4] = userColor;
             }
         }
         refreshLobbyResponse();
@@ -115,6 +115,7 @@ public class LobbyTable extends Listener {
      * entfernt einen User aus der Liste und verteilt die aktualisierte Liste
      *
      * @param con
+     * @param userID
      */
     public void deleteUser(Connection con, int userID) {
         LOGGER.finer("User wird entfernt");

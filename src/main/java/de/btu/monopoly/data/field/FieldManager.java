@@ -94,6 +94,7 @@ public class FieldManager {
      *
      * @param player Spieler
      * @param amount Anzahl Felder
+     * @return Field
      */
     public Field movePlayer(Player player, int amount) {
         int pos = PlayerService.movePlayer(player, amount);
@@ -119,16 +120,17 @@ public class FieldManager {
      */
     public Field movePlayer(Player player, GameBoard.FieldType nextFieldType) {
         int pos = player.getPosition();
-        int fields = 0;
-        while (GameBoard.FIELD_STRUCTURE[pos + fields] != nextFieldType) {
-            fields++;
+        int movedFields = 0;
+        while (GameBoard.FIELD_STRUCTURE[pos + movedFields] != nextFieldType) {
+            movedFields++;
         }
-        return movePlayer(player, fields);
+        return movePlayer(player, movedFields);
     }
 
     /**
      * Kauft ein Haus auf dem gewählten Feld, sofern es ein Straßenfeld ist und der Spieler genug Geld hat.
      *
+     * @param street StreetField
      * @return true, wenn der Kauf erfolgreich war, false sonst
      */
     public boolean buyHouse(StreetField street) {
@@ -171,6 +173,7 @@ public class FieldManager {
     /**
      * Verkauft ein Haus auf dem gewählten Feld, sofern es ein Straßenfeld ist und bereits bebaut wurde.
      *
+     * @param street StreetField
      * @return true, wenn der Verkauf erfolgreich war, false sonst
      */
     public boolean sellHouse(StreetField street) {

@@ -22,6 +22,7 @@ public class Launcher extends Application {
 
     public static final Logger LOGGER = Logger.getLogger(Launcher.class.getCanonicalName());
 
+    @Override
     public void start(Stage stage) throws Exception {
         new SceneManager();
     }
@@ -32,6 +33,7 @@ public class Launcher extends Application {
      * main().
      *
      * @param args the command line arguments
+     * @throws java.lang.Exception
      */
     public static void main(String[] args) throws Exception {
         configLoggers();

@@ -53,6 +53,8 @@ public class Game {
      * Die fachliche Komponente des Spiels als Einheit, bestehend aus einem Spielbrett, den Spielern sowie Zuschauern.
      *
      * @param players Spieler
+     * @param client GameClient
+     * @param seed RandomSeed
      *
      */
     public Game(Player[] players, GameClient client, long seed) {
@@ -281,7 +283,7 @@ public class Game {
                 break;
 
             case 2: // Auktion
-                LOGGER.info(player.getName() + " hat sich gegen den Kauf entschieden, die Straße wird nun versteigert.");
+                LOGGER.log(Level.INFO, "{0} hat sich gegen den Kauf entschieden, die Stra\u00dfe wird nun versteigert.", player.getName());
                 betPhase(prop);
                 break;
 

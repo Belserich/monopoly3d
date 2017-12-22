@@ -212,7 +212,7 @@ public class LobbyService extends Listener {
     }
 
     private static void changeColorRequest(String colorString, int id) {
-        LOGGER.finer(lobby.getPlayerName() + " sendet ChangeUsercolorRequest");
+        LOGGER.log(Level.FINER, "{0} sendet ChangeUsercolorRequest", lobby.getPlayerName());
         ChangeUsercolorRequest req = new ChangeUsercolorRequest();
         req.setUserColor(colorString);
         req.setUserId(id);
@@ -251,7 +251,7 @@ public class LobbyService extends Listener {
                 // Kann später entfernt werden wenn Farben implementiert sind
                 SceneManager.updateLobbyColors();
             } catch (InterruptedException ex) {
-                LOGGER.warning("Lobby konnte nicht geupdated werden" + ex);
+                LOGGER.log(Level.WARNING, "Lobby konnte nicht geupdated werden{0}", ex);
                 Thread.interrupted();
             }
 
@@ -273,7 +273,7 @@ public class LobbyService extends Listener {
                 SceneManager.openGameLayout();
 
             } catch (IOException ex) {
-                LOGGER.warning("Scene konnte nicht geladen werden" + ex);
+                LOGGER.log(Level.WARNING, "Scene konnte nicht geladen werden{0}", ex);
             }
 
             Thread t = new Thread() {
@@ -282,7 +282,7 @@ public class LobbyService extends Listener {
                     try {
                         startGame();
                     } catch (InterruptedException ex) {
-                        LOGGER.warning("Scene konnte nicht geladen werden" + ex);
+                        LOGGER.log(Level.WARNING, "Scene konnte nicht geladen werden{0}", ex);
                         Thread.interrupted();
                     }
                 }
