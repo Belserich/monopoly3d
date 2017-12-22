@@ -39,6 +39,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.text.TextAlignment;
 
 /**
  *
@@ -542,15 +543,16 @@ public class MainSceneController implements Initializable {
         VBox box = new VBox();
         player0Pane.setAlignment(Pos.CENTER);
         scroll.setCenterShape(true);
-        scroll.setPrefSize(150, 200);
         player0Pane.add(scroll, 0, 0);
         scroll.setContent(box);
-        Label geld = new Label(players[0].getName() + " hat in Konto: " + players[0].getMoney());
+        Label geld = new Label(" hat in Konto: " + players[0].getMoney());
         JFXButton player = new JFXButton();
         JFXButton exit = new JFXButton("Exit");
         player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[0][4]), CornerRadii.EMPTY, Insets.EMPTY)));
         player.setText(Lobby.getUsers()[0][1]);
+        player.setPrefSize(150, 10);
         box.getChildren().addAll(player, geld, exit);
+        box.setAlignment(Pos.CENTER);
 //       
 ////        player0Pane.add(geld, 2, 5);
 //        player0Pane.add(exit, 4, 7);
@@ -566,14 +568,20 @@ public class MainSceneController implements Initializable {
     private void player1ButtonAction(ActionEvent event) throws IOException, InterruptedException {
         Player[] players = Lobby.getPlayerClient().getGame().getPlayers();
         GridPane player1Pane = new GridPane();
-        Label geld = new Label(players[1].getName() + " hat in Konto: " + players[1].getMoney());
+        ScrollPane scroll = new ScrollPane();
+        VBox box = new VBox();
+        player1Pane.setAlignment(Pos.CENTER);
+        scroll.setCenterShape(true);
+        player1Pane.add(scroll, 0, 0);
+        scroll.setContent(box);
+        Label geld = new Label(" hat in Konto: " + players[1].getMoney());
         JFXButton player = new JFXButton();
         JFXButton exit = new JFXButton("Exit");
         player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[1][4]), CornerRadii.EMPTY, Insets.EMPTY)));
         player.setText(Lobby.getUsers()[1][1]);
-        player1Pane.add(player, 2, 0);
-        player1Pane.add(geld, 2, 5);
-        player1Pane.add(exit, 4, 7);
+        player.setPrefSize(150, 10);
+        box.getChildren().addAll(player, geld, exit);
+        box.setAlignment(Pos.CENTER);
 
         setPopup(player1Pane);
 
@@ -586,15 +594,20 @@ public class MainSceneController implements Initializable {
     private void player2ButtonAction(ActionEvent event) throws IOException, InterruptedException {
         Player[] players = Lobby.getPlayerClient().getGame().getPlayers();
         GridPane player2Pane = new GridPane();
-        Label geld = new Label(players[2].getName() + " hat in Konto: " + players[2].getMoney());
+        ScrollPane scroll = new ScrollPane();
+        VBox box = new VBox();
+        player2Pane.setAlignment(Pos.CENTER);
+        scroll.setCenterShape(true);
+        player2Pane.add(scroll, 0, 0);
+        scroll.setContent(box);
+        Label geld = new Label(" hat in Konto: " + players[2].getMoney());
         JFXButton player = new JFXButton();
         JFXButton exit = new JFXButton("Exit");
         player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[2][4]), CornerRadii.EMPTY, Insets.EMPTY)));
         player.setText(Lobby.getUsers()[2][1]);
-        player2Pane.add(player, 2, 0);
-        player2Pane.add(geld, 2, 5);
-        player2Pane.add(exit, 4, 7);
-
+        player.setPrefSize(150, 10);
+        box.getChildren().addAll(player, geld, exit);
+        box.setAlignment(Pos.CENTER);
         setPopup(player2Pane);
 
         exit.setOnAction(e -> {
@@ -606,14 +619,20 @@ public class MainSceneController implements Initializable {
     private void player3ButtonAction(ActionEvent event) throws IOException, InterruptedException {
         Player[] players = Lobby.getPlayerClient().getGame().getPlayers();
         GridPane player3Pane = new GridPane();
-        Label geld = new Label(players[3].getName() + " hat in Konto: " + players[3].getMoney());
+        ScrollPane scroll = new ScrollPane();
+        VBox box = new VBox();
+        player3Pane.setAlignment(Pos.CENTER);
+        scroll.setCenterShape(true);
+        player3Pane.add(scroll, 0, 0);
+        scroll.setContent(box);
+        Label geld = new Label(" hat in Konto: " + players[3].getMoney());
         JFXButton player = new JFXButton();
         JFXButton exit = new JFXButton("Exit");
         player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[3][4]), CornerRadii.EMPTY, Insets.EMPTY)));
         player.setText(Lobby.getUsers()[3][1]);
-        player3Pane.add(player, 2, 0);
-        player3Pane.add(geld, 2, 5);
-        player3Pane.add(exit, 4, 7);
+        player.setPrefSize(150, 10);
+        box.getChildren().addAll(player, geld, exit);
+        box.setAlignment(Pos.CENTER);
 
         setPopup(player3Pane);
 
@@ -626,14 +645,20 @@ public class MainSceneController implements Initializable {
     private void player4ButtonAction(ActionEvent event) throws IOException, InterruptedException {
         Player[] players = Lobby.getPlayerClient().getGame().getPlayers();
         GridPane player4Pane = new GridPane();
-        Label geld = new Label(players[4].getName() + " hat in Konto: " + players[4].getMoney());
+        ScrollPane scroll = new ScrollPane();
+        VBox box = new VBox();
+        player4Pane.setAlignment(Pos.CENTER);
+        scroll.setCenterShape(true);
+        player4Pane.add(scroll, 0, 0);
+        scroll.setContent(box);
+        Label geld = new Label(" hat in Konto: " + players[4].getMoney());
         JFXButton player = new JFXButton();
         JFXButton exit = new JFXButton("Exit");
         player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[4][4]), CornerRadii.EMPTY, Insets.EMPTY)));
         player.setText(Lobby.getUsers()[4][1]);
-        player4Pane.add(player, 2, 0);
-        player4Pane.add(geld, 2, 5);
-        player4Pane.add(exit, 4, 7);
+        player.setPrefSize(150, 10);
+        box.getChildren().addAll(player, geld, exit);
+        box.setAlignment(Pos.CENTER);
 
         setPopup(player4Pane);
 
@@ -646,14 +671,20 @@ public class MainSceneController implements Initializable {
     private void player5ButtonAction(ActionEvent event) throws IOException, InterruptedException {
         Player[] players = Lobby.getPlayerClient().getGame().getPlayers();
         GridPane player5Pane = new GridPane();
+        ScrollPane scroll = new ScrollPane();
+        VBox box = new VBox();
+        player5Pane.setAlignment(Pos.CENTER);
+        scroll.setCenterShape(true);
+        player5Pane.add(scroll, 0, 0);
+        scroll.setContent(box);
         Label geld = new Label(players[5].getName() + " hat in Konto: " + players[5].getMoney());
         JFXButton player = new JFXButton();
         JFXButton exit = new JFXButton("Exit");
         player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[5][4]), CornerRadii.EMPTY, Insets.EMPTY)));
         player.setText(Lobby.getUsers()[5][1]);
-        player5Pane.add(player, 2, 0);
-        player5Pane.add(geld, 2, 5);
-        player5Pane.add(exit, 4, 7);
+        player.setPrefSize(150, 10);
+        box.getChildren().addAll(player, geld, exit);
+        box.setAlignment(Pos.CENTER);
 
         setPopup(player5Pane);
 
