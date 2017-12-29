@@ -252,7 +252,7 @@ public class LobbyService extends Listener {
                 SceneManager.updateLobbyColors();
             } catch (InterruptedException ex) {
                 LOGGER.log(Level.WARNING, "Lobby konnte nicht geupdated werden{0}", ex);
-                Thread.interrupted();
+                Thread.currentThread().interrupt();
             }
 
             System.out.println("Spieler in Lobby: (Meine ID: " + lobby.getPlayerId() + ")");
@@ -283,7 +283,7 @@ public class LobbyService extends Listener {
                         startGame();
                     } catch (InterruptedException ex) {
                         LOGGER.log(Level.WARNING, "Scene konnte nicht geladen werden{0}", ex);
-                        Thread.interrupted();
+                        Thread.currentThread().interrupt();
                     }
                 }
             };

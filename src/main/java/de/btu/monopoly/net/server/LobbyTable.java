@@ -118,6 +118,7 @@ public class LobbyTable extends Listener {
      * @param userID
      */
     public void deleteUser(Connection con, int userID) {
+        int delID = userID;
         LOGGER.finer("User wird entfernt");
         String connectionString = con.toString();
 
@@ -128,24 +129,24 @@ public class LobbyTable extends Listener {
         if (userID == -1) {
             for (int i = 0; i < users.length; i++) {
                 if (users[i][2].equals(connectionString)) {
-                    userID = i;
+                    delID = i;
                 }
             }
-            if (userID == -1) {
+            if (delID == -1) {
                 LOGGER.warning("deleteUser fehlgeschlagen: nicht lokalisierbar");
             }
         }
 
         //loeschen
         String[][] tempusers = new String[users.length - 1][5];
-        for (int j = 0; j < userID; j++) {
+        for (int j = 0; j < delID; j++) {
             tempusers[j][0] = users[j][0];
             tempusers[j][1] = users[j][1];
             tempusers[j][2] = users[j][2];
             tempusers[j][3] = users[j][3];
             tempusers[j][4] = users[j][4];
         }
-        for (int k = userID + 1; k < users.length; k++) {
+        for (int k = delID + 1; k < users.length; k++) {
             tempusers[k - 1][0] = users[k][0];
             tempusers[k - 1][1] = users[k][1];
             tempusers[k - 1][2] = users[k][2];
