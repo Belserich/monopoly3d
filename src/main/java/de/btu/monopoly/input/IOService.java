@@ -5,6 +5,7 @@
  */
 package de.btu.monopoly.input;
 
+import de.btu.monopoly.GlobalSettings;
 import de.btu.monopoly.core.Game;
 import de.btu.monopoly.core.GameBoard;
 import de.btu.monopoly.core.mechanics.Auction;
@@ -15,6 +16,7 @@ import de.btu.monopoly.ki.HardKi;
 import de.btu.monopoly.ki.MediumKi;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.networkClasses.BroadcastPlayerChoiceRequest;
+import de.btu.monopoly.ui.SceneManager;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.logging.Level;
@@ -33,9 +35,12 @@ public class IOService {
         int choice = -1;
         switch (player.getKiLevel()) {
             case 0:
-                //TODO GUI
-                // while not -1 ->Gui
-                getClientChoice(player, 3);
+                if (GlobalSettings.isRunInConsole()) {
+                    choice = getClientChoice(player, 3);
+                }
+                else {
+                    choice = SceneManager.jailChoicePopup();
+                }
                 break;
             case 1:
                 choice = EasyKi.jailOption(player);
@@ -56,9 +61,12 @@ public class IOService {
         int choice = -1;
         switch (player.getKiLevel()) {
             case 0:
-                //TODO GUI
-                // while not -1 ->Gui
-                choice = getClientChoice(player, 2);
+                if (GlobalSettings.isRunInConsole()) {
+                    choice = getClientChoice(player, 2);
+                }
+                else {
+                    choice = SceneManager.buyPropertyPopup();
+                }
                 break;
             case 1:
                 choice = EasyKi.buyPropOption(player, prop);
@@ -80,8 +88,12 @@ public class IOService {
         int choice = 1; //kommt weg
         switch (player.getKiLevel()) {
             case 0:
-                //TODO GUI
-                choice = getClientChoice(player, 6);
+                if (GlobalSettings.isRunInConsole()) {
+                    choice = getClientChoice(player, 6);
+                }
+                else {
+                    choice = SceneManager.actionSequencePopup();
+                }
                 break;
             case 1:
                 choice = EasyKi.processActionSequence(player, board);

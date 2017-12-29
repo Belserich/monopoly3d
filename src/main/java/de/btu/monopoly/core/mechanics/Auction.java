@@ -22,8 +22,8 @@ public class Auction {
 
     /**
      *
-     * @param property Die Strasse die versteigert werden soll
      * @param players Spieler die an der Auktion teilnehmen
+     * @param client GameClient
      */
     public Auction(Player[] players, GameClient client) {
         this.players = players;

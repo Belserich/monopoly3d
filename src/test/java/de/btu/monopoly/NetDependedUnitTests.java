@@ -18,6 +18,7 @@ import de.btu.monopoly.menu.LobbyService;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.server.GameServer;
 import org.junit.Assert;
+import org.junit.Test;
 
 /**
  *
@@ -79,7 +80,7 @@ public class NetDependedUnitTests {
 
     private void clearGame() {
         client.disconnect();
-        IOService.sleep(100);
+        IOService.sleep(1000);
         server.stopServer();
         lobby = null;
         server = null;
@@ -93,7 +94,7 @@ public class NetDependedUnitTests {
         IOService.sleep(100);
     }
 
-//    @Test
+    @Test
     public void testInitNetwork() {
         initNetwork();
         Assert.assertTrue("Server nicht initialisiert", server != null);
@@ -101,7 +102,7 @@ public class NetDependedUnitTests {
         clearGame();
     }
 
-//    @Test
+    @Test
     public void testInitLobby() {
         initLobby();
         LobbyService.setLobby(lobby);
@@ -132,7 +133,7 @@ public class NetDependedUnitTests {
         clearGame();
     }
 
-//    @Test
+    @Test
     public void testInitGame() {
         initGame();
         Assert.assertTrue("Game nicht initialisiert", game != null);
@@ -143,7 +144,7 @@ public class NetDependedUnitTests {
         clearGame();
     }
 
-//    @Test
+    @Test
     public void testKiJailOption() {
         initGame();
         // KI ins Gefängnis setzen

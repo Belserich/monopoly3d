@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package de.btu.monopoly.menu;
 
 import de.btu.monopoly.core.Game;
@@ -16,9 +11,10 @@ public class Lobby {
 
     private boolean host = true;
     private boolean ki = false;
-    private String[][] users;
+    private static String[][] users;
     private String playerName;
-    private GameClient playerClient;
+    private String playerColor = "0xffffffff";
+    private static GameClient playerClient;
     private int playerID = -1;
     private long randomSeed;
     private Game controller;
@@ -40,7 +36,7 @@ public class Lobby {
     /**
      * @return the users
      */
-    public String[][] getUsers() {
+    public static String[][] getUsers() {
         return users;
     }
 
@@ -68,7 +64,7 @@ public class Lobby {
     /**
      * @return the playerClient
      */
-    public GameClient getPlayerClient() {
+    public static GameClient getPlayerClient() {
         return playerClient;
     }
 
@@ -119,6 +115,20 @@ public class Lobby {
      */
     public void setRandomSeed(long randomSeed) {
         this.randomSeed = randomSeed;
+    }
+
+    /**
+     * @return the playerColor
+     */
+    public String getPlayerColor() {
+        return playerColor;
+    }
+
+    /**
+     * @param playerColor the playerColor to set
+     */
+    public void setPlayerColor(String playerColor) {
+        this.playerColor = playerColor;
     }
 
     /**

@@ -28,6 +28,7 @@ public class CoreUnitTest {
     private static CardManager cm;
 
     public CoreUnitTest() {
+        GlobalSettings.setRunAsTest(true);
 
         players = new Player[4];
         for (int i = 0; i < 4; i++) {
@@ -42,7 +43,6 @@ public class CoreUnitTest {
 
     @Test
     public void testGameBoard() {
-
         //initialisierung
         board = game.getBoard();
         players = game.getPlayers();

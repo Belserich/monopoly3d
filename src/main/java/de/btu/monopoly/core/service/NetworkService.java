@@ -1,5 +1,6 @@
 package de.btu.monopoly.core.service;
 
+import de.btu.monopoly.net.networkClasses.Lobby.ChangeUsercolorRequest;
 import com.esotericsoftware.kryo.Kryo;
 import de.btu.monopoly.core.mechanics.Trade;
 import de.btu.monopoly.core.mechanics.TradeOffer;
@@ -25,6 +26,7 @@ public class NetworkService {
     public static void registerKryoClasses(Kryo kryo) {
         kryo.register(BroadcastPlayerChoiceRequest.class);
         kryo.register(BroadcastRandomSeedRequest.class);
+        kryo.register(ChangeUsercolorRequest.class);
         kryo.register(ChangeUsernameRequest.class);
         kryo.register(GamestartResponse.class);
         kryo.register(GamestartRequest.class);

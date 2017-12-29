@@ -1,5 +1,6 @@
 package de.btu.monopoly.core;
 
+import de.btu.monopoly.GlobalSettings;
 import de.btu.monopoly.core.mechanics.Trade;
 import de.btu.monopoly.core.mechanics.TradeOffer;
 import de.btu.monopoly.core.service.AuctionService;
@@ -15,6 +16,7 @@ import de.btu.monopoly.input.IOService;
 import de.btu.monopoly.input.InputHandler;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.networkClasses.PlayerTradeRequest;
+import de.btu.monopoly.ui.Logger.TextAreaHandler;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -51,6 +53,8 @@ public class Game {
      * Die fachliche Komponente des Spiels als Einheit, bestehend aus einem Spielbrett, den Spielern sowie Zuschauern.
      *
      * @param players Spieler
+     * @param client GameClient
+     * @param seed RandomSeed
      *
      */
     public Game(Player[] players, GameClient client, long seed) {
@@ -58,6 +62,11 @@ public class Game {
         this.client = client;
         this.SEED = seed;
         IOService.setClient(client);
+        System.out.println(GlobalSettings.isRunInConsole());
+        if (!GlobalSettings.isRunAsTest() && !GlobalSettings.isRunInConsole()) {
+            TextAreaHandler logHandler = new TextAreaHandler();
+            LOGGER.addHandler(logHandler);
+        }
     }
 
     public void init() {
@@ -82,7 +91,7 @@ public class Game {
         getIS_RUNNING().set(true);
     }
 
-    public void start() {
+    public void start() throws InterruptedException {
         LOGGER.setLevel(Level.ALL);
         LOGGER.info("Spiel beginnt.");
 
@@ -274,7 +283,7 @@ public class Game {
                 break;
 
             case 2: // Auktion
-                LOGGER.info(player.getName() + " hat sich gegen den Kauf entschieden, die Straße wird nun versteigert.");
+                LOGGER.log(Level.INFO, "{0} hat sich gegen den Kauf entschieden, die Stra\u00dfe wird nun versteigert.", player.getName());
                 betPhase(prop);
                 break;
 
@@ -412,9 +421,8 @@ public class Game {
         return retObj;
     }
 
-    //public fuer Tests, sonst nur private
     public void betPhase(PropertyField property) {
-        AuctionService.startAuction(property);
+//        AuctionService.startAuction(property);
     }
 
     public GameBoard getBoard() {

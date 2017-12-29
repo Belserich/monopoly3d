@@ -16,11 +16,14 @@ import de.btu.monopoly.input.InputHandler;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.networkClasses.Lobby.*;
 import de.btu.monopoly.net.server.AuctionTable;
+import de.btu.monopoly.ui.SceneManager;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.scene.paint.Color;
 
 /**
  *
@@ -33,6 +36,12 @@ public class LobbyService extends Listener {
     private static final boolean isRunInConsole = GlobalSettings.isRunInConsole();
     private static Lobby lobby;
 
+    /**
+     * Methode die aufgerufen wird um der Lobby beizutreten
+     *
+     * @param client des Spielers der beitreten will
+     * @param host gibt an, ob der Spieler der Host ist
+     */
     public static void joinLobby(GameClient client, boolean host) {
         LOGGER.setLevel(Level.FINER);
         // Spielernamen voreintragen
@@ -69,6 +78,12 @@ public class LobbyService extends Listener {
         }
     }
 
+    /**
+     * Fuegt der Lobby einen Computerspieler hinzu
+     *
+     * @param name des Computerspielers
+     * @param kiLevel des Computerspielers [1,3]
+     */
     public static void addKI(String name, int kiLevel) {
         if (kiLevel < 1 || kiLevel > 3) {
             LOGGER.warning("kein gültiges KI Level eingegeben!");
@@ -83,12 +98,52 @@ public class LobbyService extends Listener {
 
     }
 
-    public static void changeName(String name) {
-        lobby.setPlayerName(name);
-        changeUsernameRequest();
+    /**
+     * aendert den Namen eines Spielers (nur fuer KI vorgesehen)
+     *
+     * @param name neuer Name des Spielers (KI)
+     * @param id die der Spieler besitzt (users[i][0])
+     */
+    public static void changeName(String name, int id) {
+        changeUsernameRequest(name, id);
     }
 
-    public static void startGame() {
+    /**
+     * aendert den Namen des Spielers
+     *
+     * @param name neuer Name des Spielers
+     */
+    public static void changeName(String name) {
+        lobby.setPlayerName(name);
+        changeName(name, lobby.getPlayerId());
+    }
+
+    /**
+     * aendert die Farbe eines Spielers (nur fuer KI vorgesehen)
+     *
+     * @param color neue Farbe des Spielers
+     * @param id die der Spieler besitzt (users[i][0])
+     */
+    public static void changeColor(Color color, int id) {
+        String colString = color.toString();
+        lobby.setPlayerColor(colString);
+        changeColorRequest(colString, id);
+    }
+
+    /**
+     * aendert die Farbe des Spielers
+     *
+     * @param color neue Farbe des Spielers
+     */
+    public static void changeColor(Color color) {
+        changeColor(color, lobby.getPlayerId());
+    }
+
+    /**
+     * erstellt eine Gameinstanz und startet das Spiel
+     */
+    public static void startGame() throws InterruptedException {
+
         Game controller = new Game(generatePlayerArray(), lobby.getPlayerClient(), lobby.getRandomSeed());
         lobby.setController(controller);
         lobby.getPlayerClient().setGame(controller);
@@ -97,6 +152,11 @@ public class LobbyService extends Listener {
         controller.start();
     }
 
+    /**
+     * erzeugt aus dem users[][] ein Player[], welches fuer das Spiel benoetigt wird
+     *
+     * @return Player[] fuer den Parameter der Game Instanz
+     */
     public static Player[] generatePlayerArray() {
         String[][] users = lobby.getUsers();
         Player[] players = new Player[users.length];
@@ -119,6 +179,9 @@ public class LobbyService extends Listener {
         return players;
     }
 
+    /**
+     * erzeugt den Randomseed, welcher fur das Spiel benoetigt wird
+     */
     public static void generateRandomSeed() {
         long seed = new Random().nextLong();
         BroadcastRandomSeedRequest req = new BroadcastRandomSeedRequest();
@@ -140,11 +203,19 @@ public class LobbyService extends Listener {
 
     }
 
-    private static void changeUsernameRequest() {
+    private static void changeUsernameRequest(String name, int id) {
         ChangeUsernameRequest req = new ChangeUsernameRequest();
-        req.setUserName(lobby.getPlayerName());
-        req.setUserId(lobby.getPlayerId());
+        req.setUserName(name);
+        req.setUserId(id);
         NetworkService.logClientSendMessage(req, lobby.getPlayerName());
+        lobby.getPlayerClient().sendTCP(req);
+    }
+
+    private static void changeColorRequest(String colorString, int id) {
+        LOGGER.log(Level.FINER, "{0} sendet ChangeUsercolorRequest", lobby.getPlayerName());
+        ChangeUsercolorRequest req = new ChangeUsercolorRequest();
+        req.setUserColor(colorString);
+        req.setUserId(id);
         lobby.getPlayerClient().sendTCP(req);
     }
 
@@ -174,7 +245,16 @@ public class LobbyService extends Listener {
             RefreshLobbyResponse refres = (RefreshLobbyResponse) object;
             lobby.setUsers(refres.getUsers());
 
-            //TODO kommt in GUI weg:
+            try {
+                // Lobby updaten
+                SceneManager.updateLobby();
+                // Kann später entfernt werden wenn Farben implementiert sind
+                SceneManager.updateLobbyColors();
+            } catch (InterruptedException ex) {
+                LOGGER.log(Level.WARNING, "Lobby konnte nicht geupdated werden{0}", ex);
+                Thread.interrupted();
+            }
+
             System.out.println("Spieler in Lobby: (Meine ID: " + lobby.getPlayerId() + ")");
             for (int i = 0; i < lobby.getUsers().length; i++) {
                 System.out.print("[" + i + "] ");
@@ -188,10 +268,23 @@ public class LobbyService extends Listener {
         else if (object instanceof GamestartResponse) {
             NetworkService.logClientReceiveMessage(object, lobby.getPlayerName());
 
+            // Scene bei anderen Spielern öffnen
+            try {
+                SceneManager.openGameLayout();
+
+            } catch (IOException ex) {
+                LOGGER.log(Level.WARNING, "Scene konnte nicht geladen werden{0}", ex);
+            }
+
             Thread t = new Thread() {
                 @Override
                 public void run() {
-                    startGame();
+                    try {
+                        startGame();
+                    } catch (InterruptedException ex) {
+                        LOGGER.log(Level.WARNING, "Scene konnte nicht geladen werden{0}", ex);
+                        Thread.interrupted();
+                    }
                 }
             };
             t.setName("Game");

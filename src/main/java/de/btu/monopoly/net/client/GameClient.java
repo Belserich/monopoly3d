@@ -13,6 +13,7 @@ import de.btu.monopoly.core.service.NetworkService;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.menu.LobbyService;
 import de.btu.monopoly.net.networkClasses.BroadcastPlayerChoiceRequest;
+import de.btu.monopoly.ui.controller.GuiMessages;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -56,8 +57,12 @@ public class GameClient {
             client.addListener(listener);
             client.addListener(new LobbyService());
             client.addListener(new AuctionService());
+            // Lobby wird in GUI geöffnet
+            GuiMessages.setConnectionError(false);
         } catch (IOException ex) {
             LOGGER.log(Level.WARNING, "Client konnte nicht gestartet werden {0}", ex);
+            // GUI meldet Fehler
+            GuiMessages.setConnectionError(true);
         }
 
     }

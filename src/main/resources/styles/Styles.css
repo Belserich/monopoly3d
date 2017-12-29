@@ -1,3 +1,25 @@
 .button {
     -fx-font-weight: bold;
 }
+.losBackground{
+    -fx-background-image: url("/images/los.jpg") ;
+    -fx-background-position: center;
+    -fx-background-size: stretch;
+}
+
+.bescuhBackground{
+    -fx-background-image: url("/images/besuch.jpg") ;
+    -fx-background-position: center;
+    -fx-background-size: stretch;
+
+}
+.parkBackground{
+    -fx-background-image: url("/images/park.jpg") ;
+    -fx-background-position: center;
+    -fx-background-size: stretch;
+}
+.jailBachground{
+    -fx-background-image: url("/images/gefaengnis.jpg") ;
+    -fx-background-position: center;
+    -fx-background-size: stretch;
+}

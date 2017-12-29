@@ -5,9 +5,11 @@
  */
 package de.btu.monopoly.menu;
 
+import de.btu.monopoly.GlobalSettings;
 import de.btu.monopoly.input.InputHandler;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.server.GameServer;
+import de.btu.monopoly.ui.controller.StartGameController;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -31,7 +33,7 @@ public class MainMenu {
             createGame();
         }
         else if (choice == JOIN_GAME) {
-            joinGame();
+            joinGame("localhost");
         }
     }
 
@@ -44,15 +46,24 @@ public class MainMenu {
         client.connect(localHost);
         LOGGER.info("Die ServerIP ist " + server.getServerIP());
 
-        // Lobby als Host joinen @GUI kommt weg
-        LobbyService.joinLobby(client, true);
+        if (GlobalSettings.isRunInConsole()) {
+            LobbyService.joinLobby(client, true);
+        }
+        else {
+            StartGameController.client = client;
+        }
     }
 
-    public void joinGame() {
+    public void joinGame(String ip) {
         // Client starten und verbinden
         GameClient client = new GameClient(PORT, 5000);
-        LOGGER.fine("Geben sie die IP-Adresse des Servers ein");
-        client.connect(InputHandler.askForString()); // while Schleife bis mit Server verbunden (evtl. begrenzte Versuche)
+        if (GlobalSettings.isRunInConsole()) {
+            LOGGER.fine("Geben sie die IP-Adresse des Servers ein");
+            client.connect(InputHandler.askForString());
+        }
+        else {
+            client.connect(ip); // while Schleife bis mit Server verbunden (evtl. begrenzte Versuche)
+        }
 
         // Lobby als Client joinen
         LobbyService.joinLobby(client, false);

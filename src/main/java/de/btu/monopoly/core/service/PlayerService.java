@@ -70,7 +70,8 @@ public class PlayerService {
         if (bank.checkLiquidity(amount)) {
             LOGGER.fine("Spielerkonto auf Liquidität geprüft. Er besitzt genug Geld.");
             return true;
-        } else {
+        }
+        else {
             LOGGER.warning("Spielerkonto auf Liquidität geprüft. Er besitzt nicht genug Geld!");
             return false;
         }
