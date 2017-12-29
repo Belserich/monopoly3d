@@ -102,7 +102,7 @@ public class NetDependedUnitTests {
         clearGame();
     }
 
-    @Test
+//    @Test
     public void testInitLobby() {
         initLobby();
         LobbyService.setLobby(lobby);
@@ -133,7 +133,7 @@ public class NetDependedUnitTests {
         clearGame();
     }
 
-    @Test
+//    @Test
     public void testInitGame() {
         initGame();
         Assert.assertTrue("Game nicht initialisiert", game != null);
@@ -144,7 +144,7 @@ public class NetDependedUnitTests {
         clearGame();
     }
 
-    @Test
+//    @Test
     public void testKiJailOption() {
         initGame();
         // KI ins Gefängnis setzen
