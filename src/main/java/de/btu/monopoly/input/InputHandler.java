@@ -21,7 +21,6 @@ import java.util.logging.Logger;
 public class InputHandler {
 
     private static final Logger LOGGER = Logger.getLogger(FieldService.class.getCanonicalName());
-    public static int choice = -1;
 
     /**
      * Nimmt Spielereingaben entgegen.
@@ -51,6 +50,7 @@ public class InputHandler {
      * Methode zum Auswaehen einer Strasse die Bearbeitet werden soll in der actionPhase()
      *
      * @param player Spieler der eine Eingabe machen soll
+     * @param fields
      * @return ein int Wert zu auswaehen einer Strasse
      */
     public static int askForField(Player player, Field[] fields) {
