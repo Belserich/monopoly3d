@@ -39,7 +39,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.scene.text.TextAlignment;
 
 /**
  *
@@ -520,18 +519,20 @@ public class MainSceneController implements Initializable {
     }
 
     public void propertyUpdate() {
-        Field[] fields = Lobby.getPlayerClient().getGame().getBoard().getFieldManager().getFields();
-        int counter = 0;
+        if (Lobby.getPlayerClient().getGame().getBoard() != null) {
+            Field[] fields = Lobby.getPlayerClient().getGame().getBoard().getFieldManager().getFields();
+            int counter = 0;
 
-        for (Field field : fields) {
-            if (field instanceof PropertyField) {
-                if (((PropertyField) field).getOwner() != null) {
-                    if (BesitzanzeigeFelder[counter] != null) {
-                        BesitzanzeigeFelder[counter].setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[((PropertyField) field).getOwner().getId()][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+            for (Field field : fields) {
+                if (field instanceof PropertyField) {
+                    if (((PropertyField) field).getOwner() != null) {
+                        if (BesitzanzeigeFelder[counter] != null) {
+                            BesitzanzeigeFelder[counter].setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[((PropertyField) field).getOwner().getId()][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+                        }
                     }
                 }
+                counter++;
             }
-            counter++;
         }
     }
 
@@ -553,7 +554,7 @@ public class MainSceneController implements Initializable {
         player.setPrefSize(150, 10);
         box.getChildren().addAll(player, geld, exit);
         box.setAlignment(Pos.CENTER);
-//       
+//
 ////        player0Pane.add(geld, 2, 5);
 //        player0Pane.add(exit, 4, 7);
 

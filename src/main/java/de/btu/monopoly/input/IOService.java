@@ -14,6 +14,7 @@ import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.ki.EasyKi;
 import de.btu.monopoly.ki.HardKi;
 import de.btu.monopoly.ki.MediumKi;
+import de.btu.monopoly.menu.Lobby;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.networkClasses.BroadcastPlayerChoiceRequest;
 import de.btu.monopoly.ui.SceneManager;
@@ -39,7 +40,9 @@ public class IOService {
                     choice = getClientChoice(player, 3);
                 }
                 else {
-                    choice = SceneManager.jailChoicePopup();
+                    if (Lobby.getPlayerClient().getPlayerOnClient() == player) {
+                        choice = SceneManager.jailChoicePopup();
+                    }
                 }
                 break;
             case 1:
@@ -65,7 +68,9 @@ public class IOService {
                     choice = getClientChoice(player, 2);
                 }
                 else {
-                    choice = SceneManager.buyPropertyPopup();
+                    if (Lobby.getPlayerClient().getPlayerOnClient() == player) {
+                        choice = SceneManager.buyPropertyPopup();
+                    }
                 }
                 break;
             case 1:
@@ -92,7 +97,9 @@ public class IOService {
                     choice = getClientChoice(player, 6);
                 }
                 else {
-                    choice = SceneManager.actionSequencePopup();
+                    if (Lobby.getPlayerClient().getPlayerOnClient() == player) {
+                        choice = SceneManager.actionSequencePopup();
+                    }
                 }
                 break;
             case 1:
