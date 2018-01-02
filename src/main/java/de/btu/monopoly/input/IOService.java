@@ -32,6 +32,10 @@ public class IOService {
     private static final Logger LOGGER = Logger.getLogger(IOService.class.getCanonicalName());
     private static GameClient client;
 
+    private static int JAIL = 0;
+    private static int ACTION = 1;
+    private static int BUY = 2;
+
     public static int jailChoice(Player player) {
         int choice = -1;
         switch (player.getKiLevel()) {
@@ -41,7 +45,7 @@ public class IOService {
                 }
                 else {
                     if (Lobby.getPlayerClient().getPlayerOnClient() == player) {
-                        choice = SceneManager.jailChoicePopup();
+                        choice = getClientChoiceFromGUI(player, JAIL);
                     }
                 }
                 break;
@@ -69,7 +73,7 @@ public class IOService {
                 }
                 else {
                     if (Lobby.getPlayerClient().getPlayerOnClient() == player) {
-                        choice = SceneManager.buyPropertyPopup();
+                        choice = getClientChoiceFromGUI(player, BUY);
                     }
                 }
                 break;
@@ -98,7 +102,7 @@ public class IOService {
                 }
                 else {
                     if (Lobby.getPlayerClient().getPlayerOnClient() == player) {
-                        choice = SceneManager.actionSequencePopup();
+                        choice = getClientChoiceFromGUI(player, ACTION);
                     }
                 }
                 break;
@@ -153,6 +157,42 @@ public class IOService {
         boolean isChoiceFromThisClient = player == client.getPlayerOnClient();
         if (isChoiceFromThisClient) {
             int choice = InputHandler.getUserInput(max);
+            BroadcastPlayerChoiceRequest packet = new BroadcastPlayerChoiceRequest();
+            packet.setChoice(choice);
+            client.sendTCP(packet);
+            return choice;
+        }
+        else {
+            do {
+                BroadcastPlayerChoiceRequest[] packets = client.getPlayerChoiceObjects();
+                if (packets.length > 1) {
+                    LOGGER.warning("Fehler: Mehr als ein choice-Packet registriert!");
+                    return -1;
+                }
+                else if (packets.length == 1) {
+                    int retVal = packets[0].getChoice();
+                    client.clearPlayerChoiceObjects();
+                    return retVal;
+                }
+            } while (Game.getIS_RUNNING().get());
+        }
+        return -1;
+    }
+
+    public static int getClientChoiceFromGUI(Player player, int type) {
+        boolean isChoiceFromThisClient = player == client.getPlayerOnClient();
+        if (isChoiceFromThisClient) {
+            int choice = -1;
+            if (type == JAIL) {
+                choice = SceneManager.jailChoicePopup();
+            }
+            if (type == ACTION) {
+                choice = SceneManager.actionSequencePopup();
+            }
+            if (type == BUY) {
+                choice = SceneManager.buyPropertyPopup();
+            }
+
             BroadcastPlayerChoiceRequest packet = new BroadcastPlayerChoiceRequest();
             packet.setChoice(choice);
             client.sendTCP(packet);
