@@ -554,10 +554,9 @@ public class MainSceneController implements Initializable {
         player.setPrefSize(150, 10);
         box.getChildren().addAll(player, geld, exit);
         box.setAlignment(Pos.CENTER);
-//
-////        player0Pane.add(geld, 2, 5);
-//        player0Pane.add(exit, 4, 7);
 
+//      player0Pane.add(geld, 2, 5);
+//      player0Pane.add(exit, 4, 7);
         setPopup(player0Pane);
 
         exit.setOnAction(e -> {
