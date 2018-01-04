@@ -21,7 +21,7 @@ public class MainMenu {
 
     protected static final int CREATE_GAME = 1;
     protected static final int JOIN_GAME = 2;
-    private final int PORT = 443;
+    private final int PORT = 55555;
 
     public static final Logger LOGGER = Logger.getLogger(MainMenu.class.getCanonicalName());
 

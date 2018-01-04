@@ -480,6 +480,7 @@ public class MainSceneController implements Initializable {
                     geld5.setText("Geld: " + players[5].getMoney());
                     player5Geld.add(geld5, 0, 0);
                 }
+
                 return null;
             }
         };
