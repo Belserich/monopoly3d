@@ -43,7 +43,7 @@ public class StartGameController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        Image image = new Image(getClass().getResourceAsStream("/images/Main_Background.png"), 1200, 800, false, false);
+        Image image = new Image(getClass().getResourceAsStream("/images/Main_Background.png"), 1200, 800, false, true);
         grid.setBackground(new Background(new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
         stackPane.setBackground(new Background(new BackgroundImage(new Image(getClass().getResourceAsStream("/images/Lobby_Background.jpg")), BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT)));
     }

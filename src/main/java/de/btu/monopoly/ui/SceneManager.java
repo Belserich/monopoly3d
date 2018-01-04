@@ -283,4 +283,12 @@ public class SceneManager extends Stage {
         return -1;
     }
 
+    public static int askForAuctionPopup() {
+        // TODO Patrick
+
+        // GameController.setPopup(gridpane);
+        // GameController.resetPopup(gridpane);
+        return -1;
+    }
+
 }

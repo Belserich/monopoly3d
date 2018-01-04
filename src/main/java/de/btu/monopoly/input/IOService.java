@@ -14,9 +14,9 @@ import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.ki.EasyKi;
 import de.btu.monopoly.ki.HardKi;
 import de.btu.monopoly.ki.MediumKi;
-import de.btu.monopoly.menu.Lobby;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.networkClasses.BroadcastPlayerChoiceRequest;
+import de.btu.monopoly.ui.Logger.TextAreaHandler;
 import de.btu.monopoly.ui.SceneManager;
 import java.util.Arrays;
 import java.util.Collections;
@@ -44,9 +44,7 @@ public class IOService {
                     choice = getClientChoice(player, 3);
                 }
                 else {
-                    if (Lobby.getPlayerClient().getPlayerOnClient() == player) {
-                        choice = getClientChoiceFromGUI(player, JAIL);
-                    }
+                    choice = getClientChoiceFromGUI(player, JAIL);
                 }
                 break;
             case 1:
@@ -68,14 +66,14 @@ public class IOService {
         int choice = -1;
         switch (player.getKiLevel()) {
             case 0:
+
                 if (GlobalSettings.isRunInConsole()) {
                     choice = getClientChoice(player, 2);
                 }
                 else {
-                    if (Lobby.getPlayerClient().getPlayerOnClient() == player) {
-                        choice = getClientChoiceFromGUI(player, BUY);
-                    }
+                    choice = getClientChoiceFromGUI(player, BUY);
                 }
+
                 break;
             case 1:
                 choice = EasyKi.buyPropOption(player, prop);
@@ -101,9 +99,7 @@ public class IOService {
                     choice = getClientChoice(player, 6);
                 }
                 else {
-                    if (Lobby.getPlayerClient().getPlayerOnClient() == player) {
-                        choice = getClientChoiceFromGUI(player, ACTION);
-                    }
+                    choice = getClientChoiceFromGUI(player, ACTION);
                 }
                 break;
             case 1:
@@ -181,6 +177,10 @@ public class IOService {
 
     public static int getClientChoiceFromGUI(Player player, int type) {
         boolean isChoiceFromThisClient = player == client.getPlayerOnClient();
+        if (!GlobalSettings.isRunAsTest() && !GlobalSettings.isRunInConsole()) {
+            TextAreaHandler logHandler = new TextAreaHandler();
+            LOGGER.addHandler(logHandler);
+        }
         if (isChoiceFromThisClient) {
             int choice = -1;
             if (type == JAIL) {
