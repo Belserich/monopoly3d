@@ -23,3 +23,143 @@
     -fx-background-position: center;
     -fx-background-size: stretch;
 }
+.einkommenSteuer{
+    -fx-background-image: url("/images/einkommenssteuer.jpg") ;
+    -fx-background-position: center;
+    -fx-background-size: stretch;
+}
+.ein-titel{
+    -fx-background-image: url("/images/ein-titel.jpg") ;
+    -fx-background-position: center;
+    -fx-background-size: stretch;
+}
+.bahnhof{
+    -fx-background-image: url("/images/bahnhof.jpg") ;
+    -fx-background-position: center;
+    -fx-background-size: stretch;
+}
+.sued-titel{
+    -fx-background-image: url("/images/sued-titel.jpg") ;
+    -fx-background-position: center;
+    -fx-background-size: stretch;
+}
+.westbahnhof{
+    -fx-background-image: url("/images/west.jpg") ;
+    -fx-background-position: center;
+    -fx-background-size: stretch;
+}
+.west-titel{
+    -fx-background-image: url("/images/west-titel.jpg") ;
+    -fx-background-position: center;
+    -fx-background-size: stretch;
+}
+.nordbahnhof{
+    -fx-background-image: url("/images/nord.jpg") ;
+    -fx-background-position: center;
+    -fx-background-size: stretch;
+}
+.nord-titel{
+    -fx-background-image: url("/images/nord-titel.jpg") ;
+    -fx-background-position: center;
+    -fx-background-size: stretch;
+}
+.hauptbahnhof{
+    -fx-background-image: url("/images/haupt.jpg") ;
+    -fx-background-position: center;
+    -fx-background-size: stretch;
+}
+.haupt-titel{
+    -fx-background-image: url("/images/haupt-titel.jpg") ;
+    -fx-background-position: center;
+    -fx-background-size: stretch;
+}
+.gem1-titel{
+    -fx-background-image: url("/images/gem-titel.jpg") ;
+    -fx-background-position: center;
+    -fx-background-size: stretch;
+}
+.gemeinsh1{
+    -fx-background-image: url("/images/gemeinschaftsfeld.jpg") ;
+    -fx-background-position: center;
+    -fx-background-size: stretch;
+}
+.gem2-titel{
+    -fx-background-image: url("/images/gem2-titel.jpg") ;
+    -fx-background-position: center;
+    -fx-background-size: stretch;
+}
+.gemeinsh2{
+    -fx-background-image: url("/images/gemeinschaftsfeld2.jpg") ;
+    -fx-background-position: center;
+    -fx-background-size: stretch;
+}
+.gem3-titel{
+    -fx-background-image: url("/images/gem3-titel.jpg") ;
+    -fx-background-position: center;
+    -fx-background-size: stretch;
+}
+.gemeinsh3{
+    -fx-background-image: url("/images/gemeinschaftsfeld3.jpg") ;
+    -fx-background-position: center;
+    -fx-background-size: stretch;
+}
+.zustatzSteuer{
+    -fx-background-image: url("/images/zusatzsteuer.jpg") ;
+    -fx-background-position: center;
+    -fx-background-size: stretch;
+}
+.zustatz-titel{
+    -fx-background-image: url("/images/zusatz-titel.jpg") ;
+    -fx-background-position: center;
+    -fx-background-size: stretch;
+}
+.ereignis1{
+    -fx-background-image: url("/images/ereignisfeld.jpg") ;
+    -fx-background-position: center;
+    -fx-background-size: stretch;  
+}
+.ereignis1-titel{
+    -fx-background-image: url("/images/ereignis-titel.jpg") ;
+    -fx-background-position: center;
+    -fx-background-size: stretch;  
+}
+.ereignis2{
+    -fx-background-image: url("/images/ereignisfeld2.jpg") ;
+    -fx-background-position: center;
+    -fx-background-size: stretch;  
+}
+.ereignis2-titel{
+    -fx-background-image: url("/images/ereignis2-titel.jpg") ;
+    -fx-background-position: center;
+    -fx-background-size: stretch;  
+}
+.ereignis3{
+    -fx-background-image: url("/images/ereignisfeld3.jpg") ;
+    -fx-background-position: center;
+    -fx-background-size: stretch;  
+}
+.ereignis3-titel{
+    -fx-background-image: url("/images/ereignis3-titel.jpg") ;
+    -fx-background-position: center;
+    -fx-background-size: stretch;  
+}
+.wasserwerk{
+    -fx-background-image: url("/images/wasserwerk.jpg") ;
+    -fx-background-position: center;
+    -fx-background-size: stretch;  
+}
+.wasser-titel{
+    -fx-background-image: url("/images/wasser-titel.jpg") ;
+    -fx-background-position: center;
+    -fx-background-size: stretch;  
+}
+.eletrizitat{
+    -fx-background-image: url("/images/elektrizitat.jpg") ;
+    -fx-background-position: center;
+    -fx-background-size: stretch;  
+}
+.el-titel{
+    -fx-background-image: url("/images/el-titel.jpg") ;
+    -fx-background-position: center;
+    -fx-background-size: stretch;  
+}
