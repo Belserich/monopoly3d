@@ -395,12 +395,13 @@ public class MainSceneController implements Initializable {
 
                     //wenn 3 Spieler
                     if (Lobby.getUsers().length >= 3) {
-                        if (i != 1) {
+                        if (i > 1) {
                             player2Button.setText(Lobby.getUsers()[1][1]);
                             player2Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[1][4]), CornerRadii.EMPTY, Insets.EMPTY)));
                             player2.setFill(Color.web(Lobby.getUsers()[1][4]));
                         }
                         else {
+                            
                             player2Button.setText(Lobby.getUsers()[2][1]);
                             player2Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[2][4]), CornerRadii.EMPTY, Insets.EMPTY)));
                             player2.setFill(Color.web(Lobby.getUsers()[2][4]));
@@ -413,7 +414,7 @@ public class MainSceneController implements Initializable {
 
                     //wenn 4 Spieler
                     if (Lobby.getUsers().length >= 4) {
-                        if (i != 2) {
+                        if (i > 2) {
                             player3Button.setText(Lobby.getUsers()[2][1]);
                             player3Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[2][4]), CornerRadii.EMPTY, Insets.EMPTY)));
                             player3.setFill(Color.web(Lobby.getUsers()[2][4]));
@@ -432,7 +433,7 @@ public class MainSceneController implements Initializable {
 
                     //wenn 5 Spieler
                     if (Lobby.getUsers().length >= 5) {
-                        if (i != 3) {
+                        if (i > 3) {
                             player4Button.setText(Lobby.getUsers()[3][1]);
                             player4Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[3][4]), CornerRadii.EMPTY, Insets.EMPTY)));
                             player4.setFill(Color.web(Lobby.getUsers()[3][4]));
@@ -450,10 +451,10 @@ public class MainSceneController implements Initializable {
 
                     //wenn 6 Spieler
                     if (Lobby.getUsers().length >= 6) {
-                        if (i != 4) {
-                            player5Button.setText(Lobby.getUsers()[4][1]);
-                            player5Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[4][4]), CornerRadii.EMPTY, Insets.EMPTY)));
-                            player5.setFill(Color.web(Lobby.getUsers()[4][4]));
+                        if (i > 4) {
+                            player5Button.setText(Lobby.getUsers()[5][1]);
+                            player5Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[5][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+                            player5.setFill(Color.web(Lobby.getUsers()[5][4]));
                         }
                         else {
                             player5Button.setText(Lobby.getUsers()[5][1]);
@@ -468,6 +469,7 @@ public class MainSceneController implements Initializable {
 
                 }
             }
+        }
 
 //            if (Lobby.getUsers().length >= 1) {
 //                player0Button.setText(Lobby.getUsers()[0][1]);
@@ -507,7 +509,7 @@ public class MainSceneController implements Initializable {
 //                player5Button.setVisible(false);
 //                player5.setVisible(false);
 //            }
-        }
+        
 
         // Farben festlegen
 //        if (Lobby.getUsers() != null) {
@@ -536,13 +538,12 @@ public class MainSceneController implements Initializable {
 //                player5.setFill(Color.web(Lobby.getUsers()[5][4]));
 //            }
 //    }
+    }
 
-}
-
-public void appendText(String message) {
+    public void appendText(String message) {
         Task task = new Task() {
             @Override
-        protected Object call() throws Exception {
+            protected Object call() throws Exception {
                 textArea.appendText(message);
                 return null;
             }
@@ -555,9 +556,9 @@ public void appendText(String message) {
 
         Task task = new Task() {
             @Override
-        protected Object call() throws Exception {
+            protected Object call() throws Exception {
                 if (players.length >= 1) {
-                    geld0.setText("Geld: " + players[0].getMoney());
+                    geld0.setText("Geld: " + players[client.getPlayerOnClient().getId()].getMoney());
                     player0Geld.add(geld0, 0, 0);
                 }
                 if (players.length >= 2) {
@@ -592,7 +593,7 @@ public void appendText(String message) {
         Player[] players = Lobby.getPlayerClient().getGame().getPlayers();
         Task task = new Task() {
             @Override
-        protected Object call() throws Exception {
+            protected Object call() throws Exception {
 
                 if (players.length >= 1) {
                     Felder[players[0].getPosition()].getChildren().add(player0);
@@ -637,8 +638,9 @@ public void appendText(String message) {
         }
     }
 
+    //TODO Testen
     @FXML
-        private void player0ButtonAction(ActionEvent event) throws IOException, InterruptedException {
+    private void player0ButtonAction(ActionEvent event) throws IOException, InterruptedException {
         Player[] players = Lobby.getPlayerClient().getGame().getPlayers();
         GridPane player0Pane = new GridPane();
         ScrollPane scroll = new ScrollPane();
@@ -647,17 +649,15 @@ public void appendText(String message) {
         scroll.setCenterShape(true);
         player0Pane.add(scroll, 0, 0);
         scroll.setContent(box);
-        Label geld = new Label(" hat in Konto: " + players[0].getMoney());
+        Label geld = new Label(" hat in Konto: " + players[client.getPlayerOnClient().getId()].getMoney());
         JFXButton player = new JFXButton();
         JFXButton exit = new JFXButton("Exit");
-        player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[0][4]), CornerRadii.EMPTY, Insets.EMPTY)));
-        player.setText(Lobby.getUsers()[0][1]);
+        player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[client.getPlayerOnClient().getId()][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+        player.setText(Lobby.getUsers()[client.getPlayerOnClient().getId()][1]);
         player.setPrefSize(150, 10);
         box.getChildren().addAll(player, geld, exit);
         box.setAlignment(Pos.CENTER);
 
-//      player0Pane.add(geld, 2, 5);
-//      player0Pane.add(exit, 4, 7);
         setPopup(player0Pane);
 
         exit.setOnAction(e -> {
@@ -666,7 +666,7 @@ public void appendText(String message) {
     }
 
     @FXML
-        private void player1ButtonAction(ActionEvent event) throws IOException, InterruptedException {
+    private void player1ButtonAction(ActionEvent event) throws IOException, InterruptedException {
         Player[] players = Lobby.getPlayerClient().getGame().getPlayers();
         GridPane player1Pane = new GridPane();
         ScrollPane scroll = new ScrollPane();
@@ -675,11 +675,21 @@ public void appendText(String message) {
         scroll.setCenterShape(true);
         player1Pane.add(scroll, 0, 0);
         scroll.setContent(box);
-        Label geld = new Label(" hat in Konto: " + players[1].getMoney());
+        Label geld;
         JFXButton player = new JFXButton();
         JFXButton exit = new JFXButton("Exit");
-        player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[1][4]), CornerRadii.EMPTY, Insets.EMPTY)));
-        player.setText(Lobby.getUsers()[1][1]);
+        if (client.getPlayerOnClient().getId() == 0) {
+            geld = new Label(" hat in Konto: " + players[1].getMoney());
+
+            player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[1][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+            player.setText(Lobby.getUsers()[1][1]);
+        }
+        else {
+            geld = new Label(" hat in Konto: " + players[0].getMoney());
+
+            player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[0][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+            player.setText(Lobby.getUsers()[0][1]);
+        }
         player.setPrefSize(150, 10);
         box.getChildren().addAll(player, geld, exit);
         box.setAlignment(Pos.CENTER);
@@ -692,7 +702,7 @@ public void appendText(String message) {
     }
 
     @FXML
-        private void player2ButtonAction(ActionEvent event) throws IOException, InterruptedException {
+    private void player2ButtonAction(ActionEvent event) throws IOException, InterruptedException {
         Player[] players = Lobby.getPlayerClient().getGame().getPlayers();
         GridPane player2Pane = new GridPane();
         ScrollPane scroll = new ScrollPane();
@@ -701,11 +711,22 @@ public void appendText(String message) {
         scroll.setCenterShape(true);
         player2Pane.add(scroll, 0, 0);
         scroll.setContent(box);
-        Label geld = new Label(" hat in Konto: " + players[2].getMoney());
+         Label geld;
         JFXButton player = new JFXButton();
         JFXButton exit = new JFXButton("Exit");
-        player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[2][4]), CornerRadii.EMPTY, Insets.EMPTY)));
-        player.setText(Lobby.getUsers()[2][1]);
+        if (client.getPlayerOnClient().getId() == 2) {
+            geld = new Label(" hat in Konto: " + players[1].getMoney());
+
+            player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[1][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+            player.setText(Lobby.getUsers()[1][1]);
+        }
+        else {
+            geld = new Label(" hat in Konto: " + players[2].getMoney());
+
+            player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[2][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+            player.setText(Lobby.getUsers()[2][1]);
+        }
+     
         player.setPrefSize(150, 10);
         box.getChildren().addAll(player, geld, exit);
         box.setAlignment(Pos.CENTER);
@@ -717,7 +738,7 @@ public void appendText(String message) {
     }
 
     @FXML
-        private void player3ButtonAction(ActionEvent event) throws IOException, InterruptedException {
+    private void player3ButtonAction(ActionEvent event) throws IOException, InterruptedException {
         Player[] players = Lobby.getPlayerClient().getGame().getPlayers();
         GridPane player3Pane = new GridPane();
         ScrollPane scroll = new ScrollPane();
@@ -726,11 +747,26 @@ public void appendText(String message) {
         scroll.setCenterShape(true);
         player3Pane.add(scroll, 0, 0);
         scroll.setContent(box);
-        Label geld = new Label(" hat in Konto: " + players[3].getMoney());
+         Label geld;
         JFXButton player = new JFXButton();
         JFXButton exit = new JFXButton("Exit");
-        player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[3][4]), CornerRadii.EMPTY, Insets.EMPTY)));
-        player.setText(Lobby.getUsers()[3][1]);
+        if (client.getPlayerOnClient().getId() == 3) {
+            geld = new Label(" hat in Konto: " + players[2].getMoney());
+
+            player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[2][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+            player.setText(Lobby.getUsers()[2][1]);
+        }
+        else {
+            geld = new Label(" hat in Konto: " + players[3].getMoney());
+
+            player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[3][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+            player.setText(Lobby.getUsers()[3][1]);
+        }
+//        Label geld = new Label(" hat in Konto: " + players[3].getMoney());
+//        JFXButton player = new JFXButton();
+//        JFXButton exit = new JFXButton("Exit");
+//        player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[3][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+//        player.setText(Lobby.getUsers()[3][1]);
         player.setPrefSize(150, 10);
         box.getChildren().addAll(player, geld, exit);
         box.setAlignment(Pos.CENTER);
@@ -743,7 +779,7 @@ public void appendText(String message) {
     }
 
     @FXML
-        private void player4ButtonAction(ActionEvent event) throws IOException, InterruptedException {
+    private void player4ButtonAction(ActionEvent event) throws IOException, InterruptedException {
         Player[] players = Lobby.getPlayerClient().getGame().getPlayers();
         GridPane player4Pane = new GridPane();
         ScrollPane scroll = new ScrollPane();
@@ -752,11 +788,26 @@ public void appendText(String message) {
         scroll.setCenterShape(true);
         player4Pane.add(scroll, 0, 0);
         scroll.setContent(box);
-        Label geld = new Label(" hat in Konto: " + players[4].getMoney());
+         Label geld;
         JFXButton player = new JFXButton();
         JFXButton exit = new JFXButton("Exit");
-        player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[4][4]), CornerRadii.EMPTY, Insets.EMPTY)));
-        player.setText(Lobby.getUsers()[4][1]);
+        if (client.getPlayerOnClient().getId() == 4) {
+            geld = new Label(" hat in Konto: " + players[3].getMoney());
+
+            player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[3][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+            player.setText(Lobby.getUsers()[3][1]);
+        }
+        else {
+            geld = new Label(" hat in Konto: " + players[4].getMoney());
+
+            player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[4][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+            player.setText(Lobby.getUsers()[4][1]);
+        }
+//        Label geld = new Label(" hat in Konto: " + players[4].getMoney());
+//        JFXButton player = new JFXButton();
+//        JFXButton exit = new JFXButton("Exit");
+//        player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[4][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+//        player.setText(Lobby.getUsers()[4][1]);
         player.setPrefSize(150, 10);
         box.getChildren().addAll(player, geld, exit);
         box.setAlignment(Pos.CENTER);
@@ -769,7 +820,7 @@ public void appendText(String message) {
     }
 
     @FXML
-        private void player5ButtonAction(ActionEvent event) throws IOException, InterruptedException {
+    private void player5ButtonAction(ActionEvent event) throws IOException, InterruptedException {
         Player[] players = Lobby.getPlayerClient().getGame().getPlayers();
         GridPane player5Pane = new GridPane();
         ScrollPane scroll = new ScrollPane();
@@ -778,11 +829,26 @@ public void appendText(String message) {
         scroll.setCenterShape(true);
         player5Pane.add(scroll, 0, 0);
         scroll.setContent(box);
-        Label geld = new Label(players[5].getName() + " hat in Konto: " + players[5].getMoney());
+         Label geld;
         JFXButton player = new JFXButton();
         JFXButton exit = new JFXButton("Exit");
-        player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[5][4]), CornerRadii.EMPTY, Insets.EMPTY)));
-        player.setText(Lobby.getUsers()[5][1]);
+        if (client.getPlayerOnClient().getId() == 5) {
+            geld = new Label(" hat in Konto: " + players[4].getMoney());
+
+            player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[4][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+            player.setText(Lobby.getUsers()[4][1]);
+        }
+        else {
+            geld = new Label(" hat in Konto: " + players[5].getMoney());
+
+            player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[5][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+            player.setText(Lobby.getUsers()[5][1]);
+        }
+//        Label geld = new Label(players[5].getName() + " hat in Konto: " + players[5].getMoney());
+//        JFXButton player = new JFXButton();
+//        JFXButton exit = new JFXButton("Exit");
+//        player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[5][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+//        player.setText(Lobby.getUsers()[5][1]);
         player.setPrefSize(150, 10);
         box.getChildren().addAll(player, geld, exit);
         box.setAlignment(Pos.CENTER);
@@ -799,7 +865,7 @@ public void appendText(String message) {
 
         Task task = new Task() {
             @Override
-        protected Object call() throws Exception {
+            protected Object call() throws Exception {
                 PopupPane.getChildren().remove(middlePane);
                 PopupPane.add(gridpane, 0, 1);
                 return null;
@@ -812,7 +878,7 @@ public void appendText(String message) {
     public void resetPopup(GridPane gridpane) {
         Task task = new Task() {
             @Override
-        protected Object call() throws Exception {
+            protected Object call() throws Exception {
                 PopupPane.getChildren().remove(gridpane);
                 PopupPane.add(middlePane, 0, 1);
                 return null;
