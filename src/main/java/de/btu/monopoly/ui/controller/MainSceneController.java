@@ -366,83 +366,183 @@ public class MainSceneController implements Initializable {
         middlePane.setBackground(new Background(new BackgroundImage(image2, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT)));
         PopupPane.add(middlePane, 0, 1);
 
-        // User aus Lobby holen
+        // User aus Lobby holen ud Farben setzen
+        //TODO Bugfixes
         client = Lobby.getPlayerClient();
         if (Lobby.getUsers() != null) {
-            if (Lobby.getUsers().length >= 1) {
-                player0Button.setText(Lobby.getUsers()[0][1]);
+            for (int i = 0; i < Lobby.getUsers().length; i++) {
+                if (client.getPlayerOnClient().getId() == i) {
+                    player0Button.setText(Lobby.getUsers()[i][1]);
+                    player0Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[i][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+                    player0.setFill(Color.web(Lobby.getUsers()[i][4]));
+                    //wenn 2 Spieler
+                    if (Lobby.getUsers().length >= 2) {
+                        if (i != 0) {
+                            player1Button.setText(Lobby.getUsers()[0][1]);
+                            player1Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[0][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+                            player1.setFill(Color.web(Lobby.getUsers()[0][4]));
+                        }
+                        else {
+                            player1Button.setText(Lobby.getUsers()[1][1]);
+                            player1Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[1][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+                            player1.setFill(Color.web(Lobby.getUsers()[1][4]));
+                        }
+                    }
+                    else {
+                        player1Button.setVisible(false);
+                        player1.setVisible(false);
+                    }
+
+                    //wenn 3 Spieler
+                    if (Lobby.getUsers().length >= 3) {
+                        if (i != 1) {
+                            player2Button.setText(Lobby.getUsers()[1][1]);
+                            player2Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[1][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+                            player2.setFill(Color.web(Lobby.getUsers()[1][4]));
+                        }
+                        else {
+                            player2Button.setText(Lobby.getUsers()[2][1]);
+                            player2Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[2][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+                            player2.setFill(Color.web(Lobby.getUsers()[2][4]));
+                        }
+                    }
+                    else {
+                        player2Button.setVisible(false);
+                        player2.setVisible(false);
+                    }
+
+                    //wenn 4 Spieler
+                    if (Lobby.getUsers().length >= 4) {
+                        if (i != 2) {
+                            player3Button.setText(Lobby.getUsers()[2][1]);
+                            player3Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[2][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+                            player3.setFill(Color.web(Lobby.getUsers()[2][4]));
+
+                        }
+                        else {
+                            player3Button.setText(Lobby.getUsers()[3][1]);
+                            player3Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[3][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+                            player3.setFill(Color.web(Lobby.getUsers()[3][4]));
+                        }
+                    }
+                    else {
+                        player3Button.setVisible(false);
+                        player3.setVisible(false);
+                    }
+
+                    //wenn 5 Spieler
+                    if (Lobby.getUsers().length >= 5) {
+                        if (i != 3) {
+                            player4Button.setText(Lobby.getUsers()[3][1]);
+                            player4Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[3][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+                            player4.setFill(Color.web(Lobby.getUsers()[3][4]));
+                        }
+                        else {
+                            player4Button.setText(Lobby.getUsers()[4][1]);
+                            player4Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[4][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+                            player4.setFill(Color.web(Lobby.getUsers()[4][4]));
+                        }
+                    }
+                    else {
+                        player4Button.setVisible(false);
+                        player4.setVisible(false);
+                    }
+
+                    //wenn 6 Spieler
+                    if (Lobby.getUsers().length >= 6) {
+                        if (i != 4) {
+                            player5Button.setText(Lobby.getUsers()[4][1]);
+                            player5Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[4][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+                            player5.setFill(Color.web(Lobby.getUsers()[4][4]));
+                        }
+                        else {
+                            player5Button.setText(Lobby.getUsers()[5][1]);
+                            player5Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[5][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+                            player5.setFill(Color.web(Lobby.getUsers()[5][4]));
+                        }
+                    }
+                    else {
+                        player5Button.setVisible(false);
+                        player5.setVisible(false);
+                    }
+
+                }
             }
-            if (Lobby.getUsers().length >= 2) {
-                player1Button.setText(Lobby.getUsers()[1][1]);
-            }
-            else {
-                player1Button.setVisible(false);
-                player1.setVisible(false);
-            }
-            if (Lobby.getUsers().length >= 3) {
-                player2Button.setText(Lobby.getUsers()[2][1]);
-            }
-            else {
-                player2Button.setVisible(false);
-                player2.setVisible(false);
-            }
-            if (Lobby.getUsers().length >= 4) {
-                player3Button.setText(Lobby.getUsers()[3][1]);
-            }
-            else {
-                player3Button.setVisible(false);
-                player3.setVisible(false);
-            }
-            if (Lobby.getUsers().length >= 5) {
-                player4Button.setText(Lobby.getUsers()[4][1]);
-            }
-            else {
-                player4Button.setVisible(false);
-                player4.setVisible(false);
-            }
-            if (Lobby.getUsers().length >= 6) {
-                player5Button.setText(Lobby.getUsers()[5][1]);
-            }
-            else {
-                player5Button.setVisible(false);
-                player5.setVisible(false);
-            }
+
+//            if (Lobby.getUsers().length >= 1) {
+//                player0Button.setText(Lobby.getUsers()[0][1]);
+//            }
+//            if (Lobby.getUsers().length >= 2) {
+//                player1Button.setText(Lobby.getUsers()[1][1]);
+//            }
+//            else {
+//                player1Button.setVisible(false);
+//                player1.setVisible(false);
+//            }
+//            if (Lobby.getUsers().length >= 3) {
+//                player2Button.setText(Lobby.getUsers()[2][1]);
+//            }
+//            else {
+//                player2Button.setVisible(false);
+//                player2.setVisible(false);
+//            }
+//            if (Lobby.getUsers().length >= 4) {
+//                player3Button.setText(Lobby.getUsers()[3][1]);
+//            }
+//            else {
+//                player3Button.setVisible(false);
+//                player3.setVisible(false);
+//            }
+//            if (Lobby.getUsers().length >= 5) {
+//                player4Button.setText(Lobby.getUsers()[4][1]);
+//            }
+//            else {
+//                player4Button.setVisible(false);
+//                player4.setVisible(false);
+//            }
+//            if (Lobby.getUsers().length >= 6) {
+//                player5Button.setText(Lobby.getUsers()[5][1]);
+//            }
+//            else {
+//                player5Button.setVisible(false);
+//                player5.setVisible(false);
+//            }
         }
 
         // Farben festlegen
-        if (Lobby.getUsers() != null) {
-            if (Lobby.getUsers().length >= 1) {
-                player0Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[0][4]), CornerRadii.EMPTY, Insets.EMPTY)));
-                player0.setFill(Color.web(Lobby.getUsers()[0][4]));
-            }
-            if (Lobby.getUsers().length >= 2) {
-                player1Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[1][4]), CornerRadii.EMPTY, Insets.EMPTY)));
-                player1.setFill(Color.web(Lobby.getUsers()[1][4]));
-            }
-            if (Lobby.getUsers().length >= 3) {
-                player2Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[2][4]), CornerRadii.EMPTY, Insets.EMPTY)));
-                player2.setFill(Color.web(Lobby.getUsers()[2][4]));
-            }
-            if (Lobby.getUsers().length >= 4) {
-                player3Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[3][4]), CornerRadii.EMPTY, Insets.EMPTY)));
-                player3.setFill(Color.web(Lobby.getUsers()[3][4]));
-            }
-            if (Lobby.getUsers().length >= 5) {
-                player4Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[4][4]), CornerRadii.EMPTY, Insets.EMPTY)));
-                player4.setFill(Color.web(Lobby.getUsers()[4][4]));
-            }
-            if (Lobby.getUsers().length >= 6) {
-                player5Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[5][4]), CornerRadii.EMPTY, Insets.EMPTY)));
-                player5.setFill(Color.web(Lobby.getUsers()[5][4]));
-            }
-        }
+//        if (Lobby.getUsers() != null) {
+//            if (Lobby.getUsers().length >= 1) {
+//                player0Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[0][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+//                player0.setFill(Color.web(Lobby.getUsers()[0][4]));
+//            }
+//            if (Lobby.getUsers().length >= 2) {
+//                player1Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[1][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+//                player1.setFill(Color.web(Lobby.getUsers()[1][4]));
+//            }
+//            if (Lobby.getUsers().length >= 3) {
+//                player2Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[2][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+//                player2.setFill(Color.web(Lobby.getUsers()[2][4]));
+//            }
+//            if (Lobby.getUsers().length >= 4) {
+//                player3Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[3][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+//                player3.setFill(Color.web(Lobby.getUsers()[3][4]));
+//            }
+//            if (Lobby.getUsers().length >= 5) {
+//                player4Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[4][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+//                player4.setFill(Color.web(Lobby.getUsers()[4][4]));
+//            }
+//            if (Lobby.getUsers().length >= 6) {
+//                player5Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[5][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+//                player5.setFill(Color.web(Lobby.getUsers()[5][4]));
+//            }
+//    }
 
-    }
+}
 
-    public void appendText(String message) {
+public void appendText(String message) {
         Task task = new Task() {
             @Override
-            protected Object call() throws Exception {
+        protected Object call() throws Exception {
                 textArea.appendText(message);
                 return null;
             }
@@ -455,7 +555,7 @@ public class MainSceneController implements Initializable {
 
         Task task = new Task() {
             @Override
-            protected Object call() throws Exception {
+        protected Object call() throws Exception {
                 if (players.length >= 1) {
                     geld0.setText("Geld: " + players[0].getMoney());
                     player0Geld.add(geld0, 0, 0);
@@ -492,7 +592,7 @@ public class MainSceneController implements Initializable {
         Player[] players = Lobby.getPlayerClient().getGame().getPlayers();
         Task task = new Task() {
             @Override
-            protected Object call() throws Exception {
+        protected Object call() throws Exception {
 
                 if (players.length >= 1) {
                     Felder[players[0].getPosition()].getChildren().add(player0);
@@ -538,7 +638,7 @@ public class MainSceneController implements Initializable {
     }
 
     @FXML
-    private void player0ButtonAction(ActionEvent event) throws IOException, InterruptedException {
+        private void player0ButtonAction(ActionEvent event) throws IOException, InterruptedException {
         Player[] players = Lobby.getPlayerClient().getGame().getPlayers();
         GridPane player0Pane = new GridPane();
         ScrollPane scroll = new ScrollPane();
@@ -566,7 +666,7 @@ public class MainSceneController implements Initializable {
     }
 
     @FXML
-    private void player1ButtonAction(ActionEvent event) throws IOException, InterruptedException {
+        private void player1ButtonAction(ActionEvent event) throws IOException, InterruptedException {
         Player[] players = Lobby.getPlayerClient().getGame().getPlayers();
         GridPane player1Pane = new GridPane();
         ScrollPane scroll = new ScrollPane();
@@ -592,7 +692,7 @@ public class MainSceneController implements Initializable {
     }
 
     @FXML
-    private void player2ButtonAction(ActionEvent event) throws IOException, InterruptedException {
+        private void player2ButtonAction(ActionEvent event) throws IOException, InterruptedException {
         Player[] players = Lobby.getPlayerClient().getGame().getPlayers();
         GridPane player2Pane = new GridPane();
         ScrollPane scroll = new ScrollPane();
@@ -617,7 +717,7 @@ public class MainSceneController implements Initializable {
     }
 
     @FXML
-    private void player3ButtonAction(ActionEvent event) throws IOException, InterruptedException {
+        private void player3ButtonAction(ActionEvent event) throws IOException, InterruptedException {
         Player[] players = Lobby.getPlayerClient().getGame().getPlayers();
         GridPane player3Pane = new GridPane();
         ScrollPane scroll = new ScrollPane();
@@ -643,7 +743,7 @@ public class MainSceneController implements Initializable {
     }
 
     @FXML
-    private void player4ButtonAction(ActionEvent event) throws IOException, InterruptedException {
+        private void player4ButtonAction(ActionEvent event) throws IOException, InterruptedException {
         Player[] players = Lobby.getPlayerClient().getGame().getPlayers();
         GridPane player4Pane = new GridPane();
         ScrollPane scroll = new ScrollPane();
@@ -669,7 +769,7 @@ public class MainSceneController implements Initializable {
     }
 
     @FXML
-    private void player5ButtonAction(ActionEvent event) throws IOException, InterruptedException {
+        private void player5ButtonAction(ActionEvent event) throws IOException, InterruptedException {
         Player[] players = Lobby.getPlayerClient().getGame().getPlayers();
         GridPane player5Pane = new GridPane();
         ScrollPane scroll = new ScrollPane();
@@ -699,7 +799,7 @@ public class MainSceneController implements Initializable {
 
         Task task = new Task() {
             @Override
-            protected Object call() throws Exception {
+        protected Object call() throws Exception {
                 PopupPane.getChildren().remove(middlePane);
                 PopupPane.add(gridpane, 0, 1);
                 return null;
@@ -712,7 +812,7 @@ public class MainSceneController implements Initializable {
     public void resetPopup(GridPane gridpane) {
         Task task = new Task() {
             @Override
-            protected Object call() throws Exception {
+        protected Object call() throws Exception {
                 PopupPane.getChildren().remove(gridpane);
                 PopupPane.add(middlePane, 0, 1);
                 return null;
