@@ -66,6 +66,10 @@ public class AuctionService extends Listener {
                             break;
                     }
                 }
+                else {
+                    // SceneManager.AuctionPopup();
+                    // SceneManager.updateAuctionPopup(auctionStillActive());
+                }
             }
             sellProperty();
         }
@@ -202,5 +206,15 @@ public class AuctionService extends Listener {
             }
         }
         return retPlayer;
+    }
+
+    /**
+     * Gibt den Namen der Property zurueck
+     *
+     * @return
+     */
+    public static String getPropertyString() {
+
+        return auc.getProperty().getName();
     }
 }

@@ -7,6 +7,8 @@ package de.btu.monopoly.ui;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
+import com.jfoenix.controls.JFXTextField;
+import de.btu.monopoly.core.service.AuctionService;
 import de.btu.monopoly.data.field.Field;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.input.IOService;
@@ -14,6 +16,8 @@ import de.btu.monopoly.menu.Lobby;
 import de.btu.monopoly.ui.controller.LobbyController;
 import de.btu.monopoly.ui.controller.MainSceneController;
 import java.io.IOException;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -32,6 +36,8 @@ public class SceneManager extends Stage {
     private static Scene scene;
     private static LobbyController LobbyController;
     private static MainSceneController GameController;
+    private static Label auctionLabel = new Label("Höchstgebot der Auktion");
+    private static GridPane auctionGP = new GridPane();
 
     public SceneManager() throws IOException {
         stage = this;
@@ -282,12 +288,58 @@ public class SceneManager extends Stage {
         return -1;
     }
 
-    public static int askForAuctionPopup() {
-        // TODO Patrick
+    public static void AuctionPopup() {
 
-        // GameController.setPopup(gridpane);
-        // GameController.resetPopup(gridpane);
-        return -1;
+        //initialisierung der benoetigten Objekte
+        JFXTextField tf = new JFXTextField();
+        JFXButton bidBut = new JFXButton("Bieten");
+        JFXButton exitBut = new JFXButton("Aussteigen");
+
+        tf.setPromptText("Dein Gebot:");
+        auctionGP.add(auctionLabel, 0, 0);
+        auctionGP.add(tf, 1, 0);
+        auctionGP.add(bidBut, 2, 0);
+        auctionGP.add(exitBut, 2, 1);
+
+        bidBut.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                try {
+                    AuctionService.setBid(Lobby.getPlayerClient().getPlayerOnClient().getId(), Integer.parseInt(tf.getText()));
+                } catch (Exception e) {
+                    tf.setPromptText("Bitte nur Zahlen eingebn!");
+                }
+            }
+        });
+
+        exitBut.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                AuctionService.playerExit(Lobby.getPlayerClient().getPlayerOnClient().getId());
+            }
+        });
+
+        GameController.setPopup(auctionGP);
+
+    }
+
+    public static void updateAuctionPopup(boolean stillActive) {
+
+        auctionLabel.setText(String.valueOf(AuctionService.getHighestBid()));
+        IOService.sleep(2000);
+
+        if (stillActive == false) {
+            GameController.resetPopup(auctionGP);
+            GridPane gp = new GridPane();
+            Label lbl = new Label(Lobby.getPlayerClient().getGame().getPlayers()[AuctionService.getHighestBidder()].getName()
+                    + " hat die Auktion gewonnen und muss " + AuctionService.getHighestBid() + "€ für das Grundstück "
+                    + AuctionService.getPropertyString() + " zahlen!");
+            gp.add(lbl, 0, 0);
+            GameController.setPopup(gp);
+            IOService.sleep(3500);
+            GameController.resetPopup(gp);
+        }
+
     }
 
 }

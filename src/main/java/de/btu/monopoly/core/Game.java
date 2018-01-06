@@ -17,6 +17,7 @@ import de.btu.monopoly.input.InputHandler;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.networkClasses.PlayerTradeRequest;
 import de.btu.monopoly.ui.Logger.TextAreaHandler;
+import de.btu.monopoly.ui.SceneManager;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -422,7 +423,8 @@ public class Game {
     }
 
     public void betPhase(PropertyField property) {
-//        AuctionService.startAuction(property);
+        //AuctionService.startAuction(property);
+        SceneManager.AuctionPopup();
     }
 
     public GameBoard getBoard() {
