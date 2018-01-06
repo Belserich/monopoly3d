@@ -401,7 +401,7 @@ public class MainSceneController implements Initializable {
                             player2.setFill(Color.web(Lobby.getUsers()[1][4]));
                         }
                         else {
-                            
+
                             player2Button.setText(Lobby.getUsers()[2][1]);
                             player2Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[2][4]), CornerRadii.EMPTY, Insets.EMPTY)));
                             player2.setFill(Color.web(Lobby.getUsers()[2][4]));
@@ -509,8 +509,6 @@ public class MainSceneController implements Initializable {
 //                player5Button.setVisible(false);
 //                player5.setVisible(false);
 //            }
-        
-
         // Farben festlegen
 //        if (Lobby.getUsers() != null) {
 //            if (Lobby.getUsers().length >= 1) {
@@ -711,7 +709,7 @@ public class MainSceneController implements Initializable {
         scroll.setCenterShape(true);
         player2Pane.add(scroll, 0, 0);
         scroll.setContent(box);
-         Label geld;
+        Label geld;
         JFXButton player = new JFXButton();
         JFXButton exit = new JFXButton("Exit");
         if (client.getPlayerOnClient().getId() == 2) {
@@ -726,7 +724,7 @@ public class MainSceneController implements Initializable {
             player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[2][4]), CornerRadii.EMPTY, Insets.EMPTY)));
             player.setText(Lobby.getUsers()[2][1]);
         }
-     
+
         player.setPrefSize(150, 10);
         box.getChildren().addAll(player, geld, exit);
         box.setAlignment(Pos.CENTER);
@@ -747,7 +745,7 @@ public class MainSceneController implements Initializable {
         scroll.setCenterShape(true);
         player3Pane.add(scroll, 0, 0);
         scroll.setContent(box);
-         Label geld;
+        Label geld;
         JFXButton player = new JFXButton();
         JFXButton exit = new JFXButton("Exit");
         if (client.getPlayerOnClient().getId() == 3) {
@@ -788,7 +786,7 @@ public class MainSceneController implements Initializable {
         scroll.setCenterShape(true);
         player4Pane.add(scroll, 0, 0);
         scroll.setContent(box);
-         Label geld;
+        Label geld;
         JFXButton player = new JFXButton();
         JFXButton exit = new JFXButton("Exit");
         if (client.getPlayerOnClient().getId() == 4) {
@@ -829,7 +827,7 @@ public class MainSceneController implements Initializable {
         scroll.setCenterShape(true);
         player5Pane.add(scroll, 0, 0);
         scroll.setContent(box);
-         Label geld;
+        Label geld;
         JFXButton player = new JFXButton();
         JFXButton exit = new JFXButton("Exit");
         if (client.getPlayerOnClient().getId() == 5) {

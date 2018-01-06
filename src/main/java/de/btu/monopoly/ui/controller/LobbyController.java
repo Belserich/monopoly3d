@@ -266,7 +266,7 @@ public class LobbyController implements Initializable {
     private void setKi() {
         if (difficultyComboBox.getSelectionModel().getSelectedItem() != null) {
             if (Lobby.getUsers().length < 6) {
-                if (kiNameTextField.getText() != "") {
+                if (kiNameTextField.getText().length() > 0) {
                     // Colorpicker aktivieren
                     switch (Lobby.getUsers().length) {
                         case 1: {

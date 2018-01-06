@@ -52,7 +52,6 @@ public class SceneManager extends Stage {
 
         Parent root = loader.load();
         scene.setRoot(root);
-
     }
 
     public static void changeSceneToLobby(FXMLLoader loader) throws IOException {
