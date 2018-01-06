@@ -92,6 +92,7 @@ public class SceneManager extends Stage {
         }
     }
 
+    
     public static void playerUpdate() {
         GameController.playerInitialise();
     }
