@@ -16,6 +16,7 @@ public class TextAreaHandler extends StreamHandler {
         super.publish(record);
         flush();
         if (!GlobalSettings.isRunInConsole() && !GlobalSettings.isRunAsTest()) {
+            SceneManager.playerUpdate();
             SceneManager.movePlayerUpdate();
             SceneManager.geldPlayerUpdate();
             SceneManager.propertyUpdate();
