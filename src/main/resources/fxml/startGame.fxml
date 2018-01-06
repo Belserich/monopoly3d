@@ -45,7 +45,7 @@
                 <RowConstraints minHeight="10.0" percentHeight="60.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <JFXTextField fx:id="nicknameHostTextView" alignment="CENTER" promptText="Name" unFocusColor="BLACK" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                  <JFXTextField fx:id="nicknameHostTextView" alignment="CENTER" onKeyPressed="#enterStartsLobby" promptText="Name" unFocusColor="BLACK" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
                      <font>
                         <Font size="21.0" />
                      </font>

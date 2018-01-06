@@ -69,7 +69,7 @@
       <JFXColorPicker fx:id="playerColor6" disable="true" onAction="#pushColorPick5" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="6" />
       <JFXButton fx:id="kiButton" minHeight="80.0" minWidth="200.0" onAction="#kiButtonAction" style="-fx-background-color: #212121;" text="KI hinzufügen" textFill="WHITE" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.valignment="CENTER" />
       <JFXComboBox fx:id="difficultyComboBox" focusColor="BLACK" prefHeight="40.0" prefWidth="220.0" promptText="Ki Schwierigkeit" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
-      <JFXTextField fx:id="kiNameTextField" focusColor="BLACK" maxHeight="39.0" maxWidth="218.0" prefHeight="39.0" prefWidth="218.0" promptText="Name" unFocusColor="BLACK" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER" />
+      <JFXTextField fx:id="kiNameTextField" focusColor="BLACK" maxHeight="39.0" maxWidth="218.0" onKeyPressed="#enterSetsKi" prefHeight="39.0" prefWidth="218.0" promptText="Name" unFocusColor="BLACK" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER" />
       <Label fx:id="lobbyLabelIp" text="IP Adresse" textOverrun="CLIP" GridPane.columnIndex="2">
          <font>
             <Font size="44.0" />

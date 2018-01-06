@@ -23,6 +23,8 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.BackgroundPosition;
@@ -250,8 +252,18 @@ public class LobbyController implements Initializable {
     }
 
     @FXML
-    private void kiButtonAction(ActionEvent event) {
+    private void enterSetsKi(KeyEvent event) throws IOException {
+        if (event.getCode().equals(KeyCode.ENTER)) {
+            setKi();
+        }
+    }
 
+    @FXML
+    private void kiButtonAction(ActionEvent event) {
+        setKi();
+    }
+
+    private void setKi() {
         if (difficultyComboBox.getSelectionModel().getSelectedItem() != null) {
             if (Lobby.getUsers().length < 6) {
                 if (kiNameTextField.getText() != "") {
@@ -306,7 +318,7 @@ public class LobbyController implements Initializable {
                             break;
                         }
                         default: {
-
+                            difficulty = 1;
                         }
                     }
 
@@ -397,4 +409,5 @@ public class LobbyController implements Initializable {
         // Wechselt die Scene auf Game
         SceneManager.changeSceneToGame(new FXMLLoader(getClass().getResource("/fxml/mainScene.fxml")));
     }
+
 }
