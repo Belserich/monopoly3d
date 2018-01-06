@@ -82,6 +82,17 @@ public class FieldManager {
                 .filter(p -> p.getOwner() == player);
     }
 
+//    public String toStringOwned(Player player) {
+//        String property = "";
+//        for (Field field : fields) {
+//            
+//            if (((PropertyField)field).getOwner() == player) {
+//                property+= " "+field.getName();
+//            }
+//        }
+//        return property;
+//    }
+
     public List<Tradeable> getTradeableStreets(Player player) {
         return getOwnedPropertyFields(player)
                 .filter(p -> p instanceof Tradeable)

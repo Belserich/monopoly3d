@@ -15,6 +15,7 @@ import de.btu.monopoly.net.client.GameClient;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.stream.Stream;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
@@ -372,73 +373,7 @@ public class MainSceneController implements Initializable {
 
     }
 
-//            if (Lobby.getUsers().length >= 1) {
-//                player0Button.setText(Lobby.getUsers()[0][1]);
-//            }
-//            if (Lobby.getUsers().length >= 2) {
-//                player1Button.setText(Lobby.getUsers()[1][1]);
-//            }
-//            else {
-//                player1Button.setVisible(false);
-//                player1.setVisible(false);
-//            }
-//            if (Lobby.getUsers().length >= 3) {
-//                player2Button.setText(Lobby.getUsers()[2][1]);
-//            }
-//            else {
-//                player2Button.setVisible(false);
-//                player2.setVisible(false);
-//            }
-//            if (Lobby.getUsers().length >= 4) {
-//                player3Button.setText(Lobby.getUsers()[3][1]);
-//            }
-//            else {
-//                player3Button.setVisible(false);
-//                player3.setVisible(false);
-//            }
-//            if (Lobby.getUsers().length >= 5) {
-//                player4Button.setText(Lobby.getUsers()[4][1]);
-//            }
-//            else {
-//                player4Button.setVisible(false);
-//                player4.setVisible(false);
-//            }
-//            if (Lobby.getUsers().length >= 6) {
-//                player5Button.setText(Lobby.getUsers()[5][1]);
-//            }
-//            else {
-//                player5Button.setVisible(false);
-//                player5.setVisible(false);
-//            }
-    // Farben festlegen
-//        if (Lobby.getUsers() != null) {
-//            if (Lobby.getUsers().length >= 1) {
-//                player0Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[0][4]), CornerRadii.EMPTY, Insets.EMPTY)));
-//                player0.setFill(Color.web(Lobby.getUsers()[0][4]));
-//            }
-//            if (Lobby.getUsers().length >= 2) {
-//                player1Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[1][4]), CornerRadii.EMPTY, Insets.EMPTY)));
-//                player1.setFill(Color.web(Lobby.getUsers()[1][4]));
-//            }
-//            if (Lobby.getUsers().length >= 3) {
-//                player2Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[2][4]), CornerRadii.EMPTY, Insets.EMPTY)));
-//                player2.setFill(Color.web(Lobby.getUsers()[2][4]));
-//            }
-//            if (Lobby.getUsers().length >= 4) {
-//                player3Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[3][4]), CornerRadii.EMPTY, Insets.EMPTY)));
-//                player3.setFill(Color.web(Lobby.getUsers()[3][4]));
-//            }
-//            if (Lobby.getUsers().length >= 5) {
-//                player4Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[4][4]), CornerRadii.EMPTY, Insets.EMPTY)));
-//                player4.setFill(Color.web(Lobby.getUsers()[4][4]));
-//            }
-//            if (Lobby.getUsers().length >= 6) {
-//                player5Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[5][4]), CornerRadii.EMPTY, Insets.EMPTY)));
-//                player5.setFill(Color.web(Lobby.getUsers()[5][4]));
-//            }
-//    }
-    
-       public void playerInitialise() {
+    public void playerInitialise() {
         Task task = new Task() {
             @Override
             protected Object call() throws Exception {
@@ -648,11 +583,11 @@ public class MainSceneController implements Initializable {
         }
     }
 
-    
     //TODO Testen
     @FXML
     private void player0ButtonAction(ActionEvent event) throws IOException, InterruptedException {
         Player[] players = Lobby.getPlayerClient().getGame().getPlayers();
+        //  String fields =  Lobby.getPlayerClient().getGame().getBoard().getFieldManager().toStringOwned(players[client.getPlayerOnClient().getId()]);
         GridPane player0Pane = new GridPane();
         ScrollPane scroll = new ScrollPane();
         VBox box = new VBox();
@@ -663,10 +598,12 @@ public class MainSceneController implements Initializable {
         Label geld = new Label(" hat in Konto: " + players[client.getPlayerOnClient().getId()].getMoney());
         JFXButton player = new JFXButton();
         JFXButton exit = new JFXButton("Exit");
+        //Label properties = new Label("besitzt: " + fields);
+        Label jail = new Label(" ist in Gefängnis seit : " + players[client.getPlayerOnClient().getId()].getDaysInJail());
         player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[client.getPlayerOnClient().getId()][4]), CornerRadii.EMPTY, Insets.EMPTY)));
         player.setText(Lobby.getUsers()[client.getPlayerOnClient().getId()][1]);
         player.setPrefSize(150, 10);
-        box.getChildren().addAll(player, geld, exit);
+        box.getChildren().addAll(player, geld, jail, exit);
         box.setAlignment(Pos.CENTER);
 
         setPopup(player0Pane);
@@ -689,20 +626,22 @@ public class MainSceneController implements Initializable {
         Label geld;
         JFXButton player = new JFXButton();
         JFXButton exit = new JFXButton("Exit");
+        Label jail;
         if (client.getPlayerOnClient().getId() == 0) {
             geld = new Label(" hat in Konto: " + players[1].getMoney());
-
+            jail = new Label(" ist in Gefängnis seit : " + players[1].getDaysInJail());
             player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[1][4]), CornerRadii.EMPTY, Insets.EMPTY)));
             player.setText(Lobby.getUsers()[1][1]);
         }
         else {
             geld = new Label(" hat in Konto: " + players[0].getMoney());
+            jail = new Label(" ist in Gefängnis seit : " + players[0].getDaysInJail());
 
             player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[0][4]), CornerRadii.EMPTY, Insets.EMPTY)));
             player.setText(Lobby.getUsers()[0][1]);
         }
         player.setPrefSize(150, 10);
-        box.getChildren().addAll(player, geld, exit);
+        box.getChildren().addAll(player, geld, jail, exit);
         box.setAlignment(Pos.CENTER);
 
         setPopup(player1Pane);
@@ -725,21 +664,22 @@ public class MainSceneController implements Initializable {
         Label geld;
         JFXButton player = new JFXButton();
         JFXButton exit = new JFXButton("Exit");
+        Label jail;
         if (client.getPlayerOnClient().getId() == 2) {
             geld = new Label(" hat in Konto: " + players[1].getMoney());
-
+            jail = new Label(" ist in Gefängnis seit : " + players[1].getDaysInJail());
             player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[1][4]), CornerRadii.EMPTY, Insets.EMPTY)));
             player.setText(Lobby.getUsers()[1][1]);
         }
         else {
             geld = new Label(" hat in Konto: " + players[2].getMoney());
-
+            jail = new Label(" ist in Gefängnis seit : " + players[2].getDaysInJail());
             player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[2][4]), CornerRadii.EMPTY, Insets.EMPTY)));
             player.setText(Lobby.getUsers()[2][1]);
         }
 
         player.setPrefSize(150, 10);
-        box.getChildren().addAll(player, geld, exit);
+        box.getChildren().addAll(player, geld, jail, exit);
         box.setAlignment(Pos.CENTER);
         setPopup(player2Pane);
 
@@ -761,25 +701,21 @@ public class MainSceneController implements Initializable {
         Label geld;
         JFXButton player = new JFXButton();
         JFXButton exit = new JFXButton("Exit");
+        Label jail;
         if (client.getPlayerOnClient().getId() == 3) {
             geld = new Label(" hat in Konto: " + players[2].getMoney());
-
+            jail = new Label(" ist in Gefängnis seit : " + players[2].getDaysInJail());
             player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[2][4]), CornerRadii.EMPTY, Insets.EMPTY)));
             player.setText(Lobby.getUsers()[2][1]);
         }
         else {
             geld = new Label(" hat in Konto: " + players[3].getMoney());
-
+            jail = new Label(" ist in Gefängnis seit : " + players[3].getDaysInJail());
             player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[3][4]), CornerRadii.EMPTY, Insets.EMPTY)));
             player.setText(Lobby.getUsers()[3][1]);
         }
-//        Label geld = new Label(" hat in Konto: " + players[3].getMoney());
-//        JFXButton player = new JFXButton();
-//        JFXButton exit = new JFXButton("Exit");
-//        player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[3][4]), CornerRadii.EMPTY, Insets.EMPTY)));
-//        player.setText(Lobby.getUsers()[3][1]);
         player.setPrefSize(150, 10);
-        box.getChildren().addAll(player, geld, exit);
+        box.getChildren().addAll(player, geld, jail, exit);
         box.setAlignment(Pos.CENTER);
 
         setPopup(player3Pane);
@@ -802,15 +738,16 @@ public class MainSceneController implements Initializable {
         Label geld;
         JFXButton player = new JFXButton();
         JFXButton exit = new JFXButton("Exit");
+        Label jail;
         if (client.getPlayerOnClient().getId() == 4) {
             geld = new Label(" hat in Konto: " + players[3].getMoney());
-
+            jail = new Label(" ist in Gefängnis seit : " + players[3].getDaysInJail());
             player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[3][4]), CornerRadii.EMPTY, Insets.EMPTY)));
             player.setText(Lobby.getUsers()[3][1]);
         }
         else {
             geld = new Label(" hat in Konto: " + players[4].getMoney());
-
+            jail = new Label(" ist in Gefängnis seit : " + players[4].getDaysInJail());
             player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[4][4]), CornerRadii.EMPTY, Insets.EMPTY)));
             player.setText(Lobby.getUsers()[4][1]);
         }
@@ -820,7 +757,7 @@ public class MainSceneController implements Initializable {
 //        player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[4][4]), CornerRadii.EMPTY, Insets.EMPTY)));
 //        player.setText(Lobby.getUsers()[4][1]);
         player.setPrefSize(150, 10);
-        box.getChildren().addAll(player, geld, exit);
+        box.getChildren().addAll(player, geld, jail, exit);
         box.setAlignment(Pos.CENTER);
 
         setPopup(player4Pane);
@@ -843,15 +780,16 @@ public class MainSceneController implements Initializable {
         Label geld;
         JFXButton player = new JFXButton();
         JFXButton exit = new JFXButton("Exit");
+        Label jail;
         if (client.getPlayerOnClient().getId() == 5) {
             geld = new Label(" hat in Konto: " + players[4].getMoney());
-
+            jail = new Label(" ist in Gefängnis seit : " + players[4].getDaysInJail());
             player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[4][4]), CornerRadii.EMPTY, Insets.EMPTY)));
             player.setText(Lobby.getUsers()[4][1]);
         }
         else {
             geld = new Label(" hat in Konto: " + players[5].getMoney());
-
+            jail = new Label(" ist in Gefängnis seit : " + players[5].getDaysInJail());
             player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[5][4]), CornerRadii.EMPTY, Insets.EMPTY)));
             player.setText(Lobby.getUsers()[5][1]);
         }
@@ -861,7 +799,7 @@ public class MainSceneController implements Initializable {
 //        player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[5][4]), CornerRadii.EMPTY, Insets.EMPTY)));
 //        player.setText(Lobby.getUsers()[5][1]);
         player.setPrefSize(150, 10);
-        box.getChildren().addAll(player, geld, exit);
+        box.getChildren().addAll(player, geld, jail, exit);
         box.setAlignment(Pos.CENTER);
 
         setPopup(player5Pane);
