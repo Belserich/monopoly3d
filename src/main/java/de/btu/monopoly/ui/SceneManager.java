@@ -19,11 +19,20 @@ import java.io.IOException;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 /**
@@ -98,7 +107,6 @@ public class SceneManager extends Stage {
         }
     }
 
-    
     public static void playerUpdate() {
         GameController.playerInitialise();
     }
@@ -121,18 +129,40 @@ public class SceneManager extends Stage {
     public static int buyPropertyPopup() {
 
         GridPane gridpane = new GridPane();
+        ScrollPane scroll = new ScrollPane();
+        VBox box = new VBox();
+        gridpane.setAlignment(Pos.CENTER);
+        scroll.setCenterShape(true);
+        gridpane.add(scroll, 0, 0);
+        scroll.setContent(box);
+
         Label label = new Label("Möchtest du die " + Lobby.getPlayerClient().getGame().getBoard().getFields()[Lobby.getPlayerClient().getPlayerOnClient().getPosition()].getName() + " kaufen?");
 
         JFXButton buyButton = new JFXButton();
         JFXButton dontBuyButton = new JFXButton();
 
         buyButton.setText("Kaufen");
+        buyButton.setBackground(new Background(new BackgroundFill(Color.web("#e1f5fe"), CornerRadii.EMPTY, Insets.EMPTY)));
 
         dontBuyButton.setText("Nicht kaufen");
+        dontBuyButton.setBackground(new Background(new BackgroundFill(Color.web("#e1f5fe"), CornerRadii.EMPTY, Insets.EMPTY)));
+       
+        String cssLayout = "-fx-background-color: #fbe9e7;\n"
+                + "-fx-border-color: black;\n"
+                + "-fx-border-insets: 5;\n"
+                + "-fx-border-width: 1;\n"
+                + "-fx-border-style: double;\n";
 
-        gridpane.add(label, 0, 0);
-        gridpane.add(buyButton, 1, 0);
-        gridpane.add(dontBuyButton, 1, 1);
+        box.setStyle(cssLayout);
+        box.setSpacing(10);
+        box.setPrefSize(300, 100);
+        label.setFont(Font.font("Tahoma", 14));
+        box.getChildren().addAll(label, buyButton, dontBuyButton);
+        box.setAlignment(Pos.CENTER);
+//
+//        gridpane.add(label, 0, 0);
+//        gridpane.add(buyButton, 1, 0);
+//        gridpane.add(dontBuyButton, 1, 1);
 
         GameController.setPopup(gridpane);
 
@@ -192,8 +222,14 @@ public class SceneManager extends Stage {
     }
 
     public static int actionSequencePopup() {
-
+        
         GridPane gridpane = new GridPane();
+        ScrollPane scroll = new ScrollPane();
+        VBox box = new VBox();
+        gridpane.setAlignment(Pos.CENTER);
+        scroll.setCenterShape(true);
+        gridpane.add(scroll, 0, 0);
+        scroll.setContent(box);
 
         Label label = new Label("Was möchtest du noch tun?");
 
@@ -205,19 +241,63 @@ public class SceneManager extends Stage {
         JFXButton tradeButton = new JFXButton();
 
         nothingButton.setText("Nichts");
+        nothingButton.setBackground(new Background(new BackgroundFill(Color.web("#e1f5fe"), CornerRadii.EMPTY, Insets.EMPTY)));
         buyHouseButton.setText("Haus kaufen");
-        removeHouseButton.setText("Haus verkaufen");
-        addMortgageButton.setText("Hypothek aufnehmen");
-        removeMortgageButton.setText("Hypothek abbezahlen");
-        tradeButton.setText("Handeln");
+        buyHouseButton.setBackground(new Background(new BackgroundFill(Color.web("#e1f5fe"), CornerRadii.EMPTY, Insets.EMPTY)));
 
-        gridpane.add(label, 0, 0);
-        gridpane.add(nothingButton, 1, 0);
-        gridpane.add(buyHouseButton, 1, 1);
-        gridpane.add(removeHouseButton, 1, 2);
-        gridpane.add(addMortgageButton, 1, 3);
-        gridpane.add(removeMortgageButton, 1, 4);
-        gridpane.add(tradeButton, 1, 5);
+        removeHouseButton.setText("Haus verkaufen");
+        removeHouseButton.setBackground(new Background(new BackgroundFill(Color.web("#e1f5fe"), CornerRadii.EMPTY, Insets.EMPTY)));
+
+        addMortgageButton.setText("Hypothek aufnehmen");
+        addMortgageButton.setBackground(new Background(new BackgroundFill(Color.web("#e1f5fe"), CornerRadii.EMPTY, Insets.EMPTY)));
+
+        removeMortgageButton.setText("Hypothek abbezahlen");
+        removeMortgageButton.setBackground(new Background(new BackgroundFill(Color.web("#e1f5fe"), CornerRadii.EMPTY, Insets.EMPTY)));
+
+        tradeButton.setText("Handeln");
+        tradeButton.setBackground(new Background(new BackgroundFill(Color.web("#e1f5fe"), CornerRadii.EMPTY, Insets.EMPTY)));
+
+        label.setFont(Font.font("Tahoma", 14));
+
+        // scroll.add(label, 0, 0);
+        String cssLayout = "-fx-background-color: #b9f6ca;\n"
+                + "-fx-border-color: black;\n"
+                + "-fx-border-insets: 5;\n"
+                + "-fx-border-width: 1;\n"
+                + "-fx-border-style: double;\n";
+
+        box.setStyle(cssLayout);
+        box.setSpacing(10);
+        box.setPrefSize(200, 300);
+        box.getChildren().addAll(label, nothingButton, buyHouseButton, removeHouseButton, addMortgageButton, removeMortgageButton, tradeButton);
+        box.setAlignment(Pos.CENTER);
+
+
+//        GridPane gridpane = new GridPane();
+//
+//        Label label = new Label("Was möchtest du noch tun?");
+//
+//        JFXButton nothingButton = new JFXButton();
+//        JFXButton buyHouseButton = new JFXButton();
+//        JFXButton removeHouseButton = new JFXButton();
+//        JFXButton addMortgageButton = new JFXButton();
+//        JFXButton removeMortgageButton = new JFXButton();
+//        JFXButton tradeButton = new JFXButton();
+//
+//        nothingButton.setText("Nichts");
+//        buyHouseButton.setText("Haus kaufen");
+//        removeHouseButton.setText("Haus verkaufen");
+//        addMortgageButton.setText("Hypothek aufnehmen");
+//        removeMortgageButton.setText("Hypothek abbezahlen");
+//        tradeButton.setText("Handeln");
+//
+//        gridpane.add(label, 0, 0);
+//        gridpane.add(nothingButton, 1, 0);
+//        gridpane.add(buyHouseButton, 1, 1);
+//        gridpane.add(removeHouseButton, 1, 2);
+//        gridpane.add(addMortgageButton, 1, 3);
+//        gridpane.add(removeMortgageButton, 1, 4);
+//        gridpane.add(tradeButton, 1, 5);
 
         GameController.setPopup(gridpane);
 
@@ -256,11 +336,31 @@ public class SceneManager extends Stage {
 
         GridPane gridPane = new GridPane();
 
+//        ScrollPane scroll = new ScrollPane();
+//        VBox box = new VBox();
+//        gridPane.setAlignment(Pos.CENTER);
+//        scroll.setCenterShape(true);
+//        gridPane.add(scroll, 0, 0);
+//        scroll.setContent(box);
         Label label = new Label("Wähle ein Feld:");
         JFXComboBox fieldBox = new JFXComboBox();
         Button button = new Button();
 
+//        String cssLayout = "-fx-background-color: yellowgreen;\n"
+//                + "-fx-border-color: black;\n"
+//                + "-fx-border-insets: 5;\n"
+//                + "-fx-border-width: 1;\n"
+//                + "-fx-border-style: double;\n";
+//
+//        box.setStyle(cssLayout);
+//        box.setSpacing(10);
+//        box.setPrefSize(400, 150);
+//        box.setCenterShape(true);
         button.setText("Eingabe");
+//        button.setBackground(new Background(new BackgroundFill(Color.web("#e1f5fe"), CornerRadii.EMPTY, Insets.EMPTY)));
+//        label.setFont(Font.font("Tahoma", 14));
+//        box.getChildren().addAll(label, fieldBox, button);
+//        box.setAlignment(Pos.CENTER);
 
         for (Field field : fields) {
             fieldBox.getItems().add(field.getName());
