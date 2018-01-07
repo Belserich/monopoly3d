@@ -387,44 +387,54 @@ public class MainSceneController implements Initializable {
                         }
                         else {
 
-                            if (player1Button.getText().equals("frei")) {
-                                player1Button.setText(Lobby.getUsers()[i][1]);
-                                player1Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[i][4]), CornerRadii.EMPTY, Insets.EMPTY)));
-                                player1.setFill(Color.web(Lobby.getUsers()[i][4]));
-                                player1Button.setVisible(true);
-                                player1.setVisible(true);
-                                continue;
+                            if (Lobby.getUsers().length >= 2) {
+                                if (player1Button.getText().equals("frei")) {
+                                    player1Button.setText(Lobby.getUsers()[i][1]);
+                                    player1Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[i][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+                                    player1.setFill(Color.web(Lobby.getUsers()[i][4]));
+                                    player1Button.setVisible(true);
+                                    player1.setVisible(true);
+                                    continue;
+                                }
                             }
-                            if (player2Button.getText().equals("frei")) {
-                                player2Button.setText(Lobby.getUsers()[i][1]);
-                                player2Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[i][4]), CornerRadii.EMPTY, Insets.EMPTY)));
-                                player2.setFill(Color.web(Lobby.getUsers()[i][4]));
-                                player2Button.setVisible(true);
-                                player2.setVisible(true);
-                                continue;
+                            if (Lobby.getUsers().length >= 3) {
+                                if (player2Button.getText().equals("frei")) {
+                                    player2Button.setText(Lobby.getUsers()[i][1]);
+                                    player2Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[i][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+                                    player2.setFill(Color.web(Lobby.getUsers()[i][4]));
+                                    player2Button.setVisible(true);
+                                    player2.setVisible(true);
+                                    continue;
+                                }
                             }
-                            if (player3Button.getText().equals("frei")) {
-                                player3Button.setText(Lobby.getUsers()[i][1]);
-                                player3Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[i][4]), CornerRadii.EMPTY, Insets.EMPTY)));
-                                player3.setFill(Color.web(Lobby.getUsers()[i][4]));
-                                player3Button.setVisible(true);
-                                player3.setVisible(true);
-                                continue;
+                            if (Lobby.getUsers().length >= 4) {
+                                if (player3Button.getText().equals("frei")) {
+                                    player3Button.setText(Lobby.getUsers()[i][1]);
+                                    player3Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[i][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+                                    player3.setFill(Color.web(Lobby.getUsers()[i][4]));
+                                    player3Button.setVisible(true);
+                                    player3.setVisible(true);
+                                    continue;
+                                }
                             }
-                            if (player4Button.getText().equals("frei")) {
-                                player4Button.setText(Lobby.getUsers()[i][1]);
-                                player4Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[i][4]), CornerRadii.EMPTY, Insets.EMPTY)));
-                                player4.setFill(Color.web(Lobby.getUsers()[i][4]));
-                                player4Button.setVisible(true);
-                                player4.setVisible(true);
-                                continue;
+                            if (Lobby.getUsers().length >= 5) {
+                                if (player4Button.getText().equals("frei")) {
+                                    player4Button.setText(Lobby.getUsers()[i][1]);
+                                    player4Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[i][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+                                    player4.setFill(Color.web(Lobby.getUsers()[i][4]));
+                                    player4Button.setVisible(true);
+                                    player4.setVisible(true);
+                                    continue;
+                                }
                             }
-                            if (player5Button.getText().equals("frei")) {
-                                player5Button.setText(Lobby.getUsers()[i][1]);
-                                player5Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[i][4]), CornerRadii.EMPTY, Insets.EMPTY)));
-                                player5.setFill(Color.web(Lobby.getUsers()[i][4]));
-                                player5Button.setVisible(true);
-                                player5.setVisible(true);
+                            if (Lobby.getUsers().length >= 6) {
+                                if (player5Button.getText().equals("frei")) {
+                                    player5Button.setText(Lobby.getUsers()[i][1]);
+                                    player5Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[i][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+                                    player5.setFill(Color.web(Lobby.getUsers()[i][4]));
+                                    player5Button.setVisible(true);
+                                    player5.setVisible(true);
+                                }
                             }
                         }
                     }
@@ -578,33 +588,92 @@ public class MainSceneController implements Initializable {
 
     public void playerUpdate() {
         Player[] players = Lobby.getPlayerClient().getGame().getPlayers();
+
+        if (players.length >= 1) {
+            playerUpdate0(players);
+        }
+        if (players.length >= 2) {
+            playerUpdate1(players);
+        }
+        if (players.length >= 3) {
+            playerUpdate2(players);
+        }
+        if (players.length >= 4) {
+            playerUpdate3(players);
+        }
+        if (players.length >= 5) {
+            playerUpdate4(players);
+        }
+        if (players.length >= 6) {
+            playerUpdate5(players);
+        }
+
+    }
+
+    public void playerUpdate0(Player[] players) {
         Task task = new Task() {
             @Override
             protected Object call() throws Exception {
-
-                if (players.length >= 1) {
-                    Felder[players[0].getPosition()].getChildren().add(player0);
-                }
-                if (players.length >= 2) {
-                    Felder[players[1].getPosition()].getChildren().add(player1);
-                }
-                if (players.length >= 3) {
-                    Felder[players[2].getPosition()].getChildren().add(player2);
-                }
-                if (players.length >= 4) {
-                    Felder[players[3].getPosition()].getChildren().add(player3);
-                }
-                if (players.length >= 5) {
-                    Felder[players[4].getPosition()].getChildren().add(player4);
-                }
-                if (players.length >= 6) {
-                    Felder[players[5].getPosition()].getChildren().add(player5);
-                }
+                Felder[players[0].getPosition()].getChildren().add(player0);
                 return null;
             }
         };
         Platform.runLater(task);
+    }
 
+    public void playerUpdate1(Player[] players) {
+        Task task = new Task() {
+            @Override
+            protected Object call() throws Exception {
+                Felder[players[1].getPosition()].getChildren().add(player1);
+                return null;
+            }
+        };
+        Platform.runLater(task);
+    }
+
+    public void playerUpdate2(Player[] players) {
+        Task task = new Task() {
+            @Override
+            protected Object call() throws Exception {
+                Felder[players[2].getPosition()].getChildren().add(player2);
+                return null;
+            }
+        };
+        Platform.runLater(task);
+    }
+
+    public void playerUpdate3(Player[] players) {
+        Task task = new Task() {
+            @Override
+            protected Object call() throws Exception {
+                Felder[players[3].getPosition()].getChildren().add(player3);
+                return null;
+            }
+        };
+        Platform.runLater(task);
+    }
+
+    public void playerUpdate4(Player[] players) {
+        Task task = new Task() {
+            @Override
+            protected Object call() throws Exception {
+                Felder[players[4].getPosition()].getChildren().add(player4);
+                return null;
+            }
+        };
+        Platform.runLater(task);
+    }
+
+    public void playerUpdate5(Player[] players) {
+        Task task = new Task() {
+            @Override
+            protected Object call() throws Exception {
+                Felder[players[5].getPosition()].getChildren().add(player5);
+                return null;
+            }
+        };
+        Platform.runLater(task);
     }
 
     public void propertyUpdate() {
