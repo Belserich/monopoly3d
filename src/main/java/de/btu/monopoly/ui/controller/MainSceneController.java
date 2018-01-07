@@ -378,105 +378,58 @@ public class MainSceneController implements Initializable {
             protected Object call() throws Exception {
                 if (Lobby.getUsers() != null) {
                     for (int i = 0; i < Lobby.getUsers().length; i++) {
-                        if (client.getPlayerOnClient().getId() == i) {
+                        if (Lobby.getPlayerClient().getPlayerOnClient().getName().equals(Lobby.getUsers()[i][1])) {
                             player0Button.setText(Lobby.getUsers()[i][1]);
                             player0Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[i][4]), CornerRadii.EMPTY, Insets.EMPTY)));
                             player0.setFill(Color.web(Lobby.getUsers()[i][4]));
-                            //wenn 2 Spieler
-                            if (Lobby.getUsers().length >= 2) {
-                                if (i != 0) {
-                                    player1Button.setText(Lobby.getUsers()[0][1]);
-                                    player1Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[0][4]), CornerRadii.EMPTY, Insets.EMPTY)));
-                                    player1.setFill(Color.web(Lobby.getUsers()[0][4]));
-                                }
-                                else {
-                                    player1Button.setText(Lobby.getUsers()[1][1]);
-                                    player1Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[1][4]), CornerRadii.EMPTY, Insets.EMPTY)));
-                                    player1.setFill(Color.web(Lobby.getUsers()[1][4]));
-                                }
-                            }
-                            else {
-                                player1Button.setVisible(false);
-                                player1.setVisible(false);
-                            }
+                            player0Button.setVisible(true);
+                            player0.setVisible(true);
+                        }
+                        else {
 
-                            //wenn 3 Spieler
-                            if (Lobby.getUsers().length >= 3) {
-                                if (i > 1) {
-                                    player2Button.setText(Lobby.getUsers()[1][1]);
-                                    player2Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[1][4]), CornerRadii.EMPTY, Insets.EMPTY)));
-                                    player2.setFill(Color.web(Lobby.getUsers()[1][4]));
-                                }
-                                else {
-
-                                    player2Button.setText(Lobby.getUsers()[2][1]);
-                                    player2Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[2][4]), CornerRadii.EMPTY, Insets.EMPTY)));
-                                    player2.setFill(Color.web(Lobby.getUsers()[2][4]));
-                                }
+                            if (player1Button.getText().equals("frei")) {
+                                player1Button.setText(Lobby.getUsers()[i][1]);
+                                player1Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[i][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+                                player1.setFill(Color.web(Lobby.getUsers()[i][4]));
+                                player1Button.setVisible(true);
+                                player1.setVisible(true);
+                                continue;
                             }
-                            else {
-                                player2Button.setVisible(false);
-                                player2.setVisible(false);
+                            if (player2Button.getText().equals("frei")) {
+                                player2Button.setText(Lobby.getUsers()[i][1]);
+                                player2Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[i][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+                                player2.setFill(Color.web(Lobby.getUsers()[i][4]));
+                                player2Button.setVisible(true);
+                                player2.setVisible(true);
+                                continue;
                             }
-
-                            //wenn 4 Spieler
-                            if (Lobby.getUsers().length >= 4) {
-                                if (i > 2) {
-                                    player3Button.setText(Lobby.getUsers()[2][1]);
-                                    player3Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[2][4]), CornerRadii.EMPTY, Insets.EMPTY)));
-                                    player3.setFill(Color.web(Lobby.getUsers()[2][4]));
-
-                                }
-                                else {
-                                    player3Button.setText(Lobby.getUsers()[3][1]);
-                                    player3Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[3][4]), CornerRadii.EMPTY, Insets.EMPTY)));
-                                    player3.setFill(Color.web(Lobby.getUsers()[3][4]));
-                                }
+                            if (player3Button.getText().equals("frei")) {
+                                player3Button.setText(Lobby.getUsers()[i][1]);
+                                player3Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[i][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+                                player3.setFill(Color.web(Lobby.getUsers()[i][4]));
+                                player3Button.setVisible(true);
+                                player3.setVisible(true);
+                                continue;
                             }
-                            else {
-                                player3Button.setVisible(false);
-                                player3.setVisible(false);
+                            if (player4Button.getText().equals("frei")) {
+                                player4Button.setText(Lobby.getUsers()[i][1]);
+                                player4Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[i][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+                                player4.setFill(Color.web(Lobby.getUsers()[i][4]));
+                                player4Button.setVisible(true);
+                                player4.setVisible(true);
+                                continue;
                             }
-
-                            //wenn 5 Spieler
-                            if (Lobby.getUsers().length >= 5) {
-                                if (i > 3) {
-                                    player4Button.setText(Lobby.getUsers()[3][1]);
-                                    player4Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[3][4]), CornerRadii.EMPTY, Insets.EMPTY)));
-                                    player4.setFill(Color.web(Lobby.getUsers()[3][4]));
-                                }
-                                else {
-                                    player4Button.setText(Lobby.getUsers()[4][1]);
-                                    player4Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[4][4]), CornerRadii.EMPTY, Insets.EMPTY)));
-                                    player4.setFill(Color.web(Lobby.getUsers()[4][4]));
-                                }
+                            if (player5Button.getText().equals("frei")) {
+                                player5Button.setText(Lobby.getUsers()[i][1]);
+                                player5Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[i][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+                                player5.setFill(Color.web(Lobby.getUsers()[i][4]));
+                                player5Button.setVisible(true);
+                                player5.setVisible(true);
                             }
-                            else {
-                                player4Button.setVisible(false);
-                                player4.setVisible(false);
-                            }
-
-                            //wenn 6 Spieler
-                            if (Lobby.getUsers().length >= 6) {
-                                if (i > 4) {
-                                    player5Button.setText(Lobby.getUsers()[5][1]);
-                                    player5Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[5][4]), CornerRadii.EMPTY, Insets.EMPTY)));
-                                    player5.setFill(Color.web(Lobby.getUsers()[5][4]));
-                                }
-                                else {
-                                    player5Button.setText(Lobby.getUsers()[5][1]);
-                                    player5Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[5][4]), CornerRadii.EMPTY, Insets.EMPTY)));
-                                    player5.setFill(Color.web(Lobby.getUsers()[5][4]));
-                                }
-                            }
-                            else {
-                                player5Button.setVisible(false);
-                                player5.setVisible(false);
-                            }
-
                         }
                     }
                 }
+
                 return null;
             }
         };
