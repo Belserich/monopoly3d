@@ -614,6 +614,8 @@ public class MainSceneController implements Initializable {
         Task task = new Task() {
             @Override
             protected Object call() throws Exception {
+                player0.layoutXProperty().bind(Felder[players[0].getPosition()].widthProperty().subtract(player0.centerXProperty()).divide(2));
+                player0.layoutYProperty().bind(Felder[players[0].getPosition()].heightProperty().subtract(player0.centerYProperty()).divide(2));
                 Felder[players[0].getPosition()].getChildren().add(player0);
                 return null;
             }
@@ -625,6 +627,8 @@ public class MainSceneController implements Initializable {
         Task task = new Task() {
             @Override
             protected Object call() throws Exception {
+                player1.layoutXProperty().bind(Felder[players[1].getPosition()].widthProperty().subtract(player1.centerXProperty()).divide(2));
+                player1.layoutYProperty().bind(Felder[players[1].getPosition()].heightProperty().subtract(player1.centerYProperty()).divide(2));
                 Felder[players[1].getPosition()].getChildren().add(player1);
                 return null;
             }
@@ -636,6 +640,8 @@ public class MainSceneController implements Initializable {
         Task task = new Task() {
             @Override
             protected Object call() throws Exception {
+                player2.layoutXProperty().bind(Felder[players[2].getPosition()].widthProperty().subtract(player2.centerXProperty()).divide(2));
+                player2.layoutYProperty().bind(Felder[players[2].getPosition()].heightProperty().subtract(player2.centerYProperty()).divide(2));
                 Felder[players[2].getPosition()].getChildren().add(player2);
                 return null;
             }
@@ -647,6 +653,8 @@ public class MainSceneController implements Initializable {
         Task task = new Task() {
             @Override
             protected Object call() throws Exception {
+                player3.layoutXProperty().bind(Felder[players[3].getPosition()].widthProperty().subtract(player3.centerXProperty()).divide(2));
+                player3.layoutYProperty().bind(Felder[players[3].getPosition()].heightProperty().subtract(player3.centerYProperty()).divide(2));
                 Felder[players[3].getPosition()].getChildren().add(player3);
                 return null;
             }
@@ -658,6 +666,8 @@ public class MainSceneController implements Initializable {
         Task task = new Task() {
             @Override
             protected Object call() throws Exception {
+                player4.layoutXProperty().bind(Felder[players[4].getPosition()].widthProperty().subtract(player4.centerXProperty()).divide(2));
+                player4.layoutYProperty().bind(Felder[players[4].getPosition()].heightProperty().subtract(player4.centerYProperty()).divide(2));
                 Felder[players[4].getPosition()].getChildren().add(player4);
                 return null;
             }
@@ -669,6 +679,8 @@ public class MainSceneController implements Initializable {
         Task task = new Task() {
             @Override
             protected Object call() throws Exception {
+                player5.layoutXProperty().bind(Felder[players[5].getPosition()].widthProperty().subtract(player5.centerXProperty()).divide(2));
+                player5.layoutYProperty().bind(Felder[players[5].getPosition()].heightProperty().subtract(player5.centerYProperty()).divide(2));
                 Felder[players[5].getPosition()].getChildren().add(player5);
                 return null;
             }

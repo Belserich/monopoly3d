@@ -146,7 +146,7 @@ public class SceneManager extends Stage {
 
         dontBuyButton.setText("Nicht kaufen");
         dontBuyButton.setBackground(new Background(new BackgroundFill(Color.web("#e1f5fe"), CornerRadii.EMPTY, Insets.EMPTY)));
-       
+
         String cssLayout = "-fx-background-color: #fbe9e7;\n"
                 + "-fx-border-color: black;\n"
                 + "-fx-border-insets: 5;\n"
@@ -222,7 +222,7 @@ public class SceneManager extends Stage {
     }
 
     public static int actionSequencePopup() {
-        
+
         GridPane gridpane = new GridPane();
         ScrollPane scroll = new ScrollPane();
         VBox box = new VBox();
@@ -230,7 +230,6 @@ public class SceneManager extends Stage {
         scroll.setCenterShape(true);
         gridpane.add(scroll, 0, 0);
         scroll.setContent(box);
-
         Label label = new Label("Was möchtest du noch tun?");
 
         JFXButton nothingButton = new JFXButton();
@@ -272,7 +271,6 @@ public class SceneManager extends Stage {
         box.getChildren().addAll(label, nothingButton, buyHouseButton, removeHouseButton, addMortgageButton, removeMortgageButton, tradeButton);
         box.setAlignment(Pos.CENTER);
 
-
 //        GridPane gridpane = new GridPane();
 //
 //        Label label = new Label("Was möchtest du noch tun?");
@@ -298,7 +296,6 @@ public class SceneManager extends Stage {
 //        gridpane.add(addMortgageButton, 1, 3);
 //        gridpane.add(removeMortgageButton, 1, 4);
 //        gridpane.add(tradeButton, 1, 5);
-
         GameController.setPopup(gridpane);
 
         while (!nothingButton.isPressed() || !buyHouseButton.isPressed() || !removeHouseButton.isPressed() || !addMortgageButton.isPressed() || !removeMortgageButton.isPressed() || !tradeButton.isPressed()) {
