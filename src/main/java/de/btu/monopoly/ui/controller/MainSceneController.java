@@ -15,7 +15,6 @@ import de.btu.monopoly.net.client.GameClient;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.stream.Stream;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
@@ -496,41 +495,131 @@ public class MainSceneController implements Initializable {
         Platform.runLater(task);
     }
 
-    public void geldUpdate() {
-        Player[] players = Lobby.getPlayerClient().getGame().getPlayers();
-
+    public void geldUpdate0(Player[] players) {
         Task task = new Task() {
             @Override
             protected Object call() throws Exception {
-                if (players.length >= 1) {
-                    geld0.setText("Geld: " + players[client.getPlayerOnClient().getId()].getMoney());
-                    player0Geld.add(geld0, 0, 0);
-                }
-                if (players.length >= 2) {
-                    geld1.setText("Geld: " + players[1].getMoney());
-                    player1Geld.add(geld1, 0, 0);
-                }
-                if (players.length >= 3) {
-                    geld2.setText("Geld: " + players[2].getMoney());
-                    player2Geld.add(geld2, 0, 0);
-                }
-                if (players.length >= 4) {
-                    geld3.setText("Geld: " + players[3].getMoney());
-                    player3Geld.add(geld3, 0, 0);
-                }
-                if (players.length >= 5) {
-                    geld4.setText("Geld: " + players[4].getMoney());
-                    player4Geld.add(geld4, 0, 0);
-                }
-                if (players.length >= 6) {
-                    geld5.setText("Geld: " + players[5].getMoney());
-                    player5Geld.add(geld5, 0, 0);
-                }
 
+                geld0.setText("Geld: " + players[client.getPlayerOnClient().getId()].getMoney());
+                player0Geld.add(geld0, 0, 0);
                 return null;
             }
+
         };
         Platform.runLater(task);
+
+    }
+
+    public void geldUpdate1(Player[] players) {
+        Task task = new Task() {
+            @Override
+            protected Object call() throws Exception {
+                for (int i = 0; i < players.length; i++) {
+                    if (player1Button.getText().equals(players[i].getName())) {
+                        geld1.setText("Geld: " + players[i].getMoney());
+                        player1Geld.add(geld1, 0, 0);
+                    }
+                }
+                return null;
+            }
+
+        };
+        Platform.runLater(task);
+
+    }
+
+    public void geldUpdate2(Player[] players) {
+        Task task = new Task() {
+            @Override
+            protected Object call() throws Exception {
+                for (int i = 0; i < players.length; i++) {
+                    if (player2Button.getText().equals(players[i].getName())) {
+                        geld2.setText("Geld: " + players[i].getMoney());
+                        player2Geld.add(geld2, 0, 0);
+                    }
+                }
+                return null;
+            }
+
+        };
+        Platform.runLater(task);
+
+    }
+
+    public void geldUpdate3(Player[] players) {
+        Task task = new Task() {
+            @Override
+            protected Object call() throws Exception {
+                for (int i = 0; i < players.length; i++) {
+                    if (player3Button.getText().equals(players[i].getName())) {
+                        geld3.setText("Geld: " + players[i].getMoney());
+                        player3Geld.add(geld3, 0, 0);
+                    }
+                }
+                return null;
+            }
+
+        };
+        Platform.runLater(task);
+
+    }
+
+    public void geldUpdate4(Player[] players) {
+        Task task = new Task() {
+            @Override
+            protected Object call() throws Exception {
+                for (int i = 0; i < players.length; i++) {
+                    if (player4Button.getText().equals(players[i].getName())) {
+                        geld4.setText("Geld: " + players[i].getMoney());
+                        player4Geld.add(geld4, 0, 0);
+                    }
+                }
+                return null;
+            }
+
+        };
+        Platform.runLater(task);
+
+    }
+
+    public void geldUpdate5(Player[] players) {
+        Task task = new Task() {
+            @Override
+            protected Object call() throws Exception {
+                for (int i = 0; i < players.length; i++) {
+                    if (player5Button.getText().equals(players[i].getName())) {
+                        geld5.setText("Geld: " + players[i].getMoney());
+                        player5Geld.add(geld5, 0, 0);
+                    }
+                }
+                return null;
+            }
+
+        };
+        Platform.runLater(task);
+
+    }
+
+    public void geldUpdate() {
+        Player[] players = Lobby.getPlayerClient().getGame().getPlayers();
+        if (players.length >= 1) {
+            geldUpdate0(players);
+        }
+        if (players.length >= 2) {
+            geldUpdate1(players);
+        }
+        if (players.length >= 3) {
+            geldUpdate2(players);
+        }
+        if (players.length >= 4) {
+            geldUpdate3(players);
+        }
+        if (players.length >= 5) {
+            geldUpdate4(players);
+        }
+        if (players.length >= 6) {
+            geldUpdate5(players);
+        }
 
     }
 
