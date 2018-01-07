@@ -381,7 +381,7 @@ public class MainSceneController implements Initializable {
                         if (Lobby.getPlayerClient().getPlayerOnClient().getName().equals(Lobby.getUsers()[i][1])) {
                             player0Button.setText(Lobby.getUsers()[i][1]);
                             player0Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[i][4]), CornerRadii.EMPTY, Insets.EMPTY)));
-                            player0.setFill(Color.web(Lobby.getUsers()[i][4]));
+                            player0.setFill(Color.web(Lobby.getUsers()[0][4]));
                             player0Button.setVisible(true);
                             player0.setVisible(true);
                         }
@@ -391,7 +391,7 @@ public class MainSceneController implements Initializable {
                                 if (player1Button.getText().equals("frei")) {
                                     player1Button.setText(Lobby.getUsers()[i][1]);
                                     player1Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[i][4]), CornerRadii.EMPTY, Insets.EMPTY)));
-                                    player1.setFill(Color.web(Lobby.getUsers()[i][4]));
+                                    player1.setFill(Color.web(Lobby.getUsers()[1][4]));
                                     player1Button.setVisible(true);
                                     player1.setVisible(true);
                                     continue;
@@ -401,7 +401,7 @@ public class MainSceneController implements Initializable {
                                 if (player2Button.getText().equals("frei")) {
                                     player2Button.setText(Lobby.getUsers()[i][1]);
                                     player2Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[i][4]), CornerRadii.EMPTY, Insets.EMPTY)));
-                                    player2.setFill(Color.web(Lobby.getUsers()[i][4]));
+                                    player2.setFill(Color.web(Lobby.getUsers()[2][4]));
                                     player2Button.setVisible(true);
                                     player2.setVisible(true);
                                     continue;
@@ -411,7 +411,7 @@ public class MainSceneController implements Initializable {
                                 if (player3Button.getText().equals("frei")) {
                                     player3Button.setText(Lobby.getUsers()[i][1]);
                                     player3Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[i][4]), CornerRadii.EMPTY, Insets.EMPTY)));
-                                    player3.setFill(Color.web(Lobby.getUsers()[i][4]));
+                                    player3.setFill(Color.web(Lobby.getUsers()[3][4]));
                                     player3Button.setVisible(true);
                                     player3.setVisible(true);
                                     continue;
@@ -421,7 +421,7 @@ public class MainSceneController implements Initializable {
                                 if (player4Button.getText().equals("frei")) {
                                     player4Button.setText(Lobby.getUsers()[i][1]);
                                     player4Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[i][4]), CornerRadii.EMPTY, Insets.EMPTY)));
-                                    player4.setFill(Color.web(Lobby.getUsers()[i][4]));
+                                    player4.setFill(Color.web(Lobby.getUsers()[4][4]));
                                     player4Button.setVisible(true);
                                     player4.setVisible(true);
                                     continue;
@@ -431,7 +431,7 @@ public class MainSceneController implements Initializable {
                                 if (player5Button.getText().equals("frei")) {
                                     player5Button.setText(Lobby.getUsers()[i][1]);
                                     player5Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[i][4]), CornerRadii.EMPTY, Insets.EMPTY)));
-                                    player5.setFill(Color.web(Lobby.getUsers()[i][4]));
+                                    player5.setFill(Color.web(Lobby.getUsers()[5][4]));
                                     player5Button.setVisible(true);
                                     player5.setVisible(true);
                                 }
