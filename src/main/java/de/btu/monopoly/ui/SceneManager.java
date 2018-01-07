@@ -33,6 +33,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
 /**
@@ -159,10 +160,6 @@ public class SceneManager extends Stage {
         label.setFont(Font.font("Tahoma", 14));
         box.getChildren().addAll(label, buyButton, dontBuyButton);
         box.setAlignment(Pos.CENTER);
-//
-//        gridpane.add(label, 0, 0);
-//        gridpane.add(buyButton, 1, 0);
-//        gridpane.add(dontBuyButton, 1, 1);
 
         GameController.setPopup(gridpane);
 
@@ -184,6 +181,12 @@ public class SceneManager extends Stage {
     public static int jailChoicePopup() {
 
         GridPane gridpane = new GridPane();
+        ScrollPane scroll = new ScrollPane();
+        VBox box = new VBox();
+        gridpane.setAlignment(Pos.CENTER);
+        scroll.setCenterShape(true);
+        gridpane.add(scroll, 0, 0);
+        scroll.setContent(box);
 
         Label label = new Label("Du bist im Gefängnis. Was möchtest du tun?");
 
@@ -192,14 +195,30 @@ public class SceneManager extends Stage {
         JFXButton cardButton = new JFXButton();
 
         rollButton.setText("Würfeln");
+        rollButton.setBackground(new Background(new BackgroundFill(Color.web("#e1f5fe"), CornerRadii.EMPTY, Insets.EMPTY)));
+
         payButton.setText("Bezahlen");
+        payButton.setBackground(new Background(new BackgroundFill(Color.web("#e1f5fe"), CornerRadii.EMPTY, Insets.EMPTY)));
+
         cardButton.setText("Frei-Karte nutzen");
+        cardButton.setBackground(new Background(new BackgroundFill(Color.web("#e1f5fe"), CornerRadii.EMPTY, Insets.EMPTY)));
 
-        gridpane.add(label, 0, 0);
-        gridpane.add(rollButton, 1, 0);
-        gridpane.add(payButton, 1, 1);
-        gridpane.add(cardButton, 1, 2);
+        String cssLayout = "-fx-background-color: #ffccbc;\n"
+                + "-fx-border-color: black;\n"
+                + "-fx-border-insets: 5;\n"
+                + "-fx-border-width: 1;\n"
+                + "-fx-border-style: double;\n";
 
+        box.setStyle(cssLayout);
+        box.setSpacing(10);
+        box.setPrefSize(200, 300);
+        box.getChildren().addAll(label, rollButton, payButton, cardButton);
+        box.setAlignment(Pos.CENTER);
+
+//        gridpane.add(label, 0, 0);
+//        gridpane.add(rollButton, 1, 0);
+//        gridpane.add(payButton, 1, 1);
+//        gridpane.add(cardButton, 1, 2);
         GameController.setPopup(gridpane);
 
         while (!rollButton.isPressed() || !payButton.isPressed() || !cardButton.isPressed()) {
@@ -332,7 +351,7 @@ public class SceneManager extends Stage {
     public static int askForFieldPopup(Player player, Field[] fields) {
 
         GridPane gridPane = new GridPane();
-
+//
 //        ScrollPane scroll = new ScrollPane();
 //        VBox box = new VBox();
 //        gridPane.setAlignment(Pos.CENTER);
@@ -354,21 +373,21 @@ public class SceneManager extends Stage {
 //        box.setPrefSize(400, 150);
 //        box.setCenterShape(true);
         button.setText("Eingabe");
-//        button.setBackground(new Background(new BackgroundFill(Color.web("#e1f5fe"), CornerRadii.EMPTY, Insets.EMPTY)));
+        button.setBackground(new Background(new BackgroundFill(Color.web("#e1f5fe"), CornerRadii.EMPTY, Insets.EMPTY)));
 //        label.setFont(Font.font("Tahoma", 14));
-//        box.getChildren().addAll(label, fieldBox, button);
-//        box.setAlignment(Pos.CENTER);
 
         for (Field field : fields) {
             fieldBox.getItems().add(field.getName());
         }
 
         fieldBox.getSelectionModel().selectFirst();
+//
+//        box.getChildren().addAll(label, fieldBox, button);
+//        box.setAlignment(Pos.CENTER);
 
         gridPane.add(label, 0, 0);
         gridPane.add(fieldBox, 2, 0);
         gridPane.add(button, 1, 0);
-
         GameController.setPopup(gridPane);
 
         while (!button.isPressed()) {
@@ -390,39 +409,78 @@ public class SceneManager extends Stage {
         return -1;
     }
 
+    //TODO , da der Spieler wurde disconnected
     public static void AuctionPopup() {
 
         //initialisierung der benoetigten Objekte
+        ScrollPane scroll = new ScrollPane();
+        VBox box = new VBox();
+        auctionGP.setAlignment(Pos.CENTER);
+        scroll.setCenterShape(true);
+        auctionGP.add(scroll, 0, 0);
+        scroll.setContent(box);
+        Label label = new Label("Dein Gebot:");
+        label.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
+
         JFXTextField tf = new JFXTextField();
         JFXButton bidBut = new JFXButton("Bieten");
+        bidBut.setBackground(new Background(new BackgroundFill(Color.web("#e1f5fe"), CornerRadii.EMPTY, Insets.EMPTY)));
+
         JFXButton exitBut = new JFXButton("Aussteigen");
+        exitBut.setBackground(new Background(new BackgroundFill(Color.web("#e1f5fe"), CornerRadii.EMPTY, Insets.EMPTY)));
 
-        tf.setPromptText("Dein Gebot:");
-        auctionGP.add(auctionLabel, 0, 0);
-        auctionGP.add(tf, 1, 0);
-        auctionGP.add(bidBut, 2, 0);
-        auctionGP.add(exitBut, 2, 1);
+        tf.setPromptText(" ");
+        String cssLayout = "-fx-background-color: #dcedc8;\n"
+                + "-fx-border-color: black;\n"
+                + "-fx-border-insets: 5;\n"
+                + "-fx-border-width: 1;\n"
+                + "-fx-border-style: double;\n";
 
-        bidBut.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                try {
-                    AuctionService.setBid(Lobby.getPlayerClient().getPlayerOnClient().getId(), Integer.parseInt(tf.getText()));
-                } catch (Exception e) {
-                    tf.setPromptText("Bitte nur Zahlen eingebn!");
-                }
-            }
-        });
-
-        exitBut.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                AuctionService.playerExit(Lobby.getPlayerClient().getPlayerOnClient().getId());
-            }
-        });
-
+        box.setStyle(cssLayout);
+        box.setSpacing(10);
+        box.setPrefSize(200, 300);
+        box.setCenterShape(true);
+        box.getChildren().addAll(auctionLabel, label, tf, bidBut, exitBut);
+        box.setAlignment(Pos.CENTER);
         GameController.setPopup(auctionGP);
 
+        while (!bidBut.isPressed() || !exitBut.isPressed()) {
+            IOService.sleep(50);
+            if (bidBut.isPressed()) {
+                AuctionService.setBid(Lobby.getPlayerClient().getPlayerOnClient().getId(), Integer.parseInt(tf.getText()));
+                GameController.resetPopup(auctionGP);
+            }
+            if (exitBut.isPressed()) {
+                AuctionService.playerExit(Lobby.getPlayerClient().getPlayerOnClient().getId());
+                GameController.resetPopup(auctionGP);
+            }
+
+        }
+
+//        auctionGP.add(auctionLabel, 0, 0);
+//        auctionGP.add(tf, 1, 0);
+//        auctionGP.add(bidBut, 2, 0);
+//        auctionGP.add(exitBut, 2, 1);
+//        //tf.appendText(tf.getText());
+//        bidBut.setOnAction(new EventHandler<ActionEvent>() {
+//            @Override
+//            public void handle(ActionEvent event) {
+//                try {
+//                    AuctionService.setBid(Lobby.getPlayerClient().getPlayerOnClient().getId(), Integer.parseInt(tf.getText()));
+//                   // GameController.resetPopup(auctionGP);
+//                } catch (Exception e) {
+//                    tf.setText("Bitte nur Zahlen eingebn!");
+//                }
+//            }
+//        });
+//
+//        exitBut.setOnAction(new EventHandler<ActionEvent>() {
+//            @Override
+//            public void handle(ActionEvent event) {
+//                AuctionService.playerExit(Lobby.getPlayerClient().getPlayerOnClient().getId());
+//                //GameController.resetPopup(auctionGP);
+//            }
+//        });
     }
 
     public static void updateAuctionPopup(boolean stillActive) {
