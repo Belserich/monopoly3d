@@ -48,7 +48,7 @@ public class SceneManager extends Stage {
     private static Scene scene;
     private static LobbyController LobbyController;
     private static MainSceneController GameController;
-    private static Label auctionLabel = new Label("Höchstgebot der Auktion");
+    private static Label auctionLabel = new Label("0 €");
     private static GridPane auctionGP = new GridPane();
 
     public SceneManager() throws IOException {
@@ -421,8 +421,10 @@ public class SceneManager extends Stage {
         scroll.setCenterShape(true);
         auctionGP.add(scroll, 0, 0);
         scroll.setContent(box);
-        Label label = new Label("Dein Gebot:");
-        label.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
+        Label label1 = new Label("Höchstgebot");
+        label1.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
+        Label label2 = new Label("Dein Gebot:");
+        label2.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
 
         JFXTextField tf = new JFXTextField();
         JFXButton bidBut = new JFXButton("Bieten");
@@ -442,7 +444,7 @@ public class SceneManager extends Stage {
         box.setSpacing(10);
         box.setPrefSize(200, 300);
         box.setCenterShape(true);
-        box.getChildren().addAll(auctionLabel, label, tf, bidBut, exitBut);
+        box.getChildren().addAll(label1, auctionLabel, label2, tf, bidBut, exitBut);
         box.setAlignment(Pos.CENTER);
         GameController.setPopup(auctionGP);
 //
