@@ -35,6 +35,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
@@ -353,43 +354,40 @@ public class SceneManager extends Stage {
     public static int askForFieldPopup(Player player, Field[] fields) {
 
         GridPane gridPane = new GridPane();
-//
-//        ScrollPane scroll = new ScrollPane();
-//        VBox box = new VBox();
-//        gridPane.setAlignment(Pos.CENTER);
-//        scroll.setCenterShape(true);
-//        gridPane.add(scroll, 0, 0);
-//        scroll.setContent(box);
+
+        ScrollPane scroll = new ScrollPane();
+        VBox box = new VBox();
+        gridPane.setAlignment(Pos.CENTER);
+        scroll.setCenterShape(true);
+        gridPane.add(scroll, 0, 0);
+        scroll.setContent(box);
         Label label = new Label("Wähle ein Feld:");
         JFXComboBox fieldBox = new JFXComboBox();
         Button button = new Button();
 
-//        String cssLayout = "-fx-background-color: yellowgreen;\n"
-//                + "-fx-border-color: black;\n"
-//                + "-fx-border-insets: 5;\n"
-//                + "-fx-border-width: 1;\n"
-//                + "-fx-border-style: double;\n";
-//
-//        box.setStyle(cssLayout);
-//        box.setSpacing(10);
-//        box.setPrefSize(400, 150);
-//        box.setCenterShape(true);
+        String cssLayout = "-fx-background-color: #b2dfdb;\n"
+                + "-fx-border-color: black;\n"
+                + "-fx-border-insets: 5;\n"
+                + "-fx-border-width: 1;\n"
+                + "-fx-border-style: double;\n";
+
+        box.setStyle(cssLayout);
+        box.setSpacing(10);
+        box.setPrefSize(200, 250);
+        box.setCenterShape(true);
         button.setText("Eingabe");
         button.setBackground(new Background(new BackgroundFill(Color.web("#e1f5fe"), CornerRadii.EMPTY, Insets.EMPTY)));
-//        label.setFont(Font.font("Tahoma", 14));
+        label.setFont(Font.font("Tahoma", 14));
 
         for (Field field : fields) {
             fieldBox.getItems().add(field.getName());
         }
 
         fieldBox.getSelectionModel().selectFirst();
-//
-//        box.getChildren().addAll(label, fieldBox, button);
-//        box.setAlignment(Pos.CENTER);
 
-        gridPane.add(label, 0, 0);
-        gridPane.add(fieldBox, 2, 0);
-        gridPane.add(button, 1, 0);
+        box.getChildren().addAll(label, fieldBox, button);
+        box.setAlignment(Pos.CENTER);
+
         GameController.setPopup(gridPane);
 
         while (!button.isPressed()) {
@@ -411,7 +409,6 @@ public class SceneManager extends Stage {
         return -1;
     }
 
-    //TODO , da der Spieler wurde disconnected
     public static void AuctionPopup() {
 
         //initialisierung der benoetigten Objekte
@@ -448,25 +445,7 @@ public class SceneManager extends Stage {
         box.getChildren().addAll(label1, auctionLabel, label2, tf, bidBut, exitBut);
         box.setAlignment(Pos.CENTER);
         GameController.setPopup(auctionGP);
-//
-//        while (!bidBut.isPressed() || !exitBut.isPressed()) {
-//            IOService.sleep(50);
-//            if (bidBut.isPressed()) {
-//                AuctionService.setBid(Lobby.getPlayerClient().getPlayerOnClient().getId(), Integer.parseInt(tf.getText()));
-//                GameController.resetPopup(auctionGP);
-//            }
-//            if (exitBut.isPressed()) {
-//                AuctionService.playerExit(Lobby.getPlayerClient().getPlayerOnClient().getId());
-//                GameController.resetPopup(auctionGP);
-//            }
-//
-//        }
 
-//        auctionGP.add(auctionLabel, 0, 0);
-//        auctionGP.add(tf, 1, 0);
-//        auctionGP.add(bidBut, 2, 0);
-//        auctionGP.add(exitBut, 2, 1);
-//        //tf.appendText(tf.getText());
         bidBut.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -483,7 +462,7 @@ public class SceneManager extends Stage {
             @Override
             public void handle(ActionEvent event) {
                 AuctionService.playerExit(Lobby.getPlayerClient().getPlayerOnClient().getId());
-                //GameController.resetPopup(auctionGP);
+                GameController.resetPopup(auctionGP);
             }
         });
     }
@@ -504,10 +483,28 @@ public class SceneManager extends Stage {
         if (stillActive == false) {
             GameController.resetPopup(auctionGP);
             GridPane gp = new GridPane();
+            ScrollPane scroll = new ScrollPane();
+            VBox box = new VBox();
+            gp.setAlignment(Pos.CENTER);
+            scroll.setCenterShape(true);
+            gp.add(scroll, 0, 0);
+            scroll.setContent(box);
             Label lbl = new Label(Lobby.getPlayerClient().getGame().getPlayers()[AuctionService.getHighestBidder()].getName()
                     + " hat die Auktion gewonnen und muss " + AuctionService.getHighestBid() + "€ für das Grundstück "
                     + AuctionService.getPropertyString() + " zahlen!");
-            gp.add(lbl, 0, 0);
+            String cssLayout = "-fx-background-color: #dcedc8;\n"
+                    + "-fx-border-color: black;\n"
+                    + "-fx-border-insets: 5;\n"
+                    + "-fx-border-width: 1;\n"
+                    + "-fx-border-style: double;\n";
+
+            lbl.setFont(Font.font("Tahoma", FontWeight.BOLD, 12));
+            box.setStyle(cssLayout);
+            box.setSpacing(10);
+            box.setPrefSize(500, 150);
+            box.setCenterShape(true);
+            box.getChildren().addAll(lbl);
+            box.setAlignment(Pos.CENTER);
             GameController.setPopup(gp);
             IOService.sleep(3500);
             GameController.resetPopup(gp);
