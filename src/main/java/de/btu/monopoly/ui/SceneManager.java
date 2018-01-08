@@ -169,11 +169,11 @@ public class SceneManager extends Stage {
         while (!buyButton.isPressed() || !dontBuyButton.isPressed()) {
             IOService.sleep(50);
             if (buyButton.isPressed()) {
-                GameController.resetPopup(gridpane);
+                GameController.resetPopup();
                 return 1;
             }
             if (dontBuyButton.isPressed()) {
-                GameController.resetPopup(gridpane);
+                GameController.resetPopup();
                 return 2;
             }
         }
@@ -227,15 +227,15 @@ public class SceneManager extends Stage {
         while (!rollButton.isPressed() || !payButton.isPressed() || !cardButton.isPressed()) {
             IOService.sleep(50);
             if (rollButton.isPressed()) {
-                GameController.resetPopup(gridpane);
+                GameController.resetPopup();
                 return 1;
             }
             if (payButton.isPressed()) {
-                GameController.resetPopup(gridpane);
+                GameController.resetPopup();
                 return 2;
             }
             if (cardButton.isPressed()) {
-                GameController.resetPopup(gridpane);
+                GameController.resetPopup();
                 return 3;
             }
         }
@@ -323,27 +323,27 @@ public class SceneManager extends Stage {
         while (!nothingButton.isPressed() || !buyHouseButton.isPressed() || !removeHouseButton.isPressed() || !addMortgageButton.isPressed() || !removeMortgageButton.isPressed() || !tradeButton.isPressed()) {
             IOService.sleep(50);
             if (nothingButton.isPressed()) {
-                GameController.resetPopup(gridpane);
+                GameController.resetPopup();
                 return 1;
             }
             if (buyHouseButton.isPressed()) {
-                GameController.resetPopup(gridpane);
+                GameController.resetPopup();
                 return 2;
             }
             if (removeHouseButton.isPressed()) {
-                GameController.resetPopup(gridpane);
+                GameController.resetPopup();
                 return 3;
             }
             if (addMortgageButton.isPressed()) {
-                GameController.resetPopup(gridpane);
+                GameController.resetPopup();
                 return 4;
             }
             if (removeMortgageButton.isPressed()) {
-                GameController.resetPopup(gridpane);
+                GameController.resetPopup();
                 return 5;
             }
             if (tradeButton.isPressed()) {
-                GameController.resetPopup(gridpane);
+                GameController.resetPopup();
                 return 6;
             }
         }
@@ -394,7 +394,7 @@ public class SceneManager extends Stage {
             IOService.sleep(50);
         }
 
-        GameController.resetPopup(gridPane);
+        GameController.resetPopup();
 
         int id = 0;
         for (Field field : Lobby.getPlayerClient().getGame().getBoard().getFieldManager().getFields()) {
@@ -462,7 +462,7 @@ public class SceneManager extends Stage {
             @Override
             public void handle(ActionEvent event) {
                 AuctionService.playerExit(Lobby.getPlayerClient().getPlayerOnClient().getId());
-                GameController.resetPopup(auctionGP);
+                GameController.resetPopup();
             }
         });
     }
@@ -482,7 +482,7 @@ public class SceneManager extends Stage {
         IOService.sleep(2000);
 
         if (stillActive == false) {
-            GameController.resetPopup(auctionGP);
+            GameController.resetPopup();
             GridPane gp = new GridPane();
             ScrollPane scroll = new ScrollPane();
             VBox box = new VBox();
@@ -508,7 +508,7 @@ public class SceneManager extends Stage {
             box.setAlignment(Pos.CENTER);
             GameController.setPopup(gp);
             IOService.sleep(3500);
-            GameController.resetPopup(gp);
+            GameController.resetPopup();
         }
 
     }

@@ -15,9 +15,7 @@ import de.btu.monopoly.menu.Lobby;
 import de.btu.monopoly.net.client.GameClient;
 import java.io.IOException;
 import java.net.URL;
-import java.util.List;
 import java.util.ResourceBundle;
-import java.util.stream.Collectors;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
@@ -769,14 +767,14 @@ public class MainSceneController implements Initializable {
     @FXML
     private void player0ButtonAction(ActionEvent event) throws IOException, InterruptedException {
         Player[] players = Lobby.getPlayerClient().getGame().getPlayers();
-       // Player player = players[client.getPlayerOnClient().getId()];
-      // String property = "";
-      //Lobby.getPlayerClient().getGame().getBoard().getFieldManager().getOwnedPropertyFields(player0).forEach(System.out::println);
- 
+        // Player player = players[client.getPlayerOnClient().getId()];
+        // String property = "";
+        //Lobby.getPlayerClient().getGame().getBoard().getFieldManager().getOwnedPropertyFields(player0).forEach(System.out::println);
+
 //        List<PropertyField> ownedFields = Lobby.getPlayerClient().getGame().getBoard().getFieldManager().getOwnedPropertyFields(players[client.getPlayerOnClient().getId()]).collect(Collectors.toList());
 //        for (PropertyField field : ownedFields){
 //            field.getName();
-//            
+//
 //        }
         GridPane player0Pane = new GridPane();
         ScrollPane scroll = new ScrollPane();
@@ -796,10 +794,12 @@ public class MainSceneController implements Initializable {
         box.getChildren().addAll(player, geld, jail, exit);
         box.setAlignment(Pos.CENTER);
 
-        setPopup(player0Pane);
+        if (PopupPane.getChildren().contains(middlePane)) {
+            setPopup(player0Pane);
+        }
 
         exit.setOnAction(e -> {
-            resetPopup(player0Pane);
+            resetPopup();
         });
     }
 
@@ -833,11 +833,11 @@ public class MainSceneController implements Initializable {
         player.setPrefSize(150, 10);
         box.getChildren().addAll(player, geld, jail, exit);
         box.setAlignment(Pos.CENTER);
-
-        setPopup(player1Pane);
-
+        if (PopupPane.getChildren().contains(middlePane)) {
+            setPopup(player1Pane);
+        }
         exit.setOnAction(e -> {
-            resetPopup(player1Pane);
+            resetPopup();
         });
     }
 
@@ -871,10 +871,13 @@ public class MainSceneController implements Initializable {
         player.setPrefSize(150, 10);
         box.getChildren().addAll(player, geld, jail, exit);
         box.setAlignment(Pos.CENTER);
-        setPopup(player2Pane);
+
+        if (PopupPane.getChildren().contains(middlePane)) {
+            setPopup(player2Pane);
+        }
 
         exit.setOnAction(e -> {
-            resetPopup(player2Pane);
+            resetPopup();
         });
     }
 
@@ -908,10 +911,12 @@ public class MainSceneController implements Initializable {
         box.getChildren().addAll(player, geld, jail, exit);
         box.setAlignment(Pos.CENTER);
 
-        setPopup(player3Pane);
+        if (PopupPane.getChildren().contains(middlePane)) {
+            setPopup(player3Pane);
+        }
 
         exit.setOnAction(e -> {
-            resetPopup(player3Pane);
+            resetPopup();
         });
     }
 
@@ -949,11 +954,11 @@ public class MainSceneController implements Initializable {
         player.setPrefSize(150, 10);
         box.getChildren().addAll(player, geld, jail, exit);
         box.setAlignment(Pos.CENTER);
-
-        setPopup(player4Pane);
-
+        if (PopupPane.getChildren().contains(middlePane)) {
+            setPopup(player4Pane);
+        }
         exit.setOnAction(e -> {
-            resetPopup(player4Pane);
+            resetPopup();
         });
     }
 
@@ -991,11 +996,11 @@ public class MainSceneController implements Initializable {
         player.setPrefSize(150, 10);
         box.getChildren().addAll(player, geld, jail, exit);
         box.setAlignment(Pos.CENTER);
-
-        setPopup(player5Pane);
-
+        if (PopupPane.getChildren().contains(middlePane)) {
+            setPopup(player5Pane);
+        }
         exit.setOnAction(e -> {
-            resetPopup(player5Pane);
+            resetPopup();
         });
 
     }
@@ -1006,7 +1011,7 @@ public class MainSceneController implements Initializable {
             @Override
             protected Object call() throws Exception {
                 PopupPane.getChildren().remove(middlePane);
-                PopupPane.add(gridpane, 0, 1);
+                PopupPane.add(gridpane, 0, 0);
                 return null;
             }
         };
@@ -1014,12 +1019,12 @@ public class MainSceneController implements Initializable {
 
     }
 
-    public void resetPopup(GridPane gridpane) {
+    public void resetPopup() {
         Task task = new Task() {
             @Override
             protected Object call() throws Exception {
-                PopupPane.getChildren().remove(gridpane);
-                PopupPane.add(middlePane, 0, 1);
+                PopupPane.getChildren().clear();
+                PopupPane.add(middlePane, 0, 0);
                 return null;
             }
         };
