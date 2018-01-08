@@ -10,6 +10,7 @@ import com.jfoenix.controls.JFXTextArea;
 import de.btu.monopoly.data.field.Field;
 import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.player.Player;
+import de.btu.monopoly.input.IOService;
 import de.btu.monopoly.menu.Lobby;
 import de.btu.monopoly.net.client.GameClient;
 import java.io.IOException;
@@ -263,6 +264,14 @@ public class MainSceneController implements Initializable {
     private Pane besitz38;
     @FXML
     private Pane besitz39;
+
+    // Speichert die letzte Position für das Vorrücken
+    private int lastPosPlayer0 = 0;
+    private int lastPosPlayer1 = 0;
+    private int lastPosPlayer2 = 0;
+    private int lastPosPlayer3 = 0;
+    private int lastPosPlayer4 = 0;
+    private int lastPosPlayer5 = 0;
 
     @FXML
     private JFXTextArea textArea;
@@ -590,98 +599,128 @@ public class MainSceneController implements Initializable {
         Player[] players = Lobby.getPlayerClient().getGame().getPlayers();
 
         if (players.length >= 1) {
-            playerUpdate0(players);
+            for (int i = lastPosPlayer0; i < players[0].getPosition(); i++) {
+                playerUpdate0(players, i);
+                IOService.sleep(300);
+            }
+            playerUpdate0(players, players[0].getPosition());
+            lastPosPlayer0 = players[0].getPosition();
         }
         if (players.length >= 2) {
-            playerUpdate1(players);
+            for (int i = lastPosPlayer1; i < players[1].getPosition(); i++) {
+                playerUpdate1(players, i);
+                IOService.sleep(300);
+            }
+            playerUpdate1(players, players[1].getPosition());
+            lastPosPlayer1 = players[1].getPosition();
         }
         if (players.length >= 3) {
-            playerUpdate2(players);
+            for (int i = lastPosPlayer2; i < players[2].getPosition(); i++) {
+                playerUpdate2(players, i);
+                IOService.sleep(300);
+            }
+            playerUpdate2(players, players[2].getPosition());
+            lastPosPlayer2 = players[2].getPosition();
         }
         if (players.length >= 4) {
-            playerUpdate3(players);
+            for (int i = lastPosPlayer3; i < players[3].getPosition(); i++) {
+                playerUpdate3(players, i);
+                IOService.sleep(300);
+            }
+            playerUpdate3(players, players[3].getPosition());
+            lastPosPlayer3 = players[3].getPosition();
         }
         if (players.length >= 5) {
-            playerUpdate4(players);
+            for (int i = lastPosPlayer4; i < players[4].getPosition(); i++) {
+                playerUpdate4(players, i);
+                IOService.sleep(300);
+            }
+            playerUpdate4(players, players[4].getPosition());
+            lastPosPlayer4 = players[4].getPosition();
         }
         if (players.length >= 6) {
-            playerUpdate5(players);
+            for (int i = lastPosPlayer5; i < players[5].getPosition(); i++) {
+                playerUpdate5(players, i);
+                IOService.sleep(300);
+            }
+            playerUpdate5(players, players[5].getPosition());
+            lastPosPlayer5 = players[5].getPosition();
         }
 
     }
 
-    public void playerUpdate0(Player[] players) {
+    public void playerUpdate0(Player[] players, int nextPos) {
         Task task = new Task() {
             @Override
             protected Object call() throws Exception {
-                player0.layoutXProperty().bind(Felder[players[0].getPosition()].widthProperty().subtract(player0.centerXProperty()).divide(2));
-                player0.layoutYProperty().bind(Felder[players[0].getPosition()].heightProperty().subtract(player0.centerYProperty()).divide(2));
-                Felder[players[0].getPosition()].getChildren().add(player0);
+                player0.layoutXProperty().bind(Felder[nextPos].widthProperty().subtract(player0.centerXProperty()).divide(2));
+                player0.layoutYProperty().bind(Felder[nextPos].heightProperty().subtract(player0.centerYProperty()).divide(2));
+                Felder[nextPos].getChildren().add(player0);
                 return null;
             }
         };
         Platform.runLater(task);
     }
 
-    public void playerUpdate1(Player[] players) {
+    public void playerUpdate1(Player[] players, int nextPos) {
         Task task = new Task() {
             @Override
             protected Object call() throws Exception {
-                player1.layoutXProperty().bind(Felder[players[1].getPosition()].widthProperty().subtract(player1.centerXProperty()).divide(2));
-                player1.layoutYProperty().bind(Felder[players[1].getPosition()].heightProperty().subtract(player1.centerYProperty()).divide(2));
-                Felder[players[1].getPosition()].getChildren().add(player1);
+                player1.layoutXProperty().bind(Felder[nextPos].widthProperty().subtract(player1.centerXProperty()).divide(2));
+                player1.layoutYProperty().bind(Felder[nextPos].heightProperty().subtract(player1.centerYProperty()).divide(2));
+                Felder[nextPos].getChildren().add(player1);
                 return null;
             }
         };
         Platform.runLater(task);
     }
 
-    public void playerUpdate2(Player[] players) {
+    public void playerUpdate2(Player[] players, int nextPos) {
         Task task = new Task() {
             @Override
             protected Object call() throws Exception {
-                player2.layoutXProperty().bind(Felder[players[2].getPosition()].widthProperty().subtract(player2.centerXProperty()).divide(2));
-                player2.layoutYProperty().bind(Felder[players[2].getPosition()].heightProperty().subtract(player2.centerYProperty()).divide(2));
-                Felder[players[2].getPosition()].getChildren().add(player2);
+                player2.layoutXProperty().bind(Felder[nextPos].widthProperty().subtract(player2.centerXProperty()).divide(2));
+                player2.layoutYProperty().bind(Felder[nextPos].heightProperty().subtract(player2.centerYProperty()).divide(2));
+                Felder[nextPos].getChildren().add(player2);
                 return null;
             }
         };
         Platform.runLater(task);
     }
 
-    public void playerUpdate3(Player[] players) {
+    public void playerUpdate3(Player[] players, int nextPos) {
         Task task = new Task() {
             @Override
             protected Object call() throws Exception {
-                player3.layoutXProperty().bind(Felder[players[3].getPosition()].widthProperty().subtract(player3.centerXProperty()).divide(2));
-                player3.layoutYProperty().bind(Felder[players[3].getPosition()].heightProperty().subtract(player3.centerYProperty()).divide(2));
-                Felder[players[3].getPosition()].getChildren().add(player3);
+                player3.layoutXProperty().bind(Felder[nextPos].widthProperty().subtract(player3.centerXProperty()).divide(2));
+                player3.layoutYProperty().bind(Felder[nextPos].heightProperty().subtract(player3.centerYProperty()).divide(2));
+                Felder[nextPos].getChildren().add(player3);
                 return null;
             }
         };
         Platform.runLater(task);
     }
 
-    public void playerUpdate4(Player[] players) {
+    public void playerUpdate4(Player[] players, int nextPos) {
         Task task = new Task() {
             @Override
             protected Object call() throws Exception {
-                player4.layoutXProperty().bind(Felder[players[4].getPosition()].widthProperty().subtract(player4.centerXProperty()).divide(2));
-                player4.layoutYProperty().bind(Felder[players[4].getPosition()].heightProperty().subtract(player4.centerYProperty()).divide(2));
-                Felder[players[4].getPosition()].getChildren().add(player4);
+                player4.layoutXProperty().bind(Felder[nextPos].widthProperty().subtract(player4.centerXProperty()).divide(2));
+                player4.layoutYProperty().bind(Felder[nextPos].heightProperty().subtract(player4.centerYProperty()).divide(2));
+                Felder[nextPos].getChildren().add(player4);
                 return null;
             }
         };
         Platform.runLater(task);
     }
 
-    public void playerUpdate5(Player[] players) {
+    public void playerUpdate5(Player[] players, int nextPos) {
         Task task = new Task() {
             @Override
             protected Object call() throws Exception {
-                player5.layoutXProperty().bind(Felder[players[5].getPosition()].widthProperty().subtract(player5.centerXProperty()).divide(2));
-                player5.layoutYProperty().bind(Felder[players[5].getPosition()].heightProperty().subtract(player5.centerYProperty()).divide(2));
-                Felder[players[5].getPosition()].getChildren().add(player5);
+                player5.layoutXProperty().bind(Felder[nextPos].widthProperty().subtract(player5.centerXProperty()).divide(2));
+                player5.layoutYProperty().bind(Felder[nextPos].heightProperty().subtract(player5.centerYProperty()).divide(2));
+                Felder[nextPos].getChildren().add(player5);
                 return null;
             }
         };
