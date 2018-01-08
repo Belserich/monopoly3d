@@ -500,10 +500,10 @@ public class SceneManager extends Stage {
                     + "-fx-border-width: 1;\n"
                     + "-fx-border-style: double;\n";
 
-            lbl.setFont(Font.font("Tahoma", FontWeight.BOLD, 12));
+            lbl.setFont(Font.font("Tahoma", FontWeight.BOLD,10));
             box.setStyle(cssLayout);
             box.setSpacing(10);
-            box.setPrefSize(500, 150);
+            box.setPrefSize(550, 150);
             box.setCenterShape(true);
             box.getChildren().addAll(lbl);
             box.setAlignment(Pos.CENTER);
