@@ -11,13 +11,17 @@ import java.util.logging.StreamHandler;
  */
 public class TextAreaHandler extends StreamHandler {
 
-    
+    private static boolean boo = true;
+
     @Override
     public void publish(LogRecord record) {
         super.publish(record);
         flush();
         if (!GlobalSettings.isRunInConsole() && !GlobalSettings.isRunAsTest()) {
-            SceneManager.playerUpdate();
+            if (boo) {
+                SceneManager.playerUpdate();
+                boo = false;
+            }
             SceneManager.movePlayerUpdate();
             SceneManager.geldPlayerUpdate();
             SceneManager.propertyUpdate();

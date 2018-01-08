@@ -312,8 +312,8 @@ public class MainSceneController implements Initializable {
         Felder[24] = opernplatz;
         Felder[25] = nordBahnhof;
         Felder[26] = lessingStr;
-        Felder[27] = wasserWerk;
-        Felder[28] = schillerStr;
+        Felder[27] = schillerStr;
+        Felder[28] = wasserWerk;
         Felder[29] = goetheStr;
         Felder[30] = jailField;
         Felder[31] = rathhausPlatz;

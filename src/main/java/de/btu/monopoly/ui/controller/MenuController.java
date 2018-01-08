@@ -35,6 +35,9 @@ public class MenuController implements Initializable {
     @FXML
     private StackPane stackPane;
 
+    @FXML
+    private StackPane testPane;
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 

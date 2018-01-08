@@ -17,7 +17,6 @@ import de.btu.monopoly.input.InputHandler;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.networkClasses.PlayerTradeRequest;
 import de.btu.monopoly.ui.Logger.TextAreaHandler;
-import de.btu.monopoly.ui.SceneManager;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -51,7 +50,8 @@ public class Game {
     private static long SEED;
 
     /**
-     * Die fachliche Komponente des Spiels als Einheit, bestehend aus einem Spielbrett, den Spielern sowie Zuschauern.
+     * Die fachliche Komponente des Spiels als Einheit, bestehend aus einem
+     * Spielbrett, den Spielern sowie Zuschauern.
      *
      * @param players Spieler
      * @param client GameClient
@@ -423,8 +423,7 @@ public class Game {
     }
 
     public void betPhase(PropertyField property) {
-        //AuctionService.startAuction(property);
-        SceneManager.AuctionPopup();
+        AuctionService.startAuction(property);
     }
 
     public GameBoard getBoard() {
