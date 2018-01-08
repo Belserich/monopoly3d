@@ -35,7 +35,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
@@ -500,7 +499,7 @@ public class SceneManager extends Stage {
                     + "-fx-border-width: 1;\n"
                     + "-fx-border-style: double;\n";
 
-            lbl.setFont(Font.font("Tahoma", FontWeight.BOLD,10));
+            lbl.setFont(Font.font("Tahoma", FontWeight.BOLD, 10));
             box.setStyle(cssLayout);
             box.setSpacing(10);
             box.setPrefSize(550, 150);
