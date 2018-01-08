@@ -51,7 +51,8 @@ public class Game {
     private static long SEED;
 
     /**
-     * Die fachliche Komponente des Spiels als Einheit, bestehend aus einem Spielbrett, den Spielern sowie Zuschauern.
+     * Die fachliche Komponente des Spiels als Einheit, bestehend aus einem
+     * Spielbrett, den Spielern sowie Zuschauern.
      *
      * @param players Spieler
      * @param client GameClient
@@ -423,7 +424,7 @@ public class Game {
     }
 
     public void betPhase(PropertyField property) {
-        //AuctionService.startAuction(property);
+        AuctionService.startAuction(property);
         SceneManager.AuctionPopup();
     }
 

@@ -443,44 +443,44 @@ public class SceneManager extends Stage {
         box.getChildren().addAll(auctionLabel, label, tf, bidBut, exitBut);
         box.setAlignment(Pos.CENTER);
         GameController.setPopup(auctionGP);
-
-        while (!bidBut.isPressed() || !exitBut.isPressed()) {
-            IOService.sleep(50);
-            if (bidBut.isPressed()) {
-                AuctionService.setBid(Lobby.getPlayerClient().getPlayerOnClient().getId(), Integer.parseInt(tf.getText()));
-                GameController.resetPopup(auctionGP);
-            }
-            if (exitBut.isPressed()) {
-                AuctionService.playerExit(Lobby.getPlayerClient().getPlayerOnClient().getId());
-                GameController.resetPopup(auctionGP);
-            }
-
-        }
+//
+//        while (!bidBut.isPressed() || !exitBut.isPressed()) {
+//            IOService.sleep(50);
+//            if (bidBut.isPressed()) {
+//                AuctionService.setBid(Lobby.getPlayerClient().getPlayerOnClient().getId(), Integer.parseInt(tf.getText()));
+//                GameController.resetPopup(auctionGP);
+//            }
+//            if (exitBut.isPressed()) {
+//                AuctionService.playerExit(Lobby.getPlayerClient().getPlayerOnClient().getId());
+//                GameController.resetPopup(auctionGP);
+//            }
+//
+//        }
 
 //        auctionGP.add(auctionLabel, 0, 0);
 //        auctionGP.add(tf, 1, 0);
 //        auctionGP.add(bidBut, 2, 0);
 //        auctionGP.add(exitBut, 2, 1);
 //        //tf.appendText(tf.getText());
-//        bidBut.setOnAction(new EventHandler<ActionEvent>() {
-//            @Override
-//            public void handle(ActionEvent event) {
-//                try {
-//                    AuctionService.setBid(Lobby.getPlayerClient().getPlayerOnClient().getId(), Integer.parseInt(tf.getText()));
-//                   // GameController.resetPopup(auctionGP);
-//                } catch (Exception e) {
-//                    tf.setText("Bitte nur Zahlen eingebn!");
-//                }
-//            }
-//        });
-//
-//        exitBut.setOnAction(new EventHandler<ActionEvent>() {
-//            @Override
-//            public void handle(ActionEvent event) {
-//                AuctionService.playerExit(Lobby.getPlayerClient().getPlayerOnClient().getId());
-//                //GameController.resetPopup(auctionGP);
-//            }
-//        });
+        bidBut.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                try {
+                    AuctionService.setBid(Lobby.getPlayerClient().getPlayerOnClient().getId(), Integer.parseInt(tf.getText()));
+                    // GameController.resetPopup(auctionGP);
+                } catch (Exception e) {
+                    tf.setText("Bitte nur Zahlen eingeben!");
+                }
+            }
+        });
+
+        exitBut.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                AuctionService.playerExit(Lobby.getPlayerClient().getPlayerOnClient().getId());
+                //GameController.resetPopup(auctionGP);
+            }
+        });
     }
 
     public static void updateAuctionPopup(boolean stillActive) {
