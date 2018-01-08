@@ -11,7 +11,7 @@ import java.util.logging.StreamHandler;
  */
 public class TextAreaHandler extends StreamHandler {
 
-    private boolean boo = true;
+    private static boolean boo = true;
 
     @Override
     public void publish(LogRecord record) {
