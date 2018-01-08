@@ -15,7 +15,9 @@ import de.btu.monopoly.menu.Lobby;
 import de.btu.monopoly.net.client.GameClient;
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
@@ -767,7 +769,15 @@ public class MainSceneController implements Initializable {
     @FXML
     private void player0ButtonAction(ActionEvent event) throws IOException, InterruptedException {
         Player[] players = Lobby.getPlayerClient().getGame().getPlayers();
-        //  String fields =  Lobby.getPlayerClient().getGame().getBoard().getFieldManager().toStringOwned(players[client.getPlayerOnClient().getId()]);
+       // Player player = players[client.getPlayerOnClient().getId()];
+      // String property = "";
+      //Lobby.getPlayerClient().getGame().getBoard().getFieldManager().getOwnedPropertyFields(player0).forEach(System.out::println);
+ 
+//        List<PropertyField> ownedFields = Lobby.getPlayerClient().getGame().getBoard().getFieldManager().getOwnedPropertyFields(players[client.getPlayerOnClient().getId()]).collect(Collectors.toList());
+//        for (PropertyField field : ownedFields){
+//            field.getName();
+//            
+//        }
         GridPane player0Pane = new GridPane();
         ScrollPane scroll = new ScrollPane();
         VBox box = new VBox();
