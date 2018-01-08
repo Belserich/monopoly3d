@@ -485,16 +485,16 @@ public class SceneManager extends Stage {
 
     public static void updateAuctionPopup(boolean stillActive) {
 
-        auctionLabel.setText(String.valueOf(AuctionService.getHighestBid()));
+//        auctionLabel.setText(String.valueOf(AuctionService.getHighestBid()));
         IOService.sleep(2000);
 
         if (stillActive == false) {
             GameController.resetPopup(auctionGP);
             GridPane gp = new GridPane();
-            Label lbl = new Label(Lobby.getPlayerClient().getGame().getPlayers()[AuctionService.getHighestBidder()].getName()
-                    + " hat die Auktion gewonnen und muss " + AuctionService.getHighestBid() + "€ für das Grundstück "
-                    + AuctionService.getPropertyString() + " zahlen!");
-            gp.add(lbl, 0, 0);
+//            Label lbl = new Label(Lobby.getPlayerClient().getGame().getPlayers()[AuctionService.getHighestBidder()].getName()
+//                    + " hat die Auktion gewonnen und muss " + AuctionService.getHighestBid() + "€ für das Grundstück "
+//                    + AuctionService.getPropertyString() + " zahlen!");
+//            gp.add(lbl, 0, 0);
             GameController.setPopup(gp);
             IOService.sleep(3500);
             GameController.resetPopup(gp);
