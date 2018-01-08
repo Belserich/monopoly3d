@@ -50,6 +50,7 @@ public class SceneManager extends Stage {
     private static MainSceneController GameController;
     private static Label auctionLabel = new Label("0 €");
     private static GridPane auctionGP = new GridPane();
+    private static Label hoechstgebotLabel = new Label("Höchstgebot:");
 
     public SceneManager() throws IOException {
         stage = this;
@@ -421,9 +422,9 @@ public class SceneManager extends Stage {
         scroll.setCenterShape(true);
         auctionGP.add(scroll, 0, 0);
         scroll.setContent(box);
-        Label label1 = new Label("Höchstgebot:");
-        label1.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
-        Label label2 = new Label("Dein Gebot:");
+
+        hoechstgebotLabel.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
+        Label label2 = new Label("Dein Gebot für \n" + AuctionService.getPropertyString() + ":");
         label2.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
 
         JFXTextField tf = new JFXTextField();
@@ -445,28 +446,10 @@ public class SceneManager extends Stage {
         box.setSpacing(10);
         box.setPrefSize(200, 300);
         box.setCenterShape(true);
-        box.getChildren().addAll(label1, auctionLabel, label2, tf, bidBut, exitBut);
+        box.getChildren().addAll(hoechstgebotLabel, auctionLabel, label2, tf, bidBut, exitBut);
         box.setAlignment(Pos.CENTER);
         GameController.setPopup(auctionGP);
-//
-//        while (!bidBut.isPressed() || !exitBut.isPressed()) {
-//            IOService.sleep(50);
-//            if (bidBut.isPressed()) {
-//                AuctionService.setBid(Lobby.getPlayerClient().getPlayerOnClient().getId(), Integer.parseInt(tf.getText()));
-//                GameController.resetPopup(auctionGP);
-//            }
-//            if (exitBut.isPressed()) {
-//                AuctionService.playerExit(Lobby.getPlayerClient().getPlayerOnClient().getId());
-//                GameController.resetPopup(auctionGP);
-//            }
-//
-//        }
 
-//        auctionGP.add(auctionLabel, 0, 0);
-//        auctionGP.add(tf, 1, 0);
-//        auctionGP.add(bidBut, 2, 0);
-//        auctionGP.add(exitBut, 2, 1);
-//        //tf.appendText(tf.getText());
         bidBut.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -494,6 +477,7 @@ public class SceneManager extends Stage {
             @Override
             protected Object call() throws Exception {
                 auctionLabel.setText(String.valueOf(AuctionService.getHighestBid()));
+                hoechstgebotLabel.setText("Höchstgebot von \n" + AuctionService.getPlayer(AuctionService.getHighestBidder()).getName() + ":");
                 return null;
             }
         };
