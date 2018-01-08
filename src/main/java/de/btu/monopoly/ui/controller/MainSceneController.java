@@ -116,7 +116,7 @@ public class MainSceneController implements Initializable {
     @FXML
     private Pane badStr;
     @FXML
-    private Pane gemenschaft1;
+    private Pane gemeinschaft1;
     @FXML
     private Pane turmStr;
     @FXML
@@ -178,7 +178,7 @@ public class MainSceneController implements Initializable {
     @FXML
     private Pane hauptStr;
     @FXML
-    private Pane gemeinschat3;
+    private Pane gemeinschaft3;
     @FXML
     private Pane bahnhofStr;
     @FXML
@@ -285,7 +285,7 @@ public class MainSceneController implements Initializable {
         Felder = new Pane[40];
         Felder[0] = goField;
         Felder[1] = badStr;
-        Felder[2] = gemenschaft1;
+        Felder[2] = gemeinschaft1;
         Felder[3] = turmStr;
         Felder[4] = einkommenSt;
         Felder[5] = suedBahnhof;
@@ -316,7 +316,7 @@ public class MainSceneController implements Initializable {
         Felder[30] = jailField;
         Felder[31] = rathhausPlatz;
         Felder[32] = hauptStr;
-        Felder[33] = gemeinschat3;
+        Felder[33] = gemeinschaft3;
         Felder[34] = bahnhofStr;
         Felder[35] = hauptBahnhof;
         Felder[36] = ereignis3;
@@ -390,6 +390,9 @@ public class MainSceneController implements Initializable {
                         if (Lobby.getPlayerClient().getPlayerOnClient().getName().equals(Lobby.getUsers()[i][1])) {
                             player0Button.setText(Lobby.getUsers()[i][1]);
                             player0Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[i][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+                            if (Color.web(Lobby.getUsers()[i][4]).getBrightness() <= 0.8) {
+                                player0Button.setTextFill(Color.WHITE);
+                            }
                             player0.setFill(Color.web(Lobby.getUsers()[0][4]));
                             player0Button.setVisible(true);
                             player0.setVisible(true);
@@ -400,6 +403,9 @@ public class MainSceneController implements Initializable {
                                 if (player1Button.getText().equals("frei")) {
                                     player1Button.setText(Lobby.getUsers()[i][1]);
                                     player1Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[i][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+                                    if (Color.web(Lobby.getUsers()[i][4]).getBrightness() <= 0.8) {
+                                        player1Button.setTextFill(Color.WHITE);
+                                    }
                                     player1.setFill(Color.web(Lobby.getUsers()[1][4]));
                                     player1Button.setVisible(true);
                                     player1.setVisible(true);
@@ -410,6 +416,9 @@ public class MainSceneController implements Initializable {
                                 if (player2Button.getText().equals("frei")) {
                                     player2Button.setText(Lobby.getUsers()[i][1]);
                                     player2Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[i][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+                                    if (Color.web(Lobby.getUsers()[i][4]).getBrightness() <= 0.8) {
+                                        player2Button.setTextFill(Color.WHITE);
+                                    }
                                     player2.setFill(Color.web(Lobby.getUsers()[2][4]));
                                     player2Button.setVisible(true);
                                     player2.setVisible(true);
@@ -420,6 +429,9 @@ public class MainSceneController implements Initializable {
                                 if (player3Button.getText().equals("frei")) {
                                     player3Button.setText(Lobby.getUsers()[i][1]);
                                     player3Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[i][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+                                    if (Color.web(Lobby.getUsers()[i][4]).getBrightness() <= 0.8) {
+                                        player3Button.setTextFill(Color.WHITE);
+                                    }
                                     player3.setFill(Color.web(Lobby.getUsers()[3][4]));
                                     player3Button.setVisible(true);
                                     player3.setVisible(true);
@@ -430,6 +442,9 @@ public class MainSceneController implements Initializable {
                                 if (player4Button.getText().equals("frei")) {
                                     player4Button.setText(Lobby.getUsers()[i][1]);
                                     player4Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[i][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+                                    if (Color.web(Lobby.getUsers()[i][4]).getBrightness() <= 0.8) {
+                                        player4Button.setTextFill(Color.WHITE);
+                                    }
                                     player4.setFill(Color.web(Lobby.getUsers()[4][4]));
                                     player4Button.setVisible(true);
                                     player4.setVisible(true);
@@ -440,6 +455,9 @@ public class MainSceneController implements Initializable {
                                 if (player5Button.getText().equals("frei")) {
                                     player5Button.setText(Lobby.getUsers()[i][1]);
                                     player5Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[i][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+                                    if (Color.web(Lobby.getUsers()[i][4]).getBrightness() <= 0.8) {
+                                        player5Button.setTextFill(Color.WHITE);
+                                    }
                                     player5.setFill(Color.web(Lobby.getUsers()[5][4]));
                                     player5Button.setVisible(true);
                                     player5.setVisible(true);
