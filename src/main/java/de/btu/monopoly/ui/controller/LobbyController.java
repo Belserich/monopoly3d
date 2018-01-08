@@ -95,9 +95,14 @@ public class LobbyController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        Image image = new Image(
-                getClass().getResourceAsStream("/images/Lobby_Background.jpg"));
-        grid.setBackground(new Background(new BackgroundImage(image, BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT)));
+//        Image image = new Image(
+//                getClass().getResourceAsStream("/images/Lobby_Background.jpg"));
+//        grid.setBackground(new Background(new BackgroundImage(image, BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT)));
+
+        String image = " -fx-background-image: url(\"/images/Lobby_Background.jpg\") ;\n"
+                + "    -fx-background-position: center;\n"
+                + "    -fx-background-size: stretch;";
+        grid.setStyle(image);
         try {
             // Anzeigen der IP Adresse
             lobbyLabelIp.setText(InetAddress.getLocalHost().getHostAddress());
