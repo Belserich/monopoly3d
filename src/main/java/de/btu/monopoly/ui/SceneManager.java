@@ -421,12 +421,13 @@ public class SceneManager extends Stage {
         scroll.setCenterShape(true);
         auctionGP.add(scroll, 0, 0);
         scroll.setContent(box);
-        Label label1 = new Label("Höchstgebot");
+        Label label1 = new Label("Höchstgebot:");
         label1.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
         Label label2 = new Label("Dein Gebot:");
         label2.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
 
         JFXTextField tf = new JFXTextField();
+        tf.setAlignment(Pos.CENTER);
         JFXButton bidBut = new JFXButton("Bieten");
         bidBut.setBackground(new Background(new BackgroundFill(Color.web("#e1f5fe"), CornerRadii.EMPTY, Insets.EMPTY)));
 
@@ -473,7 +474,7 @@ public class SceneManager extends Stage {
                     AuctionService.setBid(Lobby.getPlayerClient().getPlayerOnClient().getId(), Integer.parseInt(tf.getText()));
                     // GameController.resetPopup(auctionGP);
                 } catch (Exception e) {
-                    tf.setText("Bitte nur Zahlen eingeben!");
+                    tf.setPromptText("Bitte nur Zahlen eingeben!");
                 }
             }
         });
