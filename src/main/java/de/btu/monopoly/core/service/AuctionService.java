@@ -9,6 +9,7 @@ import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.input.IOService;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.networkClasses.*;
+import de.btu.monopoly.ui.Logger.TextAreaHandler;
 import de.btu.monopoly.ui.SceneManager;
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -34,6 +35,8 @@ public class AuctionService extends Listener {
     public static void initAuction(Player[] players, GameClient client) {
         auc = new Auction(players, client);
         LOGGER.setLevel(Level.FINEST);
+        TextAreaHandler handler = new TextAreaHandler();
+        LOGGER.addHandler(handler);
     }
 
     /**

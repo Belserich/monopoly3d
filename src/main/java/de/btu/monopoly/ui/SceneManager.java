@@ -16,6 +16,8 @@ import de.btu.monopoly.menu.Lobby;
 import de.btu.monopoly.ui.controller.LobbyController;
 import de.btu.monopoly.ui.controller.MainSceneController;
 import java.io.IOException;
+import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
@@ -485,16 +487,24 @@ public class SceneManager extends Stage {
 
     public static void updateAuctionPopup(boolean stillActive) {
 
-//        auctionLabel.setText(String.valueOf(AuctionService.getHighestBid()));
+        Task task = new Task() {
+            @Override
+            protected Object call() throws Exception {
+                auctionLabel.setText(String.valueOf(AuctionService.getHighestBid()));
+                return null;
+            }
+        };
+        Platform.runLater(task);
+
         IOService.sleep(2000);
 
         if (stillActive == false) {
             GameController.resetPopup(auctionGP);
             GridPane gp = new GridPane();
-//            Label lbl = new Label(Lobby.getPlayerClient().getGame().getPlayers()[AuctionService.getHighestBidder()].getName()
-//                    + " hat die Auktion gewonnen und muss " + AuctionService.getHighestBid() + "€ für das Grundstück "
-//                    + AuctionService.getPropertyString() + " zahlen!");
-//            gp.add(lbl, 0, 0);
+            Label lbl = new Label(Lobby.getPlayerClient().getGame().getPlayers()[AuctionService.getHighestBidder()].getName()
+                    + " hat die Auktion gewonnen und muss " + AuctionService.getHighestBid() + "€ für das Grundstück "
+                    + AuctionService.getPropertyString() + " zahlen!");
+            gp.add(lbl, 0, 0);
             GameController.setPopup(gp);
             IOService.sleep(3500);
             GameController.resetPopup(gp);
