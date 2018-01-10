@@ -54,7 +54,7 @@ public class IOService {
                 choice = MediumKi.jailOption(player);
                 break;
             case 3:
-                choice = HardKi.jailOption(player);
+                choice = HardKi.jailOption(player, client);
                 break;
             default:
                 LOGGER.warning("Illegale KI-Stufe in JailChoice registriert");
