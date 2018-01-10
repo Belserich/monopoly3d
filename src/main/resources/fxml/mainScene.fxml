@@ -493,7 +493,7 @@
                         <Pane fx:id="besuch" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black;" styleClass="bescuhBackground" stylesheets="@../styles/Styles.css" GridPane.columnIndex="1" />
                      </children>
                   </GridPane>
-                  <Pane fx:id="parkplatz" prefHeight="200.0" prefWidth="200.0" />
+                  <Pane prefHeight="200.0" prefWidth="200.0" />
                </children>
             </GridPane>
             <GridPane layoutX="10.0" layoutY="10.0" GridPane.columnIndex="2">
