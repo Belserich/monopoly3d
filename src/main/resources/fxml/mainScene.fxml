@@ -449,7 +449,7 @@
                               </Label>
                            </children>
                         </Pane>
-                        <Pane fx:id="wienerStr" layoutX="182.0" layoutY="262.0" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #ffe0b2;" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                        <Pane layoutX="182.0" layoutY="262.0" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #ffe0b2;" GridPane.columnIndex="3" GridPane.rowIndex="1">
                            <children>
                               <Label alignment="CENTER" layoutX="-31.0" layoutY="8.0" prefHeight="42.0" prefWidth="91.0" rotate="90.0" text="WienerStr.">
                                  <font>
@@ -458,7 +458,7 @@
                               </Label>
                            </children>
                         </Pane>
-                        <Pane fx:id="berlinerStr" layoutX="182.0" layoutY="94.0" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #ffe0b2;" GridPane.columnIndex="3">
+                        <Pane layoutX="182.0" layoutY="94.0" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #ffe0b2;" GridPane.columnIndex="3">
                            <children>
                               <Label alignment="CENTER" layoutX="-31.0" layoutY="8.0" prefHeight="42.0" prefWidth="91.0" rotate="90.0" text="BerlinerStr.">
                                  <font>
@@ -468,7 +468,7 @@
                            </children>
                         </Pane>
                         <Pane fx:id="westBahnhof" prefHeight="200.0" prefWidth="200.0" styleClass="west-titel" stylesheets="@../styles/Styles.css" GridPane.columnIndex="3" GridPane.rowIndex="4" />
-                        <Pane fx:id="gemeinschaft2" prefHeight="200.0" prefWidth="200.0" styleClass="gem2-titel" stylesheets="@../styles/Styles.css" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                        <Pane prefHeight="200.0" prefWidth="200.0" styleClass="gem2-titel" stylesheets="@../styles/Styles.css" GridPane.columnIndex="3" GridPane.rowIndex="2" />
                         <Pane fx:id="elWerk" layoutX="182.0" layoutY="178.0" prefHeight="200.0" prefWidth="200.0" styleClass="el-titel" stylesheets="@../styles/Styles.css" GridPane.columnIndex="3" GridPane.rowIndex="7" />
                         <Pane fx:id="besitz17" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                         <Pane fx:id="besitz18" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
