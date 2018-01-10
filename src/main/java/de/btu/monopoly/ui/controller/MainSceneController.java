@@ -43,6 +43,9 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
 
 /**
  *
@@ -769,17 +772,18 @@ public class MainSceneController implements Initializable {
     //TODO Testen
     @FXML
     private void player0ButtonAction(ActionEvent event) throws IOException, InterruptedException {
-        Player[] players = Lobby.getPlayerClient().getGame().getPlayers();
-        // Player player = players[client.getPlayerOnClient().getId()];
 
-        //Lobby.getPlayerClient().getGame().getBoard().getFieldManager().getOwnedPropertyFields(players[client.getPlayerOnClient().getId()]).forEach(System.out::println);
-        
-        List<PropertyField> ownedFields = Lobby.getPlayerClient().getGame().getBoard().getFieldManager()
-                .getOwnedPropertyFields(players[client.getPlayerOnClient().getId()])
+        Player[] players = Lobby.getPlayerClient().getGame().getPlayers();
+        FieldManager manager = Lobby.getPlayerClient().getGame().getBoard().getFieldManager();
+        Player playeronbutton = players[client.getPlayerOnClient().getId()];
+
+        String property = "";
+        List<PropertyField> ownedFields = manager.getOwnedPropertyFields(playeronbutton)
                 .collect(Collectors.toList());      //Liste der besessenen Strassen
-        for (PropertyField field : ownedFields){
-            field.getName();
+        for (PropertyField field : ownedFields) {
+            property += "\n" + field.getName() + " [ " + field.getRent() + " €]";
         }
+
         GridPane player0Pane = new GridPane();
         ScrollPane scroll = new ScrollPane();
         VBox box = new VBox();
@@ -787,16 +791,24 @@ public class MainSceneController implements Initializable {
         scroll.setCenterShape(true);
         player0Pane.add(scroll, 0, 0);
         scroll.setContent(box);
-        Label geld = new Label(" hat in Konto: " + players[client.getPlayerOnClient().getId()].getMoney());
+
+        Label fields = new Label(property + "\n");
+        fields.setFont(Font.font("Tahoma", FontPosture.ITALIC, 10));
+        fields.setTextFill(Color.MIDNIGHTBLUE);
+
+        Label geld = new Label(" hat in Konto: " + playeronbutton.getMoney());
+
         JFXButton player = new JFXButton();
+
         JFXButton exit = new JFXButton("Exit");
-        //Label properties = new Label("besitzt: " + fields);
-        Label jail = new Label(" ist in Gefängnis seit : " + players[client.getPlayerOnClient().getId()]
-                .getDaysInJail());
+
+        Label jail = new Label(" ist in Gefängnis seit : " + playeronbutton.getDaysInJail());
+
         player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[client.getPlayerOnClient().getId()][4]), CornerRadii.EMPTY, Insets.EMPTY)));
         player.setText(Lobby.getUsers()[client.getPlayerOnClient().getId()][1]);
         player.setPrefSize(150, 10);
-        box.getChildren().addAll(player, geld, jail, exit);
+
+        box.getChildren().addAll(player, geld, jail, fields, exit);
         box.setAlignment(Pos.CENTER);
 
         if (PopupPane.getChildren().contains(middlePane)) {
@@ -811,6 +823,10 @@ public class MainSceneController implements Initializable {
     @FXML
     private void player1ButtonAction(ActionEvent event) throws IOException, InterruptedException {
         Player[] players = Lobby.getPlayerClient().getGame().getPlayers();
+        FieldManager manager = Lobby.getPlayerClient().getGame().getBoard().getFieldManager();
+
+        String property = "";
+
         GridPane player1Pane = new GridPane();
         ScrollPane scroll = new ScrollPane();
         VBox box = new VBox();
@@ -818,26 +834,44 @@ public class MainSceneController implements Initializable {
         scroll.setCenterShape(true);
         player1Pane.add(scroll, 0, 0);
         scroll.setContent(box);
+
         Label geld;
         JFXButton player = new JFXButton();
         JFXButton exit = new JFXButton("Exit");
         Label jail;
+
         if (client.getPlayerOnClient().getId() == 0) {
             geld = new Label(" hat in Konto: " + players[1].getMoney());
             jail = new Label(" ist in Gefängnis seit : " + players[1].getDaysInJail());
+            List<PropertyField> ownedFields = manager.getOwnedPropertyFields(players[1])
+                    .collect(Collectors.toList());      //Liste der besessenen Strassen
+            for (PropertyField field : ownedFields) {
+                property += "\n" + field.getName() + " [ " + field.getRent() + " €]";
+            }
             player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[1][4]), CornerRadii.EMPTY, Insets.EMPTY)));
             player.setText(Lobby.getUsers()[1][1]);
         }
         else {
             geld = new Label(" hat in Konto: " + players[0].getMoney());
             jail = new Label(" ist in Gefängnis seit : " + players[0].getDaysInJail());
+            List<PropertyField> ownedFields = manager.getOwnedPropertyFields(players[0])
+                    .collect(Collectors.toList());      //Liste der besessenen Strassen
+            for (PropertyField field : ownedFields) {
+                property += "\n" + field.getName() + " [ " + field.getRent() + " €]";
+            }
 
             player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[0][4]), CornerRadii.EMPTY, Insets.EMPTY)));
             player.setText(Lobby.getUsers()[0][1]);
         }
+
+        Label fields = new Label(property + "\n");
+        fields.setFont(Font.font("Tahoma", FontPosture.ITALIC, 10));
+        fields.setTextFill(Color.MIDNIGHTBLUE);
+
         player.setPrefSize(150, 10);
-        box.getChildren().addAll(player, geld, jail, exit);
+        box.getChildren().addAll(player, geld, jail, fields, exit);
         box.setAlignment(Pos.CENTER);
+
         if (PopupPane.getChildren().contains(middlePane)) {
             setPopup(player1Pane);
         }
@@ -849,6 +883,10 @@ public class MainSceneController implements Initializable {
     @FXML
     private void player2ButtonAction(ActionEvent event) throws IOException, InterruptedException {
         Player[] players = Lobby.getPlayerClient().getGame().getPlayers();
+        FieldManager manager = Lobby.getPlayerClient().getGame().getBoard().getFieldManager();
+
+        String property = "";
+
         GridPane player2Pane = new GridPane();
         ScrollPane scroll = new ScrollPane();
         VBox box = new VBox();
@@ -856,6 +894,7 @@ public class MainSceneController implements Initializable {
         scroll.setCenterShape(true);
         player2Pane.add(scroll, 0, 0);
         scroll.setContent(box);
+
         Label geld;
         JFXButton player = new JFXButton();
         JFXButton exit = new JFXButton("Exit");
@@ -863,18 +902,32 @@ public class MainSceneController implements Initializable {
         if (client.getPlayerOnClient().getId() == 2) {
             geld = new Label(" hat in Konto: " + players[1].getMoney());
             jail = new Label(" ist in Gefängnis seit : " + players[1].getDaysInJail());
+            List<PropertyField> ownedFields = manager.getOwnedPropertyFields(players[1])
+                    .collect(Collectors.toList());      //Liste der besessenen Strassen
+            for (PropertyField field : ownedFields) {
+                property += "\n" + field.getName() + " [ " + field.getRent() + " €]";
+            }
             player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[1][4]), CornerRadii.EMPTY, Insets.EMPTY)));
             player.setText(Lobby.getUsers()[1][1]);
         }
         else {
             geld = new Label(" hat in Konto: " + players[2].getMoney());
             jail = new Label(" ist in Gefängnis seit : " + players[2].getDaysInJail());
+            List<PropertyField> ownedFields = manager.getOwnedPropertyFields(players[2])
+                    .collect(Collectors.toList());      //Liste der besessenen Strassen
+            for (PropertyField field : ownedFields) {
+                property += "\n" + field.getName() + " [ " + field.getRent() + " €]";
+            }
             player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[2][4]), CornerRadii.EMPTY, Insets.EMPTY)));
             player.setText(Lobby.getUsers()[2][1]);
         }
 
+        Label fields = new Label(property + "\n");
+        fields.setFont(Font.font("Tahoma", FontPosture.ITALIC, 10));
+        fields.setTextFill(Color.MIDNIGHTBLUE);
+
         player.setPrefSize(150, 10);
-        box.getChildren().addAll(player, geld, jail, exit);
+        box.getChildren().addAll(player, geld, jail, fields, exit);
         box.setAlignment(Pos.CENTER);
 
         if (PopupPane.getChildren().contains(middlePane)) {
@@ -889,6 +942,9 @@ public class MainSceneController implements Initializable {
     @FXML
     private void player3ButtonAction(ActionEvent event) throws IOException, InterruptedException {
         Player[] players = Lobby.getPlayerClient().getGame().getPlayers();
+        FieldManager manager = Lobby.getPlayerClient().getGame().getBoard().getFieldManager();
+
+        String property = "";
         GridPane player3Pane = new GridPane();
         ScrollPane scroll = new ScrollPane();
         VBox box = new VBox();
@@ -896,6 +952,7 @@ public class MainSceneController implements Initializable {
         scroll.setCenterShape(true);
         player3Pane.add(scroll, 0, 0);
         scroll.setContent(box);
+
         Label geld;
         JFXButton player = new JFXButton();
         JFXButton exit = new JFXButton("Exit");
@@ -903,17 +960,32 @@ public class MainSceneController implements Initializable {
         if (client.getPlayerOnClient().getId() == 3) {
             geld = new Label(" hat in Konto: " + players[2].getMoney());
             jail = new Label(" ist in Gefängnis seit : " + players[2].getDaysInJail());
+            List<PropertyField> ownedFields = manager.getOwnedPropertyFields(players[2])
+                    .collect(Collectors.toList());      //Liste der besessenen Strassen
+            for (PropertyField field : ownedFields) {
+                property += "\n" + field.getName() + " [ " + field.getRent() + " €]";
+            }
             player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[2][4]), CornerRadii.EMPTY, Insets.EMPTY)));
             player.setText(Lobby.getUsers()[2][1]);
         }
         else {
             geld = new Label(" hat in Konto: " + players[3].getMoney());
             jail = new Label(" ist in Gefängnis seit : " + players[3].getDaysInJail());
+            List<PropertyField> ownedFields = manager.getOwnedPropertyFields(players[3])
+                    .collect(Collectors.toList());      //Liste der besessenen Strassen
+            for (PropertyField field : ownedFields) {
+                property += "\n" + field.getName() + " [ " + field.getRent() + " €]";
+            }
             player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[3][4]), CornerRadii.EMPTY, Insets.EMPTY)));
             player.setText(Lobby.getUsers()[3][1]);
         }
+
+        Label fields = new Label(property + "\n");
+        fields.setFont(Font.font("Tahoma", FontPosture.ITALIC, 10));
+        fields.setTextFill(Color.MIDNIGHTBLUE);
+
         player.setPrefSize(150, 10);
-        box.getChildren().addAll(player, geld, jail, exit);
+        box.getChildren().addAll(player, geld, jail, fields, exit);
         box.setAlignment(Pos.CENTER);
 
         if (PopupPane.getChildren().contains(middlePane)) {
@@ -928,6 +1000,10 @@ public class MainSceneController implements Initializable {
     @FXML
     private void player4ButtonAction(ActionEvent event) throws IOException, InterruptedException {
         Player[] players = Lobby.getPlayerClient().getGame().getPlayers();
+        FieldManager manager = Lobby.getPlayerClient().getGame().getBoard().getFieldManager();
+
+        String property = "";
+
         GridPane player4Pane = new GridPane();
         ScrollPane scroll = new ScrollPane();
         VBox box = new VBox();
@@ -935,6 +1011,7 @@ public class MainSceneController implements Initializable {
         scroll.setCenterShape(true);
         player4Pane.add(scroll, 0, 0);
         scroll.setContent(box);
+
         Label geld;
         JFXButton player = new JFXButton();
         JFXButton exit = new JFXButton("Exit");
@@ -942,22 +1019,33 @@ public class MainSceneController implements Initializable {
         if (client.getPlayerOnClient().getId() == 4) {
             geld = new Label(" hat in Konto: " + players[3].getMoney());
             jail = new Label(" ist in Gefängnis seit : " + players[3].getDaysInJail());
+            List<PropertyField> ownedFields = manager.getOwnedPropertyFields(players[3])
+                    .collect(Collectors.toList());      //Liste der besessenen Strassen
+            for (PropertyField field : ownedFields) {
+                property += "\n" + field.getName() + " [ " + field.getRent() + " €]";
+            }
             player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[3][4]), CornerRadii.EMPTY, Insets.EMPTY)));
             player.setText(Lobby.getUsers()[3][1]);
         }
         else {
             geld = new Label(" hat in Konto: " + players[4].getMoney());
             jail = new Label(" ist in Gefängnis seit : " + players[4].getDaysInJail());
+            List<PropertyField> ownedFields = manager.getOwnedPropertyFields(players[4])
+                    .collect(Collectors.toList());      //Liste der besessenen Strassen
+            for (PropertyField field : ownedFields) {
+                property += "\n" + field.getName() + " [ " + field.getRent() + " €]";
+            }
+
             player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[4][4]), CornerRadii.EMPTY, Insets.EMPTY)));
             player.setText(Lobby.getUsers()[4][1]);
         }
-//        Label geld = new Label(" hat in Konto: " + players[4].getMoney());
-//        JFXButton player = new JFXButton();
-//        JFXButton exit = new JFXButton("Exit");
-//        player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[4][4]), CornerRadii.EMPTY, Insets.EMPTY)));
-//        player.setText(Lobby.getUsers()[4][1]);
+
+        Label fields = new Label(property + "\n");
+        fields.setFont(Font.font("Tahoma", FontPosture.ITALIC, 10));
+        fields.setTextFill(Color.MIDNIGHTBLUE);
+
         player.setPrefSize(150, 10);
-        box.getChildren().addAll(player, geld, jail, exit);
+        box.getChildren().addAll(player, geld, jail, fields, exit);
         box.setAlignment(Pos.CENTER);
         if (PopupPane.getChildren().contains(middlePane)) {
             setPopup(player4Pane);
@@ -970,6 +1058,10 @@ public class MainSceneController implements Initializable {
     @FXML
     private void player5ButtonAction(ActionEvent event) throws IOException, InterruptedException {
         Player[] players = Lobby.getPlayerClient().getGame().getPlayers();
+        FieldManager manager = Lobby.getPlayerClient().getGame().getBoard().getFieldManager();
+
+        String property = "";
+
         GridPane player5Pane = new GridPane();
         ScrollPane scroll = new ScrollPane();
         VBox box = new VBox();
@@ -977,6 +1069,7 @@ public class MainSceneController implements Initializable {
         scroll.setCenterShape(true);
         player5Pane.add(scroll, 0, 0);
         scroll.setContent(box);
+
         Label geld;
         JFXButton player = new JFXButton();
         JFXButton exit = new JFXButton("Exit");
@@ -984,23 +1077,34 @@ public class MainSceneController implements Initializable {
         if (client.getPlayerOnClient().getId() == 5) {
             geld = new Label(" hat in Konto: " + players[4].getMoney());
             jail = new Label(" ist in Gefängnis seit : " + players[4].getDaysInJail());
+            List<PropertyField> ownedFields = manager.getOwnedPropertyFields(players[4])
+                    .collect(Collectors.toList());      //Liste der besessenen Strassen
+            for (PropertyField field : ownedFields) {
+                property += "\n" + field.getName() + " [ " + field.getRent() + " €]";
+            }
             player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[4][4]), CornerRadii.EMPTY, Insets.EMPTY)));
             player.setText(Lobby.getUsers()[4][1]);
         }
         else {
             geld = new Label(" hat in Konto: " + players[5].getMoney());
             jail = new Label(" ist in Gefängnis seit : " + players[5].getDaysInJail());
+            List<PropertyField> ownedFields = manager.getOwnedPropertyFields(players[5])
+                    .collect(Collectors.toList());      //Liste der besessenen Strassen
+            for (PropertyField field : ownedFields) {
+                property += "\n" + field.getName() + " [ " + field.getRent() + " €]";
+            }
             player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[5][4]), CornerRadii.EMPTY, Insets.EMPTY)));
             player.setText(Lobby.getUsers()[5][1]);
         }
-//        Label geld = new Label(players[5].getName() + " hat in Konto: " + players[5].getMoney());
-//        JFXButton player = new JFXButton();
-//        JFXButton exit = new JFXButton("Exit");
-//        player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[5][4]), CornerRadii.EMPTY, Insets.EMPTY)));
-//        player.setText(Lobby.getUsers()[5][1]);
+
+        Label fields = new Label(property + "\n");
+        fields.setFont(Font.font("Tahoma", FontPosture.ITALIC, 10));
+        fields.setTextFill(Color.MIDNIGHTBLUE);
+        
         player.setPrefSize(150, 10);
-        box.getChildren().addAll(player, geld, jail, exit);
+        box.getChildren().addAll(player, geld, jail, fields, exit);
         box.setAlignment(Pos.CENTER);
+
         if (PopupPane.getChildren().contains(middlePane)) {
             setPopup(player5Pane);
         }
