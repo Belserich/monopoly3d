@@ -8,6 +8,7 @@ package de.btu.monopoly.ui.controller;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextArea;
 import de.btu.monopoly.data.field.Field;
+import de.btu.monopoly.data.field.FieldManager;
 import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.input.IOService;
@@ -15,7 +16,9 @@ import de.btu.monopoly.menu.Lobby;
 import de.btu.monopoly.net.client.GameClient;
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
@@ -768,14 +771,15 @@ public class MainSceneController implements Initializable {
     private void player0ButtonAction(ActionEvent event) throws IOException, InterruptedException {
         Player[] players = Lobby.getPlayerClient().getGame().getPlayers();
         // Player player = players[client.getPlayerOnClient().getId()];
-        // String property = "";
-        //Lobby.getPlayerClient().getGame().getBoard().getFieldManager().getOwnedPropertyFields(player0).forEach(System.out::println);
 
-//        List<PropertyField> ownedFields = Lobby.getPlayerClient().getGame().getBoard().getFieldManager().getOwnedPropertyFields(players[client.getPlayerOnClient().getId()]).collect(Collectors.toList());
-//        for (PropertyField field : ownedFields){
-//            field.getName();
-//
-//        }
+        //Lobby.getPlayerClient().getGame().getBoard().getFieldManager().getOwnedPropertyFields(players[client.getPlayerOnClient().getId()]).forEach(System.out::println);
+        
+        List<PropertyField> ownedFields = Lobby.getPlayerClient().getGame().getBoard().getFieldManager()
+                .getOwnedPropertyFields(players[client.getPlayerOnClient().getId()])
+                .collect(Collectors.toList());      //Liste der besessenen Strassen
+        for (PropertyField field : ownedFields){
+            field.getName();
+        }
         GridPane player0Pane = new GridPane();
         ScrollPane scroll = new ScrollPane();
         VBox box = new VBox();
@@ -787,7 +791,8 @@ public class MainSceneController implements Initializable {
         JFXButton player = new JFXButton();
         JFXButton exit = new JFXButton("Exit");
         //Label properties = new Label("besitzt: " + fields);
-        Label jail = new Label(" ist in Gefängnis seit : " + players[client.getPlayerOnClient().getId()].getDaysInJail());
+        Label jail = new Label(" ist in Gefängnis seit : " + players[client.getPlayerOnClient().getId()]
+                .getDaysInJail());
         player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[client.getPlayerOnClient().getId()][4]), CornerRadii.EMPTY, Insets.EMPTY)));
         player.setText(Lobby.getUsers()[client.getPlayerOnClient().getId()][1]);
         player.setPrefSize(150, 10);
