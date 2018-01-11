@@ -491,6 +491,7 @@ public class MainSceneController implements Initializable {
 
     //onMouseClicked FieldsPopUps
     public void HandleOnMouse(Pane feld) {
+        Field[] currentField = Lobby.getPlayerClient().getGame().getBoard().getFields();
 
         GridPane gp = new GridPane();
         ScrollPane scroll = new ScrollPane();
@@ -503,10 +504,10 @@ public class MainSceneController implements Initializable {
         String text = "";
         for (int i = 0; i < Felder.length; i++) {
             if (Felder[i] == feld) {
-                
-                text = "" + Lobby.getPlayerClient().getGame().getBoard().getFields()[i];
+
+                text = "" + currentField[i];
             }
-           
+
         }
 
         Label info = new Label(text);

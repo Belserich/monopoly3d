@@ -373,14 +373,13 @@
                <children>
                   <GridPane fx:id="gridPark" stylesheets="@../styles/Styles.css">
                     <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="10.0" prefWidth="100.0" />
-                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="90.0" prefWidth="100.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="100.0" prefWidth="100.0" />
                     </columnConstraints>
                     <rowConstraints>
                       <RowConstraints minHeight="10.0" percentHeight="100.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <Pane fx:id="parkplatz" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black;" styleClass="parkBackground" stylesheets="@../styles/Styles.css" GridPane.columnIndex="1" />
+                        <Pane fx:id="parkplatz" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black;" styleClass="parkBackground" stylesheets="@../styles/Styles.css" />
                      </children>
                   </GridPane>
                   <GridPane GridPane.rowIndex="1">
@@ -484,14 +483,13 @@
                   </GridPane>
                   <GridPane prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: ;" GridPane.rowIndex="2">
                     <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="10.0" prefWidth="100.0" />
-                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="90.0" prefWidth="100.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="100.0" prefWidth="100.0" />
                     </columnConstraints>
                     <rowConstraints>
                       <RowConstraints minHeight="10.0" percentHeight="100.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <Pane fx:id="besuch" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black;" styleClass="bescuhBackground" stylesheets="@../styles/Styles.css" GridPane.columnIndex="1" />
+                        <Pane fx:id="besuch" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black;" styleClass="bescuhBackground" stylesheets="@../styles/Styles.css" />
                      </children>
                   </GridPane>
                   <Pane prefHeight="200.0" prefWidth="200.0" />
@@ -501,8 +499,7 @@
                <children>
                   <GridPane>
                      <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="90.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="100.0" prefWidth="100.0" />
                      </columnConstraints>
                      <rowConstraints>
                         <RowConstraints minHeight="10.0" percentHeight="100.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -600,8 +597,7 @@
                   </GridPane>
                   <GridPane GridPane.rowIndex="2">
                      <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="90.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="100.0" prefWidth="100.0" />
                      </columnConstraints>
                      <rowConstraints>
                         <RowConstraints minHeight="10.0" percentHeight="100.0" prefHeight="30.0" vgrow="SOMETIMES" />
