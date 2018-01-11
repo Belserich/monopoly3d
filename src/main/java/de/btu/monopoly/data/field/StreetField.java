@@ -94,8 +94,8 @@ public class StreetField extends PropertyField {
 
     @Override
     public String toString() {
-        return String.format("[Straßenfeld] Name: %s, Preis: %s, Miete0: %s, Miete1: %s, Miete2: %s, Miete3: %s, Miete4: %s"
-                + ", Miete5: %s, Hauspreis: %s, Hypothekswert: %s, Hypotheksrückwert: %s",
+        return String.format("[Straßenfeld] %nName: %s, %nPreis: %s, %nMiete0: %s, %nMiete1: %s, %nMiete2: %s, %nMiete3: %s, %nMiete4: %s"
+                + ", %nMiete5: %s, %nHauspreis: %s, %nHypothekswert: %s, %nHypotheksrückwert: %s",
                 getName(), getPrice(), rents[0], rents[1], rents[2], rents[3], rents[4], rents[5], housePrice, getMortgageValue(), getMortgageBack());
     }
 }

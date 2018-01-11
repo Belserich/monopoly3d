@@ -480,15 +480,17 @@ public class MainSceneController implements Initializable {
         };
         Platform.runLater(task);
 
-        
-        badStr.setOnMouseClicked((event) -> {
-            HandleOnMouse();
+        for (Pane field : Felder) {
+            field.setOnMouseClicked((event) -> {
+                HandleOnMouse(field);
 
-        });
+            });
+        }
+
     }
 
     //onMouseClicked FieldsPopUps
-    public void HandleOnMouse() {
+    public void HandleOnMouse(Pane feld) {
 
         GridPane gp = new GridPane();
         ScrollPane scroll = new ScrollPane();
@@ -498,13 +500,21 @@ public class MainSceneController implements Initializable {
         gp.add(scroll, 0, 0);
         scroll.setContent(box);
 
-        //Label name = new Label("Badstrasse");
-        String text = "" + Lobby.getPlayerClient().getGame().getBoard().getFields()[1];
+        String text = "";
+        for (int i = 0; i < Felder.length; i++) {
+            if (Felder[i] == feld) {
+                
+                text = "" + Lobby.getPlayerClient().getGame().getBoard().getFields()[i];
+            }
+           
+        }
+
         Label info = new Label(text);
         JFXButton exit = new JFXButton("Exit");
 
-        box.getChildren().addAll( info, exit);
-        box.setPrefSize(600, 200);
+        box.getChildren().addAll(info, exit);
+        box.setBackground(new Background(new BackgroundFill(Color.web("#e0f2f1"), CornerRadii.EMPTY, Insets.EMPTY)));
+        box.setPrefWidth(200);
         box.setAlignment(Pos.CENTER);
 
         if (PopupPane.getChildren().contains(middlePane)) {
