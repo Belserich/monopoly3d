@@ -129,7 +129,7 @@
     -fx-background-size: stretch;  
 }
 .ereignis2-titel{
-    -fx-background-image: url("/images/ereignis2-titel.jpg") ;
+    -fx-background-image: url("/images/ereignis-titel.jpg") ;
     -fx-background-position: center;
     -fx-background-size: stretch;  
 }
