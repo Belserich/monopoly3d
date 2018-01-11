@@ -23,7 +23,7 @@ public class HardKi {
 
     private static final Logger LOGGER = Logger.getLogger(HardKi.class.getCanonicalName());
     private static GameClient client;
-    private static final int PROPERTY_CAP_FOR_STAYING_IN_PRISON = 15;
+    private static final int PROPERTY_CAP_FOR_STAYING_IN_PRISON = 9;
 
     public static int jailOption(Player player, GameClient Gclient) {
         IOService.sleep(3000);
@@ -31,29 +31,28 @@ public class HardKi {
         int days = player.getDaysInJail();
         CardStack stack = player.getCardStack();
         int soldProps = getSoldProperties();
-                
+
         // Ist die Obergrenze noch nicht erreicht, versucht die KI sofort rauszukommen
-        if (soldProps < PROPERTY_CAP_FOR_STAYING_IN_PRISON){
-            if (stack.countCardsOfAction(CardAction.JAIL) > 0){ // mit Karte
-                return 3;   
-            } 
-            else if (player.getMoney() > 100) {                 // mit Geld
+        if (soldProps < PROPERTY_CAP_FOR_STAYING_IN_PRISON) {
+            if (stack.countCardsOfAction(CardAction.JAIL) > 0) { // mit Karte
+                return 3;
+            }
+            else if (player.getMoney() > 100) {                  // mit Geld
                 return 2;
             }
             else {
                 return 1;
             }
-        } 
+        }
         else {    // sonst bleibt sie so lang wie moeglich drin
-            if (days >= 3 && stack.countCardsOfAction(CardAction.JAIL) > 0){
+            if (days >= 3 && stack.countCardsOfAction(CardAction.JAIL) > 0) {
                 return 3;
-            } else {
+            }
+            else {
                 return 1;
             }
         }
-        
-       
-        
+
     }
 
     public static int buyPropOption(Player player, PropertyField prop) {
@@ -69,12 +68,12 @@ public class HardKi {
     }
 
     /**
-     * 
+     *
      * @return Anzahl der Properties die einen Besitzer haben
      */
     private static int getSoldProperties() {
         return (int) Arrays.stream(client.getGame().getBoard().getFields())
-                .filter(p -> p instanceof PropertyField).map(p -> (PropertyField)p)
+                .filter(p -> p instanceof PropertyField).map(p -> (PropertyField) p)
                 .filter(p -> p.getOwner() != null).count();
     }
 

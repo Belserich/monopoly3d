@@ -118,9 +118,11 @@ public class IOService {
     }
 
     public static void betSequence(Auction auc) {
-        Player[] kiPlayers = auc.getPlayers();
+        Player[] kiPlayers = new Player[auc.getPlayers().length];
+        System.arraycopy(auc.getPlayers(), 0, kiPlayers, 0, kiPlayers.length);
         Collections.shuffle(Arrays.asList(kiPlayers));
         Player rndKi = kiPlayers[0];
+
         for (Player ki : kiPlayers) {
             rndKi = (ki.getKiLevel() > 0) ? ki : rndKi;
         }
