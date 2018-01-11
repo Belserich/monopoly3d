@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
@@ -46,6 +47,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
+import org.w3c.dom.events.MouseEvent;
 
 /**
  *
@@ -477,6 +479,41 @@ public class MainSceneController implements Initializable {
             }
         };
         Platform.runLater(task);
+
+        
+        badStr.setOnMouseClicked((event) -> {
+            HandleOnMouse();
+
+        });
+    }
+
+    //onMouseClicked FieldsPopUps
+    public void HandleOnMouse() {
+
+        GridPane gp = new GridPane();
+        ScrollPane scroll = new ScrollPane();
+        VBox box = new VBox();
+        gp.setAlignment(Pos.CENTER);
+        scroll.setCenterShape(true);
+        gp.add(scroll, 0, 0);
+        scroll.setContent(box);
+
+        //Label name = new Label("Badstrasse");
+        String text = "" + Lobby.getPlayerClient().getGame().getBoard().getFields()[1];
+        Label info = new Label(text);
+        JFXButton exit = new JFXButton("Exit");
+
+        box.getChildren().addAll( info, exit);
+        box.setPrefSize(600, 200);
+        box.setAlignment(Pos.CENTER);
+
+        if (PopupPane.getChildren().contains(middlePane)) {
+            setPopup(gp);
+        }
+
+        exit.setOnAction(e -> {
+            resetPopup();
+        });
 
     }
 
@@ -1100,7 +1137,7 @@ public class MainSceneController implements Initializable {
         Label fields = new Label(property + "\n");
         fields.setFont(Font.font("Tahoma", FontPosture.ITALIC, 10));
         fields.setTextFill(Color.MIDNIGHTBLUE);
-        
+
         player.setPrefSize(150, 10);
         box.getChildren().addAll(player, geld, jail, fields, exit);
         box.setAlignment(Pos.CENTER);
