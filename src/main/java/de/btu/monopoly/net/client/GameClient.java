@@ -12,9 +12,10 @@ import de.btu.monopoly.core.service.AuctionService;
 import de.btu.monopoly.core.service.NetworkService;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.menu.LobbyService;
-import de.btu.monopoly.net.networkClasses.BroadcastPlayerChoiceRequest;
 import de.btu.monopoly.ui.controller.GuiMessages;
+
 import java.io.IOException;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -25,8 +26,7 @@ import java.util.logging.Logger;
 public class GameClient {
 
     private static final Logger LOGGER = Logger.getLogger(GameClient.class.getCanonicalName());
-
-    private UiInteractionThread uiThread;
+    
     private int tcpPort;
     private int timeout;
     private Client client;
@@ -39,8 +39,7 @@ public class GameClient {
     public GameClient(int tcp, int timeout) {
         this.tcpPort = tcp;
         this.timeout = timeout;
-
-        uiThread = new UiInteractionThread(this);
+        
         client = new Client();
         kryo = client.getKryo();
         NetworkService.registerKryoClasses(kryo);
@@ -53,7 +52,7 @@ public class GameClient {
         try {
             client.start();
             client.connect(timeout, serverIP, tcpPort);
-            listener = new ClientListener(uiThread);
+            listener = new ClientListener();
             client.addListener(listener);
             client.addListener(new LobbyService());
             client.addListener(new AuctionService());
@@ -76,17 +75,14 @@ public class GameClient {
     public void sendTCP(Object object) {
         client.sendTCP(object);
     }
-
-    public BroadcastPlayerChoiceRequest[] getPlayerChoiceObjects() {
-        return uiThread.receivedPlayerChoiceObjects.stream().toArray(BroadcastPlayerChoiceRequest[]::new);
-    }
-
-    public void clearPlayerChoiceObjects() {
-        uiThread.receivedPlayerChoiceObjects.clear();
-    }
-
-    public UiInteractionThread getUiThread() {
-        return uiThread;
+    
+    public Object waitForObjectOfClass(Class<?> clazz) {
+        Optional<Object> optional = listener.waitForObjectOfClass(clazz);
+        if (optional.isPresent()) {
+            return optional.get();
+        }
+        else throw new RuntimeException(String.format("Thread %s interrupted while waiting for network data.",
+                Thread.currentThread().getName()));
     }
 
     /**

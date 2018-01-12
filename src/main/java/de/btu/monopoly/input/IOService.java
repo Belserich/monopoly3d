@@ -6,7 +6,6 @@
 package de.btu.monopoly.input;
 
 import de.btu.monopoly.GlobalSettings;
-import de.btu.monopoly.core.Game;
 import de.btu.monopoly.core.GameBoard;
 import de.btu.monopoly.core.mechanics.Auction;
 import de.btu.monopoly.data.field.PropertyField;
@@ -17,6 +16,7 @@ import de.btu.monopoly.ki.MediumKi;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.networkClasses.BroadcastPlayerChoiceRequest;
 import de.btu.monopoly.ui.SceneManager;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.logging.Level;
@@ -152,20 +152,10 @@ public class IOService {
             return choice;
         }
         else {
-            do {
-                BroadcastPlayerChoiceRequest[] packets = client.getPlayerChoiceObjects();
-                if (packets.length > 1) {
-                    LOGGER.warning("Fehler: Mehr als ein choice-Packet registriert!");
-                    return -1;
-                }
-                else if (packets.length == 1) {
-                    int retVal = packets[0].getChoice();
-                    client.clearPlayerChoiceObjects();
-                    return retVal;
-                }
-            } while (Game.getIS_RUNNING().get());
+            BroadcastPlayerChoiceRequest request = (BroadcastPlayerChoiceRequest)
+                    client.waitForObjectOfClass(BroadcastPlayerChoiceRequest.class);
+            return request.getChoice();
         }
-        return -1;
     }
 
     public static void sleep(int millis) {
