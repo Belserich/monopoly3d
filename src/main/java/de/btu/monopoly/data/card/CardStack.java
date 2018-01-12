@@ -6,8 +6,8 @@
 package de.btu.monopoly.data.card;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.LinkedList;
+import java.util.Random;
 
 /**
  *
@@ -38,8 +38,17 @@ public class CardStack {
     /**
      * Mischt den Kartenstapel.
      */
-    public void shuffle() {
-        Collections.shuffle(cards);
+    public void shuffle(Random random) {
+        
+        Card temp;
+        int index;
+        for (int i = cards.size() - 1; i > 0; i--) {
+            
+            index = random.nextInt(i + 1);
+            temp = cards.get(index);
+            cards.set(index, cards.get(i));
+            cards.set(i, temp);
+        }
     }
 
     /**
