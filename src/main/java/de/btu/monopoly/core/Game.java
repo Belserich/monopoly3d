@@ -26,7 +26,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -36,10 +36,13 @@ import java.util.stream.Collectors;
  */
 public class Game {
 
-    private static AtomicBoolean IS_RUNNING = new AtomicBoolean(false);
-
     private static final Logger LOGGER = Logger.getLogger(Game.class.getCanonicalName());
-
+    
+    /**
+     * Spielclient
+     */
+    private final GameClient client;
+    
     /**
      * Spielbrett
      */
@@ -49,25 +52,26 @@ public class Game {
      * Spieler (Zuschauer und aktive Spieler)
      */
     private final Player[] players;
-
-    private final GameClient client;
-
-    private static long SEED;
+    
+    /**
+     * Die Zufallsinstanz für sämtliche zufällige Spielereignisse
+     */
+    private final Random random;
 
     /**
      * Die fachliche Komponente des Spiels als Einheit, bestehend aus einem Spielbrett, den Spielern sowie Zuschauern.
      *
-     * @param players Spieler
      * @param client GameClient
+     * @param players Spieler
      * @param seed RandomSeed
-     *
      */
-    public Game(Player[] players, GameClient client, long seed) {
-        this.players = players;
+    public Game(GameClient client, Player[] players, long seed) {
+    
         this.client = client;
-        this.SEED = seed;
+        this.players = players;
+        random = new Random(seed);
+        
         IOService.setClient(client);
-        System.out.println(GlobalSettings.isRunInConsole());
         if (!GlobalSettings.isRunAsTest() && !GlobalSettings.isRunInConsole()) {
             TextAreaHandler logHandler = new TextAreaHandler();
             LOGGER.addHandler(logHandler);
@@ -75,17 +79,18 @@ public class Game {
     }
 
     public void init() {
-        LOGGER.log(Level.INFO, "Spiel wird initialisiert.");
+        LOGGER.info("Spiel wird initialisiert.");
 
         try {
             CardStack stack = CardStackParser.parse("/data/card_data.xml");
-            LOGGER.log(Level.FINEST, stack.toString());
+            stack.shuffle(random);
+            LOGGER.finest(stack.toString());
             GameBoardParser.setCardLoadout0(stack);
             GameBoardParser.setCardLoadout1(stack);
             board = GameBoardParser.parse("/data/field_data.xml");
             AuctionService.initAuction(players, client);
         } catch (IOException | SAXException | ParserConfigurationException ex) {
-            LOGGER.log(Level.WARNING, "Fehler beim initialisieren des Boards / der Karten.", ex);
+            LOGGER.warning(String.format("Fehler beim initialisieren des Boards / der Karten.", ex));
         }
 
         for (Player player : players) {
@@ -93,7 +98,6 @@ public class Game {
         }
 
         System.err.println("-------------------------");
-        getIS_RUNNING().set(true);
     }
 
     public void start() throws InterruptedException {
@@ -170,7 +174,7 @@ public class Game {
     }
 
     public void processJailRollOption(Player player) {
-        int[] result = PlayerService.roll(player);
+        int[] result = PlayerService.roll(random);
         if (result[0] == result[1]) {
             PlayerService.freeFromJail(player);
         }
@@ -209,7 +213,7 @@ public class Game {
 
         LOGGER.info(String.format("%s ist dran mit würfeln.", player.getName()));
         IOService.sleep(2000);
-        rollResult = PlayerService.roll(player);
+        rollResult = PlayerService.roll(random);
         doubletCount += (rollResult[0] == rollResult[1]) ? 1 : 0;
 
         if (doubletCount >= 3) {
@@ -275,7 +279,7 @@ public class Game {
     }
 
     private void processBuyPropertyFieldOption(Player player, PropertyField prop) {
-        int choice = IOService.buyPropertyChoice(player, prop);
+        int choice = IOService.buyPropertyChoice(player, prop, random);
 
         switch (choice) {
             case 1: // Kaufen
@@ -523,26 +527,5 @@ public class Game {
 
     public Player[] getPlayers() {
         return players;
-    }
-
-    /**
-     * @return the SEED
-     */
-    public static long getSEED() {
-        return SEED;
-    }
-
-    /**
-     * @return the IS_RUNNING
-     */
-    public static AtomicBoolean getIS_RUNNING() {
-        return IS_RUNNING;
-    }
-
-    /**
-     * @param aIS_RUNNING the IS_RUNNING to set
-     */
-    public static void setIS_RUNNING(AtomicBoolean aIS_RUNNING) {
-        IS_RUNNING = aIS_RUNNING;
     }
 }

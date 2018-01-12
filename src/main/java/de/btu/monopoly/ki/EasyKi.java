@@ -13,6 +13,8 @@ import de.btu.monopoly.data.card.CardStack;
 import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.input.IOService;
+
+import java.util.Random;
 import java.util.logging.Logger;
 
 /**
@@ -39,9 +41,9 @@ public class EasyKi {
         return choice;
     }
 
-    public static int buyPropOption(Player player, PropertyField prop) {
+    public static int buyPropOption(Player player, PropertyField prop, Random random) {
         int choice;
-        int percentage = PlayerService.getRng().nextInt(100);
+        int percentage =  random.nextInt(100);
         if (percentage <= 50) {
             choice = 1;
         }

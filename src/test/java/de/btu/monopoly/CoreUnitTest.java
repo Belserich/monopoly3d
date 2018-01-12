@@ -14,6 +14,8 @@ import de.btu.monopoly.net.client.GameClient;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.Random;
+
 /**
  *
  * @author Patrick Kalweit
@@ -37,7 +39,7 @@ public class CoreUnitTest {
         }
         client = new GameClient(59687, 5000);
         client.setPlayerOnClient(players[0]);
-        game = new Game(players, client, 42);
+        game = new Game(client, players, 42);
         game.init();
     }
 
@@ -72,7 +74,7 @@ public class CoreUnitTest {
         Player patrick = players[0];
 
         for (int j = 0; j < 1000; j++) {
-            int[] result = PlayerService.roll(patrick);
+            int[] result = PlayerService.roll(new Random());
             for (int i : result) {
                 Assert.assertTrue("Wuerfelergebnis ungueltig", i > 0 && i < 7);
             }

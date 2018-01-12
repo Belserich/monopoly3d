@@ -68,7 +68,6 @@ public class GameClient {
 
     public void disconnect() {
         LOGGER.finer("Client trennt Verbindung");
-        Game.getIS_RUNNING().set(false);
         client.stop();
     }
 
