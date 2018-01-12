@@ -289,6 +289,8 @@ public class MainSceneController implements Initializable {
     private int player4ButtonID;
     private int player5ButtonID;
 
+    // -------------------------------------------------------------------------
+    // Initialisierung von Buttons und interner Variablen
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
@@ -385,11 +387,14 @@ public class MainSceneController implements Initializable {
         middlePane.setBackground(new Background(new BackgroundImage(image2, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT)));
         PopupPane.add(middlePane, 0, 1);
 
-        // User aus Lobby holen ud Farben setzen
+        // User aus Lobby holen und Farben setzen
         client = Lobby.getPlayerClient();
 
     }
 
+    /**
+     * Initialisierung der Spielerbuttons und Spielfiguren
+     */
     public void playerInitialise() {
         Task task = new Task() {
             @Override
@@ -505,15 +510,23 @@ public class MainSceneController implements Initializable {
         };
         Platform.runLater(task);
 
+        // Initialisierung für FeldPopups (Miete, etc.)
         for (Pane field : Felder) {
             field.setOnMouseClicked((event) -> {
-                HandleOnMouse(field);
+                fieldPopup(field);
 
             });
         }
 
     }
 
+    // -------------------------------------------------------------------------
+    // Interne Popups in der GUI (permanent angezeigte Buttons)
+    /**
+     * Öffnen des jeweiligen SpielerPopups
+     *
+     * @param id
+     */
     private void playerButtonPopup(int id) {
         Player[] players = Lobby.getPlayerClient().getGame().getPlayers();
         FieldManager manager = Lobby.getPlayerClient().getGame().getBoard().getFieldManager();
@@ -564,9 +577,13 @@ public class MainSceneController implements Initializable {
             resetPopup();
         });
     }
-//onMouseClicked FieldsPopUps
 
-    public void HandleOnMouse(Pane feld) {
+    /**
+     * Öffnen des Feldpopups zu angeklicktem Feld
+     *
+     * @param feld
+     */
+    public void fieldPopup(Pane feld) {
         Field[] currentField = Lobby.getPlayerClient().getGame().getBoard().getFields();
 
         GridPane gp = new GridPane();
@@ -583,9 +600,7 @@ public class MainSceneController implements Initializable {
 
                 text = "" + currentField[i];
             }
-
         }
-
         Label info = new Label(text);
         JFXButton exit = new JFXButton("Exit");
 
@@ -604,122 +619,11 @@ public class MainSceneController implements Initializable {
 
     }
 
-    public void appendText(String message) {
-        Task task = new Task() {
-            @Override
-            protected Object call() throws Exception {
-                textArea.appendText(message);
-                return null;
-            }
-        };
-        Platform.runLater(task);
-    }
-
-    public void geldUpdate0(Player[] players) {
-        Task task = new Task() {
-            @Override
-            protected Object call() throws Exception {
-
-                geld0.setText("Geld: " + players[client.getPlayerOnClient().getId()].getMoney());
-                player0Geld.add(geld0, 0, 0);
-                return null;
-            }
-
-        };
-        Platform.runLater(task);
-
-    }
-
-    public void geldUpdate1(Player[] players) {
-        Task task = new Task() {
-            @Override
-            protected Object call() throws Exception {
-                for (int i = 0; i < players.length; i++) {
-                    if (player1Button.getText().equals(players[i].getName())) {
-                        geld1.setText("Geld: " + players[i].getMoney());
-                        player1Geld.add(geld1, 0, 0);
-                    }
-                }
-                return null;
-            }
-
-        };
-        Platform.runLater(task);
-
-    }
-
-    public void geldUpdate2(Player[] players) {
-        Task task = new Task() {
-            @Override
-            protected Object call() throws Exception {
-                for (int i = 0; i < players.length; i++) {
-                    if (player2Button.getText().equals(players[i].getName())) {
-                        geld2.setText("Geld: " + players[i].getMoney());
-                        player2Geld.add(geld2, 0, 0);
-                    }
-                }
-                return null;
-            }
-
-        };
-        Platform.runLater(task);
-
-    }
-
-    public void geldUpdate3(Player[] players) {
-        Task task = new Task() {
-            @Override
-            protected Object call() throws Exception {
-                for (int i = 0; i < players.length; i++) {
-                    if (player3Button.getText().equals(players[i].getName())) {
-                        geld3.setText("Geld: " + players[i].getMoney());
-                        player3Geld.add(geld3, 0, 0);
-                    }
-                }
-                return null;
-            }
-
-        };
-        Platform.runLater(task);
-
-    }
-
-    public void geldUpdate4(Player[] players) {
-        Task task = new Task() {
-            @Override
-            protected Object call() throws Exception {
-                for (int i = 0; i < players.length; i++) {
-                    if (player4Button.getText().equals(players[i].getName())) {
-                        geld4.setText("Geld: " + players[i].getMoney());
-                        player4Geld.add(geld4, 0, 0);
-                    }
-                }
-                return null;
-            }
-
-        };
-        Platform.runLater(task);
-
-    }
-
-    public void geldUpdate5(Player[] players) {
-        Task task = new Task() {
-            @Override
-            protected Object call() throws Exception {
-                for (int i = 0; i < players.length; i++) {
-                    if (player5Button.getText().equals(players[i].getName())) {
-                        geld5.setText("Geld: " + players[i].getMoney());
-                        player5Geld.add(geld5, 0, 0);
-                    }
-                }
-                return null;
-            }
-
-        };
-        Platform.runLater(task);
-
-    }
-
+    // -------------------------------------------------------------------------
+    // Update Funktionen für Steuerung aktiver Inhalte des Spielbretts
+    /**
+     * Updaten des Geldes der Spieler
+     */
     public void geldUpdate() {
         Player[] players = Lobby.getPlayerClient().getGame().getPlayers();
         if (players.length >= 1) {
@@ -740,9 +644,116 @@ public class MainSceneController implements Initializable {
         if (players.length >= 6) {
             geldUpdate5(players);
         }
+    }
+
+    private void geldUpdate0(Player[] players) {
+        Task task = new Task() {
+            @Override
+            protected Object call() throws Exception {
+
+                geld0.setText("Geld: " + players[client.getPlayerOnClient().getId()].getMoney());
+                player0Geld.add(geld0, 0, 0);
+                return null;
+            }
+
+        };
+        Platform.runLater(task);
 
     }
 
+    private void geldUpdate1(Player[] players) {
+        Task task = new Task() {
+            @Override
+            protected Object call() throws Exception {
+                for (int i = 0; i < players.length; i++) {
+                    if (player1Button.getText().equals(players[i].getName())) {
+                        geld1.setText("Geld: " + players[i].getMoney());
+                        player1Geld.add(geld1, 0, 0);
+                    }
+                }
+                return null;
+            }
+
+        };
+        Platform.runLater(task);
+
+    }
+
+    private void geldUpdate2(Player[] players) {
+        Task task = new Task() {
+            @Override
+            protected Object call() throws Exception {
+                for (int i = 0; i < players.length; i++) {
+                    if (player2Button.getText().equals(players[i].getName())) {
+                        geld2.setText("Geld: " + players[i].getMoney());
+                        player2Geld.add(geld2, 0, 0);
+                    }
+                }
+                return null;
+            }
+
+        };
+        Platform.runLater(task);
+
+    }
+
+    private void geldUpdate3(Player[] players) {
+        Task task = new Task() {
+            @Override
+            protected Object call() throws Exception {
+                for (int i = 0; i < players.length; i++) {
+                    if (player3Button.getText().equals(players[i].getName())) {
+                        geld3.setText("Geld: " + players[i].getMoney());
+                        player3Geld.add(geld3, 0, 0);
+                    }
+                }
+                return null;
+            }
+
+        };
+        Platform.runLater(task);
+
+    }
+
+    private void geldUpdate4(Player[] players) {
+        Task task = new Task() {
+            @Override
+            protected Object call() throws Exception {
+                for (int i = 0; i < players.length; i++) {
+                    if (player4Button.getText().equals(players[i].getName())) {
+                        geld4.setText("Geld: " + players[i].getMoney());
+                        player4Geld.add(geld4, 0, 0);
+                    }
+                }
+                return null;
+            }
+
+        };
+        Platform.runLater(task);
+
+    }
+
+    private void geldUpdate5(Player[] players) {
+        Task task = new Task() {
+            @Override
+            protected Object call() throws Exception {
+                for (int i = 0; i < players.length; i++) {
+                    if (player5Button.getText().equals(players[i].getName())) {
+                        geld5.setText("Geld: " + players[i].getMoney());
+                        player5Geld.add(geld5, 0, 0);
+                    }
+                }
+                return null;
+            }
+
+        };
+        Platform.runLater(task);
+
+    }
+
+    /**
+     * Updaten der Position der Spielfigur
+     */
     public void playerUpdate() {
         Player[] players = Lobby.getPlayerClient().getGame().getPlayers();
 
@@ -797,7 +808,7 @@ public class MainSceneController implements Initializable {
 
     }
 
-    public void playerUpdate0(Player[] players, int nextPos) {
+    private void playerUpdate0(Player[] players, int nextPos) {
         Task task = new Task() {
             @Override
             protected Object call() throws Exception {
@@ -810,7 +821,7 @@ public class MainSceneController implements Initializable {
         Platform.runLater(task);
     }
 
-    public void playerUpdate1(Player[] players, int nextPos) {
+    private void playerUpdate1(Player[] players, int nextPos) {
         Task task = new Task() {
             @Override
             protected Object call() throws Exception {
@@ -823,7 +834,7 @@ public class MainSceneController implements Initializable {
         Platform.runLater(task);
     }
 
-    public void playerUpdate2(Player[] players, int nextPos) {
+    private void playerUpdate2(Player[] players, int nextPos) {
         Task task = new Task() {
             @Override
             protected Object call() throws Exception {
@@ -836,7 +847,7 @@ public class MainSceneController implements Initializable {
         Platform.runLater(task);
     }
 
-    public void playerUpdate3(Player[] players, int nextPos) {
+    private void playerUpdate3(Player[] players, int nextPos) {
         Task task = new Task() {
             @Override
             protected Object call() throws Exception {
@@ -849,7 +860,7 @@ public class MainSceneController implements Initializable {
         Platform.runLater(task);
     }
 
-    public void playerUpdate4(Player[] players, int nextPos) {
+    private void playerUpdate4(Player[] players, int nextPos) {
         Task task = new Task() {
             @Override
             protected Object call() throws Exception {
@@ -862,7 +873,7 @@ public class MainSceneController implements Initializable {
         Platform.runLater(task);
     }
 
-    public void playerUpdate5(Player[] players, int nextPos) {
+    private void playerUpdate5(Player[] players, int nextPos) {
         Task task = new Task() {
             @Override
             protected Object call() throws Exception {
@@ -875,6 +886,9 @@ public class MainSceneController implements Initializable {
         Platform.runLater(task);
     }
 
+    /**
+     * Update der Anzeigen für Spielerbesitz
+     */
     public void propertyUpdate() {
         if (Lobby.getPlayerClient().getGame().getBoard() != null) {
             Field[] fields = Lobby.getPlayerClient().getGame().getBoard().getFieldManager().getFields();
@@ -893,6 +907,13 @@ public class MainSceneController implements Initializable {
         }
     }
 
+    // -------------------------------------------------------------------------
+    // Grundlegende Steuerung der Popups
+    /**
+     * Übergebenes Popup öffnen
+     *
+     * @param gridpane
+     */
     public void setPopup(GridPane gridpane) {
 
         Task task = new Task() {
@@ -907,12 +928,33 @@ public class MainSceneController implements Initializable {
 
     }
 
+    /**
+     * Reset des letzten Popups
+     */
     public void resetPopup() {
         Task task = new Task() {
             @Override
             protected Object call() throws Exception {
                 PopupPane.getChildren().clear();
                 PopupPane.add(middlePane, 0, 0);
+                return null;
+            }
+        };
+        Platform.runLater(task);
+    }
+
+    // -------------------------------------------------------------------------
+    // Steuerung des Protokollfensters
+    /**
+     * Anfügen eines Texts in das Protokollfenster
+     *
+     * @param message
+     */
+    public void appendText(String message) {
+        Task task = new Task() {
+            @Override
+            protected Object call() throws Exception {
+                textArea.appendText(message);
                 return null;
             }
         };
