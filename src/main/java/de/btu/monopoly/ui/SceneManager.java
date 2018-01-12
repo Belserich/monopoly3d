@@ -13,7 +13,6 @@ import de.btu.monopoly.input.IOService;
 import de.btu.monopoly.menu.Lobby;
 import de.btu.monopoly.ui.controller.LobbyController;
 import de.btu.monopoly.ui.controller.MainSceneController;
-import java.io.IOException;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -21,6 +20,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+
+import java.io.IOException;
 
 /**
  *
@@ -242,7 +243,7 @@ public class SceneManager extends Stage {
         return -1;
     }
 
-    public static int askForFieldPopup(Player player, Field[] fields) {
+    public static int askForFieldPopup(Player player, String[] fieldNames) {
 
         GridPane gridPane = new GridPane();
 
@@ -252,8 +253,8 @@ public class SceneManager extends Stage {
 
         button.setText("Eingabe");
 
-        for (Field field : fields) {
-            fieldBox.getItems().add(field.getName());
+        for (String name : fieldNames) {
+            fieldBox.getItems().add(name);
         }
 
         fieldBox.getSelectionModel().selectFirst();
@@ -274,7 +275,7 @@ public class SceneManager extends Stage {
         for (Field field : Lobby.getPlayerClient().getGame().getBoard().getFieldManager().getFields()) {
 
             id++;
-            if (field == fields[fieldBox.getSelectionModel().getSelectedIndex()]) {
+            if (field.getName() == fieldNames[fieldBox.getSelectionModel().getSelectedIndex()]) {
                 return id;
 
             }

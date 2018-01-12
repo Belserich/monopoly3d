@@ -7,12 +7,13 @@ package de.btu.monopoly;
 
 import de.btu.monopoly.menu.MainMenu;
 import de.btu.monopoly.ui.SceneManager;
+import javafx.application.Application;
+import javafx.stage.Stage;
+
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
-import javafx.application.Application;
-import javafx.stage.Stage;
 
 /**
  *
@@ -37,7 +38,7 @@ public class Launcher extends Application {
      */
     public static void main(String[] args) throws Exception {
         configLoggers();
-        GlobalSettings.setRunInConsole(false); // Als Zusatz wurde in Game.java Z.424 die Auktion deaktiviert
+        GlobalSettings.setRunInConsole(true); // Als Zusatz wurde in Game.java Z.424 die Auktion deaktiviert
         if (GlobalSettings.isRunInConsole()) {
             initGame();
         }
