@@ -133,12 +133,12 @@ public class SceneManager extends Stage {
     public static int buyPropertyPopup() {
 
         GridPane gridpane = new GridPane();
-        ScrollPane scroll = new ScrollPane();
+       // ScrollPane scroll = new ScrollPane();
         VBox box = new VBox();
         gridpane.setAlignment(Pos.CENTER);
-        scroll.setCenterShape(true);
-        gridpane.add(scroll, 0, 0);
-        scroll.setContent(box);
+       // scroll.setCenterShape(true);
+        gridpane.add(box, 0, 0);
+       // box.setContent(box);
 
         Label label = new Label("Möchtest du die " + Lobby.getPlayerClient().getGame().getBoard().getFields()[Lobby.getPlayerClient().getPlayerOnClient().getPosition()].getName() + " kaufen?");
 
@@ -159,7 +159,7 @@ public class SceneManager extends Stage {
 
         box.setStyle(cssLayout);
         box.setSpacing(10);
-        box.setPrefSize(300, 100);
+        box.setPrefSize(300, 200);
         label.setFont(Font.font("Tahoma", 14));
         box.getChildren().addAll(label, buyButton, dontBuyButton);
         box.setAlignment(Pos.CENTER);
@@ -184,12 +184,12 @@ public class SceneManager extends Stage {
     public static int jailChoicePopup() {
 
         GridPane gridpane = new GridPane();
-        ScrollPane scroll = new ScrollPane();
+       // ScrollPane scroll = new ScrollPane();
         VBox box = new VBox();
         gridpane.setAlignment(Pos.CENTER);
-        scroll.setCenterShape(true);
-        gridpane.add(scroll, 0, 0);
-        scroll.setContent(box);
+        //scroll.setCenterShape(true);
+        gridpane.add(box, 0, 0);
+        //scroll.setContent(box);
 
         Label label = new Label("Du bist im Gefängnis. Was möchtest du tun?");
 
@@ -218,10 +218,6 @@ public class SceneManager extends Stage {
         box.getChildren().addAll(label, rollButton, payButton, cardButton);
         box.setAlignment(Pos.CENTER);
 
-//        gridpane.add(label, 0, 0);
-//        gridpane.add(rollButton, 1, 0);
-//        gridpane.add(payButton, 1, 1);
-//        gridpane.add(cardButton, 1, 2);
         GameController.setPopup(gridpane);
 
         while (!rollButton.isPressed() || !payButton.isPressed() || !cardButton.isPressed()) {
@@ -246,12 +242,12 @@ public class SceneManager extends Stage {
     public static int actionSequencePopup() {
 
         GridPane gridpane = new GridPane();
-        ScrollPane scroll = new ScrollPane();
+        //ScrollPane scroll = new ScrollPane();
         VBox box = new VBox();
         gridpane.setAlignment(Pos.CENTER);
-        scroll.setCenterShape(true);
-        gridpane.add(scroll, 0, 0);
-        scroll.setContent(box);
+        //scroll.setCenterShape(true);
+        gridpane.add(box, 0, 0);
+       // scroll.setContent(box);
         Label label = new Label("Was möchtest du noch tun?");
 
         JFXButton nothingButton = new JFXButton();
@@ -293,31 +289,6 @@ public class SceneManager extends Stage {
         box.getChildren().addAll(label, nothingButton, buyHouseButton, removeHouseButton, addMortgageButton, removeMortgageButton, tradeButton);
         box.setAlignment(Pos.CENTER);
 
-//        GridPane gridpane = new GridPane();
-//
-//        Label label = new Label("Was möchtest du noch tun?");
-//
-//        JFXButton nothingButton = new JFXButton();
-//        JFXButton buyHouseButton = new JFXButton();
-//        JFXButton removeHouseButton = new JFXButton();
-//        JFXButton addMortgageButton = new JFXButton();
-//        JFXButton removeMortgageButton = new JFXButton();
-//        JFXButton tradeButton = new JFXButton();
-//
-//        nothingButton.setText("Nichts");
-//        buyHouseButton.setText("Haus kaufen");
-//        removeHouseButton.setText("Haus verkaufen");
-//        addMortgageButton.setText("Hypothek aufnehmen");
-//        removeMortgageButton.setText("Hypothek abbezahlen");
-//        tradeButton.setText("Handeln");
-//
-//        gridpane.add(label, 0, 0);
-//        gridpane.add(nothingButton, 1, 0);
-//        gridpane.add(buyHouseButton, 1, 1);
-//        gridpane.add(removeHouseButton, 1, 2);
-//        gridpane.add(addMortgageButton, 1, 3);
-//        gridpane.add(removeMortgageButton, 1, 4);
-//        gridpane.add(tradeButton, 1, 5);
         GameController.setPopup(gridpane);
 
         while (!nothingButton.isPressed() || !buyHouseButton.isPressed() || !removeHouseButton.isPressed() || !addMortgageButton.isPressed() || !removeMortgageButton.isPressed() || !tradeButton.isPressed()) {
@@ -355,12 +326,12 @@ public class SceneManager extends Stage {
 
         GridPane gridPane = new GridPane();
 
-        ScrollPane scroll = new ScrollPane();
+        //ScrollPane scroll = new ScrollPane();
         VBox box = new VBox();
         gridPane.setAlignment(Pos.CENTER);
-        scroll.setCenterShape(true);
-        gridPane.add(scroll, 0, 0);
-        scroll.setContent(box);
+        //scroll.setCenterShape(true);
+        gridPane.add(box, 0, 0);
+       // scroll.setContent(box);
         Label label = new Label("Wähle ein Feld:");
         JFXComboBox fieldBox = new JFXComboBox();
         Button button = new Button();
@@ -412,12 +383,12 @@ public class SceneManager extends Stage {
     public static void AuctionPopup() {
 
         //initialisierung der benoetigten Objekte
-        ScrollPane scroll = new ScrollPane();
+        //ScrollPane scroll = new ScrollPane();
         VBox box = new VBox();
         auctionGP.setAlignment(Pos.CENTER);
-        scroll.setCenterShape(true);
-        auctionGP.add(scroll, 0, 0);
-        scroll.setContent(box);
+       // scroll.setCenterShape(true);
+        auctionGP.add(box, 0, 0);
+       // scroll.setContent(box);
 
         hoechstgebotLabel.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
         Label label2 = new Label("Dein Gebot für \n" + AuctionService.getPropertyString() + ":");
@@ -484,12 +455,12 @@ public class SceneManager extends Stage {
         if (stillActive == false) {
             GameController.resetPopup();
             GridPane gp = new GridPane();
-            ScrollPane scroll = new ScrollPane();
+            //ScrollPane scroll = new ScrollPane();
             VBox box = new VBox();
             gp.setAlignment(Pos.CENTER);
-            scroll.setCenterShape(true);
-            gp.add(scroll, 0, 0);
-            scroll.setContent(box);
+           // scroll.setCenterShape(true);
+            gp.add(box, 0, 0);
+            //scroll.setContent(box);
             Label lbl = new Label(Lobby.getPlayerClient().getGame().getPlayers()[AuctionService.getHighestBidder()].getName()
                     + " hat die Auktion gewonnen und muss " + AuctionService.getHighestBid() + "€ für das Grundstück "
                     + AuctionService.getPropertyString() + " zahlen!");
