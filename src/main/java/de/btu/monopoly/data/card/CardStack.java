@@ -57,7 +57,7 @@ public class CardStack {
      * @param action Aktionstyp
      * @return nächste Karte vom angegebenen Typ
      */
-    private Card nextCard(CardAction action) {
+    private Card nextCardOfAction(CardAction action) {
         for (Card c : cards) {
             if (c.getActions().contains(action)) {
                 return c;
@@ -81,7 +81,7 @@ public class CardStack {
      *
      * @param card Karte
      */
-    void removeCard(Card card) {
+    public void removeCard(Card card) {
         // Geht den Stapel von hinten durch da die gesuchte Karte meist die Letzte ist.
         for (int i = cards.size() - 1; i >= 0; i--) {
             if (cards.get(i) == card) {
@@ -96,8 +96,8 @@ public class CardStack {
      * @param action Aktionstyp
      * @return nächste Karte eines bestimmten Aktionstyps
      */
-    Card removeCardOfAction(CardAction action) {
-        Card retObj = nextCard(action);
+    public Card removeCardOfAction(CardAction action) {
+        Card retObj = nextCardOfAction(action);
         cards.remove(retObj);
         return retObj;
     }
@@ -114,6 +114,10 @@ public class CardStack {
             counter += c.getActions().contains(action) ? 1 : 0;
         }
         return counter;
+    }
+    
+    public Card cardAt(int index) {
+        return cards.get(index);
     }
 
     /**

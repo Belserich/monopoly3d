@@ -9,7 +9,7 @@ import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.player.Player;
 
 import java.util.logging.Logger;
-import java.util.stream.Stream;
+import java.util.stream.IntStream;
 
 /**
  * @author Maximilian Bels (belsmaxi@b-tu.de)
@@ -113,10 +113,20 @@ public class CardManager {
         else return false;
     }
     
-    public Stream<Tradeable> getTradeableCards(Player player) {
-        return player.getCardStack().cards.stream()
-                .filter(c -> c instanceof Tradeable)
-                .map(c -> (Tradeable) c);
+    public int[] getTradeableCardIds(Player player) {
+        CardStack stack = player.getCardStack();
+        IntStream.Builder builder = IntStream.builder();
+        for (int id = 0; id < stack.cards.size(); id++) {
+            if (stack.cards.get(id) instanceof Tradeable) {
+                builder.accept(id);
+            }
+        }
+        return builder.build().toArray();
+    }
+    
+    public Card getCard(Player player, int id) {
+        CardStack stack = player.getCardStack();
+        return stack.cards.get(id);
     }
     
     private void processRenovateAction(Player player, int[] args) {

@@ -1,12 +1,14 @@
 package de.btu.monopoly.core;
 
-import static de.btu.monopoly.core.GameBoard.FieldType.*;
 import de.btu.monopoly.data.card.CardManager;
 import de.btu.monopoly.data.field.Field;
 import de.btu.monopoly.data.field.FieldManager;
 import de.btu.monopoly.data.player.Player;
+
 import java.util.LinkedList;
 import java.util.List;
+
+import static de.btu.monopoly.core.GameBoard.FieldType.*;
 
 /**
  * @author Maximilian Bels (belsmaxi@b-tu.de)
@@ -52,7 +54,7 @@ public class GameBoard {
      * @param fields Felder des Spielbretts
      */
     public GameBoard(Field[] fields) {
-        this.fieldManager = new FieldManager(fields);
+        this.fieldManager = new FieldManager(this, fields);
         this.cardManager = new CardManager(this);
         activePlayers = new LinkedList<>();
     }
@@ -73,6 +75,15 @@ public class GameBoard {
         return activePlayers;
     }
 
+    public Player getPlayer(int playerId) {
+        for (Player player : activePlayers) {
+            if (player.getId() == playerId) {
+                return player;
+            }
+        }
+        return null;
+    }
+    
     /**
      * Sortiert alle Spieler die bankrott gegangen sind aus.
      *
