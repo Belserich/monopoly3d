@@ -145,7 +145,7 @@ public class FieldManager {
     public Field movePlayer(Player player, GameBoard.FieldType nextFieldType) {
         int pos = player.getPosition();
         int movedFields = 0;
-        while (GameBoard.FIELD_STRUCTURE[pos + movedFields] != nextFieldType) {
+        while (GameBoard.FIELD_STRUCTURE[(pos + movedFields) % FieldService.FIELD_COUNT] != nextFieldType) {
             movedFields++;
         }
         return movePlayer(player, movedFields);

@@ -133,6 +133,33 @@ public class CoreUnitTest {
     }
 
     @Test
+    public void testRenovateAction() {
+        
+        Player p = players[0];
+        
+        CardManager cm = board.getCardManager();
+        cm.processRenovateAction(p, new int[]{25});
+    }
+    
+    @Test
+    public void testCardActions() {
+        
+        Player p = players[0];
+        CardField field = ((CardField) board.getFieldManager().getField(2));
+        
+        for (int i = 0; i < 2; i++) {
+            
+            Card first = field.nextCard();
+            Card card = first;
+            do {
+                board.getCardManager().manageCardActions(p, card);
+                card = field.nextCard();
+            }
+            while (card != first);
+        }
+    }
+    
+    @Test
     public void testBuyStreet() {
 
         //initialisierung
@@ -620,7 +647,7 @@ public class CoreUnitTest {
 
         int currMoney = patrick.getMoney();
 
-        cm.manageCardAction(patrick, payCard);
+        cm.manageCardActions(patrick, payCard);
         Assert.assertTrue("Spieler musste kein Geld zahlen", currMoney == patrick.getMoney() + 15);
 
     }
@@ -646,33 +673,33 @@ public class CoreUnitTest {
         Card los = new Card("Los", "Ruecke vor bis auf Los", new CardAction[]{CardAction.SET_POSITION}, new int[]{0});
 
         //Karten + Tests
-        cm.manageCardAction(patrick, nextTrain);
+        cm.manageCardActions(patrick, nextTrain);
         Assert.assertTrue("Spieler ist nicht auf Suedbahnhof(naechster)!", patrick.getPosition() == 5);
 
-        cm.manageCardAction(patrick, seestrasse);
+        cm.manageCardActions(patrick, seestrasse);
         Assert.assertTrue("Spieler nicht auf Seestrasse", patrick.getPosition() == 11);
 
-        cm.manageCardAction(patrick, opernplatz);
+        cm.manageCardActions(patrick, opernplatz);
         Assert.assertTrue("Spieler nicht auf Opernplatz", patrick.getPosition() == 24);
 
         //TODO Fehler ausbessern
-//        cm.manageCardAction(patrick, werk);
+//        cm.manageCardActions(patrick, werk);
 //        Assert.assertTrue("Spieler nicht auf Wasserwerk", patrick.getPosition() == 28);
-        cm.manageCardAction(patrick, schlossallee);
+        cm.manageCardActions(patrick, schlossallee);
         Assert.assertTrue("Spieler nicht auf Schlossallee", patrick.getPosition() == 39);
 
         //TODO Spieler muss ueber Los bewegt werden und Geld bekommen!!
         int currMoney = patrick.getMoney();
-        cm.manageCardAction(patrick, suedbahnhof);
+        cm.manageCardActions(patrick, suedbahnhof);
         Assert.assertTrue("Spieler nicht auf Suedbahnhof", patrick.getPosition() == 5);
         Assert.assertTrue("Spieler hat kein Geld bekommen (Los)", patrick.getMoney() == currMoney + fm.getGoField().getAmount());
 
-        cm.manageCardAction(patrick, dreiZurueck);
+        cm.manageCardActions(patrick, dreiZurueck);
         Assert.assertTrue("Spieler nicht drei Felder zurueck gegangen!", patrick.getPosition() == 2);
 
         //TOD Spieler bekommt auch hier kein Geld!
         currMoney = patrick.getMoney();
-        cm.manageCardAction(patrick, los);
+        cm.manageCardActions(patrick, los);
         Assert.assertTrue("Spieler nicht auf Los!", patrick.getPosition() == 0);
         Assert.assertTrue("Spieler hat kein Geld bekommen (Los)", patrick.getMoney() == currMoney + fm.getGoField().getAmount());
 
@@ -692,11 +719,11 @@ public class CoreUnitTest {
         Card dividend = new Card("Dividende", "Die Bank zahlt dir eine Dividende von #1{$currency}.", new CardAction[]{CardAction.GIVE_MONEY}, new int[]{50});
 
         //Karten + Tests
-        cm.manageCardAction(patrick, contract);
+        cm.manageCardActions(patrick, contract);
         Assert.assertTrue("Spieler hat kein Geld aus Bausparvertrag erhalten", patrick.getMoney() == currMoney + 150);
 
         currMoney = patrick.getMoney();
-        cm.manageCardAction(patrick, dividend);
+        cm.manageCardActions(patrick, dividend);
         Assert.assertTrue("Spieler hat kein Geld aus der Dividende erhalten", patrick.getMoney() == currMoney + 50);
 
     }
@@ -731,7 +758,7 @@ public class CoreUnitTest {
         Card renovate = new Card("Renovieren", "Du laesste deine Haeuser renovieren", new CardAction[]{CardAction.RENOVATE}, new int[]{25});
 
         //Renovieren + Test
-        cm.manageCardAction(patrick, renovate);
+        cm.manageCardActions(patrick, renovate);
         Assert.assertTrue("Spieler wurder kein/falsch Geld abgezogen", patrick.getMoney() == currMoney - 75);
 
     }
@@ -755,7 +782,7 @@ public class CoreUnitTest {
         Card ceo = new Card("Vorstand", "Zahle jedem Spieler #1{$currency}.", new CardAction[]{CardAction.PAY_MONEY_ALL}, new int[]{50});
 
         //Vorstandswahl + Test
-        cm.manageCardAction(patrick, ceo);
+        cm.manageCardActions(patrick, ceo);
         //TODO Spieler wird falsch Geld abgezogen
         Assert.assertTrue("Spieler wurde kein/falsch Geld abgezogen", patrick.getMoney() == currMoney1 - (2 * ceo.getArgs()[0]));
         Assert.assertTrue("Spieler wurde kein/falsch Geld gegeben", schmarotzer.getMoney() == currMoney2 + ceo.getArgs()[0]);
@@ -779,7 +806,7 @@ public class CoreUnitTest {
         Card goToJail = new Card("Ins Gefaengnis", "Gehe in das Gefaegnis!", new CardAction[]{CardAction.GO_JAIL}, new int[]{200});
 
         //Ins Gefaegnis + Test
-        cm.manageCardAction(patrick, goToJail);
+        cm.manageCardActions(patrick, goToJail);
         Assert.assertTrue("Spieler nicht auf Gefaengnisfeld", patrick.getPosition() == 10);
         Assert.assertTrue("Spieler nicht IM Gefaegnis", patrick.isInJail() == true);
     }
