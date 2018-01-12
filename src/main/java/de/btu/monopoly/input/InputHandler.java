@@ -7,9 +7,9 @@ package de.btu.monopoly.input;
 
 import de.btu.monopoly.GlobalSettings;
 import de.btu.monopoly.core.service.FieldService;
-import de.btu.monopoly.data.field.Field;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.ui.SceneManager;
+
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -42,7 +42,8 @@ public class InputHandler {
             if (output < 1 || output > max) {
                 LOGGER.log(Level.INFO, "Deine Eingabe liegt nicht im Wertebereich! Bitte erneut versuchen.");
             }
-        } while (output < 1 || output > max);
+        }
+        while (output < 1 || output > max);
         return output;
     }
 
@@ -50,20 +51,20 @@ public class InputHandler {
      * Methode zum Auswaehen einer Strasse die Bearbeitet werden soll in der actionPhase()
      *
      * @param player Spieler der eine Eingabe machen soll
-     * @param fields
+     * @param fieldNames Namen der zur Wahl stehenden Felder
      * @return ein int Wert zu auswaehen einer Strasse
      */
-    public static int askForField(Player player, Field[] fields) {
+    public static int askForField(Player player, String[] fieldNames) {
         if (GlobalSettings.isRunInConsole()) {
             String mesg = player.getName() + "! Wähle ein Feld:\n";
-            for (int i = 0; i < fields.length; i++) {
-                mesg += String.format("[%d] - %s%n", i + 1, fields[i].getName());
+            for (int i = 0; i < fieldNames.length; i++) {
+                mesg += String.format("[%d] - %s%n", i + 1, fieldNames[i]);
             }
             LOGGER.log(Level.INFO, mesg);
-            return getUserInput(39);
+            return IOService.getClientChoice(player, 39);
         }
         else {
-            return SceneManager.askForFieldPopup(player, fields);
+            return SceneManager.askForFieldPopup(player, fieldNames);
         }
     }
 
