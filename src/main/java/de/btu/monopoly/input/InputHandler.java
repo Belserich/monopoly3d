@@ -60,7 +60,7 @@ public class InputHandler {
             for (int i = 0; i < fieldNames.length; i++) {
                 mesg += String.format("[%d] - %s%n", i + 1, fieldNames[i]);
             }
-            LOGGER.log(Level.INFO, mesg);
+            LOGGER.info(mesg);
             return IOService.getClientChoice(player, 39);
         }
         else {

@@ -330,40 +330,41 @@ public class Game {
                 processPlayerTradeOption(player);
             }
             else if (choice > 1 && choice < 6) {
-                String[] fieldNames = Arrays.stream(board.getFieldManager().getOwnedPropertyFieldIds(player))
+                
+                int[] ownedFieldIds = board.getFieldManager().getOwnedPropertyFieldIds(player);
+                String[] fieldNames = Arrays.stream(ownedFieldIds)
                         .mapToObj(id -> board.getFieldManager().getField(id).getName())
                         .toArray(String[]::new);
-                Field currField = board.getFields()[InputHandler.askForField(player, fieldNames) - 1]; // Wahl der Strasse
-
-                if (currField instanceof PropertyField) {
-                    PropertyField property = (PropertyField) currField;
-                    switch (choice) {
-                        case 2: // Haus kaufen
-                            if (!(currField instanceof StreetField)) {
-                                LOGGER.info("Gewähltes Feld ist keine Straße!");
-                                break;
-                            }
-                            StreetField streetField = (StreetField) property;
-                            board.getFieldManager().buyHouse(streetField);
+                int chosenFieldId = ownedFieldIds[InputHandler.askForField(player, fieldNames) - 1];
+                Field currField = board.getFieldManager().getField(chosenFieldId); // Wahl der Strasse
+    
+                PropertyField property = (PropertyField) currField;
+                switch (choice) {
+                    case 2: // Haus kaufen
+                        if (!(currField instanceof StreetField)) {
+                            LOGGER.info("Gewähltes Feld ist keine Straße!");
                             break;
-
-                        case 3: //Haus verkaufen
-                            if (!(currField instanceof StreetField)) {
-                                LOGGER.info("Gewähltes Feld ist keine Straße!");
-                                break;
-                            }
-                            streetField = (StreetField) property;
-                            board.getFieldManager().sellHouse(streetField);
+                        }
+                        StreetField streetField = (StreetField) property;
+                        board.getFieldManager().buyHouse(streetField);
+                        break;
+        
+                    case 3: //Haus verkaufen
+                        if (!(currField instanceof StreetField)) {
+                            LOGGER.info("Gewähltes Feld ist keine Straße!");
                             break;
-
-                        case 4: // Hypothek aufnehmen
-                            board.getFieldManager().takeMortgage(property);
-                            break;
-
-                        case 5: // Hypothek zurückzahlen
-                            board.getFieldManager().payMortgage(property);
-                            break;
-                    }
+                        }
+                        streetField = (StreetField) property;
+                        board.getFieldManager().sellHouse(streetField);
+                        break;
+        
+                    case 4: // Hypothek aufnehmen
+                        board.getFieldManager().takeMortgage(property);
+                        break;
+        
+                    case 5: // Hypothek zurückzahlen
+                        board.getFieldManager().payMortgage(property);
+                        break;
                 }
             }
         }
