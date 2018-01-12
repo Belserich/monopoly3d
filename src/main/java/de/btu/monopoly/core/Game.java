@@ -6,7 +6,8 @@ import de.btu.monopoly.core.mechanics.TradeOffer;
 import de.btu.monopoly.core.service.AuctionService;
 import de.btu.monopoly.core.service.FieldService;
 import de.btu.monopoly.core.service.PlayerService;
-import de.btu.monopoly.data.card.Card;
+import de.btu.monopoly.core.service.TradeService;
+import de.btu.monopoly.data.card.CardManager;
 import de.btu.monopoly.data.card.CardStack;
 import de.btu.monopoly.data.field.*;
 import de.btu.monopoly.data.parser.CardStackParser;
@@ -16,15 +17,19 @@ import de.btu.monopoly.input.IOService;
 import de.btu.monopoly.input.InputHandler;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.networkClasses.PlayerTradeRequest;
+import de.btu.monopoly.net.networkClasses.PlayerTradeResponse;
 import de.btu.monopoly.ui.Logger.TextAreaHandler;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.IntStream;
-import javax.xml.parsers.ParserConfigurationException;
-import org.xml.sax.SAXException;
+import java.util.stream.Collectors;
 
 /**
  * @author Christian Prinz
@@ -300,14 +305,15 @@ public class Game {
             LOGGER.info(String.format("%s ist an der Reihe! Waehle eine Aktion:%n[1] - Nichts%n[2] - Haus kaufen%n[3] - Haus verkaufen%n[4] - "
                     + "Hypothek aufnehmen%n[5] - Hypothek abbezahlen%n[6] - Handeln", player.getName()));
 
-//            choice = getClientChoice(player, 6);
             choice = IOService.actionSequence(player, board);
             if (choice == 6) {
                 processPlayerTradeOption(player);
             }
             else if (choice > 1 && choice < 6) {
-                Field[] ownedFields = board.getFieldManager().getOwnedPropertyFields(player).toArray(Field[]::new);
-                Field currField = board.getFields()[InputHandler.askForField(player, ownedFields) - 1]; // Wahl der Strasse
+                String[] fieldNames = Arrays.stream(board.getFieldManager().getOwnedPropertyFieldIds(player))
+                        .mapToObj(id -> board.getFieldManager().getField(id).getName())
+                        .toArray(String[]::new);
+                Field currField = board.getFields()[InputHandler.askForField(player, fieldNames) - 1]; // Wahl der Strasse
 
                 if (currField instanceof PropertyField) {
                     PropertyField property = (PropertyField) currField;
@@ -340,16 +346,19 @@ public class Game {
                     }
                 }
             }
-        } while (choice != 1);
+        }
+        while (choice != 1);
     }
 
     private void processPlayerTradeOption(Player player) {
+        
+        PlayerTradeResponse response = null;
+        
         if (isChoiceFromThisClient(player)) {
+            
             PlayerTradeRequest request = new PlayerTradeRequest();
             Trade trade = new Trade();
-
-            trade.setSupply(createTradeOfferFor(player));
-
+    
             List<Player> activePlayers = board.getActivePlayers();
             StringBuilder builder = new StringBuilder("Waehle einen Spieler:\n");
             for (int i = 0; i < activePlayers.size(); i++) {
@@ -360,65 +369,148 @@ public class Game {
             }
             LOGGER.info(builder.toString());
             Player otherPlayer = activePlayers.get(InputHandler.getUserInput(activePlayers.size()) - 1);
+            
+            trade.setSupply(createTradeOfferFor(player));
             trade.setDemand(createTradeOfferFor(otherPlayer));
-
             request.setTrade(trade);
-            client.sendTCP(new PlayerTradeRequest());
+            
+            LOGGER.info(String.format("Zusammenfassung:%n%n%s%nHandelsanfrage wirklich absenden?%n\t[1] - Ja%n\t[2] - Nein",
+                    trade.toString(board)));
+            
+            request.setDenied(InputHandler.getUserInput(2) == 2);
+            
+            client.sendTCP(request);
+            
+            response = (PlayerTradeResponse) client.waitForObjectOfClass(PlayerTradeResponse.class);
+        }
+        else {
+            
+            PlayerTradeRequest request = (PlayerTradeRequest) client.waitForObjectOfClass(PlayerTradeRequest.class);
+            
+            if (request.isDenied()) return;
+            
+            Trade trade = request.getTrade();
+            Player receipt = board.getPlayer(request.getTrade().getDemand().getPlayerId());
+            Player thisPlayer = client.getPlayerOnClient();
+            
+            if (receipt == thisPlayer) {
+                
+                LOGGER.info(String.format("Spieler %s hat dir eine Handelsanfrage gemacht:%n%n%s%n\t[1] - annehmen%n\t[2] - ablehnen",
+                        board.getPlayer(trade.getSupply().getPlayerId()).getName(), trade.toString(board)));
+                int choice = IOService.getClientChoice(receipt, 2);
+    
+                response = new PlayerTradeResponse();
+                response.setRequest(request);
+                response.setAccepted(choice == 1);
+                
+                client.sendTCP(response);
+            }
+            else response = (PlayerTradeResponse) client.waitForObjectOfClass(PlayerTradeResponse.class);
+        }
+    
+        if (response.isAccepted()) {
+            LOGGER.info("<<< HANDEL ANGENOMMEN >>>");
+            TradeService.completeTrade(response.getRequest().getTrade(), board);
+        }
+        else {
+            LOGGER.info("<<< HANDEL ABGELEHNT >>>");
         }
     }
 
     private TradeOffer createTradeOfferFor(Player player) {
+        
         TradeOffer retObj = new TradeOffer();
-
-        IntStream.Builder propertyIdStream = IntStream.builder();
-        IntStream.Builder cardIdStream = IntStream.builder();
-        int money = 0;
-
-        StringBuilder builder;
-        int i, choice;
-        boolean runOnce = false;
+    
+        List<Integer> ownedIds;
+        ArrayList<Integer> chosenIds = new ArrayList<>();
+        
+        boolean runOnce = false,
+                doneChoosing = false;
 
         retObj.setPlayerId(player.getId());
-
-        PropertyField[] ownedProps = board.getFieldManager().getOwnedPropertyFields(player).toArray(PropertyField[]::new);
-        do {
-            builder = new StringBuilder(String.format("Welches Gebaeude bietet Spieler %s%s?%n", player.getName(), runOnce ? " noch" : ""));
-            for (i = 0; i < ownedProps.length; i++) {
-                builder.append(String.format("[%d] - %s%n", i + 1, ownedProps[i].getName()));
-            }
-            builder.append(String.format("[%d] - Keins%n", i + 1));
-            LOGGER.info(builder.toString());
-            choice = InputHandler.getUserInput(ownedProps.length + 1) - 1;
-            propertyIdStream.accept(choice);
+    
+        ownedIds = Arrays.stream(board.getFieldManager().getOwnedPropertyFieldIds(player))
+                .boxed().collect(Collectors.toList());
+        while (!doneChoosing && (ownedIds.size() - chosenIds.size()) > 0) {
+            printPropertyOffer(player, ownedIds, runOnce);
             runOnce = true;
-        } while (choice != ownedProps.length);
-
+            doneChoosing = handleOfferChoice(ownedIds, chosenIds);
+        }
+        
+        retObj.setPropertyIds(chosenIds.stream().mapToInt(i -> i).toArray());
+    
+        doneChoosing = false;
         runOnce = false;
-        Card[] tradeableCards = board.getCardManager().getTradeableCards(player)
-                .map(t -> (Card) t)
-                .toArray(Card[]::new);
-        do {
-            builder = new StringBuilder(String.format("Welche Karte bietet Spieler %s%s?%n", player.getName(), runOnce ? " noch" : ""));
-            for (i = 0; i < tradeableCards.length; i++) {
-                builder.append(String.format("[%d] - %s%n", i + 1, tradeableCards[i].getName()));
-            }
-            builder.append(String.format("[%d] - Keine%n", i + 1));
-            LOGGER.info(builder.toString());
-            choice = InputHandler.getUserInput(tradeableCards.length + 1) - 1;
-            cardIdStream.accept(choice);
+        chosenIds.clear();
+        
+        ownedIds = Arrays.stream(board.getCardManager().getTradeableCardIds(player))
+                .boxed().collect(Collectors.toList());
+        while (!doneChoosing && (ownedIds.size() - chosenIds.size()) > 0) {
+            printCardOffer(player, ownedIds, runOnce);
             runOnce = true;
-        } while (choice != tradeableCards.length);
+            doneChoosing = handleOfferChoice(ownedIds, chosenIds);
+        }
+        
+        retObj.setCardIds(chosenIds.stream().mapToInt(i -> i).toArray());
 
         if (player.getBank().isLiquid()) {
-            LOGGER.info(String.format("Wieviel Geld bietet Spieler %s?%n", player.getName()));
-            money = InputHandler.getUserInput(player.getMoney());
+            
+            LOGGER.info(String.format("Soll %s Geld bieten?%n\t[1] - Ja%n\t[2] - Nein", player.getName()));
+            if (InputHandler.getUserInput(2) == 1) {
+                LOGGER.info(String.format("Wieviel Geld bietet Spieler %s?%n", player.getName()));
+                retObj.setMoney(InputHandler.getUserInput(player.getMoney()));
+            }
         }
 
-        retObj.setPropertyIds(propertyIdStream.build().toArray());
-        retObj.setCardIds(cardIdStream.build().toArray());
-        retObj.setMoney(money);
-
         return retObj;
+    }
+    
+    public boolean handleOfferChoice(List<Integer> ownedIds, List<Integer> chosenIds) {
+        
+        int choice, chosenId;
+        
+        choice = InputHandler.getUserInput(ownedIds.size() + 1) - 1;
+        if (choice != ownedIds.size()) {
+            chosenId = ownedIds.get(choice);
+            chosenIds.add(chosenId);
+            ownedIds.remove(ownedIds.indexOf(chosenId));
+            return false;
+        }
+        else return true;
+    }
+    
+    public void printPropertyOffer(Player player, List<Integer> ownedPropIds, boolean runOnce) {
+        
+        FieldManager fm = board.getFieldManager();
+    
+        StringBuilder builder;
+        int id;
+        
+        builder = new StringBuilder(String.format("Welches Gebaeude bietet Spieler %s%s?%n",
+                player.getName(), runOnce ? " noch" : ""));
+        for (id = 0; id < ownedPropIds.size(); id++) {
+            builder.append(String.format("[%d] - %s%n", id + 1, fm.getField(ownedPropIds.get(id)).getName()));
+        }
+    
+        builder.append(String.format("[%d] - Keins%n", id + 1));
+        LOGGER.info(builder.toString());
+    }
+    
+    public void printCardOffer(Player player, List<Integer> ownedCardIds, boolean runOnce) {
+        
+        CardManager cm = board.getCardManager();
+    
+        StringBuilder builder;
+        int id;
+        
+        builder = new StringBuilder(String.format("Welche Karte bietet Spieler %s%s?%n",
+                player.getName(), runOnce ? " noch" : ""));
+        for (id = 0; id < ownedCardIds.size(); id++) {
+            builder.append(String.format("[%d] - %s%n", id + 1, cm.getCard(player, ownedCardIds.get(id)).getName()));
+        }
+        
+        builder.append(String.format("[%d] - Keine%n", id + 1));
+        LOGGER.info(builder.toString());
     }
 
     public void betPhase(PropertyField property) {
