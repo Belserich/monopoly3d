@@ -7,6 +7,8 @@ import de.btu.monopoly.core.service.AuctionService;
 import de.btu.monopoly.core.service.FieldService;
 import de.btu.monopoly.core.service.PlayerService;
 import de.btu.monopoly.core.service.TradeService;
+import de.btu.monopoly.data.card.Card;
+import de.btu.monopoly.data.card.CardAction;
 import de.btu.monopoly.data.card.CardManager;
 import de.btu.monopoly.data.card.CardStack;
 import de.btu.monopoly.data.field.*;
@@ -79,6 +81,7 @@ public class Game {
     }
 
     public void init() {
+        
         LOGGER.info("Spiel wird initialisiert.");
 
         try {
@@ -227,38 +230,51 @@ public class Game {
     }
 
     public void fieldPhase(Player player, int[] rollResult) {
-        GameBoard.FieldType type = GameBoard.FIELD_STRUCTURE[player.getPosition()];
-        switch (type) {
-            case TAX: // Steuerfeld
-                TaxField taxField = (TaxField) board.getFields()[player.getPosition()];
-                LOGGER.fine(String.format("%s steht auf einem Steuer-Zahlen-Feld.", player.getName()));
-                FieldService.payTax(player, taxField);
-                break;
-
-            case CARD: // Kartenfeld
-                CardField cardField = (CardField) board.getFields()[player.getPosition()];
-                LOGGER.fine(String.format("%s steht auf einem Kartenfeld (%s).", player.getName(), cardField.getName()));
-                board.getCardManager().manageCardAction(player, cardField.nextCard());
-                break;
-
-            case GO_JAIL: // "Gehen Sie Ins Gefaengnis"-Feld
-                LOGGER.info(String.format("%s muss ins Gefaengnis!", player.getName()));
-                FieldService.toJail(player);
-                break;
-
-            case CORNER: // Eckfeld
-                LOGGER.fine(String.format("%s steht auf einem Eckfeld.", player.getName()));
-                break;
-
-            case GO: // "LOS"-Feld
-                LOGGER.fine(String.format("%s steht auf LOS.", player.getName()));
-                break;
-
-            default:
-                PropertyField prop = (PropertyField) board.getFields()[player.getPosition()];
-                processPlayerOnPropertyField(player, prop, rollResult);
-                break;
+        
+        boolean repeatPhase;
+        do {
+            repeatPhase = false;
+            switch (GameBoard.FIELD_STRUCTURE[player.getPosition()]) {
+                
+                case TAX: // Steuerfeld
+                    TaxField taxField = (TaxField) board.getFields()[player.getPosition()];
+                    LOGGER.fine(String.format("%s steht auf einem Steuer-Zahlen-Feld.", player.getName()));
+                    FieldService.payTax(player, taxField);
+                    break;
+        
+                case CARD: // Kartenfeld
+                    CardField cardField = (CardField) board.getFields()[player.getPosition()];
+                    Card nextCard = cardField.nextCard();
+                    LOGGER.fine(String.format("%s steht auf einem Kartenfeld (%s).", player.getName(), cardField.getName()));
+                    board.getCardManager().manageCardActions(player, nextCard);
+                    
+                    if (nextCard.getActions().contains(CardAction.SET_POSITION)
+                            || nextCard.getActions().contains(CardAction.MOVE_PLAYER)
+                            || nextCard.getActions().contains(CardAction.NEXT_SUPPLY)) {
+                        repeatPhase = true;
+                    }
+                    break;
+        
+                case GO_JAIL: // "Gehen Sie Ins Gefaengnis"-Feld
+                    LOGGER.info(String.format("%s muss ins Gefaengnis!", player.getName()));
+                    FieldService.toJail(player);
+                    break;
+        
+                case CORNER: // Eckfeld
+                    LOGGER.fine(String.format("%s steht auf einem Eckfeld.", player.getName()));
+                    break;
+        
+                case GO: // "LOS"-Feld
+                    LOGGER.fine(String.format("%s steht auf LOS.", player.getName()));
+                    break;
+        
+                default:
+                    PropertyField prop = (PropertyField) board.getFields()[player.getPosition()];
+                    processPlayerOnPropertyField(player, prop, rollResult);
+                    break;
+            }
         }
+        while (repeatPhase);
     }
 
     private void processPlayerOnPropertyField(Player player, PropertyField prop, int[] rollResult) {

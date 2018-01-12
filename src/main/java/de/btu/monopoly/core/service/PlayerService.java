@@ -133,11 +133,11 @@ public class PlayerService {
      *
      * @return int[] mit den beiden Wuerfelergebnissen
      */
-    public static int[] roll(Random random) {
+    public static int[] roll(Random rng) {
         int[] result = new int[2];
 
-        result[0] = random.nextInt(6) + 1;
-        result[1] = random.nextInt(6) + 1;
+        result[0] = rng.nextInt(6) + 1;
+        result[1] = rng.nextInt(6) + 1;
 
         LOGGER.info(String.format("Würfelergebnis: %d %d", result[0], result[1]));
         return result;
