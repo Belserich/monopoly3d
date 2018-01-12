@@ -231,7 +231,7 @@ public class Game {
             case CARD: // Kartenfeld
                 CardField cardField = (CardField) board.getFields()[player.getPosition()];
                 LOGGER.fine(String.format("%s steht auf einem Kartenfeld (%s).", player.getName(), cardField.getName()));
-                board.getCardManager().manageCardAction(player, cardField.nextCard());
+                //board.getCardManager().manageCardAction(player, cardField.nextCard());
                 break;
 
             case GO_JAIL: // "Gehen Sie Ins Gefaengnis"-Feld
