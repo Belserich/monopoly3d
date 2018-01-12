@@ -4,6 +4,7 @@ import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.field.SupplyField;
 import de.btu.monopoly.data.field.TaxField;
 import de.btu.monopoly.data.player.Player;
+
 import java.util.logging.Logger;
 
 /**
@@ -28,6 +29,8 @@ public class FieldService {
         {23, 24}, {21, 24}, {23, 21}, {5, 15, 35}, {27, 29}, {26, 29}, {12}, {26, 27}, // Dritte Reihe
         {32, 34}, {31, 34}, {32, 31}, {5, 15, 25}, {39}, {37} // Vierte Reihe
     };
+    
+    public static final int FIELD_COUNT = 40;
 
     /**
      * ID des "LOS"-Feldes
