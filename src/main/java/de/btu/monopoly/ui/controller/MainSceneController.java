@@ -85,6 +85,7 @@ public class MainSceneController implements Initializable {
     private GridPane player4Geld;
     @FXML
     private GridPane player5Geld;
+
     //Spieler Figur
     @FXML
     private Circle player0;
@@ -195,6 +196,7 @@ public class MainSceneController implements Initializable {
     @FXML
     private Pane schlossAllee;
 
+    // Besitzanzeigen
     @FXML
     private Pane besitz1;
     @FXML
@@ -268,6 +270,9 @@ public class MainSceneController implements Initializable {
     @FXML
     private Pane besitz39;
 
+    private Pane[] Felder;
+    private Pane[] BesitzanzeigeFelder;
+
     // Speichert die letzte Position für das Vorrücken
     private int lastPosPlayer0 = 0;
     private int lastPosPlayer1 = 0;
@@ -276,12 +281,11 @@ public class MainSceneController implements Initializable {
     private int lastPosPlayer4 = 0;
     private int lastPosPlayer5 = 0;
 
+    // Protokollfenster
     @FXML
     private JFXTextArea textArea;
 
-    private Pane[] Felder;
-    private Pane[] BesitzanzeigeFelder;
-
+    // Speichern der ID welche das ButtonPopup anzeigen soll
     private int player0ButtonID;
     private int player1ButtonID;
     private int player2ButtonID;
