@@ -6,7 +6,6 @@ import de.btu.monopoly.core.service.FieldService;
 import de.btu.monopoly.core.service.PlayerService;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.ui.Logger.TextAreaHandler;
-import de.btu.monopoly.ui.SceneManager;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,12 +21,12 @@ import java.util.stream.Stream;
 public class FieldManager {
 
     private static final Logger LOGGER = Logger.getLogger(FieldService.class.getCanonicalName());
-    
+
     /**
      * Die Spielbrett-Instanz
      */
     private GameBoard board;
-    
+
     /**
      * Die Felder des Spielbretts
      */
@@ -39,10 +38,10 @@ public class FieldManager {
      * @param fields Feld-Array
      */
     public FieldManager(GameBoard board, Field[] fields) {
-        
+
         this.board = board;
         this.fields = fields;
-        
+
         Arrays.asList(fields).forEach(f -> f.fieldManager = this);
         if (!GlobalSettings.isRunAsTest() && !GlobalSettings.isRunInConsole()) {
             TextAreaHandler logHandler = new TextAreaHandler();
@@ -56,7 +55,7 @@ public class FieldManager {
     public Field[] getFields() {
         return fields;
     }
-    
+
     public Field getField(int fieldId) {
         return fields[fieldId];
     }
@@ -92,18 +91,31 @@ public class FieldManager {
         IntStream.Builder builder = IntStream.builder();
         for (int fieldId = 0; fieldId < fields.length; fieldId++) {
             if (fields[fieldId] instanceof PropertyField
-                    && ((PropertyField)fields[fieldId]).getOwner() == player) {
+                    && ((PropertyField) fields[fieldId]).getOwner() == player) {
                 builder.accept(fieldId);
             }
         }
         return builder.build().toArray();
     }
 
+    /**
+     * Erzeugt einen Stream aus PropertyFields, welche einem bestimmten Player gehören
+     *
+     * @param player Besitzer
+     * @return Stream von besessenen PropertyFields
+     */
+    public Stream<PropertyField> getOwnedPropertyFields(Player player) {
+        return Stream.of(fields)
+                .filter(f -> f instanceof PropertyField)
+                .map(f -> (PropertyField) f)
+                .filter(p -> p.getOwner() == player);
+    }
+
     public PropertyField[] getTradeableProperties(Player player) {
-        
+
         ArrayList<PropertyField> tradeableProperties = new ArrayList<>();
         int[] ownedPropertyIds = getOwnedPropertyFieldIds(player);
-        
+
         for (int id : ownedPropertyIds) {
             Field f = fields[id];
             if (f instanceof PropertyField) {
@@ -122,16 +134,13 @@ public class FieldManager {
      */
     public Field movePlayer(Player player, int amount) {
         int pos = PlayerService.movePlayer(player, amount);
-        if (!GlobalSettings.isRunInConsole() && !GlobalSettings.isRunAsTest()) {
-            SceneManager.movePlayerUpdate();
-            SceneManager.geldPlayerUpdate();
-            SceneManager.propertyUpdate();
-        }
+
         if (pos >= fields.length) {
             pos %= fields.length;
             player.setPosition(pos);
             PlayerService.giveMoney(player, getGoField().getAmount());
         }
+
         return fields[pos];
     }
 
@@ -159,7 +168,7 @@ public class FieldManager {
      */
     public boolean buyHouse(StreetField street) {
         Player player = street.getOwner();
-    
+
         System.out.println("HAI");
         LOGGER.info(String.format("%s versucht, ein Haus auf %s zu kaufen.", player.getName(), street.getName()));
         if (balanceCheck(street, 1, 0)

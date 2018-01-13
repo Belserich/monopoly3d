@@ -61,7 +61,8 @@ public class Game {
     private final Random random;
 
     /**
-     * Die fachliche Komponente des Spiels als Einheit, bestehend aus einem Spielbrett, den Spielern sowie Zuschauern.
+     * Die fachliche Komponente des Spiels als Einheit, bestehend aus einem
+     * Spielbrett, den Spielern sowie Zuschauern.
      *
      * @param client GameClient
      * @param players Spieler
@@ -148,9 +149,10 @@ public class Game {
     public void jailPhase(Player player) {
         int choice;
         do {
-            LOGGER.info(String.format(" %s ist im Gefängnis und kann: %n[1] - 3-mal Würfeln, um mit einem Pasch freizukommen "
-                    + "%n[2] - Bezahlen (50€) %n[3] - Gefängnis-Frei-Karte benutzen", player.getName()));
-
+            if (GlobalSettings.isRunInConsole()) {
+                LOGGER.info(String.format(" %s ist im Gefängnis und kann: %n[1] - 3-mal Würfeln, um mit einem Pasch freizukommen "
+                        + "%n[2] - Bezahlen (50€) %n[3] - Gefängnis-Frei-Karte benutzen", player.getName()));
+            }
             choice = IOService.jailChoice(player);
             switch (choice) {
                 case 1:
@@ -280,8 +282,10 @@ public class Game {
     private void processPlayerOnPropertyField(Player player, PropertyField prop, int[] rollResult) {
         Player other = prop.getOwner();
         if (other == null) { // Feld frei
-            LOGGER.info(String.format("%s steht auf %s. Wähle eine Aktion!%n[1] Kaufen %n[2] Nicht kaufen",
-                    player.getName(), prop.getName()));
+            if (GlobalSettings.isRunInConsole()) {
+                LOGGER.info(String.format("%s steht auf %s. Wähle eine Aktion!%n[1] Kaufen %n[2] Nicht kaufen",
+                        player.getName(), prop.getName()));
+            }
             processBuyPropertyFieldOption(player, prop);
         }
         else if (other == player) { // PropertyField im eigenen Besitz
@@ -322,9 +326,11 @@ public class Game {
 
         int choice;
         do {
-            LOGGER.info(String.format("%s ist an der Reihe! Waehle eine Aktion:%n[1] - Nichts%n[2] - Haus kaufen%n[3] - Haus verkaufen%n[4] - "
-                    + "Hypothek aufnehmen%n[5] - Hypothek abbezahlen%n[6] - Handeln", player.getName()));
-
+            if (GlobalSettings.isRunInConsole()) {
+                LOGGER.info(String.format("%s ist an der Reihe! Waehle eine Aktion:%n[1] - Nichts%n[2] - Haus kaufen%n[3] - Haus verkaufen%n[4] - "
+                        + "Hypothek aufnehmen%n[5] - Hypothek abbezahlen%n[6] - Handeln", player.getName()));
+            }
+//            choice = getClientChoice(player, 6);
             choice = IOService.actionSequence(player, board);
             if (choice == 6) {
                 processPlayerTradeOption(player);
@@ -535,7 +541,7 @@ public class Game {
     }
 
     public void betPhase(PropertyField property) {
-//        AuctionService.startAuction(property);
+        AuctionService.startAuction(property);
     }
 
     public GameBoard getBoard() {

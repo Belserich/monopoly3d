@@ -15,8 +15,8 @@ import de.btu.monopoly.ki.HardKi;
 import de.btu.monopoly.ki.MediumKi;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.networkClasses.BroadcastPlayerChoiceRequest;
+import de.btu.monopoly.ui.Logger.TextAreaHandler;
 import de.btu.monopoly.ui.SceneManager;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Random;
@@ -32,6 +32,10 @@ public class IOService {
     private static final Logger LOGGER = Logger.getLogger(IOService.class.getCanonicalName());
     private static GameClient client;
 
+    private static int JAIL = 0;
+    private static int ACTION = 1;
+    private static int BUY = 2;
+
     public static int jailChoice(Player player) {
         int choice = -1;
         switch (player.getKiLevel()) {
@@ -40,7 +44,7 @@ public class IOService {
                     choice = getClientChoice(player, 3);
                 }
                 else {
-                    choice = SceneManager.jailChoicePopup();
+                    choice = getClientChoiceFromGUI(player, JAIL);
                 }
                 break;
             case 1:
@@ -50,7 +54,7 @@ public class IOService {
                 choice = MediumKi.jailOption(player);
                 break;
             case 3:
-                choice = HardKi.jailOption(player);
+                choice = HardKi.jailOption(player, client);
                 break;
             default:
                 LOGGER.warning("Illegale KI-Stufe in JailChoice registriert");
@@ -62,12 +66,14 @@ public class IOService {
         int choice = -1;
         switch (player.getKiLevel()) {
             case 0:
+
                 if (GlobalSettings.isRunInConsole()) {
                     choice = getClientChoice(player, 2);
                 }
                 else {
-                    choice = SceneManager.buyPropertyPopup();
+                    choice = getClientChoiceFromGUI(player, BUY);
                 }
+
                 break;
             case 1:
                 choice = EasyKi.buyPropOption(player, prop, random);
@@ -93,7 +99,7 @@ public class IOService {
                     choice = getClientChoice(player, 6);
                 }
                 else {
-                    choice = SceneManager.actionSequencePopup();
+                    choice = getClientChoiceFromGUI(player, ACTION);
                 }
                 break;
             case 1:
@@ -112,9 +118,11 @@ public class IOService {
     }
 
     public static void betSequence(Auction auc) {
-        Player[] kiPlayers = auc.getPlayers();
+        Player[] kiPlayers = new Player[auc.getPlayers().length];
+        System.arraycopy(auc.getPlayers(), 0, kiPlayers, 0, kiPlayers.length);
         Collections.shuffle(Arrays.asList(kiPlayers));
         Player rndKi = kiPlayers[0];
+
         for (Player ki : kiPlayers) {
             rndKi = (ki.getKiLevel() > 0) ? ki : rndKi;
         }
@@ -153,8 +161,36 @@ public class IOService {
             return choice;
         }
         else {
-            BroadcastPlayerChoiceRequest request = (BroadcastPlayerChoiceRequest)
-                    client.waitForObjectOfClass(BroadcastPlayerChoiceRequest.class);
+            BroadcastPlayerChoiceRequest request = (BroadcastPlayerChoiceRequest) client.waitForObjectOfClass(BroadcastPlayerChoiceRequest.class);
+            return request.getChoice();
+        }
+    }
+
+    public static int getClientChoiceFromGUI(Player player, int type) {
+        boolean isChoiceFromThisClient = player == client.getPlayerOnClient();
+        if (!GlobalSettings.isRunAsTest() && !GlobalSettings.isRunInConsole()) {
+            TextAreaHandler logHandler = new TextAreaHandler();
+            LOGGER.addHandler(logHandler);
+        }
+        if (isChoiceFromThisClient) {
+            int choice = -1;
+            if (type == JAIL) {
+                choice = SceneManager.jailChoicePopup();
+            }
+            if (type == ACTION) {
+                choice = SceneManager.actionSequencePopup();
+            }
+            if (type == BUY) {
+                choice = SceneManager.buyPropertyPopup();
+            }
+
+            BroadcastPlayerChoiceRequest packet = new BroadcastPlayerChoiceRequest();
+            packet.setChoice(choice);
+            client.sendTCP(packet);
+            return choice;
+        }
+        else {
+            BroadcastPlayerChoiceRequest request = (BroadcastPlayerChoiceRequest) client.waitForObjectOfClass(BroadcastPlayerChoiceRequest.class);
             return request.getChoice();
         }
     }

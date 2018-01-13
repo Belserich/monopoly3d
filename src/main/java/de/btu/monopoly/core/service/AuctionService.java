@@ -9,6 +9,8 @@ import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.input.IOService;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.networkClasses.*;
+import de.btu.monopoly.ui.Logger.TextAreaHandler;
+import de.btu.monopoly.ui.SceneManager;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -33,10 +35,13 @@ public class AuctionService extends Listener {
     public static void initAuction(Player[] players, GameClient client) {
         auc = new Auction(players, client);
         LOGGER.setLevel(Level.FINEST);
+        TextAreaHandler handler = new TextAreaHandler();
+        LOGGER.addHandler(handler);
     }
 
     /**
-     * Startet die Auktion, ermittelt den Höchstbietenden und übergibt den Gewinner, sowie den Preis an deren Klassenvariablen
+     * Startet die Auktion, ermittelt den Höchstbietenden und übergibt den
+     * Gewinner, sowie den Preis an deren Klassenvariablen
      *
      * @param prop
      */
@@ -46,7 +51,7 @@ public class AuctionService extends Listener {
         JoinAuctionRequest jaReq = new JoinAuctionRequest();
         NetworkService.logClientSendMessage(jaReq, auc.getPlayerName());
         auc.getClient().sendTCP(jaReq);
-
+        SceneManager.AuctionPopup();
         IOService.sleepDeep(1500);
         if (!isRunAsTest) { // nicht fuer Test
             while (auctionStillActive()) {
@@ -66,7 +71,11 @@ public class AuctionService extends Listener {
                             break;
                     }
                 }
+                else {
+                    SceneManager.updateAuctionPopup(auctionStillActive());
+                }
             }
+            SceneManager.updateAuctionPopup(false);
             sellProperty();
         }
     }
@@ -83,7 +92,8 @@ public class AuctionService extends Listener {
     }
 
     /**
-     * Setzt das Gebot eines Spielers, falls dieses hoeher ist als das aktuell hoechste Gebot
+     * Setzt das Gebot eines Spielers, falls dieses hoeher ist als das aktuell
+     * hoechste Gebot
      *
      * @param playerID
      * @param bid
@@ -119,7 +129,8 @@ public class AuctionService extends Listener {
     }
 
     /**
-     * Das hoechste Gebot aller Bieter wird ermittelt. Es wird die ID des Spielers mit dem hoechsten Gebot zurueck gegeben
+     * Das hoechste Gebot aller Bieter wird ermittelt. Es wird die ID des
+     * Spielers mit dem hoechsten Gebot zurueck gegeben
      *
      * @return playerID
      */
@@ -128,7 +139,8 @@ public class AuctionService extends Listener {
     }
 
     /**
-     * Das hoechste Gebot aller Bieter wird ermittelt. Es wird die ID des Spielers mit dem hoechsten Gebot zurueck gegeben
+     * Das hoechste Gebot aller Bieter wird ermittelt. Es wird die ID des
+     * Spielers mit dem hoechsten Gebot zurueck gegeben
      *
      * @return playerID
      */
@@ -202,5 +214,15 @@ public class AuctionService extends Listener {
             }
         }
         return retPlayer;
+    }
+
+    /**
+     * Gibt den Namen der Property zurueck
+     *
+     * @return
+     */
+    public static String getPropertyString() {
+
+        return auc.getProperty().getName();
     }
 }

@@ -29,7 +29,7 @@
       <RowConstraints minHeight="10.0" percentHeight="60.0" prefHeight="30.0" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
-      <StackPane fx:id="stackPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="20.0" prefWidth="400.0" GridPane.columnIndex="2" GridPane.rowSpan="7">
+      <StackPane fx:id="stackPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="20.0" prefWidth="600.0" GridPane.columnIndex="2" GridPane.rowSpan="7">
          <children>
             <GridPane>
               <columnConstraints>
@@ -55,7 +55,7 @@
                         <Font size="21.0" />
                      </font>
                   </Label>
-                  <JFXTextField fx:id="nameTextField" alignment="CENTER" focusColor="BLACK" promptText="Name" unFocusColor="BLACK" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                  <JFXTextField fx:id="nameTextField" alignment="CENTER" focusColor="BLACK" onKeyPressed="#enterJoinsLobby" promptText="Name" unFocusColor="BLACK" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                      <font>
                         <Font size="21.0" />
                      </font>
@@ -65,7 +65,7 @@
                         <Font size="19.0" />
                      </font></Label>
                   <JFXButton fx:id="searchButton" minHeight="60.0" minWidth="200.0" onAction="#searchButtonAction" style="-fx-background-color: #212121;" text="Beitreten" textFill="WHITE" GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.valignment="CENTER" />
-                  <JFXTextField fx:id="ipAdressTextField" alignment="CENTER" focusColor="BLACK" promptText="IP Adresse" unFocusColor="BLACK" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
+                  <JFXTextField fx:id="ipAdressTextField" alignment="CENTER" focusColor="BLACK" onKeyPressed="#enterJoinsLobby" promptText="IP Adresse" unFocusColor="BLACK" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
                      <font>
                         <Font size="21.0" />
                      </font>

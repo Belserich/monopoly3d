@@ -8,16 +8,21 @@ package de.btu.monopoly.ui.controller;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextArea;
 import de.btu.monopoly.data.field.Field;
+import de.btu.monopoly.data.field.FieldManager;
 import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.player.Player;
+import de.btu.monopoly.input.IOService;
 import de.btu.monopoly.menu.Lobby;
 import de.btu.monopoly.net.client.GameClient;
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
@@ -39,7 +44,10 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.scene.text.TextAlignment;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
+import org.w3c.dom.events.MouseEvent;
 
 /**
  *
@@ -116,7 +124,7 @@ public class MainSceneController implements Initializable {
     @FXML
     private Pane badStr;
     @FXML
-    private Pane gemenschaft1;
+    private Pane gemeinschaft1;
     @FXML
     private Pane turmStr;
     @FXML
@@ -178,7 +186,7 @@ public class MainSceneController implements Initializable {
     @FXML
     private Pane hauptStr;
     @FXML
-    private Pane gemeinschat3;
+    private Pane gemeinschaft3;
     @FXML
     private Pane bahnhofStr;
     @FXML
@@ -265,6 +273,14 @@ public class MainSceneController implements Initializable {
     @FXML
     private Pane besitz39;
 
+    // Speichert die letzte Position für das Vorrücken
+    private int lastPosPlayer0 = 0;
+    private int lastPosPlayer1 = 0;
+    private int lastPosPlayer2 = 0;
+    private int lastPosPlayer3 = 0;
+    private int lastPosPlayer4 = 0;
+    private int lastPosPlayer5 = 0;
+
     @FXML
     private JFXTextArea textArea;
 
@@ -277,7 +293,7 @@ public class MainSceneController implements Initializable {
         Felder = new Pane[40];
         Felder[0] = goField;
         Felder[1] = badStr;
-        Felder[2] = gemenschaft1;
+        Felder[2] = gemeinschaft1;
         Felder[3] = turmStr;
         Felder[4] = einkommenSt;
         Felder[5] = suedBahnhof;
@@ -302,13 +318,13 @@ public class MainSceneController implements Initializable {
         Felder[24] = opernplatz;
         Felder[25] = nordBahnhof;
         Felder[26] = lessingStr;
-        Felder[27] = wasserWerk;
-        Felder[28] = schillerStr;
+        Felder[27] = schillerStr;
+        Felder[28] = wasserWerk;
         Felder[29] = goetheStr;
         Felder[30] = jailField;
         Felder[31] = rathhausPlatz;
         Felder[32] = hauptStr;
-        Felder[33] = gemeinschat3;
+        Felder[33] = gemeinschaft3;
         Felder[34] = bahnhofStr;
         Felder[35] = hauptBahnhof;
         Felder[36] = ereignis3;
@@ -367,76 +383,148 @@ public class MainSceneController implements Initializable {
         middlePane.setBackground(new Background(new BackgroundImage(image2, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT)));
         PopupPane.add(middlePane, 0, 1);
 
-        // User aus Lobby holen
+        // User aus Lobby holen ud Farben setzen
+        //TODO Bugfixes
         client = Lobby.getPlayerClient();
-        if (Lobby.getUsers() != null) {
-            if (Lobby.getUsers().length >= 1) {
-                player0Button.setText(Lobby.getUsers()[0][1]);
+
+    }
+
+    public void playerInitialise() {
+        Task task = new Task() {
+            @Override
+            protected Object call() throws Exception {
+                if (Lobby.getUsers() != null) {
+                    for (int i = 0; i < Lobby.getUsers().length; i++) {
+                        if (Lobby.getPlayerClient().getPlayerOnClient().getName().equals(Lobby.getUsers()[i][1])) {
+                            player0Button.setText(Lobby.getUsers()[i][1]);
+                            player0Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[i][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+                            if (Color.web(Lobby.getUsers()[i][4]).getBrightness() <= 0.8) {
+                                player0Button.setTextFill(Color.WHITE);
+                            }
+                            player0.setFill(Color.web(Lobby.getUsers()[0][4]));
+                            player0Button.setVisible(true);
+                            player0.setVisible(true);
+                        }
+                        else {
+
+                            if (Lobby.getUsers().length >= 2) {
+                                if (player1Button.getText().equals("frei")) {
+                                    player1Button.setText(Lobby.getUsers()[i][1]);
+                                    player1Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[i][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+                                    if (Color.web(Lobby.getUsers()[i][4]).getBrightness() <= 0.8) {
+                                        player1Button.setTextFill(Color.WHITE);
+                                    }
+                                    player1.setFill(Color.web(Lobby.getUsers()[1][4]));
+                                    player1Button.setVisible(true);
+                                    player1.setVisible(true);
+                                    continue;
+                                }
+                            }
+                            if (Lobby.getUsers().length >= 3) {
+                                if (player2Button.getText().equals("frei")) {
+                                    player2Button.setText(Lobby.getUsers()[i][1]);
+                                    player2Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[i][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+                                    if (Color.web(Lobby.getUsers()[i][4]).getBrightness() <= 0.8) {
+                                        player2Button.setTextFill(Color.WHITE);
+                                    }
+                                    player2.setFill(Color.web(Lobby.getUsers()[2][4]));
+                                    player2Button.setVisible(true);
+                                    player2.setVisible(true);
+                                    continue;
+                                }
+                            }
+                            if (Lobby.getUsers().length >= 4) {
+                                if (player3Button.getText().equals("frei")) {
+                                    player3Button.setText(Lobby.getUsers()[i][1]);
+                                    player3Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[i][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+                                    if (Color.web(Lobby.getUsers()[i][4]).getBrightness() <= 0.8) {
+                                        player3Button.setTextFill(Color.WHITE);
+                                    }
+                                    player3.setFill(Color.web(Lobby.getUsers()[3][4]));
+                                    player3Button.setVisible(true);
+                                    player3.setVisible(true);
+                                    continue;
+                                }
+                            }
+                            if (Lobby.getUsers().length >= 5) {
+                                if (player4Button.getText().equals("frei")) {
+                                    player4Button.setText(Lobby.getUsers()[i][1]);
+                                    player4Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[i][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+                                    if (Color.web(Lobby.getUsers()[i][4]).getBrightness() <= 0.8) {
+                                        player4Button.setTextFill(Color.WHITE);
+                                    }
+                                    player4.setFill(Color.web(Lobby.getUsers()[4][4]));
+                                    player4Button.setVisible(true);
+                                    player4.setVisible(true);
+                                    continue;
+                                }
+                            }
+                            if (Lobby.getUsers().length >= 6) {
+                                if (player5Button.getText().equals("frei")) {
+                                    player5Button.setText(Lobby.getUsers()[i][1]);
+                                    player5Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[i][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+                                    if (Color.web(Lobby.getUsers()[i][4]).getBrightness() <= 0.8) {
+                                        player5Button.setTextFill(Color.WHITE);
+                                    }
+                                    player5.setFill(Color.web(Lobby.getUsers()[5][4]));
+                                    player5Button.setVisible(true);
+                                    player5.setVisible(true);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                return null;
             }
-            if (Lobby.getUsers().length >= 2) {
-                player1Button.setText(Lobby.getUsers()[1][1]);
-            }
-            else {
-                player1Button.setVisible(false);
-                player1.setVisible(false);
-            }
-            if (Lobby.getUsers().length >= 3) {
-                player2Button.setText(Lobby.getUsers()[2][1]);
-            }
-            else {
-                player2Button.setVisible(false);
-                player2.setVisible(false);
-            }
-            if (Lobby.getUsers().length >= 4) {
-                player3Button.setText(Lobby.getUsers()[3][1]);
-            }
-            else {
-                player3Button.setVisible(false);
-                player3.setVisible(false);
-            }
-            if (Lobby.getUsers().length >= 5) {
-                player4Button.setText(Lobby.getUsers()[4][1]);
-            }
-            else {
-                player4Button.setVisible(false);
-                player4.setVisible(false);
-            }
-            if (Lobby.getUsers().length >= 6) {
-                player5Button.setText(Lobby.getUsers()[5][1]);
-            }
-            else {
-                player5Button.setVisible(false);
-                player5.setVisible(false);
-            }
+        };
+        Platform.runLater(task);
+
+        for (Pane field : Felder) {
+            field.setOnMouseClicked((event) -> {
+                HandleOnMouse(field);
+
+            });
         }
 
-        // Farben festlegen
-        if (Lobby.getUsers() != null) {
-            if (Lobby.getUsers().length >= 1) {
-                player0Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[0][4]), CornerRadii.EMPTY, Insets.EMPTY)));
-                player0.setFill(Color.web(Lobby.getUsers()[0][4]));
+    }
+
+    //onMouseClicked FieldsPopUps
+    public void HandleOnMouse(Pane feld) {
+        Field[] currentField = Lobby.getPlayerClient().getGame().getBoard().getFields();
+
+        GridPane gp = new GridPane();
+        ScrollPane scroll = new ScrollPane();
+        VBox box = new VBox();
+        gp.setAlignment(Pos.CENTER);
+        scroll.setCenterShape(true);
+        gp.add(scroll, 0, 0);
+        scroll.setContent(box);
+
+        String text = "";
+        for (int i = 0; i < Felder.length; i++) {
+            if (Felder[i] == feld) {
+
+                text = "" + currentField[i];
             }
-            if (Lobby.getUsers().length >= 2) {
-                player1Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[1][4]), CornerRadii.EMPTY, Insets.EMPTY)));
-                player1.setFill(Color.web(Lobby.getUsers()[1][4]));
-            }
-            if (Lobby.getUsers().length >= 3) {
-                player2Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[2][4]), CornerRadii.EMPTY, Insets.EMPTY)));
-                player2.setFill(Color.web(Lobby.getUsers()[2][4]));
-            }
-            if (Lobby.getUsers().length >= 4) {
-                player3Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[3][4]), CornerRadii.EMPTY, Insets.EMPTY)));
-                player3.setFill(Color.web(Lobby.getUsers()[3][4]));
-            }
-            if (Lobby.getUsers().length >= 5) {
-                player4Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[4][4]), CornerRadii.EMPTY, Insets.EMPTY)));
-                player4.setFill(Color.web(Lobby.getUsers()[4][4]));
-            }
-            if (Lobby.getUsers().length >= 6) {
-                player5Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[5][4]), CornerRadii.EMPTY, Insets.EMPTY)));
-                player5.setFill(Color.web(Lobby.getUsers()[5][4]));
-            }
+
         }
+
+        Label info = new Label(text);
+        JFXButton exit = new JFXButton("Exit");
+
+        box.getChildren().addAll(info, exit);
+        box.setBackground(new Background(new BackgroundFill(Color.web("#e0f2f1"), CornerRadii.EMPTY, Insets.EMPTY)));
+        box.setPrefWidth(200);
+        box.setAlignment(Pos.CENTER);
+
+        if (PopupPane.getChildren().contains(middlePane)) {
+            setPopup(gp);
+        }
+
+        exit.setOnAction(e -> {
+            resetPopup();
+        });
 
     }
 
@@ -451,93 +539,299 @@ public class MainSceneController implements Initializable {
         Platform.runLater(task);
     }
 
-    public void geldUpdate() {
-        Player[] players = Lobby.getPlayerClient().getGame().getPlayers();
-
+    public void geldUpdate0(Player[] players) {
         Task task = new Task() {
             @Override
             protected Object call() throws Exception {
-                if (players.length >= 1) {
-                    geld0.setText("Geld: " + players[0].getMoney());
-                    player0Geld.add(geld0, 0, 0);
-                }
-                if (players.length >= 2) {
-                    geld1.setText("Geld: " + players[1].getMoney());
-                    player1Geld.add(geld1, 0, 0);
-                }
-                if (players.length >= 3) {
-                    geld2.setText("Geld: " + players[2].getMoney());
-                    player2Geld.add(geld2, 0, 0);
-                }
-                if (players.length >= 4) {
-                    geld3.setText("Geld: " + players[3].getMoney());
-                    player3Geld.add(geld3, 0, 0);
-                }
-                if (players.length >= 5) {
-                    geld4.setText("Geld: " + players[4].getMoney());
-                    player4Geld.add(geld4, 0, 0);
-                }
-                if (players.length >= 6) {
-                    geld5.setText("Geld: " + players[5].getMoney());
-                    player5Geld.add(geld5, 0, 0);
+
+                geld0.setText("Geld: " + players[client.getPlayerOnClient().getId()].getMoney());
+                player0Geld.add(geld0, 0, 0);
+                return null;
+            }
+
+        };
+        Platform.runLater(task);
+
+    }
+
+    public void geldUpdate1(Player[] players) {
+        Task task = new Task() {
+            @Override
+            protected Object call() throws Exception {
+                for (int i = 0; i < players.length; i++) {
+                    if (player1Button.getText().equals(players[i].getName())) {
+                        geld1.setText("Geld: " + players[i].getMoney());
+                        player1Geld.add(geld1, 0, 0);
+                    }
                 }
                 return null;
             }
+
         };
         Platform.runLater(task);
+
+    }
+
+    public void geldUpdate2(Player[] players) {
+        Task task = new Task() {
+            @Override
+            protected Object call() throws Exception {
+                for (int i = 0; i < players.length; i++) {
+                    if (player2Button.getText().equals(players[i].getName())) {
+                        geld2.setText("Geld: " + players[i].getMoney());
+                        player2Geld.add(geld2, 0, 0);
+                    }
+                }
+                return null;
+            }
+
+        };
+        Platform.runLater(task);
+
+    }
+
+    public void geldUpdate3(Player[] players) {
+        Task task = new Task() {
+            @Override
+            protected Object call() throws Exception {
+                for (int i = 0; i < players.length; i++) {
+                    if (player3Button.getText().equals(players[i].getName())) {
+                        geld3.setText("Geld: " + players[i].getMoney());
+                        player3Geld.add(geld3, 0, 0);
+                    }
+                }
+                return null;
+            }
+
+        };
+        Platform.runLater(task);
+
+    }
+
+    public void geldUpdate4(Player[] players) {
+        Task task = new Task() {
+            @Override
+            protected Object call() throws Exception {
+                for (int i = 0; i < players.length; i++) {
+                    if (player4Button.getText().equals(players[i].getName())) {
+                        geld4.setText("Geld: " + players[i].getMoney());
+                        player4Geld.add(geld4, 0, 0);
+                    }
+                }
+                return null;
+            }
+
+        };
+        Platform.runLater(task);
+
+    }
+
+    public void geldUpdate5(Player[] players) {
+        Task task = new Task() {
+            @Override
+            protected Object call() throws Exception {
+                for (int i = 0; i < players.length; i++) {
+                    if (player5Button.getText().equals(players[i].getName())) {
+                        geld5.setText("Geld: " + players[i].getMoney());
+                        player5Geld.add(geld5, 0, 0);
+                    }
+                }
+                return null;
+            }
+
+        };
+        Platform.runLater(task);
+
+    }
+
+    public void geldUpdate() {
+        Player[] players = Lobby.getPlayerClient().getGame().getPlayers();
+        if (players.length >= 1) {
+            geldUpdate0(players);
+        }
+        if (players.length >= 2) {
+            geldUpdate1(players);
+        }
+        if (players.length >= 3) {
+            geldUpdate2(players);
+        }
+        if (players.length >= 4) {
+            geldUpdate3(players);
+        }
+        if (players.length >= 5) {
+            geldUpdate4(players);
+        }
+        if (players.length >= 6) {
+            geldUpdate5(players);
+        }
 
     }
 
     public void playerUpdate() {
         Player[] players = Lobby.getPlayerClient().getGame().getPlayers();
+
+        if (players.length >= 1) {
+            for (int i = lastPosPlayer0; i < players[0].getPosition(); i++) {
+                playerUpdate0(players, i);
+                IOService.sleep(300);
+            }
+            playerUpdate0(players, players[0].getPosition());
+            lastPosPlayer0 = players[0].getPosition();
+        }
+        if (players.length >= 2) {
+            for (int i = lastPosPlayer1; i < players[1].getPosition(); i++) {
+                playerUpdate1(players, i);
+                IOService.sleep(300);
+            }
+            playerUpdate1(players, players[1].getPosition());
+            lastPosPlayer1 = players[1].getPosition();
+        }
+        if (players.length >= 3) {
+            for (int i = lastPosPlayer2; i < players[2].getPosition(); i++) {
+                playerUpdate2(players, i);
+                IOService.sleep(300);
+            }
+            playerUpdate2(players, players[2].getPosition());
+            lastPosPlayer2 = players[2].getPosition();
+        }
+        if (players.length >= 4) {
+            for (int i = lastPosPlayer3; i < players[3].getPosition(); i++) {
+                playerUpdate3(players, i);
+                IOService.sleep(300);
+            }
+            playerUpdate3(players, players[3].getPosition());
+            lastPosPlayer3 = players[3].getPosition();
+        }
+        if (players.length >= 5) {
+            for (int i = lastPosPlayer4; i < players[4].getPosition(); i++) {
+                playerUpdate4(players, i);
+                IOService.sleep(300);
+            }
+            playerUpdate4(players, players[4].getPosition());
+            lastPosPlayer4 = players[4].getPosition();
+        }
+        if (players.length >= 6) {
+            for (int i = lastPosPlayer5; i < players[5].getPosition(); i++) {
+                playerUpdate5(players, i);
+                IOService.sleep(300);
+            }
+            playerUpdate5(players, players[5].getPosition());
+            lastPosPlayer5 = players[5].getPosition();
+        }
+
+    }
+
+    public void playerUpdate0(Player[] players, int nextPos) {
         Task task = new Task() {
             @Override
             protected Object call() throws Exception {
-
-                if (players.length >= 1) {
-                    Felder[players[0].getPosition()].getChildren().add(player0);
-                }
-                if (players.length >= 2) {
-                    Felder[players[1].getPosition()].getChildren().add(player1);
-                }
-                if (players.length >= 3) {
-                    Felder[players[2].getPosition()].getChildren().add(player2);
-                }
-                if (players.length >= 4) {
-                    Felder[players[3].getPosition()].getChildren().add(player3);
-                }
-                if (players.length >= 5) {
-                    Felder[players[4].getPosition()].getChildren().add(player4);
-                }
-                if (players.length >= 6) {
-                    Felder[players[5].getPosition()].getChildren().add(player5);
-                }
+                player0.layoutXProperty().bind(Felder[nextPos].widthProperty().subtract(player0.centerXProperty()).divide(2));
+                player0.layoutYProperty().bind(Felder[nextPos].heightProperty().subtract(player0.centerYProperty()).divide(2));
+                Felder[nextPos].getChildren().add(player0);
                 return null;
             }
         };
         Platform.runLater(task);
+    }
 
+    public void playerUpdate1(Player[] players, int nextPos) {
+        Task task = new Task() {
+            @Override
+            protected Object call() throws Exception {
+                player1.layoutXProperty().bind(Felder[nextPos].widthProperty().subtract(player1.centerXProperty()).divide(2));
+                player1.layoutYProperty().bind(Felder[nextPos].heightProperty().subtract(player1.centerYProperty()).divide(2));
+                Felder[nextPos].getChildren().add(player1);
+                return null;
+            }
+        };
+        Platform.runLater(task);
+    }
+
+    public void playerUpdate2(Player[] players, int nextPos) {
+        Task task = new Task() {
+            @Override
+            protected Object call() throws Exception {
+                player2.layoutXProperty().bind(Felder[nextPos].widthProperty().subtract(player2.centerXProperty()).divide(2));
+                player2.layoutYProperty().bind(Felder[nextPos].heightProperty().subtract(player2.centerYProperty()).divide(2));
+                Felder[nextPos].getChildren().add(player2);
+                return null;
+            }
+        };
+        Platform.runLater(task);
+    }
+
+    public void playerUpdate3(Player[] players, int nextPos) {
+        Task task = new Task() {
+            @Override
+            protected Object call() throws Exception {
+                player3.layoutXProperty().bind(Felder[nextPos].widthProperty().subtract(player3.centerXProperty()).divide(2));
+                player3.layoutYProperty().bind(Felder[nextPos].heightProperty().subtract(player3.centerYProperty()).divide(2));
+                Felder[nextPos].getChildren().add(player3);
+                return null;
+            }
+        };
+        Platform.runLater(task);
+    }
+
+    public void playerUpdate4(Player[] players, int nextPos) {
+        Task task = new Task() {
+            @Override
+            protected Object call() throws Exception {
+                player4.layoutXProperty().bind(Felder[nextPos].widthProperty().subtract(player4.centerXProperty()).divide(2));
+                player4.layoutYProperty().bind(Felder[nextPos].heightProperty().subtract(player4.centerYProperty()).divide(2));
+                Felder[nextPos].getChildren().add(player4);
+                return null;
+            }
+        };
+        Platform.runLater(task);
+    }
+
+    public void playerUpdate5(Player[] players, int nextPos) {
+        Task task = new Task() {
+            @Override
+            protected Object call() throws Exception {
+                player5.layoutXProperty().bind(Felder[nextPos].widthProperty().subtract(player5.centerXProperty()).divide(2));
+                player5.layoutYProperty().bind(Felder[nextPos].heightProperty().subtract(player5.centerYProperty()).divide(2));
+                Felder[nextPos].getChildren().add(player5);
+                return null;
+            }
+        };
+        Platform.runLater(task);
     }
 
     public void propertyUpdate() {
-        Field[] fields = Lobby.getPlayerClient().getGame().getBoard().getFieldManager().getFields();
-        int counter = 0;
+        if (Lobby.getPlayerClient().getGame().getBoard() != null) {
+            Field[] fields = Lobby.getPlayerClient().getGame().getBoard().getFieldManager().getFields();
+            int counter = 0;
 
-        for (Field field : fields) {
-            if (field instanceof PropertyField) {
-                if (((PropertyField) field).getOwner() != null) {
-                    if (BesitzanzeigeFelder[counter] != null) {
-                        BesitzanzeigeFelder[counter].setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[((PropertyField) field).getOwner().getId()][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+            for (Field field : fields) {
+                if (field instanceof PropertyField) {
+                    if (((PropertyField) field).getOwner() != null) {
+                        if (BesitzanzeigeFelder[counter] != null) {
+                            BesitzanzeigeFelder[counter].setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[((PropertyField) field).getOwner().getId()][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+                        }
                     }
                 }
+                counter++;
             }
-            counter++;
         }
     }
 
+    //TODO Testen
     @FXML
     private void player0ButtonAction(ActionEvent event) throws IOException, InterruptedException {
+
         Player[] players = Lobby.getPlayerClient().getGame().getPlayers();
+        FieldManager manager = Lobby.getPlayerClient().getGame().getBoard().getFieldManager();
+        Player playeronbutton = players[client.getPlayerOnClient().getId()];
+
+        String property = "";
+        List<PropertyField> ownedFields = manager.getOwnedPropertyFields(playeronbutton)
+                .collect(Collectors.toList());      //Liste der besessenen Strassen
+        for (PropertyField field : ownedFields) {
+            property += "\n" + field.getName() + " [ " + field.getRent() + " €]";
+        }
+
         GridPane player0Pane = new GridPane();
         ScrollPane scroll = new ScrollPane();
         VBox box = new VBox();
@@ -545,28 +839,42 @@ public class MainSceneController implements Initializable {
         scroll.setCenterShape(true);
         player0Pane.add(scroll, 0, 0);
         scroll.setContent(box);
-        Label geld = new Label(" hat in Konto: " + players[0].getMoney());
-        JFXButton player = new JFXButton();
-        JFXButton exit = new JFXButton("Exit");
-        player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[0][4]), CornerRadii.EMPTY, Insets.EMPTY)));
-        player.setText(Lobby.getUsers()[0][1]);
-        player.setPrefSize(150, 10);
-        box.getChildren().addAll(player, geld, exit);
-        box.setAlignment(Pos.CENTER);
-//       
-////        player0Pane.add(geld, 2, 5);
-//        player0Pane.add(exit, 4, 7);
 
-        setPopup(player0Pane);
+        Label fields = new Label(property + "\n");
+        fields.setFont(Font.font("Tahoma", FontPosture.ITALIC, 10));
+        fields.setTextFill(Color.MIDNIGHTBLUE);
+
+        Label geld = new Label(" hat in Konto: " + playeronbutton.getMoney());
+
+        JFXButton player = new JFXButton();
+
+        JFXButton exit = new JFXButton("Exit");
+
+        Label jail = new Label(" ist in Gefängnis seit : " + playeronbutton.getDaysInJail());
+
+        player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[client.getPlayerOnClient().getId()][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+        player.setText(Lobby.getUsers()[client.getPlayerOnClient().getId()][1]);
+        player.setPrefSize(150, 10);
+
+        box.getChildren().addAll(player, geld, jail, fields, exit);
+        box.setAlignment(Pos.CENTER);
+
+        if (PopupPane.getChildren().contains(middlePane)) {
+            setPopup(player0Pane);
+        }
 
         exit.setOnAction(e -> {
-            resetPopup(player0Pane);
+            resetPopup();
         });
     }
 
     @FXML
     private void player1ButtonAction(ActionEvent event) throws IOException, InterruptedException {
         Player[] players = Lobby.getPlayerClient().getGame().getPlayers();
+        FieldManager manager = Lobby.getPlayerClient().getGame().getBoard().getFieldManager();
+
+        String property = "";
+
         GridPane player1Pane = new GridPane();
         ScrollPane scroll = new ScrollPane();
         VBox box = new VBox();
@@ -574,25 +882,59 @@ public class MainSceneController implements Initializable {
         scroll.setCenterShape(true);
         player1Pane.add(scroll, 0, 0);
         scroll.setContent(box);
-        Label geld = new Label(" hat in Konto: " + players[1].getMoney());
+
+        Label geld;
         JFXButton player = new JFXButton();
         JFXButton exit = new JFXButton("Exit");
-        player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[1][4]), CornerRadii.EMPTY, Insets.EMPTY)));
-        player.setText(Lobby.getUsers()[1][1]);
+        Label jail;
+
+        if (client.getPlayerOnClient().getId() == 0) {
+            geld = new Label(" hat in Konto: " + players[1].getMoney());
+            jail = new Label(" ist in Gefängnis seit : " + players[1].getDaysInJail());
+            List<PropertyField> ownedFields = manager.getOwnedPropertyFields(players[1])
+                    .collect(Collectors.toList());      //Liste der besessenen Strassen
+            for (PropertyField field : ownedFields) {
+                property += "\n" + field.getName() + " [ " + field.getRent() + " €]";
+            }
+            player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[1][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+            player.setText(Lobby.getUsers()[1][1]);
+        }
+        else {
+            geld = new Label(" hat in Konto: " + players[0].getMoney());
+            jail = new Label(" ist in Gefängnis seit : " + players[0].getDaysInJail());
+            List<PropertyField> ownedFields = manager.getOwnedPropertyFields(players[0])
+                    .collect(Collectors.toList());      //Liste der besessenen Strassen
+            for (PropertyField field : ownedFields) {
+                property += "\n" + field.getName() + " [ " + field.getRent() + " €]";
+            }
+
+            player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[0][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+            player.setText(Lobby.getUsers()[0][1]);
+        }
+
+        Label fields = new Label(property + "\n");
+        fields.setFont(Font.font("Tahoma", FontPosture.ITALIC, 10));
+        fields.setTextFill(Color.MIDNIGHTBLUE);
+
         player.setPrefSize(150, 10);
-        box.getChildren().addAll(player, geld, exit);
+        box.getChildren().addAll(player, geld, jail, fields, exit);
         box.setAlignment(Pos.CENTER);
 
-        setPopup(player1Pane);
-
+        if (PopupPane.getChildren().contains(middlePane)) {
+            setPopup(player1Pane);
+        }
         exit.setOnAction(e -> {
-            resetPopup(player1Pane);
+            resetPopup();
         });
     }
 
     @FXML
     private void player2ButtonAction(ActionEvent event) throws IOException, InterruptedException {
         Player[] players = Lobby.getPlayerClient().getGame().getPlayers();
+        FieldManager manager = Lobby.getPlayerClient().getGame().getBoard().getFieldManager();
+
+        String property = "";
+
         GridPane player2Pane = new GridPane();
         ScrollPane scroll = new ScrollPane();
         VBox box = new VBox();
@@ -600,24 +942,57 @@ public class MainSceneController implements Initializable {
         scroll.setCenterShape(true);
         player2Pane.add(scroll, 0, 0);
         scroll.setContent(box);
-        Label geld = new Label(" hat in Konto: " + players[2].getMoney());
+
+        Label geld;
         JFXButton player = new JFXButton();
         JFXButton exit = new JFXButton("Exit");
-        player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[2][4]), CornerRadii.EMPTY, Insets.EMPTY)));
-        player.setText(Lobby.getUsers()[2][1]);
+        Label jail;
+        if (client.getPlayerOnClient().getId() == 2) {
+            geld = new Label(" hat in Konto: " + players[1].getMoney());
+            jail = new Label(" ist in Gefängnis seit : " + players[1].getDaysInJail());
+            List<PropertyField> ownedFields = manager.getOwnedPropertyFields(players[1])
+                    .collect(Collectors.toList());      //Liste der besessenen Strassen
+            for (PropertyField field : ownedFields) {
+                property += "\n" + field.getName() + " [ " + field.getRent() + " €]";
+            }
+            player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[1][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+            player.setText(Lobby.getUsers()[1][1]);
+        }
+        else {
+            geld = new Label(" hat in Konto: " + players[2].getMoney());
+            jail = new Label(" ist in Gefängnis seit : " + players[2].getDaysInJail());
+            List<PropertyField> ownedFields = manager.getOwnedPropertyFields(players[2])
+                    .collect(Collectors.toList());      //Liste der besessenen Strassen
+            for (PropertyField field : ownedFields) {
+                property += "\n" + field.getName() + " [ " + field.getRent() + " €]";
+            }
+            player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[2][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+            player.setText(Lobby.getUsers()[2][1]);
+        }
+
+        Label fields = new Label(property + "\n");
+        fields.setFont(Font.font("Tahoma", FontPosture.ITALIC, 10));
+        fields.setTextFill(Color.MIDNIGHTBLUE);
+
         player.setPrefSize(150, 10);
-        box.getChildren().addAll(player, geld, exit);
+        box.getChildren().addAll(player, geld, jail, fields, exit);
         box.setAlignment(Pos.CENTER);
-        setPopup(player2Pane);
+
+        if (PopupPane.getChildren().contains(middlePane)) {
+            setPopup(player2Pane);
+        }
 
         exit.setOnAction(e -> {
-            resetPopup(player2Pane);
+            resetPopup();
         });
     }
 
     @FXML
     private void player3ButtonAction(ActionEvent event) throws IOException, InterruptedException {
         Player[] players = Lobby.getPlayerClient().getGame().getPlayers();
+        FieldManager manager = Lobby.getPlayerClient().getGame().getBoard().getFieldManager();
+
+        String property = "";
         GridPane player3Pane = new GridPane();
         ScrollPane scroll = new ScrollPane();
         VBox box = new VBox();
@@ -625,25 +1000,58 @@ public class MainSceneController implements Initializable {
         scroll.setCenterShape(true);
         player3Pane.add(scroll, 0, 0);
         scroll.setContent(box);
-        Label geld = new Label(" hat in Konto: " + players[3].getMoney());
+
+        Label geld;
         JFXButton player = new JFXButton();
         JFXButton exit = new JFXButton("Exit");
-        player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[3][4]), CornerRadii.EMPTY, Insets.EMPTY)));
-        player.setText(Lobby.getUsers()[3][1]);
+        Label jail;
+        if (client.getPlayerOnClient().getId() == 3) {
+            geld = new Label(" hat in Konto: " + players[2].getMoney());
+            jail = new Label(" ist in Gefängnis seit : " + players[2].getDaysInJail());
+            List<PropertyField> ownedFields = manager.getOwnedPropertyFields(players[2])
+                    .collect(Collectors.toList());      //Liste der besessenen Strassen
+            for (PropertyField field : ownedFields) {
+                property += "\n" + field.getName() + " [ " + field.getRent() + " €]";
+            }
+            player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[2][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+            player.setText(Lobby.getUsers()[2][1]);
+        }
+        else {
+            geld = new Label(" hat in Konto: " + players[3].getMoney());
+            jail = new Label(" ist in Gefängnis seit : " + players[3].getDaysInJail());
+            List<PropertyField> ownedFields = manager.getOwnedPropertyFields(players[3])
+                    .collect(Collectors.toList());      //Liste der besessenen Strassen
+            for (PropertyField field : ownedFields) {
+                property += "\n" + field.getName() + " [ " + field.getRent() + " €]";
+            }
+            player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[3][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+            player.setText(Lobby.getUsers()[3][1]);
+        }
+
+        Label fields = new Label(property + "\n");
+        fields.setFont(Font.font("Tahoma", FontPosture.ITALIC, 10));
+        fields.setTextFill(Color.MIDNIGHTBLUE);
+
         player.setPrefSize(150, 10);
-        box.getChildren().addAll(player, geld, exit);
+        box.getChildren().addAll(player, geld, jail, fields, exit);
         box.setAlignment(Pos.CENTER);
 
-        setPopup(player3Pane);
+        if (PopupPane.getChildren().contains(middlePane)) {
+            setPopup(player3Pane);
+        }
 
         exit.setOnAction(e -> {
-            resetPopup(player3Pane);
+            resetPopup();
         });
     }
 
     @FXML
     private void player4ButtonAction(ActionEvent event) throws IOException, InterruptedException {
         Player[] players = Lobby.getPlayerClient().getGame().getPlayers();
+        FieldManager manager = Lobby.getPlayerClient().getGame().getBoard().getFieldManager();
+
+        String property = "";
+
         GridPane player4Pane = new GridPane();
         ScrollPane scroll = new ScrollPane();
         VBox box = new VBox();
@@ -651,25 +1059,57 @@ public class MainSceneController implements Initializable {
         scroll.setCenterShape(true);
         player4Pane.add(scroll, 0, 0);
         scroll.setContent(box);
-        Label geld = new Label(" hat in Konto: " + players[4].getMoney());
+
+        Label geld;
         JFXButton player = new JFXButton();
         JFXButton exit = new JFXButton("Exit");
-        player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[4][4]), CornerRadii.EMPTY, Insets.EMPTY)));
-        player.setText(Lobby.getUsers()[4][1]);
+        Label jail;
+        if (client.getPlayerOnClient().getId() == 4) {
+            geld = new Label(" hat in Konto: " + players[3].getMoney());
+            jail = new Label(" ist in Gefängnis seit : " + players[3].getDaysInJail());
+            List<PropertyField> ownedFields = manager.getOwnedPropertyFields(players[3])
+                    .collect(Collectors.toList());      //Liste der besessenen Strassen
+            for (PropertyField field : ownedFields) {
+                property += "\n" + field.getName() + " [ " + field.getRent() + " €]";
+            }
+            player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[3][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+            player.setText(Lobby.getUsers()[3][1]);
+        }
+        else {
+            geld = new Label(" hat in Konto: " + players[4].getMoney());
+            jail = new Label(" ist in Gefängnis seit : " + players[4].getDaysInJail());
+            List<PropertyField> ownedFields = manager.getOwnedPropertyFields(players[4])
+                    .collect(Collectors.toList());      //Liste der besessenen Strassen
+            for (PropertyField field : ownedFields) {
+                property += "\n" + field.getName() + " [ " + field.getRent() + " €]";
+            }
+
+            player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[4][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+            player.setText(Lobby.getUsers()[4][1]);
+        }
+
+        Label fields = new Label(property + "\n");
+        fields.setFont(Font.font("Tahoma", FontPosture.ITALIC, 10));
+        fields.setTextFill(Color.MIDNIGHTBLUE);
+
         player.setPrefSize(150, 10);
-        box.getChildren().addAll(player, geld, exit);
+        box.getChildren().addAll(player, geld, jail, fields, exit);
         box.setAlignment(Pos.CENTER);
-
-        setPopup(player4Pane);
-
+        if (PopupPane.getChildren().contains(middlePane)) {
+            setPopup(player4Pane);
+        }
         exit.setOnAction(e -> {
-            resetPopup(player4Pane);
+            resetPopup();
         });
     }
 
     @FXML
     private void player5ButtonAction(ActionEvent event) throws IOException, InterruptedException {
         Player[] players = Lobby.getPlayerClient().getGame().getPlayers();
+        FieldManager manager = Lobby.getPlayerClient().getGame().getBoard().getFieldManager();
+
+        String property = "";
+
         GridPane player5Pane = new GridPane();
         ScrollPane scroll = new ScrollPane();
         VBox box = new VBox();
@@ -677,19 +1117,47 @@ public class MainSceneController implements Initializable {
         scroll.setCenterShape(true);
         player5Pane.add(scroll, 0, 0);
         scroll.setContent(box);
-        Label geld = new Label(players[5].getName() + " hat in Konto: " + players[5].getMoney());
+
+        Label geld;
         JFXButton player = new JFXButton();
         JFXButton exit = new JFXButton("Exit");
-        player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[5][4]), CornerRadii.EMPTY, Insets.EMPTY)));
-        player.setText(Lobby.getUsers()[5][1]);
+        Label jail;
+        if (client.getPlayerOnClient().getId() == 5) {
+            geld = new Label(" hat in Konto: " + players[4].getMoney());
+            jail = new Label(" ist in Gefängnis seit : " + players[4].getDaysInJail());
+            List<PropertyField> ownedFields = manager.getOwnedPropertyFields(players[4])
+                    .collect(Collectors.toList());      //Liste der besessenen Strassen
+            for (PropertyField field : ownedFields) {
+                property += "\n" + field.getName() + " [ " + field.getRent() + " €]";
+            }
+            player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[4][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+            player.setText(Lobby.getUsers()[4][1]);
+        }
+        else {
+            geld = new Label(" hat in Konto: " + players[5].getMoney());
+            jail = new Label(" ist in Gefängnis seit : " + players[5].getDaysInJail());
+            List<PropertyField> ownedFields = manager.getOwnedPropertyFields(players[5])
+                    .collect(Collectors.toList());      //Liste der besessenen Strassen
+            for (PropertyField field : ownedFields) {
+                property += "\n" + field.getName() + " [ " + field.getRent() + " €]";
+            }
+            player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[5][4]), CornerRadii.EMPTY, Insets.EMPTY)));
+            player.setText(Lobby.getUsers()[5][1]);
+        }
+
+        Label fields = new Label(property + "\n");
+        fields.setFont(Font.font("Tahoma", FontPosture.ITALIC, 10));
+        fields.setTextFill(Color.MIDNIGHTBLUE);
+
         player.setPrefSize(150, 10);
-        box.getChildren().addAll(player, geld, exit);
+        box.getChildren().addAll(player, geld, jail, fields, exit);
         box.setAlignment(Pos.CENTER);
 
-        setPopup(player5Pane);
-
+        if (PopupPane.getChildren().contains(middlePane)) {
+            setPopup(player5Pane);
+        }
         exit.setOnAction(e -> {
-            resetPopup(player5Pane);
+            resetPopup();
         });
 
     }
@@ -700,7 +1168,7 @@ public class MainSceneController implements Initializable {
             @Override
             protected Object call() throws Exception {
                 PopupPane.getChildren().remove(middlePane);
-                PopupPane.add(gridpane, 0, 1);
+                PopupPane.add(gridpane, 0, 0);
                 return null;
             }
         };
@@ -708,12 +1176,12 @@ public class MainSceneController implements Initializable {
 
     }
 
-    public void resetPopup(GridPane gridpane) {
+    public void resetPopup() {
         Task task = new Task() {
             @Override
             protected Object call() throws Exception {
-                PopupPane.getChildren().remove(gridpane);
-                PopupPane.add(middlePane, 0, 1);
+                PopupPane.getChildren().clear();
+                PopupPane.add(middlePane, 0, 0);
                 return null;
             }
         };
