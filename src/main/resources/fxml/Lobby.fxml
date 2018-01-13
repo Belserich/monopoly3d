@@ -110,5 +110,10 @@
             </GridPane>
          </children>
       </StackPane>
+      <JFXButton fx:id="deleteKi1" alignment="CENTER_RIGHT" contentDisplay="CENTER" style="-fx-background-color: #212121;" text="Löschen" textFill="WHITE" visible="false" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="2" />
+      <JFXButton fx:id="deleteKi2" style="-fx-background-color: #212121;" text="Löschen" textFill="WHITE" visible="false" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="3" />
+      <JFXButton fx:id="deleteKi3" style="-fx-background-color: #212121;" text="Löschen" textFill="WHITE" visible="false" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="4" />
+      <JFXButton fx:id="deleteKi4" style="-fx-background-color: #212121;" text="Löschen" textFill="WHITE" visible="false" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="5" />
+      <JFXButton fx:id="deleteKi5" style="-fx-background-color: #212121;" text="Löschen" textFill="WHITE" visible="false" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="6" />
    </children>
 </GridPane>

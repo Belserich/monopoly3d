@@ -51,6 +51,17 @@ public class LobbyController implements Initializable {
     private Label name6Label;
 
     @FXML
+    private Button deleteKi1;
+    @FXML
+    private Button deleteKi2;
+    @FXML
+    private Button deleteKi3;
+    @FXML
+    private Button deleteKi4;
+    @FXML
+    private Button deleteKi5;
+
+    @FXML
     private GridPane grid;
 
     @FXML
@@ -269,26 +280,31 @@ public class LobbyController implements Initializable {
                     switch (Lobby.getUsers().length) {
                         case 1: {
                             playerColor2.setDisable(false);
+                            deleteKi1.setVisible(true);
                             kiID.add(1);
                             break;
                         }
                         case 2: {
                             playerColor3.setDisable(false);
+                            deleteKi2.setVisible(true);
                             kiID.add(2);
                             break;
                         }
                         case 3: {
                             playerColor4.setDisable(false);
+                            deleteKi3.setVisible(true);
                             kiID.add(3);
                             break;
                         }
                         case 4: {
                             playerColor5.setDisable(false);
+                            deleteKi4.setVisible(true);
                             kiID.add(4);
                             break;
                         }
                         case 5: {
                             playerColor6.setDisable(false);
+                            deleteKi5.setVisible(true);
                             kiID.add(5);
                             break;
                         }
