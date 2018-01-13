@@ -6,6 +6,7 @@
 package de.btu.monopoly.input;
 
 import de.btu.monopoly.GlobalSettings;
+import de.btu.monopoly.core.Game;
 import de.btu.monopoly.core.GameBoard;
 import de.btu.monopoly.core.mechanics.Auction;
 import de.btu.monopoly.data.field.PropertyField;
@@ -200,6 +201,10 @@ public class IOService {
             LOGGER.log(Level.WARNING, "FEHLER: {0}", ex);
             Thread.currentThread().interrupt();
         }
+    }
+
+    public static Game getGame() {
+        return client.getGame();
     }
 
 }

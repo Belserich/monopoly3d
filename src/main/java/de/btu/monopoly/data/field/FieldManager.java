@@ -6,9 +6,9 @@ import de.btu.monopoly.core.service.FieldService;
 import de.btu.monopoly.core.service.PlayerService;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.ui.Logger.TextAreaHandler;
-
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.logging.Logger;
 import java.util.stream.IntStream;
@@ -58,6 +58,15 @@ public class FieldManager {
 
     public Field getField(int fieldId) {
         return fields[fieldId];
+    }
+
+    public int getFieldId(Field field) {
+        for (int i = 0; i < fields.length; i++) {
+            if (fields[i] == field) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     /**
@@ -279,6 +288,20 @@ public class FieldManager {
             }
         }
         return true;
+    }
+
+    /**
+     *
+     * @param prop Strasse dessen Nachbarn aufgelistet werden sollen
+     * @return Liste der Nachbarn der Strasse
+     */
+    public List<PropertyField> getNeighborList(PropertyField prop) {
+        List<PropertyField> list = new ArrayList();
+        int[] neighbourIds = FieldService.NEIGHBOUR_IDS[getPropertyId(prop)];
+        for (int i = 0; i < neighbourIds.length; i++) {
+            list.add((PropertyField) board.getFields()[neighbourIds[i]]);
+        }
+        return list;
     }
 
     /**

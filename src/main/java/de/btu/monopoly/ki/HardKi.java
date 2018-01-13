@@ -13,6 +13,7 @@ import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.input.IOService;
 import de.btu.monopoly.net.client.GameClient;
 import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Logger;
 
 /**
@@ -22,12 +23,24 @@ import java.util.logging.Logger;
 public class HardKi {
 
     private static final Logger LOGGER = Logger.getLogger(HardKi.class.getCanonicalName());
-    private static GameClient client;
+
+    // Ab wieviel verkauften Strassen im Gefaengnis bleiben
     private static final int PROPERTY_CAP_FOR_STAYING_IN_PRISON = 9;
+
+    // Straßenkaufzonen: (lukrative Kaufzone)
+    // bis zum Begin der lukrativen Zone betrachtet die KI die Strassen als zu billig (Zone 1)
+    private static final int BEGIN_LUCRATIVE_AREA = 15;
+    // in der Lukrativen Zone befinden sich begehrenswerte Strassen (Zone 2)
+    private static final int END_LUCTRATIVE_AREA = 25;
+    // nach der lukrativen Zone teure Strassen, die aber trotzdem kaufenswert sind (Zone 3)
+
+    // Reichtumsbereiche (bis zu...): (arm -> fluessig -> reich -> superreich)
+    private static final int rich = 800;    // reich
+    private static final int liquid = 600;   // fluessig
+    private static final int poor = 300;    // arm
 
     public static int jailOption(Player player, GameClient Gclient) {
         IOService.sleep(3000);
-        client = Gclient;
         int days = player.getDaysInJail();
         CardStack stack = player.getCardStack();
         int soldProps = getSoldProperties();
@@ -52,11 +65,32 @@ public class HardKi {
                 return 1;
             }
         }
-
     }
 
     public static int buyPropOption(Player player, PropertyField prop) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        boolean buy = false;
+        int propertyId = IOService.getGame().getBoard().getFieldManager().getFieldId(prop);
+        int amount = player.getMoney();
+
+        // Ist die KI superreich kauft sie aus Zone 1, 2 und 3
+        if (amount > rich) {
+            buy = true;
+        }// reich nur aus Zone 2 und 3
+        else if (amount > liquid) {
+            buy = (propertyId > BEGIN_LUCRATIVE_AREA);
+        }// ist sie fluessig kauft sie nur Strassen der Zone 2
+        else if (amount > poor) {
+            buy = (propertyId > BEGIN_LUCRATIVE_AREA && propertyId < END_LUCTRATIVE_AREA);
+        }//ist die KI arm kauft sie nicht
+        else {
+            //Es sei denn sie hat bereits Straßen des selben Zuges
+            if (areThereAlreadyNeighboursOwned(prop, player)) {
+                //Dann nur wenn sie genug Geld hat
+                buy = (player.getMoney() > prop.getPrice());
+            }
+        }
+
+        return buy ? 1 : 2;
     }
 
     public static void processActionSequence(Player player, GameBoard board) {
@@ -72,9 +106,22 @@ public class HardKi {
      * @return Anzahl der Properties die einen Besitzer haben
      */
     private static int getSoldProperties() {
-        return (int) Arrays.stream(client.getGame().getBoard().getFields())
+        return (int) Arrays.stream(IOService.getGame().getBoard().getFields())
                 .filter(p -> p instanceof PropertyField).map(p -> (PropertyField) p)
-                .filter(p -> p.getOwner() != null).count();
+                .filter(p -> p.getOwner() != null)
+                .count();
+    }
+
+    private static int numberOfMortgages(Player player) {
+        return (int) IOService.getGame().getBoard().getFieldManager().getOwnedPropertyFields(player)
+                .filter(p -> p.isMortgageTaken())
+                .count();
+    }
+
+    private static boolean areThereAlreadyNeighboursOwned(PropertyField prop, Player player) {
+        List<PropertyField> neighborList = IOService.getGame().getBoard().getFieldManager()
+                .getNeighborList(prop);
+        return neighborList.stream().anyMatch((neigh) -> (neigh.getOwner() == player));
     }
 
 }
