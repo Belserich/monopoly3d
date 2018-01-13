@@ -131,6 +131,7 @@ public class LobbyTable extends Listener {
                     userID = i;
                 }
             }
+
             if (userID == -1) {
                 LOGGER.warning("deleteUser fehlgeschlagen: nicht lokalisierbar");
             }
@@ -213,6 +214,11 @@ public class LobbyTable extends Listener {
             ChangeUsercolorRequest chanreq = (ChangeUsercolorRequest) object;
             changeUserColor(chanreq.getUserId(), chanreq.getUserColor());
         }
+        else if (object instanceof DeleteUserRequest) {
+            NetworkService.logServerReceiveMessage(object);
+            DeleteUserRequest dur = (DeleteUserRequest) object;
+            deleteUser(connection, dur.getId());
+        }
         else if (object instanceof GamestartRequest) {
             NetworkService.logServerReceiveMessage(object);
             gameStarted = true;
@@ -225,7 +231,6 @@ public class LobbyTable extends Listener {
             BroadcastRandomSeedRequest req = (BroadcastRandomSeedRequest) object;
             randomSeed = req.getSeed();
         }
-
     }
 
     @Override
