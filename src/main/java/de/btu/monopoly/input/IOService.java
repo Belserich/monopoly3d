@@ -12,7 +12,6 @@ import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.ki.EasyKi;
 import de.btu.monopoly.ki.HardKi;
-import de.btu.monopoly.ki.MediumKi;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.networkClasses.BroadcastPlayerChoiceRequest;
 import de.btu.monopoly.ui.Logger.TextAreaHandler;
@@ -51,9 +50,6 @@ public class IOService {
                 choice = EasyKi.jailOption(player);
                 break;
             case 2:
-                choice = MediumKi.jailOption(player);
-                break;
-            case 3:
                 choice = HardKi.jailOption(player, client);
                 break;
             default:
@@ -79,9 +75,6 @@ public class IOService {
                 choice = EasyKi.buyPropOption(player, prop, random);
                 break;
             case 2:
-                choice = MediumKi.buyPropOption(player, prop);
-                break;
-            case 3:
                 choice = HardKi.buyPropOption(player, prop);
                 break;
             default:
@@ -106,9 +99,6 @@ public class IOService {
                 choice = EasyKi.processActionSequence(player, board);
                 break;
             case 2:
-                MediumKi.processActionSequence(player, board);
-                break;
-            case 3:
                 HardKi.processActionSequence(player, board);
                 break;
             default:
@@ -134,9 +124,6 @@ public class IOService {
                 EasyKi.processBetSequence(rndKi);
                 break;
             case 2:
-                MediumKi.processBetSequence();
-                break;
-            case 3:
                 HardKi.processBetSequence();
                 break;
             default:

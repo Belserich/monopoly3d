@@ -17,6 +17,7 @@ import de.btu.monopoly.menu.Lobby;
 import de.btu.monopoly.menu.LobbyService;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.server.GameServer;
+import java.util.Arrays;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -90,20 +91,27 @@ public class NetDependedUnitTests {
         players = null;
         fm = null;
         cm = null;
-        System.out.println("\nCLEAR GAME ---- ALLES ZURUECKGESETZT!!!\n");
+        System.out.println("\nCLEAR GAME ---- ALLES ZURUECKGESETZT!!!");
         IOService.sleep(100);
+    }
+
+    private void testOutput(String testName) {
+        System.out.println("\n###############################################\n"
+                + "Starte Test: " + testName + "\n");
     }
 
     @Test
     public void testInitNetwork() {
+        testOutput("testInitNetwork");
         initNetwork();
         Assert.assertTrue("Server nicht initialisiert", server != null);
         Assert.assertTrue("Client nicht initialisiert", client != null);
         clearGame();
     }
 
-//    @Test
+    @Test
     public void testInitLobby() {
+        testOutput("testInitLobby");
         initLobby();
         LobbyService.setLobby(lobby);
         Assert.assertTrue("Lobby nicht initialisiert", LobbyService.getLobby() != null);
@@ -133,8 +141,9 @@ public class NetDependedUnitTests {
         clearGame();
     }
 
-//    @Test
+    @Test
     public void testInitGame() {
+        testOutput("testInitGame");
         initGame();
         Assert.assertTrue("Game nicht initialisiert", game != null);
         Assert.assertTrue("board nicht initialisiert", board != null);
@@ -144,8 +153,9 @@ public class NetDependedUnitTests {
         clearGame();
     }
 
-//    @Test
-    public void testKiJailOption() {
+    @Test
+    public void testEasyKiJailOption() {
+        testOutput("testEasyKiJailOption");
         initGame();
         // KI ins Gefängnis setzen
         Player ki = players[1];
@@ -163,8 +173,37 @@ public class NetDependedUnitTests {
         clearGame();
     }
 
+    @Test
+    public void testHardKiJailOption() {
+        testOutput("testHardKiJailOption");
+        initGame();
+        Player ki = players[1];
+        ki.setKiLevel(2);
+
+        // KI ins Gefängnis setzen
+        ki.setInJail(true);
+        ki.setPosition(10);
+
+        //KI sollte sich freikaufen
+        game.jailPhase(ki);
+        Assert.assertTrue("KI hat nicht bezahlt", !ki.isInJail());
+
+        // Alle Strassen verkaufen
+        Arrays.stream(board.getFields())
+                .filter(p -> p instanceof PropertyField).map(p -> (PropertyField) p)
+                .forEach(p -> p.setOwner(ki));
+
+        Assert.assertTrue("Strassen wurden nicht verkauft", ((PropertyField) board.getFields()[1]).getOwner() != null);
+
+        //KI sollte sich jetzt freiwuerfeln
+        int choice = IOService.jailChoice(ki);
+        Assert.assertTrue("KI will sich nicht freiwürfeln", choice == 1);
+        clearGame();
+    }
+
 //    @Test
     public void testAuctionEnter() {
+        testOutput("testAuctionEnter");
         initGame();
         Assert.assertTrue("Auktion nicht initialisiert", AuctionService.getAuc() != null);
 

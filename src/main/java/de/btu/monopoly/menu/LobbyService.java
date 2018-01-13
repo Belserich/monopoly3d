@@ -17,14 +17,13 @@ import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.networkClasses.Lobby.*;
 import de.btu.monopoly.net.server.AuctionTable;
 import de.btu.monopoly.ui.SceneManager;
-import javafx.scene.paint.Color;
-
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.scene.paint.Color;
 
 /**
  *
@@ -86,7 +85,7 @@ public class LobbyService extends Listener {
      * @param kiLevel des Computerspielers [1,3]
      */
     public static void addKI(String name, int kiLevel) {
-        if (kiLevel < 1 || kiLevel > 3) {
+        if (kiLevel < 1 || kiLevel > 2) {
             LOGGER.warning("kein gültiges KI Level eingegeben!");
         }
         else {
@@ -246,16 +245,17 @@ public class LobbyService extends Listener {
             RefreshLobbyResponse refres = (RefreshLobbyResponse) object;
             lobby.setUsers(refres.getUsers());
 
-            try {
-                // Lobby updaten
-                SceneManager.updateLobby();
-                // Kann später entfernt werden wenn Farben implementiert sind
-                SceneManager.updateLobbyColors();
-            } catch (InterruptedException ex) {
-                LOGGER.log(Level.WARNING, "Lobby konnte nicht geupdated werden{0}", ex);
-                Thread.currentThread().interrupt();
+            if (!GlobalSettings.isRunAsTest() && !GlobalSettings.isRunInConsole()) {
+                try {
+                    // Lobby updaten
+                    SceneManager.updateLobby();
+                    // Kann später entfernt werden wenn Farben implementiert sind
+                    SceneManager.updateLobbyColors();
+                } catch (InterruptedException ex) {
+                    LOGGER.log(Level.WARNING, "Lobby konnte nicht geupdated werden{0}", ex);
+                    Thread.currentThread().interrupt();
+                }
             }
-
             System.out.println("Spieler in Lobby: (Meine ID: " + lobby.getPlayerId() + ")");
             for (int i = 0; i < lobby.getUsers().length; i++) {
                 System.out.print("[" + i + "] ");
