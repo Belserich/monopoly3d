@@ -67,9 +67,15 @@
       <JFXColorPicker fx:id="playerColor4" disable="true" onAction="#pushColorPick3" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
       <JFXColorPicker fx:id="playerColor5" disable="true" onAction="#pushColorPick4" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="5" />
       <JFXColorPicker fx:id="playerColor6" disable="true" onAction="#pushColorPick5" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="6" />
-      <JFXButton fx:id="kiButton" minHeight="80.0" minWidth="200.0" onAction="#kiButtonAction" style="-fx-background-color: #212121;" text="KI hinzufügen" textFill="WHITE" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.valignment="CENTER" />
-      <JFXComboBox fx:id="difficultyComboBox" focusColor="BLACK" prefHeight="40.0" prefWidth="220.0" promptText="Ki Schwierigkeit" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
-      <JFXTextField fx:id="kiNameTextField" focusColor="BLACK" maxHeight="39.0" maxWidth="218.0" onKeyPressed="#enterSetsKi" prefHeight="39.0" prefWidth="218.0" promptText="Name" unFocusColor="BLACK" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER" />
+      <JFXButton fx:id="kiButton" minHeight="80.0" minWidth="200.0" onAction="#kiButtonAction" style="-fx-background-color: #212121;" text="KI hinzufügen" textFill="WHITE" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.valignment="CENTER">
+         <font>
+            <Font size="23.0" />
+         </font></JFXButton>
+      <JFXComboBox fx:id="difficultyComboBox" focusColor="BLACK" prefHeight="50.0" prefWidth="200.0" promptText="Ki Schwierigkeit" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
+      <JFXTextField fx:id="kiNameTextField" focusColor="BLACK" maxHeight="50.0" maxWidth="200.0" onKeyPressed="#enterSetsKi" prefHeight="50.0" prefWidth="200.0" promptText="Name" unFocusColor="BLACK" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER">
+         <font>
+            <Font size="23.0" />
+         </font></JFXTextField>
       <Label fx:id="lobbyLabelIp" text="IP Adresse" textOverrun="CLIP" GridPane.columnIndex="2">
          <font>
             <Font size="44.0" />
@@ -92,8 +98,14 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <JFXButton fx:id="playButton" minHeight="80.0" minWidth="200.0" onAction="#playButtonAction" style="-fx-background-color: #212121;" text="Spiel starten" textFill="WHITE" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
-                  <JFXButton fx:id="leaveLobbyButton" minHeight="80.0" minWidth="200.0" onAction="#leaveLobbyButtonAction" style="-fx-background-color: #212121;" text="Lobby verlassen" textFill="WHITE" GridPane.halignment="CENTER" GridPane.rowIndex="6" GridPane.valignment="CENTER" />
+                  <JFXButton fx:id="playButton" minHeight="80.0" minWidth="200.0" onAction="#playButtonAction" style="-fx-background-color: #212121;" text="Spiel starten" textFill="WHITE" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                     <font>
+                        <Font size="23.0" />
+                     </font></JFXButton>
+                  <JFXButton fx:id="leaveLobbyButton" minHeight="80.0" minWidth="200.0" onAction="#leaveLobbyButtonAction" style="-fx-background-color: #212121;" text="Lobby verlassen" textFill="WHITE" GridPane.halignment="CENTER" GridPane.rowIndex="6" GridPane.valignment="CENTER">
+                     <font>
+                        <Font size="23.0" />
+                     </font></JFXButton>
                </children>
             </GridPane>
          </children>

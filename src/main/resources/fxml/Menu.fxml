@@ -55,9 +55,18 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <JFXButton fx:id="startGameButton" contentDisplay="RIGHT" onAction="#startGameButtonAction" prefHeight="80.0" prefWidth="200.0" ripplerFill="RED" style="-fx-background-color: #212121;" text="Spiel erstellen" textFill="WHITE" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
-                  <JFXButton fx:id="closeButton" onAction="#closeButtonAction" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #212121;" text="Schließen" textFill="WHITE" GridPane.halignment="CENTER" GridPane.rowIndex="9" GridPane.valignment="CENTER" />
-                  <JFXButton fx:id="joinGameButton" onAction="#joinGameButtonAction" prefHeight="80.0" prefWidth="200.0" style="-fx-background-color: #212121;" text="Spiel beitreten" textFill="WHITE" GridPane.halignment="CENTER" GridPane.rowIndex="6" GridPane.valignment="CENTER" />
+                  <JFXButton fx:id="startGameButton" contentDisplay="RIGHT" onAction="#startGameButtonAction" prefHeight="80.0" prefWidth="200.0" ripplerFill="RED" style="-fx-background-color: #212121;" text="Spiel erstellen" textFill="WHITE" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
+                     <font>
+                        <Font size="23.0" />
+                     </font></JFXButton>
+                  <JFXButton fx:id="closeButton" onAction="#closeButtonAction" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #212121;" text="Schließen" textFill="WHITE" GridPane.halignment="CENTER" GridPane.rowIndex="9" GridPane.valignment="CENTER">
+                     <font>
+                        <Font size="23.0" />
+                     </font></JFXButton>
+                  <JFXButton fx:id="joinGameButton" onAction="#joinGameButtonAction" prefHeight="80.0" prefWidth="200.0" style="-fx-background-color: #212121;" text="Spiel beitreten" textFill="WHITE" GridPane.halignment="CENTER" GridPane.rowIndex="6" GridPane.valignment="CENTER">
+                     <font>
+                        <Font size="23.0" />
+                     </font></JFXButton>
                </children>
             </GridPane>
          </children>
