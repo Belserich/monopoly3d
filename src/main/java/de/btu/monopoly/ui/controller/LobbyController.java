@@ -22,14 +22,8 @@ import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundImage;
-import javafx.scene.layout.BackgroundPosition;
-import javafx.scene.layout.BackgroundRepeat;
-import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -55,6 +49,17 @@ public class LobbyController implements Initializable {
     private Label name5Label;
     @FXML
     private Label name6Label;
+
+    @FXML
+    private Button deleteKi1;
+    @FXML
+    private Button deleteKi2;
+    @FXML
+    private Button deleteKi3;
+    @FXML
+    private Button deleteKi4;
+    @FXML
+    private Button deleteKi5;
 
     @FXML
     private GridPane grid;
@@ -95,9 +100,8 @@ public class LobbyController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-//        Image image = new Image(
-//                getClass().getResourceAsStream("/images/Lobby_Background.jpg"));
-//        grid.setBackground(new Background(new BackgroundImage(image, BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT)));
+
+        difficultyComboBox.setStyle("-fx-font: 22px \"System\";");
 
         String image = " -fx-background-image: url(\"/images/Lobby_Background.jpg\") ;\n"
                 + "    -fx-background-position: center;\n"
@@ -276,26 +280,31 @@ public class LobbyController implements Initializable {
                     switch (Lobby.getUsers().length) {
                         case 1: {
                             playerColor2.setDisable(false);
+                            deleteKi1.setVisible(true);
                             kiID.add(1);
                             break;
                         }
                         case 2: {
                             playerColor3.setDisable(false);
+                            deleteKi2.setVisible(true);
                             kiID.add(2);
                             break;
                         }
                         case 3: {
                             playerColor4.setDisable(false);
+                            deleteKi3.setVisible(true);
                             kiID.add(3);
                             break;
                         }
                         case 4: {
                             playerColor5.setDisable(false);
+                            deleteKi4.setVisible(true);
                             kiID.add(4);
                             break;
                         }
                         case 5: {
                             playerColor6.setDisable(false);
+                            deleteKi5.setVisible(true);
                             kiID.add(5);
                             break;
                         }

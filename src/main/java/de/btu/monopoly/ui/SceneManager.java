@@ -27,7 +27,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
@@ -135,12 +134,12 @@ public class SceneManager extends Stage {
     public static int buyPropertyPopup() {
 
         GridPane gridpane = new GridPane();
-       // ScrollPane scroll = new ScrollPane();
+        // ScrollPane scroll = new ScrollPane();
         VBox box = new VBox();
         gridpane.setAlignment(Pos.CENTER);
-       // scroll.setCenterShape(true);
+        // scroll.setCenterShape(true);
         gridpane.add(box, 0, 0);
-       // box.setContent(box);
+        // box.setContent(box);
 
         Label label = new Label("Möchtest du die " + Lobby.getPlayerClient().getGame().getBoard().getFields()[Lobby.getPlayerClient().getPlayerOnClient().getPosition()].getName() + " kaufen?");
 
@@ -186,7 +185,7 @@ public class SceneManager extends Stage {
     public static int jailChoicePopup() {
 
         GridPane gridpane = new GridPane();
-       // ScrollPane scroll = new ScrollPane();
+        // ScrollPane scroll = new ScrollPane();
         VBox box = new VBox();
         gridpane.setAlignment(Pos.CENTER);
         //scroll.setCenterShape(true);
@@ -249,7 +248,7 @@ public class SceneManager extends Stage {
         gridpane.setAlignment(Pos.CENTER);
         //scroll.setCenterShape(true);
         gridpane.add(box, 0, 0);
-       // scroll.setContent(box);
+        // scroll.setContent(box);
         Label label = new Label("Was möchtest du noch tun?");
 
         JFXButton nothingButton = new JFXButton();
@@ -333,7 +332,7 @@ public class SceneManager extends Stage {
         gridPane.setAlignment(Pos.CENTER);
         //scroll.setCenterShape(true);
         gridPane.add(box, 0, 0);
-       // scroll.setContent(box);
+        // scroll.setContent(box);
         Label label = new Label("Wähle ein Feld:");
         JFXComboBox fieldBox = new JFXComboBox();
         Button button = new Button();
@@ -388,9 +387,9 @@ public class SceneManager extends Stage {
         //ScrollPane scroll = new ScrollPane();
         VBox box = new VBox();
         auctionGP.setAlignment(Pos.CENTER);
-       // scroll.setCenterShape(true);
+        // scroll.setCenterShape(true);
         auctionGP.add(box, 0, 0);
-       // scroll.setContent(box);
+        // scroll.setContent(box);
 
         hoechstgebotLabel.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
         Label label2 = new Label("Dein Gebot für \n" + AuctionService.getPropertyString() + ":");
@@ -426,6 +425,7 @@ public class SceneManager extends Stage {
                     AuctionService.setBid(Lobby.getPlayerClient().getPlayerOnClient().getId(), Integer.parseInt(tf.getText()));
                     // GameController.resetPopup(auctionGP);
                 } catch (Exception e) {
+                    tf.setText("");
                     tf.setPromptText("Bitte nur Zahlen eingeben!");
                 }
             }
@@ -460,7 +460,7 @@ public class SceneManager extends Stage {
             //ScrollPane scroll = new ScrollPane();
             VBox box = new VBox();
             gp.setAlignment(Pos.CENTER);
-           // scroll.setCenterShape(true);
+            // scroll.setCenterShape(true);
             gp.add(box, 0, 0);
             //scroll.setContent(box);
             Label lbl = new Label(Lobby.getPlayerClient().getGame().getPlayers()[AuctionService.getHighestBidder()].getName()
