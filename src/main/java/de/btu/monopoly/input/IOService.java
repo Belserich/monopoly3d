@@ -84,9 +84,8 @@ public class IOService {
         return choice;
     }
 
-    // wird noch zu void, wenn GUI fertig
     public static int actionSequence(Player player, GameBoard board) {
-        int choice = 1; //kommt weg
+        int choice = 1;
         switch (player.getKiLevel()) {
             case 0:
                 if (GlobalSettings.isRunInConsole()) {
@@ -100,7 +99,7 @@ public class IOService {
                 choice = EasyKi.processActionSequence(player, board);
                 break;
             case 2:
-                HardKi.processActionSequence(player, board);
+                choice = HardKi.processActionSequence(player, board);
                 break;
             default:
                 LOGGER.warning("Illegale KI-Stufe in JailChoice registriert");
@@ -122,10 +121,10 @@ public class IOService {
             case 0:
                 break;
             case 1:
-                EasyKi.processBetSequence(rndKi);
+                EasyKi.processBetSequence(rndKi, EasyKi.getMAXIMUM_BID());
                 break;
             case 2:
-                HardKi.processBetSequence();
+                HardKi.processBetSequence(rndKi);
                 break;
             default:
                 LOGGER.warning("Illegale KI-Stufe in BetSequence registriert");

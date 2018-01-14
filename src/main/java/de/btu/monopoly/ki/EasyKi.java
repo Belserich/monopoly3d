@@ -13,7 +13,6 @@ import de.btu.monopoly.data.card.CardStack;
 import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.input.IOService;
-
 import java.util.Random;
 import java.util.logging.Logger;
 
@@ -24,6 +23,10 @@ import java.util.logging.Logger;
 public class EasyKi {
 
     private static final Logger LOGGER = Logger.getLogger(EasyKi.class.getCanonicalName());
+    // Wahrscheinlichkeit (in %) eine Strasse zu kaufen
+    private static final int BUY_STREET_CAP = 50;
+    // Maximalgebot (in %) fuer die Auktion
+    private static final int MAXIMUM_BID = 80;
 
     public static int jailOption(Player player) {
         int choice;
@@ -42,16 +45,9 @@ public class EasyKi {
     }
 
     public static int buyPropOption(Player player, PropertyField prop, Random random) {
-        int choice;
-        int percentage =  random.nextInt(100);
-        if (percentage <= 50) {
-            choice = 1;
-        }
-        else {
-            choice = 2;
-        }
+        int percentage = random.nextInt(100);
         IOService.sleep(3000);
-        return choice;
+        return (percentage <= BUY_STREET_CAP) ? 1 : 2;
     }
 
     public static int processActionSequence(Player player, GameBoard board) { //wird zu void
@@ -61,7 +57,7 @@ public class EasyKi {
         return 1;
     }
 
-    public static void processBetSequence(Player ki) {
+    public static void processBetSequence(Player ki, int maximalGebot) {
         IOService.sleep(2000);
         int originPrice = AuctionService.getAuc().getProperty().getPrice();
         int actualPrice = AuctionService.getHighestBid();
@@ -75,8 +71,8 @@ public class EasyKi {
         }
         // wenn die KI noch an der Auktion teilnimmt und nicht Höchstbietender ist
         if (AuctionService.getAuc().getAucPlayers()[aucID][2] != 0 && AuctionService.getHighestBidder() != ki.getId()) {
-            // wenn sie genuegend Geld hat und noch nicht 80% des Strassenpreises erreicht sind
-            if (PlayerService.checkLiquidity(ki, actualPrice) && percentage < 80) {
+            // wenn sie genuegend Geld hat und noch nicht maximalGebot% des Strassenpreises erreicht sind
+            if (PlayerService.checkLiquidity(ki, actualPrice) && percentage < maximalGebot) {
                 newPrice += (int) (originPrice * 0.1);
                 AuctionService.setBid(ki.getId(), newPrice);
             }
@@ -84,5 +80,12 @@ public class EasyKi {
                 AuctionService.playerExit(ki.getId());
             }
         }
+    }
+
+    /**
+     * @return the MAXIMUM_BID
+     */
+    public static int getMAXIMUM_BID() {
+        return MAXIMUM_BID;
     }
 }

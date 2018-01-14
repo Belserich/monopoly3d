@@ -6,6 +6,7 @@
 package de.btu.monopoly.ki;
 
 import de.btu.monopoly.core.GameBoard;
+import de.btu.monopoly.core.service.AuctionService;
 import de.btu.monopoly.data.card.CardAction;
 import de.btu.monopoly.data.card.CardStack;
 import de.btu.monopoly.data.field.PropertyField;
@@ -35,9 +36,13 @@ public class HardKi {
     // nach der lukrativen Zone teure Strassen, die aber trotzdem kaufenswert sind (Zone 3)
 
     // Reichtumsbereiche (bis zu...): (arm -> fluessig -> reich -> superreich)
-    private static final int rich = 800;    // reich
-    private static final int liquid = 600;   // fluessig
-    private static final int poor = 300;    // arm
+    private static final int RICH = 800;    // reich
+    private static final int LIQUID = 600;   // fluessig
+    private static final int POOR = 300;    // arm
+
+    // Auktion:
+    private static final int HIGH_BID = 120;    // Maiximalgebot (in %) fuer eine gute Strasse
+    private static final int LOW_BID = 50;      // Maximalgebot (in %) fuer eine schlechte
 
     public static int jailOption(Player player, GameClient Gclient) {
         IOService.sleep(3000);
@@ -73,13 +78,13 @@ public class HardKi {
         int amount = player.getMoney();
 
         // Ist die KI superreich kauft sie aus Zone 1, 2 und 3
-        if (amount > rich) {
+        if (amount > RICH) {
             buy = true;
         }// reich nur aus Zone 2 und 3
-        else if (amount > liquid) {
+        else if (amount > LIQUID) {
             buy = (propertyId > BEGIN_LUCRATIVE_AREA);
         }// ist sie fluessig kauft sie nur Strassen der Zone 2
-        else if (amount > poor) {
+        else if (amount > POOR) {
             buy = (propertyId > BEGIN_LUCRATIVE_AREA && propertyId < END_LUCTRATIVE_AREA);
         }//ist die KI arm kauft sie nicht
         else {
@@ -93,12 +98,28 @@ public class HardKi {
         return buy ? 1 : 2;
     }
 
-    public static void processActionSequence(Player player, GameBoard board) {
+    public static int processActionSequence(Player player, GameBoard board) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    public static void processBetSequence() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public static void processBetSequence(Player player) {
+        PropertyField prop = AuctionService.getAuc().getProperty();
+        // Gebotswichtigkeit wie Kaufentscheidung
+        switch (buyPropOption(player, prop)) {
+            case 1: // Diese Strasse will die KI haben
+                EasyKi.processBetSequence(player, HIGH_BID);
+                break;
+            case 2: // Diese nur wenn sie mindestens reich ist
+                if (player.getMoney() > LIQUID) {
+                    EasyKi.processBetSequence(player, LOW_BID);
+                }
+                else { // Ansonsten bietet sie nicht und steigt sofort aus
+                    EasyKi.processBetSequence(player, 0);
+                }
+                break;
+            default:
+                break;
+        }
     }
 
     /**
