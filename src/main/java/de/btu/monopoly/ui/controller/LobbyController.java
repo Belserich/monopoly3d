@@ -281,30 +281,45 @@ public class LobbyController implements Initializable {
                         case 1: {
                             playerColor2.setDisable(false);
                             deleteKi1.setVisible(true);
+                            deleteKi1.setOnAction((event) -> {
+                                LobbyService.deleteUser(1);
+                            });
                             kiID.add(1);
                             break;
                         }
                         case 2: {
                             playerColor3.setDisable(false);
                             deleteKi2.setVisible(true);
+                            deleteKi2.setOnAction((event) -> {
+                                LobbyService.deleteUser(2);
+                            });
                             kiID.add(2);
                             break;
                         }
                         case 3: {
                             playerColor4.setDisable(false);
                             deleteKi3.setVisible(true);
+                            deleteKi3.setOnAction((event) -> {
+                                LobbyService.deleteUser(3);
+                            });
                             kiID.add(3);
                             break;
                         }
                         case 4: {
                             playerColor5.setDisable(false);
                             deleteKi4.setVisible(true);
+                            deleteKi4.setOnAction((event) -> {
+                                LobbyService.deleteUser(4);
+                            });
                             kiID.add(4);
                             break;
                         }
                         case 5: {
                             playerColor6.setDisable(false);
                             deleteKi5.setVisible(true);
+                            deleteKi5.setOnAction((event) -> {
+                                LobbyService.deleteUser(5);
+                            });
                             kiID.add(5);
                             break;
                         }
