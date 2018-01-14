@@ -1,19 +1,11 @@
 package de.btu.monopoly.core.service;
 
-import de.btu.monopoly.net.networkClasses.Lobby.ChangeUsercolorRequest;
 import com.esotericsoftware.kryo.Kryo;
 import de.btu.monopoly.core.mechanics.Trade;
 import de.btu.monopoly.core.mechanics.TradeOffer;
 import de.btu.monopoly.net.networkClasses.*;
-import de.btu.monopoly.net.networkClasses.Lobby.AddKiRequest;
-import de.btu.monopoly.net.networkClasses.Lobby.BroadcastRandomSeedRequest;
-import de.btu.monopoly.net.networkClasses.Lobby.ChangeUsernameRequest;
-import de.btu.monopoly.net.networkClasses.Lobby.GamestartRequest;
-import de.btu.monopoly.net.networkClasses.Lobby.GamestartResponse;
-import de.btu.monopoly.net.networkClasses.Lobby.JoinImpossibleResponse;
-import de.btu.monopoly.net.networkClasses.Lobby.JoinRequest;
-import de.btu.monopoly.net.networkClasses.Lobby.JoinResponse;
-import de.btu.monopoly.net.networkClasses.Lobby.RefreshLobbyResponse;
+import de.btu.monopoly.net.networkClasses.Lobby.*;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -50,18 +42,18 @@ public class NetworkService {
     }
 
     public static void logServerReceiveMessage(Object obj) {
-        LOGGER.info("S <- " + obj.getClass().getSimpleName());
+        LOGGER.log(Level.INFO, "S <- {0}", obj.getClass().getSimpleName());
     }
 
     public static void logServerSendMessage(Object obj) {
-        LOGGER.info("S -> " + obj.getClass().getSimpleName());
+        LOGGER.log(Level.INFO, "S -> {0}", obj.getClass().getSimpleName());
     }
 
     public static void logClientReceiveMessage(Object obj, String name) {
-        LOGGER.info("C <- " + obj.getClass().getSimpleName() + "(" + name + ")");
+        LOGGER.log(Level.INFO, "C <- {0}({1})", new Object[]{obj.getClass().getSimpleName(), name});
     }
 
     public static void logClientSendMessage(Object obj, String name) {
-        LOGGER.info("C -> " + obj.getClass().getSimpleName() + "(" + name + ")");
+        LOGGER.log(Level.INFO, "C -> {0}({1})", new Object[]{obj.getClass().getSimpleName(), name});
     }
 }
