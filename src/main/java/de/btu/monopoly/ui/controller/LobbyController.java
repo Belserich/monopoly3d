@@ -175,32 +175,77 @@ public class LobbyController implements Initializable {
                     }
                     if (Lobby.getUsers().length >= 2) {
                         name2Label.setText(Lobby.getUsers()[1][1]);
+                        if (Integer.valueOf(Lobby.getUsers()[1][3]) > 0) {
+                            if (id == 0) {
+                                deleteKi1.setVisible(true);
+                            }
+                        }
+                        else {
+                            deleteKi1.setVisible(false);
+                        }
                     }
                     else {
                         name2Label.setText("frei");
+                        deleteKi1.setVisible(false);
                     }
                     if (Lobby.getUsers().length >= 3) {
                         name3Label.setText(Lobby.getUsers()[2][1]);
+                        if (Integer.valueOf(Lobby.getUsers()[2][3]) > 0) {
+                            if (id == 0) {
+                                deleteKi2.setVisible(true);
+                            }
+                        }
+                        else {
+                            deleteKi2.setVisible(false);
+                        }
                     }
                     else {
                         name3Label.setText("frei");
+                        deleteKi2.setVisible(false);
                     }
                     if (Lobby.getUsers().length >= 4) {
                         name4Label.setText(Lobby.getUsers()[3][1]);
+                        if (Integer.valueOf(Lobby.getUsers()[3][3]) > 0) {
+                            if (id == 0) {
+                                deleteKi3.setVisible(true);
+                            }
+                        }
+                        else {
+                            deleteKi3.setVisible(false);
+                        }
                     }
                     else {
                         name4Label.setText("frei");
+                        deleteKi3.setVisible(false);
                     }
                     if (Lobby.getUsers().length >= 5) {
                         name5Label.setText(Lobby.getUsers()[4][1]);
+                        if (Integer.valueOf(Lobby.getUsers()[4][3]) > 0) {
+                            if (id == 0) {
+                                deleteKi4.setVisible(true);
+                            }
+                        }
+                        else {
+                            deleteKi4.setVisible(false);
+                        }
                     }
                     else {
                         name5Label.setText("frei");
+                        deleteKi4.setVisible(false);
                     }
                     if (Lobby.getUsers().length >= 6) {
                         name6Label.setText(Lobby.getUsers()[5][1]);
+                        if (Integer.valueOf(Lobby.getUsers()[5][3]) > 0) {
+                            if (id == 0) {
+                                deleteKi5.setVisible(true);
+                            }
+                        }
+                        else {
+                            deleteKi5.setVisible(false);
+                        }
                     }
                     else {
+                        deleteKi5.setVisible(false);
                         name6Label.setText("frei");
                     }
 
