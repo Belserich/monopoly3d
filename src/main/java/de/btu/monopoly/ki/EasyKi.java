@@ -5,7 +5,6 @@
  */
 package de.btu.monopoly.ki;
 
-import de.btu.monopoly.core.GameBoard;
 import de.btu.monopoly.core.service.AuctionService;
 import de.btu.monopoly.core.service.PlayerService;
 import de.btu.monopoly.data.card.CardAction;
@@ -28,6 +27,11 @@ public class EasyKi {
     // Maximalgebot (in %) fuer die Auktion
     private static final int MAXIMUM_BID = 80;
 
+    /**
+     *
+     * @param player ki
+     * @return int fuer die Wahl der Option im Gefaengnis 1 - wuerfeln, 2 - bezahlen, 3 - GFKarte
+     */
     public static int jailOption(Player player) {
         int choice;
         CardStack stack = player.getCardStack();
@@ -44,19 +48,35 @@ public class EasyKi {
         return choice;
     }
 
-    public static int buyPropOption(Player player, PropertyField prop, Random random) {
+    /**
+     *
+     * @param player
+     * @param prop
+     * @return int für die Kaufentscheidung 1 - kaufen , 2 - nicht kaufen
+     */
+    public static int buyPropOption(Player player, PropertyField prop) {
+        Random random = IOService.getGame().getRandom();
         int percentage = random.nextInt(100);
         IOService.sleep(3000);
         return (percentage <= BUY_STREET_CAP) ? 1 : 2;
     }
 
-    public static int processActionSequence(Player player, GameBoard board) { //wird zu void
+    /**
+     *
+     * @return 1 fur die Wahl in der Aktionsphase nichts zu tun
+     */
+    public static int processActionSequence() { //wird zu void
         LOGGER.finer("Der Computergegner hat keine Lust zu bauen, oder sich um Hyoptheken zu kümmern. "
                 + "Zum Handeln ist er nicht schlau genug");
         IOService.sleep(3000);
         return 1;
     }
 
+    /**
+     *
+     * @param ki bietende KI
+     * @param maximalGebot bis zu welcher Grenze (in %) bietet die KI fuer die Strasse mit
+     */
     public static void processBetSequence(Player ki, int maximalGebot) {
         IOService.sleep(2000);
         int originPrice = AuctionService.getAuc().getProperty().getPrice();

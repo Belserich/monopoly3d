@@ -12,7 +12,6 @@ import de.btu.monopoly.data.card.CardStack;
 import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.input.IOService;
-import de.btu.monopoly.net.client.GameClient;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
@@ -44,7 +43,12 @@ public class HardKi {
     private static final int HIGH_BID = 120;    // Maiximalgebot (in %) fuer eine gute Strasse
     private static final int LOW_BID = 50;      // Maximalgebot (in %) fuer eine schlechte
 
-    public static int jailOption(Player player, GameClient Gclient) {
+    /**
+     *
+     * @param player ki
+     * @return int fuer die Wahl der Option im Gefaengnis 1 - wuerfeln, 2 - bezahlen, 3 - GFKarte
+     */
+    public static int jailOption(Player player) {
         IOService.sleep(3000);
         int days = player.getDaysInJail();
         CardStack stack = player.getCardStack();
@@ -72,6 +76,12 @@ public class HardKi {
         }
     }
 
+    /**
+     *
+     * @param player ki
+     * @param prop zu kaufende Strasse
+     * @return int fuer die Wahl der Kaufentscheidung 1 - kaufen (interessiert) , 2 - nicht kaufen (nicht interessiert)
+     */
     public static int buyPropOption(Player player, PropertyField prop) {
         boolean buy = false;
         int propertyId = IOService.getGame().getBoard().getFieldManager().getFieldId(prop);
@@ -99,9 +109,16 @@ public class HardKi {
     }
 
     public static int processActionSequence(Player player, GameBoard board) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+
+        return -1;
     }
 
+    /**
+     * die Ki entscheidet je nach Kaufinteresse (HardKi.buyPropOption()), ob und wie weit sie bei der Auktion mitbietet
+     * (EasyKi.processBetSequence())
+     *
+     * @param player ki
+     */
     public static void processBetSequence(Player player) {
         PropertyField prop = AuctionService.getAuc().getProperty();
         // Gebotswichtigkeit wie Kaufentscheidung
@@ -133,12 +150,23 @@ public class HardKi {
                 .count();
     }
 
+    /**
+     *
+     * @param player zu pruefende Ki
+     * @return Anzahl der Hypotheken, welche die Ki insgesamt aufgenommen hat
+     */
     private static int numberOfMortgages(Player player) {
         return (int) IOService.getGame().getBoard().getFieldManager().getOwnedPropertyFields(player)
                 .filter(p -> p.isMortgageTaken())
                 .count();
     }
 
+    /**
+     *
+     * @param prop Property welche auf im Besitz befindliche Nachbarn zu pruefen ist
+     * @param player Ki
+     * @return Gibt an, ob bereits Strassen des selben Strassenzuges, wie dem der uebergebenen Strasse im Besitz sind
+     */
     private static boolean areThereAlreadyNeighboursOwned(PropertyField prop, Player player) {
         List<PropertyField> neighborList = IOService.getGame().getBoard().getFieldManager()
                 .getNeighborList(prop);

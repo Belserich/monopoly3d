@@ -19,7 +19,6 @@ import de.btu.monopoly.ui.Logger.TextAreaHandler;
 import de.btu.monopoly.ui.SceneManager;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -51,7 +50,7 @@ public class IOService {
                 choice = EasyKi.jailOption(player);
                 break;
             case 2:
-                choice = HardKi.jailOption(player, client);
+                choice = HardKi.jailOption(player);
                 break;
             default:
                 LOGGER.warning("Illegale KI-Stufe in JailChoice registriert");
@@ -59,7 +58,7 @@ public class IOService {
         return choice;
     }
 
-    public static int buyPropertyChoice(Player player, PropertyField prop, Random random) {
+    public static int buyPropertyChoice(Player player, PropertyField prop) {
         int choice = -1;
         switch (player.getKiLevel()) {
             case 0:
@@ -73,7 +72,7 @@ public class IOService {
 
                 break;
             case 1:
-                choice = EasyKi.buyPropOption(player, prop, random);
+                choice = EasyKi.buyPropOption(player, prop);
                 break;
             case 2:
                 choice = HardKi.buyPropOption(player, prop);
@@ -96,7 +95,7 @@ public class IOService {
                 }
                 break;
             case 1:
-                choice = EasyKi.processActionSequence(player, board);
+                choice = EasyKi.processActionSequence();
                 break;
             case 2:
                 choice = HardKi.processActionSequence(player, board);
