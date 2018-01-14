@@ -139,6 +139,10 @@ public class LobbyService extends Listener {
         changeColor(color, lobby.getPlayerId());
     }
 
+    public static void deleteUser(int id) {
+        deleteUserRequest(id);
+    }
+
     /**
      * erstellt eine Gameinstanz und startet das Spiel
      */
@@ -212,10 +216,17 @@ public class LobbyService extends Listener {
     }
 
     private static void changeColorRequest(String colorString, int id) {
-        LOGGER.log(Level.FINER, "{0} sendet ChangeUsercolorRequest", lobby.getPlayerName());
         ChangeUsercolorRequest req = new ChangeUsercolorRequest();
         req.setUserColor(colorString);
         req.setUserId(id);
+        NetworkService.logClientSendMessage(req, lobby.getPlayerName());
+        lobby.getPlayerClient().sendTCP(req);
+    }
+
+    private static void deleteUserRequest(int id) {
+        DeleteUserRequest req = new DeleteUserRequest();
+        req.setId(id);
+        NetworkService.logClientSendMessage(req, lobby.getPlayerName());
         lobby.getPlayerClient().sendTCP(req);
     }
 
