@@ -422,7 +422,7 @@ public class SceneManager extends Stage {
                 try {
                     AuctionService.setBid(Lobby.getPlayerClient().getPlayerOnClient().getId(), Integer.parseInt(tf.getText()));
                     // GameController.resetPopup(auctionGP);
-                } catch (Exception e) {
+                } catch (NumberFormatException e) {
                     tf.setText("");
                     tf.setPromptText("Bitte nur Zahlen eingeben!");
                 }

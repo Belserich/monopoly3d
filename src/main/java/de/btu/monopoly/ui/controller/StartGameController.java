@@ -32,7 +32,7 @@ import javafx.scene.layout.StackPane;
  */
 public class StartGameController implements Initializable {
 
-    public static GameClient client;
+    private static GameClient client;
 
     @FXML
     private Button backButton;
@@ -53,6 +53,10 @@ public class StartGameController implements Initializable {
                 + "    -fx-background-size: stretch;";
         grid.setStyle(image);
         stackPane.setBackground(new Background(new BackgroundImage(new Image(getClass().getResourceAsStream("/images/Lobby_Background.jpg")), BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT)));
+    }
+
+    public static void setClient(GameClient client) {
+        StartGameController.client = client;
     }
 
     //-----------------------------------------------------------------------------------------

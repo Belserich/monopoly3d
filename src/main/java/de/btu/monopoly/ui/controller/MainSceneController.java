@@ -422,7 +422,7 @@ public class MainSceneController implements Initializable {
                         else {
 
                             if (Lobby.getUsers().length >= 2) {
-                                if (player1Button.getText().equals("frei")) {
+                                if ("frei".equals(player1Button.getText())) {
                                     player1Button.setText(Lobby.getUsers()[i][1]);
                                     player1Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[i][4]), CornerRadii.EMPTY, Insets.EMPTY)));
                                     if (Color.web(Lobby.getUsers()[i][4]).getBrightness() <= 0.8) {
@@ -439,7 +439,7 @@ public class MainSceneController implements Initializable {
                                 }
                             }
                             if (Lobby.getUsers().length >= 3) {
-                                if (player2Button.getText().equals("frei")) {
+                                if ("frei".equals(player2Button.getText())) {
                                     player2Button.setText(Lobby.getUsers()[i][1]);
                                     player2Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[i][4]), CornerRadii.EMPTY, Insets.EMPTY)));
                                     if (Color.web(Lobby.getUsers()[i][4]).getBrightness() <= 0.8) {
@@ -456,7 +456,7 @@ public class MainSceneController implements Initializable {
                                 }
                             }
                             if (Lobby.getUsers().length >= 4) {
-                                if (player3Button.getText().equals("frei")) {
+                                if ("frei".equals(player3Button.getText())) {
                                     player3Button.setText(Lobby.getUsers()[i][1]);
                                     player3Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[i][4]), CornerRadii.EMPTY, Insets.EMPTY)));
                                     if (Color.web(Lobby.getUsers()[i][4]).getBrightness() <= 0.8) {
@@ -473,7 +473,7 @@ public class MainSceneController implements Initializable {
                                 }
                             }
                             if (Lobby.getUsers().length >= 5) {
-                                if (player4Button.getText().equals("frei")) {
+                                if ("frei".equals(player4Button.getText())) {
                                     player4Button.setText(Lobby.getUsers()[i][1]);
                                     player4Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[i][4]), CornerRadii.EMPTY, Insets.EMPTY)));
                                     if (Color.web(Lobby.getUsers()[i][4]).getBrightness() <= 0.8) {
@@ -490,7 +490,7 @@ public class MainSceneController implements Initializable {
                                 }
                             }
                             if (Lobby.getUsers().length >= 6) {
-                                if (player5Button.getText().equals("frei")) {
+                                if ("frei".equals(player5Button.getText())) {
                                     player5Button.setText(Lobby.getUsers()[i][1]);
                                     player5Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[i][4]), CornerRadii.EMPTY, Insets.EMPTY)));
                                     if (Color.web(Lobby.getUsers()[i][4]).getBrightness() <= 0.8) {

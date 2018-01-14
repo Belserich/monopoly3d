@@ -254,7 +254,7 @@ public class LobbyController implements Initializable {
 
         // Schließt die Anwendung
         Platform.exit();
-        System.exit(0);
+        System.exit(0); //NOSONAR
 
         // Wechselt die Scene auf Menu
         // SceneManager.changeScene(new FXMLLoader(getClass().getResource("/fxml/Menu.fxml")));
@@ -316,7 +316,7 @@ public class LobbyController implements Initializable {
                     }
 
                     // Schwierigkeit auslesen
-                    int difficulty = -1;
+                    int difficulty;
 
                     switch ((String) difficultyComboBox.getSelectionModel().getSelectedItem()) {
                         case "Einfach": {

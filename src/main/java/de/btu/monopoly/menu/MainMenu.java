@@ -50,7 +50,7 @@ public class MainMenu {
             LobbyService.joinLobby(client, true);
         }
         else {
-            StartGameController.client = client;
+            StartGameController.setClient(client);
         }
     }
 
