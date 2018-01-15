@@ -115,44 +115,47 @@ public class HardKi {
         int buildings = IOService.getGame().getBoard().getFieldManager().getHouseAndHotelCount(player)[0]
                 + IOService.getGame().getBoard().getFieldManager().getHouseAndHotelCount(player)[1];
 
-        if (amount < POOR) {                        // Wenn die ki arm ist
+        if (amount < POOR) {                     // Wenn die ki arm ist
             if (buildings > 0) {                        // verkauft sie erst Haeuser
                 sellBuilding();
                 return 3;
             }
             else if (numberOfMortgages(player) > 0) {   // und nimmt dann Hypotheken auf
-                setMortgage();
+                takeMortgage();
                 return 4;
             }
             else {                                      // ist nichts vorhanden, beendet sie
                 return 1;
             }
         }
-        else if (amount < LIQUID) {                 // Wenn sie fluessig ist
+        else if (amount < LIQUID) {              // Wenn sie fluessig ist
             return 1;                                   // beendet sie die AktionsPhase
         }
-        else if (amount < RICH) {                   // Wenn sie reich ist
-            if (getSoldProperties() < BEGINNING) {      // zu Spielbeginn
+        else if (amount < RICH) {                // Wenn sie reich ist
+            if (getSoldProperties() < BEGINNING) {    // zu Spielbeginn
                 if (numberOfMortgages(player) > 0) {    // zahlt sie zuerst Hypotheken ab
                     payMortgage();
+                    return 5;
                 }
                 else {                                  // und kauft dann Haeuser
-                    buyHouse();
+                    buyBuilding();
+                    return 2;
                 }
             }
-            else {                                      // zum Spielende hin
+            else {                                    // zum Spielende hin
                 return 1;                               // beendet sie die Aktionsphase
             }
         }
-        else {                                      // Wenn sie superreich ist
+        else {                                   // Wenn sie superreich ist
             if (numberOfMortgages(player) > 0) {        // zahlt sie zuerst Hypotheken ab
                 payMortgage();
+                return 5;
             }
             else {                                      // und kauft dann Haeuser
-                buyHouse();
+                buyBuilding();
+                return 2;
             }
         }
-        return -1;
     }
 
     /**
@@ -220,12 +223,18 @@ public class HardKi {
         return chosenFieldId;
     }
 
+    /*
+     * _____________________AKTIONSPHASE-METHODEN____________________________________________________________________________
+     * Diese Methoden werden von der processActionSequence aufgerufen und setzen die lokale Variable chosenFieldId auf die ID des
+     * jeweils in der Methode ausgewählten Feldes. Diese ID wird später in Game.java für die actionPhase verwendet, um die
+     * wirklichen Methoden auszuführen.
+     */
     private static void sellBuilding() {
         // TODO
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    private static void setMortgage() {
+    private static void takeMortgage() {
         // TODO
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
@@ -235,7 +244,7 @@ public class HardKi {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    private static void buyHouse() {
+    private static void buyBuilding() {
         // TODO
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
