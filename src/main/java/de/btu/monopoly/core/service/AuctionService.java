@@ -40,13 +40,14 @@ public class AuctionService extends Listener {
     }
 
     /**
-     * Startet die Auktion, ermittelt den Höchstbietenden und übergibt den
-     * Gewinner, sowie den Preis an deren Klassenvariablen
+     * Startet die Auktion, ermittelt den Höchstbietenden und übergibt den Gewinner, sowie den Preis an deren Klassenvariablen
      *
      * @param prop
      */
     public static void startAuction(PropertyField prop) {
 
+        int oneMore = 1;
+        boolean auctionRun = true;
         auc.setProperty(prop);
         JoinAuctionRequest jaReq = new JoinAuctionRequest();
         NetworkService.logClientSendMessage(jaReq, auc.getPlayerName());
@@ -54,7 +55,7 @@ public class AuctionService extends Listener {
         SceneManager.AuctionPopup();
         IOService.sleepDeep(1500);
         if (!isRunAsTest) { // nicht fuer Test
-            while (auctionStillActive()) {
+            while (auctionRun) {
                 IOService.sleepDeep(500);
                 if (isRunInConsole) { // nur fuer @Console
                     LOGGER.finest("Wähle [1] für bieten [2] für aussteigen");
@@ -74,6 +75,14 @@ public class AuctionService extends Listener {
                 else {
                     SceneManager.updateAuctionPopup(auctionStillActive());
                 }
+                if (!auctionStillActive()) {
+                    if (oneMore == 1) {
+                        oneMore--;
+                    }
+                    else {
+                        auctionRun = false;
+                    }
+                }
             }
             SceneManager.updateAuctionPopup(false);
             sellProperty();
@@ -92,8 +101,7 @@ public class AuctionService extends Listener {
     }
 
     /**
-     * Setzt das Gebot eines Spielers, falls dieses hoeher ist als das aktuell
-     * hoechste Gebot
+     * Setzt das Gebot eines Spielers, falls dieses hoeher ist als das aktuell hoechste Gebot
      *
      * @param playerID
      * @param bid
@@ -129,8 +137,7 @@ public class AuctionService extends Listener {
     }
 
     /**
-     * Das hoechste Gebot aller Bieter wird ermittelt. Es wird die ID des
-     * Spielers mit dem hoechsten Gebot zurueck gegeben
+     * Das hoechste Gebot aller Bieter wird ermittelt. Es wird die ID des Spielers mit dem hoechsten Gebot zurueck gegeben
      *
      * @return playerID
      */
@@ -139,8 +146,7 @@ public class AuctionService extends Listener {
     }
 
     /**
-     * Das hoechste Gebot aller Bieter wird ermittelt. Es wird die ID des
-     * Spielers mit dem hoechsten Gebot zurueck gegeben
+     * Das hoechste Gebot aller Bieter wird ermittelt. Es wird die ID des Spielers mit dem hoechsten Gebot zurueck gegeben
      *
      * @return playerID
      */
