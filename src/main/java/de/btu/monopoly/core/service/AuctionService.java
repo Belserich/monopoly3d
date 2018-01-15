@@ -73,19 +73,19 @@ public class AuctionService extends Listener {
                     }
                 }
                 else {
-                    SceneManager.updateAuctionPopup(auctionStillActive());
-                }
-                if (!auctionStillActive()) {
-                    if (oneMore != 1) {
-                        for (int i = 1; i != 4; i++) {
-                            LOGGER.info(auc.getHighestBid() + "€ zum " + oneMore + ".");
-                            IOService.sleep(2000);
+                    if (!auctionStillActive()) {
+                        if (oneMore != 1) {
+                            for (int i = 1; i != 4; i++) {
+                                LOGGER.fine(auc.getHighestBid() + "€ zum " + i + ".");
+                                IOService.sleep(2000);
+                            }
+                            oneMore++;
                         }
-                        oneMore++;
+                        else {
+                            auctionRun = false;
+                        }
                     }
-                    else {
-                        auctionRun = false;
-                    }
+                    SceneManager.updateAuctionPopup(auctionStillActive());
                 }
             }
             SceneManager.updateAuctionPopup(false);
