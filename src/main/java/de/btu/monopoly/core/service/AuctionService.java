@@ -46,7 +46,7 @@ public class AuctionService extends Listener {
      */
     public static void startAuction(PropertyField prop) {
 
-        int oneMore = 1;
+        int oneMore = 0;
         boolean auctionRun = true;
         auc.setProperty(prop);
         JoinAuctionRequest jaReq = new JoinAuctionRequest();
@@ -76,8 +76,10 @@ public class AuctionService extends Listener {
                     SceneManager.updateAuctionPopup(auctionStillActive());
                 }
                 if (!auctionStillActive()) {
-                    if (oneMore == 1) {
-                        oneMore--;
+                    if (oneMore <= 4) {
+                        oneMore++;
+                        LOGGER.fine(auc.getHighestBid() + "€ zum " + oneMore + ".");
+                        IOService.sleep(2000);
                     }
                     else {
                         auctionRun = false;
