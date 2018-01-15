@@ -10,6 +10,7 @@ import java.net.UnknownHostException;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.animation.FadeTransition;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
@@ -26,6 +27,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.util.Duration;
 
 /**
  *
@@ -35,6 +37,9 @@ public class LobbyController implements Initializable {
 
     @FXML
     private Label lobbyLabelIp;
+
+    @FXML
+    private Label lobbyLabel;
 
     @FXML
     private Label name1Label;
@@ -59,6 +64,9 @@ public class LobbyController implements Initializable {
     private Button deleteKi4;
     @FXML
     private Button deleteKi5;
+
+    @FXML
+    private Button leaveLobbyButton;
 
     @FXML
     private GridPane grid;
@@ -149,12 +157,198 @@ public class LobbyController implements Initializable {
             id = 5;
         }
 
+        // Animation
+        lobbyLabelIp.setOpacity(0);
+        lobbyLabel.setOpacity(0);
+        name1Label.setOpacity(0);
+        name2Label.setOpacity(0);
+        name3Label.setOpacity(0);
+        name4Label.setOpacity(0);
+        name5Label.setOpacity(0);
+        name6Label.setOpacity(0);
+        playerColor1.setOpacity(0);
+        playerColor2.setOpacity(0);
+        playerColor3.setOpacity(0);
+        playerColor4.setOpacity(0);
+        playerColor5.setOpacity(0);
+        playerColor6.setOpacity(0);
+        difficultyComboBox.setOpacity(0);
+        kiNameTextField.setOpacity(0);
+        kiButton.setOpacity(0);
+        playButton.setOpacity(0);
+        leaveLobbyButton.setOpacity(0);
+        grid.setOpacity(0);
+
         // Deaktivieren der KI Steuerung
         if (id != 0) {
             kiButton.setDisable(true);
             kiNameTextField.setDisable(true);
             difficultyComboBox.setDisable(true);
         }
+
+        Task task = new Task() {
+            @Override
+            protected Object call() throws Exception {
+
+                FadeTransition fadeGrid = new FadeTransition(Duration.millis(800), grid);
+                fadeGrid.setFromValue(0);
+                fadeGrid.setToValue(1);
+                fadeGrid.playFromStart();
+                fadeGrid.setOnFinished((event) -> {
+
+                    if (id != 0) {
+                        double value = 0.5;
+                    }
+                    else {
+                        double value = 1;
+                    }
+
+                    FadeTransition fadeInButton1
+                            = new FadeTransition(Duration.millis(800), lobbyLabel);
+                    fadeInButton1.setFromValue(0);
+                    fadeInButton1.setToValue(1);
+                    fadeInButton1.playFromStart();
+
+                    FadeTransition fadeInButton2
+                            = new FadeTransition(Duration.millis(800), name1Label);
+                    fadeInButton2.setFromValue(0);
+                    fadeInButton2.setToValue(1);
+                    fadeInButton2.playFromStart();
+
+                    FadeTransition fadeInButton3
+                            = new FadeTransition(Duration.millis(800), name2Label);
+                    fadeInButton3.setFromValue(0);
+                    fadeInButton3.setToValue(1);
+                    fadeInButton3.playFromStart();
+
+                    FadeTransition fadeInButton4
+                            = new FadeTransition(Duration.millis(800), name3Label);
+                    fadeInButton4.setFromValue(0);
+                    fadeInButton4.setToValue(1);
+                    fadeInButton4.playFromStart();
+
+                    FadeTransition fadeInButton5
+                            = new FadeTransition(Duration.millis(800), name4Label);
+                    fadeInButton5.setFromValue(0);
+                    fadeInButton5.setToValue(1);
+                    fadeInButton5.playFromStart();
+
+                    FadeTransition fadeInButton6
+                            = new FadeTransition(Duration.millis(800), name5Label);
+                    fadeInButton6.setFromValue(0);
+                    fadeInButton6.setToValue(1);
+                    fadeInButton6.playFromStart();
+
+                    FadeTransition fadeInButton7
+                            = new FadeTransition(Duration.millis(800), name6Label);
+                    fadeInButton7.setFromValue(0);
+                    fadeInButton7.setToValue(1);
+                    fadeInButton7.playFromStart();
+
+                    FadeTransition fadeInButton8
+                            = new FadeTransition(Duration.millis(800), lobbyLabelIp);
+                    fadeInButton8.setFromValue(0);
+                    fadeInButton8.setToValue(1);
+                    fadeInButton8.playFromStart();
+
+                    FadeTransition fadeInButton9
+                            = new FadeTransition(Duration.millis(800), playerColor1);
+                    fadeInButton9.setFromValue(0);
+                    fadeInButton9.setToValue(1);
+                    fadeInButton9.playFromStart();
+
+                    FadeTransition fadeInButton10
+                            = new FadeTransition(Duration.millis(800), playerColor2);
+                    fadeInButton10.setFromValue(0);
+                    fadeInButton10.setToValue(1);
+                    fadeInButton10.playFromStart();
+
+                    FadeTransition fadeInButton11
+                            = new FadeTransition(Duration.millis(800), playerColor3);
+                    fadeInButton11.setFromValue(0);
+                    fadeInButton11.setToValue(1);
+                    fadeInButton11.playFromStart();
+
+                    FadeTransition fadeInButton12
+                            = new FadeTransition(Duration.millis(800), playerColor4);
+                    fadeInButton12.setFromValue(0);
+                    fadeInButton12.setToValue(1);
+                    fadeInButton12.playFromStart();
+
+                    FadeTransition fadeInButton13
+                            = new FadeTransition(Duration.millis(800), playerColor5);
+                    fadeInButton13.setFromValue(0);
+                    fadeInButton13.setToValue(1);
+                    fadeInButton13.playFromStart();
+
+                    FadeTransition fadeInButton14
+                            = new FadeTransition(Duration.millis(800), playerColor6);
+                    fadeInButton14.setFromValue(0);
+                    fadeInButton14.setToValue(1);
+                    fadeInButton14.playFromStart();
+                    if (id == 0) {
+                        FadeTransition fadeInButton15
+                                = new FadeTransition(Duration.millis(800), difficultyComboBox);
+                        fadeInButton15.setFromValue(0);
+                        fadeInButton15.setToValue(1);
+                        fadeInButton15.playFromStart();
+
+                        FadeTransition fadeInButton16
+                                = new FadeTransition(Duration.millis(800), kiNameTextField);
+                        fadeInButton16.setFromValue(0);
+                        fadeInButton16.setToValue(1);
+                        fadeInButton16.playFromStart();
+
+                        FadeTransition fadeInButton17
+                                = new FadeTransition(Duration.millis(800), kiButton);
+                        fadeInButton17.setFromValue(0);
+                        fadeInButton17.setToValue(1);
+                        fadeInButton17.playFromStart();
+
+                        FadeTransition fadeInButton18
+                                = new FadeTransition(Duration.millis(800), playButton);
+                        fadeInButton18.setFromValue(0);
+                        fadeInButton18.setToValue(1);
+                        fadeInButton18.playFromStart();
+                    }
+                    else {
+                        FadeTransition fadeInButton15
+                                = new FadeTransition(Duration.millis(800), difficultyComboBox);
+                        fadeInButton15.setFromValue(0);
+                        fadeInButton15.setToValue(0.5);
+                        fadeInButton15.playFromStart();
+
+                        FadeTransition fadeInButton16
+                                = new FadeTransition(Duration.millis(800), kiNameTextField);
+                        fadeInButton16.setFromValue(0);
+                        fadeInButton16.setToValue(0.5);
+                        fadeInButton16.playFromStart();
+
+                        FadeTransition fadeInButton17
+                                = new FadeTransition(Duration.millis(800), kiButton);
+                        fadeInButton17.setFromValue(0);
+                        fadeInButton17.setToValue(0.5);
+                        fadeInButton17.playFromStart();
+
+                        FadeTransition fadeInButton18
+                                = new FadeTransition(Duration.millis(800), playButton);
+                        fadeInButton18.setFromValue(0);
+                        fadeInButton18.setToValue(0.5);
+                        fadeInButton18.playFromStart();
+                    }
+
+                    FadeTransition fadeInButton19
+                            = new FadeTransition(Duration.millis(800), leaveLobbyButton);
+                    fadeInButton19.setFromValue(0);
+                    fadeInButton19.setToValue(1);
+                    fadeInButton19.playFromStart();
+                });
+
+                return null;
+            }
+        };
+        Platform.runLater(task);
+
     }
 
     /**
@@ -495,8 +689,18 @@ public class LobbyController implements Initializable {
     }
 
     public void loadGameLayout() throws IOException {
-        // Wechselt die Scene auf Game
-        SceneManager.changeSceneToGame(new FXMLLoader(getClass().getResource("/fxml/mainScene.fxml")));
+        FadeTransition fadeGrid = new FadeTransition(Duration.millis(400), grid);
+        fadeGrid.setFromValue(1);
+        fadeGrid.setToValue(0);
+        fadeGrid.playFromStart();
+
+        try {
+            // Wechselt die Scene auf Game
+            SceneManager.changeSceneToGame(new FXMLLoader(getClass().getResource("/fxml/mainScene.fxml")));
+        } catch (IOException ex) {
+            Logger.getLogger(LobbyController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }
 
 }

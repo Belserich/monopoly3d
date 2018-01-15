@@ -157,16 +157,27 @@ public class StartGameController implements Initializable {
         fadeInButton4.setFromValue(1);
         fadeInButton4.setToValue(0);
         fadeInButton4.playFromStart();
-        fadeInButton4.setOnFinished((event) -> {
-            try {
-                if (changeToLobby) {
-                    SceneManager.changeSceneToLobby(loader);
-                }
-                else {
+        fadeInButton4.setOnFinished((ActionEvent event) -> {
+
+            if (changeToLobby) {
+                FadeTransition fadeGrid = new FadeTransition(Duration.millis(400), grid);
+                fadeGrid.setFromValue(1);
+                fadeGrid.setToValue(0);
+                fadeGrid.playFromStart();
+                fadeGrid.setOnFinished((ActionEvent event1) -> {
+                    try {
+                        SceneManager.changeSceneToLobby(loader);
+                    } catch (IOException ex) {
+                        Logger.getLogger(StartGameController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                });
+            }
+            else {
+                try {
                     SceneManager.changeScene(loader);
+                } catch (IOException ex) {
+                    Logger.getLogger(MenuController.class.getName()).log(Level.SEVERE, null, ex);
                 }
-            } catch (IOException ex) {
-                Logger.getLogger(MenuController.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
     }

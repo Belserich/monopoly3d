@@ -19,6 +19,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
+import javafx.animation.FadeTransition;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
@@ -46,6 +47,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
+import javafx.util.Duration;
 
 /**
  *
@@ -70,6 +72,8 @@ public class MainSceneController implements Initializable {
     @FXML
     private Label geld5;
 
+    @FXML
+    private GridPane mainGrid;
     @FXML
     private GridPane grid;
     @FXML
@@ -397,6 +401,12 @@ public class MainSceneController implements Initializable {
         // User aus Lobby holen und Farben setzen
         client = Lobby.getPlayerClient();
 
+        // Animation
+        mainGrid.setOpacity(0);
+        FadeTransition fadeGrid = new FadeTransition(Duration.millis(800), mainGrid);
+        fadeGrid.setFromValue(0);
+        fadeGrid.setToValue(1);
+        fadeGrid.playFromStart();
     }
 
     /**
