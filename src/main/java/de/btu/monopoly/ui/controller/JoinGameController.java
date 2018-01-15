@@ -9,10 +9,12 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.animation.FadeTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -25,6 +27,7 @@ import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
+import javafx.util.Duration;
 
 /**
  *
@@ -39,6 +42,18 @@ public class JoinGameController implements Initializable {
     private TextField ipAdressTextField;
 
     @FXML
+    private Label nameLabel;
+
+    @FXML
+    private Label ipLabel;
+
+    @FXML
+    private Button backButton;
+
+    @FXML
+    private Button searchButton;
+
+    @FXML
     private Label errorLabel;
 
     @FXML
@@ -49,13 +64,56 @@ public class JoinGameController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-//        Image image = new Image(getClass().getResourceAsStream("/images/Main_Background.png"), 1200, 800, false, false);
-//        grid.setBackground(new Background(new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
+
         String image = " -fx-background-image: url(\"/images/Main_Background.png\") ;\n"
                 + "    -fx-background-position: center;\n"
                 + "    -fx-background-size: stretch;";
         grid.setStyle(image);
         stackPane.setBackground(new Background(new BackgroundImage(new Image(getClass().getResourceAsStream("/images/Lobby_Background.jpg")), BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT)));
+
+        // Animation
+        nameTextField.setOpacity(0);
+        ipAdressTextField.setOpacity(0);
+        nameLabel.setOpacity(0);
+        ipLabel.setOpacity(0);
+        backButton.setOpacity(0);
+        searchButton.setOpacity(0);
+
+        FadeTransition fadeInButton1
+                = new FadeTransition(Duration.millis(500), backButton);
+        fadeInButton1.setFromValue(0);
+        fadeInButton1.setToValue(1);
+        fadeInButton1.playFromStart();
+
+        FadeTransition fadeInButton2
+                = new FadeTransition(Duration.millis(500), ipLabel);
+        fadeInButton2.setFromValue(0);
+        fadeInButton2.setToValue(1);
+        fadeInButton2.playFromStart();
+
+        FadeTransition fadeInButton3
+                = new FadeTransition(Duration.millis(500), nameLabel);
+        fadeInButton3.setFromValue(0);
+        fadeInButton3.setToValue(1);
+        fadeInButton3.playFromStart();
+
+        FadeTransition fadeInButton4
+                = new FadeTransition(Duration.millis(500), ipAdressTextField);
+        fadeInButton4.setFromValue(0);
+        fadeInButton4.setToValue(1);
+        fadeInButton4.playFromStart();
+
+        FadeTransition fadeInButton5
+                = new FadeTransition(Duration.millis(500), searchButton);
+        fadeInButton5.setFromValue(0);
+        fadeInButton5.setToValue(1);
+        fadeInButton5.playFromStart();
+
+        FadeTransition fadeInButton6
+                = new FadeTransition(Duration.millis(500), nameTextField);
+        fadeInButton6.setFromValue(0);
+        fadeInButton6.setToValue(1);
+        fadeInButton6.playFromStart();
     }
 
     // Button back
@@ -63,7 +121,7 @@ public class JoinGameController implements Initializable {
     private void backButtonAction(ActionEvent event) throws IOException {
 
         // Wechselt die Scene auf Menu
-        SceneManager.changeScene(new FXMLLoader(getClass().getResource("/fxml/Menu.fxml")));
+        changeScene(new FXMLLoader(getClass().getResource("/fxml/Menu.fxml")), false);
     }
 
     @FXML
@@ -90,17 +148,63 @@ public class JoinGameController implements Initializable {
         LobbyService.changeName(nameTextField.getText());
 
         if (GuiMessages.getConnectionError() == false) {
-            try {
-                // Wechselt die Scene auf Lobby
-                SceneManager.changeSceneToLobby(new FXMLLoader(getClass().getResource("/fxml/Lobby.fxml")));
-            } catch (IOException ex) {
-                Logger.getLogger(JoinGameController.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            // Wechselt die Scene auf Lobby
+            changeScene(new FXMLLoader(getClass().getResource("/fxml/Lobby.fxml")), true);
         }
         else {
             errorLabel.setText("Keine Verbindung möglich.");
         }
 
+    }
+
+    private void changeScene(FXMLLoader loader, boolean changeToLobby) {
+        FadeTransition fadeInButton1
+                = new FadeTransition(Duration.millis(500), backButton);
+        fadeInButton1.setFromValue(1);
+        fadeInButton1.setToValue(0);
+        fadeInButton1.playFromStart();
+
+        FadeTransition fadeInButton2
+                = new FadeTransition(Duration.millis(500), ipAdressTextField);
+        fadeInButton2.setFromValue(1);
+        fadeInButton2.setToValue(0);
+        fadeInButton2.playFromStart();
+
+        FadeTransition fadeInButton3
+                = new FadeTransition(Duration.millis(500), nameLabel);
+        fadeInButton3.setFromValue(1);
+        fadeInButton3.setToValue(0);
+        fadeInButton3.playFromStart();
+
+        FadeTransition fadeInButton5
+                = new FadeTransition(Duration.millis(500), searchButton);
+        fadeInButton5.setFromValue(1);
+        fadeInButton5.setToValue(0);
+        fadeInButton5.playFromStart();
+
+        FadeTransition fadeInButton6
+                = new FadeTransition(Duration.millis(500), nameTextField);
+        fadeInButton6.setFromValue(1);
+        fadeInButton6.setToValue(0);
+        fadeInButton6.playFromStart();
+
+        FadeTransition fadeInButton4
+                = new FadeTransition(Duration.millis(500), ipLabel);
+        fadeInButton4.setFromValue(1);
+        fadeInButton4.setToValue(0);
+        fadeInButton4.playFromStart();
+        fadeInButton4.setOnFinished((event) -> {
+            try {
+                if (changeToLobby) {
+                    SceneManager.changeSceneToLobby(loader);
+                }
+                else {
+                    SceneManager.changeScene(loader);
+                }
+            } catch (IOException ex) {
+                Logger.getLogger(MenuController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
     }
 
 }

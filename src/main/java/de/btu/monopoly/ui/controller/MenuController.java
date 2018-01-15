@@ -5,6 +5,9 @@ import de.btu.monopoly.ui.SceneManager;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.animation.FadeTransition;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -19,6 +22,7 @@ import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
+import javafx.util.Duration;
 
 /**
  *
@@ -28,6 +32,15 @@ public class MenuController implements Initializable {
 
     @FXML
     private Button joinGameButton;
+
+    @FXML
+    private Button startGameButton;
+
+    @FXML
+    private Button settingsButton;
+
+    @FXML
+    private Button closeButton;
 
     @FXML
     private GridPane grid;
@@ -48,6 +61,37 @@ public class MenuController implements Initializable {
         grid.setStyle(image);
         //grid.setBackground(new Background(new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
         stackPane.setBackground(new Background(new BackgroundImage(new Image(getClass().getResourceAsStream("/images/Lobby_Background.jpg")), BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT)));
+
+        // Animation
+        closeButton.setOpacity(0);
+        joinGameButton.setOpacity(0);
+        startGameButton.setOpacity(0);
+        settingsButton.setOpacity(0);
+
+        FadeTransition fadeInButton1
+                = new FadeTransition(Duration.millis(1000), joinGameButton);
+        fadeInButton1.setFromValue(0);
+        fadeInButton1.setToValue(1);
+        fadeInButton1.playFromStart();
+
+        FadeTransition fadeInButton2
+                = new FadeTransition(Duration.millis(1000), startGameButton);
+        fadeInButton2.setFromValue(0);
+        fadeInButton2.setToValue(1);
+        fadeInButton2.playFromStart();
+
+        FadeTransition fadeInButton3
+                = new FadeTransition(Duration.millis(1000), settingsButton);
+        fadeInButton3.setFromValue(0);
+        fadeInButton3.setToValue(1);
+        fadeInButton3.playFromStart();
+
+        FadeTransition fadeInButton4
+                = new FadeTransition(Duration.millis(1000), closeButton);
+        fadeInButton4.setFromValue(0);
+        fadeInButton4.setToValue(1);
+        fadeInButton4.playFromStart();
+
     }
 
     // Button startGame
@@ -55,7 +99,7 @@ public class MenuController implements Initializable {
     private void startGameButtonAction(ActionEvent event) throws IOException {
 
         // Wechselt die Scene auf startGame
-        SceneManager.changeScene(new FXMLLoader(getClass().getResource("/fxml/startGame.fxml")));
+        changeScene(new FXMLLoader(getClass().getResource("/fxml/startGame.fxml")));
 
         // Server initialisieren
         MainMenu menu = new MainMenu();
@@ -66,9 +110,17 @@ public class MenuController implements Initializable {
     // Button joinGame
     @FXML
     private void joinGameButtonAction(ActionEvent event) throws IOException {
-
         // Wechselt die Scene auf joinGame
-        SceneManager.changeScene(new FXMLLoader(getClass().getResource("/fxml/joinGame.fxml")));
+        changeScene(new FXMLLoader(getClass().getResource("/fxml/joinGame.fxml")));
+    }
+
+    // Button Einstellungen
+    @FXML
+    private void settingButtonAction(ActionEvent event) throws IOException {
+
+        changeScene(new FXMLLoader(getClass().getResource("/fxml/settings.fxml")));
+        // Wechselt die Scene auf Einstellungen
+
     }
 
     // Button Close
@@ -80,4 +132,38 @@ public class MenuController implements Initializable {
         System.exit(0); //NOSONAR
 
     }
+
+    private void changeScene(FXMLLoader loader) {
+        FadeTransition fadeInButton1
+                = new FadeTransition(Duration.millis(500), joinGameButton);
+        fadeInButton1.setFromValue(1);
+        fadeInButton1.setToValue(0);
+        fadeInButton1.playFromStart();
+
+        FadeTransition fadeInButton2
+                = new FadeTransition(Duration.millis(500), startGameButton);
+        fadeInButton2.setFromValue(1);
+        fadeInButton2.setToValue(0);
+        fadeInButton2.playFromStart();
+
+        FadeTransition fadeInButton3
+                = new FadeTransition(Duration.millis(500), settingsButton);
+        fadeInButton3.setFromValue(1);
+        fadeInButton3.setToValue(0);
+        fadeInButton3.playFromStart();
+
+        FadeTransition fadeInButton4
+                = new FadeTransition(Duration.millis(500), closeButton);
+        fadeInButton4.setFromValue(1);
+        fadeInButton4.setToValue(0);
+        fadeInButton4.playFromStart();
+        fadeInButton4.setOnFinished((event) -> {
+            try {
+                SceneManager.changeScene(loader);
+            } catch (IOException ex) {
+                Logger.getLogger(MenuController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
+    }
+
 }
