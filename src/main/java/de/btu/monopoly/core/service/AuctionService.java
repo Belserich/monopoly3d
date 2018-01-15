@@ -76,18 +76,18 @@ public class AuctionService extends Listener {
                     SceneManager.updateAuctionPopup(auctionStillActive());
                 }
                 if (!auctionStillActive()) {
-                    if (oneMore <= 4) {
+                    if (oneMore < 4) {
                         oneMore++;
                         LOGGER.info(auc.getHighestBid() + "€ zum " + oneMore + ".");
                         IOService.sleep(2000);
                     }
                     else {
                         auctionRun = false;
+                        sellProperty();
                     }
                 }
             }
             SceneManager.updateAuctionPopup(false);
-            sellProperty();
         }
     }
 
