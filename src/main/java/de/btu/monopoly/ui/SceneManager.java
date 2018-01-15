@@ -7,6 +7,7 @@ package de.btu.monopoly.ui;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
+import com.jfoenix.controls.JFXDialog;
 import com.jfoenix.controls.JFXTextField;
 import de.btu.monopoly.core.service.AuctionService;
 import de.btu.monopoly.data.field.Field;
@@ -124,6 +125,9 @@ public class SceneManager extends Stage {
 
     public static void propertyUpdate() {
         GameController.propertyUpdate();
+    }
+    public static void hausUpdate(){
+        GameController.hausAnzeigen();
     }
 
     // -----------------------------------------------------------------------
@@ -243,6 +247,7 @@ public class SceneManager extends Stage {
         GridPane gridpane = new GridPane();
         //ScrollPane scroll = new ScrollPane();
         VBox box = new VBox();
+        
         gridpane.setAlignment(Pos.CENTER);
         //scroll.setCenterShape(true);
         gridpane.add(box, 0, 0);
@@ -278,6 +283,7 @@ public class SceneManager extends Stage {
         // scroll.add(label, 0, 0);
         String cssLayout = "-fx-background-color: #b9f6ca;\n"
                 + "-fx-border-color: black;\n"
+                + "-fx-effect: dropshadow(gaussian, yellowgreen, 20, 0, 0, 0);"
                 + "-fx-border-insets: 5;\n"
                 + "-fx-border-width: 1;\n"
                 + "-fx-border-style: double;\n";

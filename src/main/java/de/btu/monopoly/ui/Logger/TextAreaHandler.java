@@ -25,6 +25,7 @@ public class TextAreaHandler extends StreamHandler {
             SceneManager.movePlayerUpdate();
             SceneManager.geldPlayerUpdate();
             SceneManager.propertyUpdate();
+            SceneManager.hausUpdate();
         }
         SceneManager.appendText(getFormatter().format(record));
 

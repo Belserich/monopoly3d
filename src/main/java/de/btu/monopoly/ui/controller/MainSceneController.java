@@ -10,6 +10,7 @@ import com.jfoenix.controls.JFXTextArea;
 import de.btu.monopoly.data.field.Field;
 import de.btu.monopoly.data.field.FieldManager;
 import de.btu.monopoly.data.field.PropertyField;
+import de.btu.monopoly.data.field.StreetField;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.input.IOService;
 import de.btu.monopoly.menu.Lobby;
@@ -36,11 +37,13 @@ import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 
@@ -521,6 +524,67 @@ public class MainSceneController implements Initializable {
 
             });
         }
+
+    }
+
+    /**
+     * Erstellt auf dem entsprechenden Feld ein/mehrere Hauser TODO moegliche
+     * Bugfixes
+     */
+    public void hausAnzeigen() {
+        if (Lobby.getPlayerClient().getGame().getBoard() != null) {
+            Field[] currentField = Lobby.getPlayerClient().getGame().getBoard().getFields();
+
+            Task task = new Task() {
+                @Override
+                protected Object call() throws Exception {
+                    HBox hbox = new HBox();
+                    int hausAnzahl = 0;
+                    for (Pane field : Felder) {
+                        for (int i = 0; i < Felder.length; i++) {
+                            if (Felder[i] == field) {
+                                if (currentField[i] instanceof StreetField) {
+                                    hausAnzahl = ((StreetField) currentField[i]).getHouseCount();
+                                    if (hausAnzahl != 0) {
+                                        field.getChildren().addAll(createHaus(10, 10, hausAnzahl));
+
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    return null;
+                }
+
+            };
+            Platform.runLater(task);
+
+        }
+    }
+
+    /**
+     * Erstellt die Figur von Haus
+     *
+     * @param width
+     * @param heigth
+     * @param anzahl der Hauser
+     * @return
+     */
+    public HBox createHaus(int width, int heigth, int anzahl) {
+        HBox hbox = new HBox();
+
+        HBox haus = new HBox();
+        for (int j = 0; j < anzahl; j++) {
+            Rectangle half1 = new Rectangle(width / 2, heigth, Color.web("#82ada9"));
+            Rectangle half2 = new Rectangle(width / 2, heigth, Color.web("#b2dfdb"));
+            haus.getChildren().addAll(half1, half2);
+            haus.setStyle("-fx-effect: dropshadow(gaussian, yellowgreen, 3, 0, 0, 0);");
+            hbox.getChildren().addAll(haus);
+
+            hbox.setSpacing(5);
+        }
+        return hbox;
 
     }
 
