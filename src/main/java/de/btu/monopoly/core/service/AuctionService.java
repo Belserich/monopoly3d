@@ -78,7 +78,7 @@ public class AuctionService extends Listener {
                 if (!auctionStillActive()) {
                     if (oneMore <= 4) {
                         oneMore++;
-                        LOGGER.fine(auc.getHighestBid() + "€ zum " + oneMore + ".");
+                        LOGGER.info(auc.getHighestBid() + "€ zum " + oneMore + ".");
                         IOService.sleep(2000);
                     }
                     else {
