@@ -17,15 +17,16 @@ import java.util.List;
 import java.util.logging.Logger;
 
 /**
- *
  * @author Christian Prinz
  */
 public class HardKi {
 
     private static final Logger LOGGER = Logger.getLogger(HardKi.class.getCanonicalName());
 
-    // Ab wieviel verkauften Strassen im Gefaengnis bleiben
+    // Ab wieviel verkauften Strassen im Gefaengnis bleiben (x von 24)
     private static final int PROPERTY_CAP_FOR_STAYING_IN_PRISON = 9;
+    // Ab wieviel verkauften Strassen sicherer Spielen
+    private static final int BEGINNING = 12;
 
     // Straßenkaufzonen: (lukrative Kaufzone)
     // bis zum Begin der lukrativen Zone betrachtet die KI die Strassen als zu billig (Zone 1)
@@ -43,8 +44,10 @@ public class HardKi {
     private static final int HIGH_BID = 120;    // Maiximalgebot (in %) fuer eine gute Strasse
     private static final int LOW_BID = 50;      // Maximalgebot (in %) fuer eine schlechte
 
+    // Aktionsphase:
+    private static int chosenFieldId;
+
     /**
-     *
      * @param player ki
      * @return int fuer die Wahl der Option im Gefaengnis 1 - wuerfeln, 2 - bezahlen, 3 - GFKarte
      */
@@ -77,7 +80,6 @@ public class HardKi {
     }
 
     /**
-     *
      * @param player ki
      * @param prop zu kaufende Strasse
      * @return int fuer die Wahl der Kaufentscheidung 1 - kaufen (interessiert) , 2 - nicht kaufen (nicht interessiert)
@@ -109,7 +111,47 @@ public class HardKi {
     }
 
     public static int processActionSequence(Player player, GameBoard board) {
+        int amount = player.getMoney();
+        int buildings = IOService.getGame().getBoard().getFieldManager().getHouseAndHotelCount(player)[0]
+                + IOService.getGame().getBoard().getFieldManager().getHouseAndHotelCount(player)[1];
 
+        if (amount < POOR) {                        // Wenn die ki arm ist
+            if (buildings > 0) {                        // verkauft sie erst Haeuser
+                sellBuilding();
+                return 3;
+            }
+            else if (numberOfMortgages(player) > 0) {   // und nimmt dann Hypotheken auf
+                setMortgage();
+                return 4;
+            }
+            else {                                      // ist nichts vorhanden, beendet sie
+                return 1;
+            }
+        }
+        else if (amount < LIQUID) {                 // Wenn sie fluessig ist
+            return 1;                                   // beendet sie die AktionsPhase
+        }
+        else if (amount < RICH) {                   // Wenn sie reich ist
+            if (getSoldProperties() < BEGINNING) {      // zu Spielbeginn
+                if (numberOfMortgages(player) > 0) {    // zahlt sie zuerst Hypotheken ab
+                    payMortgage();
+                }
+                else {                                  // und kauft dann Haeuser
+                    buyHouse();
+                }
+            }
+            else {                                      // zum Spielende hin
+                return 1;                               // beendet sie die Aktionsphase
+            }
+        }
+        else {                                      // Wenn sie superreich ist
+            if (numberOfMortgages(player) > 0) {        // zahlt sie zuerst Hypotheken ab
+                payMortgage();
+            }
+            else {                                      // und kauft dann Haeuser
+                buyHouse();
+            }
+        }
         return -1;
     }
 
@@ -139,8 +181,8 @@ public class HardKi {
         }
     }
 
+    //________________________HILFSMETHODEN________________________________________________________
     /**
-     *
      * @return Anzahl der Properties die einen Besitzer haben
      */
     private static int getSoldProperties() {
@@ -151,7 +193,6 @@ public class HardKi {
     }
 
     /**
-     *
      * @param player zu pruefende Ki
      * @return Anzahl der Hypotheken, welche die Ki insgesamt aufgenommen hat
      */
@@ -162,7 +203,6 @@ public class HardKi {
     }
 
     /**
-     *
      * @param prop Property welche auf im Besitz befindliche Nachbarn zu pruefen ist
      * @param player Ki
      * @return Gibt an, ob bereits Strassen des selben Strassenzuges, wie dem der uebergebenen Strasse im Besitz sind
@@ -171,6 +211,33 @@ public class HardKi {
         List<PropertyField> neighborList = IOService.getGame().getBoard().getFieldManager()
                 .getNeighborList(prop);
         return neighborList.stream().anyMatch((neigh) -> (neigh.getOwner() == player));
+    }
+
+    /**
+     * @return die ID des Feldes, welches in der Aktionsphase behandelt werden soll
+     */
+    public static int getChosenFieldId() {
+        return chosenFieldId;
+    }
+
+    private static void sellBuilding() {
+        // TODO
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private static void setMortgage() {
+        // TODO
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private static void payMortgage() {
+        // TODO
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private static void buyHouse() {
+        // TODO
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

@@ -17,6 +17,7 @@ import de.btu.monopoly.data.parser.GameBoardParser;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.input.IOService;
 import de.btu.monopoly.input.InputHandler;
+import de.btu.monopoly.ki.HardKi;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.networkClasses.PlayerTradeRequest;
 import de.btu.monopoly.net.networkClasses.PlayerTradeResponse;
@@ -337,7 +338,13 @@ public class Game {
                 String[] fieldNames = Arrays.stream(ownedFieldIds)
                         .mapToObj(id -> board.getFieldManager().getField(id).getName())
                         .toArray(String[]::new);
-                int chosenFieldId = ownedFieldIds[InputHandler.askForField(player, fieldNames) - 1];
+                int chosenFieldId;
+                if (player.getKiLevel() < 2) {
+                    chosenFieldId = ownedFieldIds[InputHandler.askForField(player, fieldNames) - 1];
+                }
+                else {
+                    chosenFieldId = HardKi.getChosenFieldId();
+                }
                 Field currField = board.getFieldManager().getField(chosenFieldId); // Wahl der Strasse
 
                 PropertyField property = (PropertyField) currField;
