@@ -55,11 +55,11 @@
                         <Font size="23.0" />
                      </font>
                   </Label>
-                  <JFXButton fx:id="createLobbyButton" minHeight="80.0" minWidth="200.0" onAction="#createLobbyButtonAction" style="-fx-background-color: #212121;" text="Lobby eröffnen" textFill="WHITE" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
+                  <JFXButton fx:id="createLobbyButton" buttonType="RAISED" minHeight="80.0" minWidth="200.0" onAction="#createLobbyButtonAction" style="-fx-background-color: #212121;" text="Lobby eröffnen" textFill="WHITE" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
                      <font>
                         <Font size="23.0" />
                      </font></JFXButton>
-                  <JFXButton fx:id="backButton" minHeight="50.0" minWidth="200.0" onAction="#backButtonAction" style="-fx-background-color: #212121;" text="Zurück" textFill="WHITE" GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.valignment="CENTER">
+                  <JFXButton fx:id="backButton" buttonType="RAISED" minHeight="50.0" minWidth="200.0" onAction="#backButtonAction" style="-fx-background-color: #212121;" text="Zurück" textFill="WHITE" GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.valignment="CENTER">
                      <font>
                         <Font size="23.0" />
                      </font></JFXButton>

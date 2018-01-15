@@ -55,7 +55,7 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <JFXButton fx:id="backButton" onAction="#backButtonAction" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #212121;" text="Zurück" textFill="WHITE" GridPane.halignment="CENTER" GridPane.rowIndex="9" GridPane.valignment="CENTER">
+                  <JFXButton fx:id="backButton" buttonType="RAISED" onAction="#backButtonAction" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #212121;" text="Zurück" textFill="WHITE" GridPane.halignment="CENTER" GridPane.rowIndex="9" GridPane.valignment="CENTER">
                      <font>
                         <Font size="23.0" />
                      </font></JFXButton>
