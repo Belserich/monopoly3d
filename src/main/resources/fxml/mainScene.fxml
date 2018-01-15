@@ -492,7 +492,17 @@
                         <Pane fx:id="besuch" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black;" styleClass="bescuhBackground" stylesheets="@../styles/Styles.css" />
                      </children>
                   </GridPane>
-                  <Pane prefHeight="200.0" prefWidth="200.0" />
+                  <GridPane>
+                     <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="100.0" />
+                     </columnConstraints>
+                     <rowConstraints>
+                        <RowConstraints minHeight="10.0" percentHeight="100.0" vgrow="SOMETIMES" />
+                     </rowConstraints>
+                     <children>
+                        <Pane fx:id="parkplatz" prefHeight="200.0" prefWidth="200.0" />
+                     </children>
+                  </GridPane>
                </children>
             </GridPane>
             <GridPane layoutX="10.0" layoutY="10.0" GridPane.columnIndex="2">

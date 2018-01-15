@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.shape.*?>
 <?import javafx.scene.effect.*?>
 <?import javafx.scene.paint.*?>
 <?import com.jfoenix.controls.*?>
@@ -33,7 +34,7 @@
             <Insets />
          </GridPane.margin>
          <children>
-            <Pane prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black;" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+            <Pane fx:id="goField" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black;" GridPane.columnIndex="2" GridPane.rowIndex="2" />
             <GridPane GridPane.columnIndex="1" GridPane.rowIndex="2">
                <columnConstraints>
                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -64,7 +65,7 @@
                   <Pane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                   <Pane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                   <Pane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1" />
-                  <GridPane style="-fx-border-color: black;" GridPane.columnIndex="8">
+                  <GridPane style="-fx-border-color: black; -fx-background-color: #e1bee7;" GridPane.columnIndex="8">
                     <columnConstraints>
                       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                     </columnConstraints>
@@ -73,6 +74,9 @@
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                       <RowConstraints minHeight="10.0" percentHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
+                     <children>
+                        <Pane fx:id="badStr" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #e1bee7;" GridPane.rowIndex="1" />
+                     </children>
                   </GridPane>
                   <GridPane style="-fx-border-color: black;" GridPane.columnIndex="7">
                      <columnConstraints>
@@ -83,8 +87,11 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="10.0" percentHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
                      </rowConstraints>
+                     <children>
+                        <Pane fx:id="gemeinschaft1" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1" />
+                     </children>
                   </GridPane>
-                  <GridPane style="-fx-border-color: black;" GridPane.columnIndex="6">
+                  <GridPane style="-fx-border-color: black; -fx-background-color: #e1bee7;" GridPane.columnIndex="6">
                      <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                      </columnConstraints>
@@ -93,6 +100,9 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="10.0" percentHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
                      </rowConstraints>
+                     <children>
+                        <Pane fx:id="turmStr" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #e1bee7;" GridPane.rowIndex="1" />
+                     </children>
                   </GridPane>
                   <GridPane style="-fx-border-color: black;" GridPane.columnIndex="5">
                      <columnConstraints>
@@ -103,6 +113,9 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="10.0" percentHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
                      </rowConstraints>
+                     <children>
+                        <Pane fx:id="einkommenSt" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1" />
+                     </children>
                   </GridPane>
                   <GridPane style="-fx-border-color: black;" GridPane.columnIndex="4">
                      <columnConstraints>
@@ -113,8 +126,11 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="10.0" percentHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
                      </rowConstraints>
+                     <children>
+                        <Pane fx:id="suedBahnhof" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1" />
+                     </children>
                   </GridPane>
-                  <GridPane style="-fx-border-color: black;" GridPane.columnIndex="3">
+                  <GridPane style="-fx-border-color: black; -fx-background-color: #cfd8dc;" GridPane.columnIndex="3">
                      <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                      </columnConstraints>
@@ -123,6 +139,9 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="10.0" percentHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
                      </rowConstraints>
+                     <children>
+                        <Pane fx:id="chauseeStr" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #cfd8dc;" GridPane.rowIndex="1" />
+                     </children>
                   </GridPane>
                   <GridPane style="-fx-border-color: black;" GridPane.columnIndex="2">
                      <columnConstraints>
@@ -133,8 +152,11 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="10.0" percentHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
                      </rowConstraints>
+                     <children>
+                        <Pane fx:id="ereignis1" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1" />
+                     </children>
                   </GridPane>
-                  <GridPane style="-fx-border-color: black;" GridPane.columnIndex="1">
+                  <GridPane style="-fx-border-color: black; -fx-background-color: #cfd8dc;" GridPane.columnIndex="1">
                      <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                      </columnConstraints>
@@ -143,8 +165,11 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="10.0" percentHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
                      </rowConstraints>
+                     <children>
+                        <Pane fx:id="elisenStr" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #cfd8dc;" GridPane.rowIndex="1" />
+                     </children>
                   </GridPane>
-                  <GridPane style="-fx-border-color: black;">
+                  <GridPane style="-fx-border-color: black; -fx-background-color: #cfd8dc;">
                      <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                      </columnConstraints>
@@ -153,10 +178,13 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="10.0" percentHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
                      </rowConstraints>
+                     <children>
+                        <Pane fx:id="postStr" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #cfd8dc;" GridPane.rowIndex="1" />
+                     </children>
                   </GridPane>
                </children>
             </GridPane>
-            <Pane prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black;" GridPane.rowIndex="2" />
+            <Pane fx:id="besuch" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black;" GridPane.rowIndex="2" />
             <GridPane GridPane.rowIndex="1">
               <columnConstraints>
                   <ColumnConstraints hgrow="SOMETIMES" percentWidth="10.0" />
@@ -183,7 +211,7 @@
                   <Pane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="6" />
                   <Pane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="7" />
                   <Pane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="8" />
-                  <GridPane style="-fx-border-color: black;" GridPane.columnIndex="1">
+                  <GridPane style="-fx-border-color: black; -fx-background-color: #ffe0b2;" GridPane.columnIndex="1">
                     <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="30.0" prefWidth="100.0" />
                       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -192,8 +220,11 @@
                     <rowConstraints>
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
+                     <children>
+                        <Pane fx:id="berlinerStr" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #ffe0b2;" GridPane.columnIndex="1" />
+                     </children>
                   </GridPane>
-                  <GridPane style="-fx-border-color: black;" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                  <GridPane style="-fx-border-color: black; -fx-background-color: #ffe0b2;" GridPane.columnIndex="1" GridPane.rowIndex="1">
                      <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="30.0" prefWidth="100.0" />
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -202,6 +233,9 @@
                      <rowConstraints>
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                      </rowConstraints>
+                     <children>
+                        <Pane fx:id="wienerStr" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #ffe0b2;" GridPane.columnIndex="1" />
+                     </children>
                   </GridPane>
                   <GridPane style="-fx-border-color: black;" GridPane.columnIndex="1" GridPane.rowIndex="2">
                      <columnConstraints>
@@ -212,8 +246,11 @@
                      <rowConstraints>
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                      </rowConstraints>
+                     <children>
+                        <Pane fx:id="gemeinschaft2" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" />
+                     </children>
                   </GridPane>
-                  <GridPane style="-fx-border-color: black;" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                  <GridPane style="-fx-border-color: black; -fx-background-color: #ffe0b2;" GridPane.columnIndex="1" GridPane.rowIndex="3">
                      <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="30.0" prefWidth="100.0" />
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -222,6 +259,9 @@
                      <rowConstraints>
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                      </rowConstraints>
+                     <children>
+                        <Pane fx:id="muenchenerStr" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #ffe0b2;" GridPane.columnIndex="1" />
+                     </children>
                   </GridPane>
                   <GridPane style="-fx-border-color: black; -fx-background-color: grey;" GridPane.columnIndex="1" GridPane.rowIndex="4">
                      <columnConstraints>
@@ -232,8 +272,11 @@
                      <rowConstraints>
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                      </rowConstraints>
+                     <children>
+                        <Pane fx:id="westBahnhof" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" />
+                     </children>
                   </GridPane>
-                  <GridPane style="-fx-border-color: black;" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                  <GridPane style="-fx-border-color: black; -fx-background-color: #f8bbd0;" GridPane.columnIndex="1" GridPane.rowIndex="5">
                      <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="30.0" prefWidth="100.0" />
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -242,8 +285,11 @@
                      <rowConstraints>
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                      </rowConstraints>
+                     <children>
+                        <Pane fx:id="neueStr" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #f8bbd0;" GridPane.columnIndex="1" />
+                     </children>
                   </GridPane>
-                  <GridPane style="-fx-border-color: black;" GridPane.columnIndex="1" GridPane.rowIndex="6">
+                  <GridPane style="-fx-border-color: black; -fx-background-color: #f8bbd0;" GridPane.columnIndex="1" GridPane.rowIndex="6">
                      <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="30.0" prefWidth="100.0" />
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -252,6 +298,9 @@
                      <rowConstraints>
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                      </rowConstraints>
+                     <children>
+                        <Pane fx:id="hafenStr" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #f8bbd0;" GridPane.columnIndex="1" />
+                     </children>
                   </GridPane>
                   <GridPane style="-fx-border-color: black;" GridPane.columnIndex="1" GridPane.rowIndex="7">
                      <columnConstraints>
@@ -262,8 +311,11 @@
                      <rowConstraints>
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                      </rowConstraints>
+                     <children>
+                        <Pane fx:id="elWerk" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" />
+                     </children>
                   </GridPane>
-                  <GridPane style="-fx-border-color: black;" GridPane.columnIndex="1" GridPane.rowIndex="8">
+                  <GridPane style="-fx-border-color: black; -fx-background-color: #f8bbd0;" GridPane.columnIndex="1" GridPane.rowIndex="8">
                      <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="30.0" prefWidth="100.0" />
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -272,10 +324,13 @@
                      <rowConstraints>
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                      </rowConstraints>
+                     <children>
+                        <Pane fx:id="seeStr" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #f8bbd0;" GridPane.columnIndex="1" />
+                     </children>
                   </GridPane>
                </children>
             </GridPane>
-            <Pane prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black;" />
+            <Pane fx:id="parkplatz" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black;" />
             <GridPane GridPane.columnIndex="1">
               <columnConstraints>
                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -302,7 +357,7 @@
                   <Pane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="6" />
                   <Pane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="7" />
                   <Pane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="8" />
-                  <GridPane style="-fx-border-color: black;" GridPane.rowIndex="1">
+                  <GridPane style="-fx-border-color: black; -fx-background-color: #ff9e80;" GridPane.rowIndex="1">
                      <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                      </columnConstraints>
@@ -311,6 +366,9 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="10.0" percentHeight="15.0" prefHeight="30.0" vgrow="SOMETIMES" />
                      </rowConstraints>
+                     <children>
+                        <Pane fx:id="theaterStr" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #ff9e80;" GridPane.rowIndex="1" />
+                     </children>
                   </GridPane>
                   <GridPane style="-fx-border-color: black;" GridPane.columnIndex="1" GridPane.rowIndex="1">
                      <columnConstraints>
@@ -321,8 +379,11 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="10.0" percentHeight="15.0" prefHeight="30.0" vgrow="SOMETIMES" />
                      </rowConstraints>
+                     <children>
+                        <Pane fx:id="ereignis2" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1" />
+                     </children>
                   </GridPane>
-                  <GridPane style="-fx-border-color: black;" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                  <GridPane style="-fx-border-color: black; -fx-background-color: #ff9e80;" GridPane.columnIndex="2" GridPane.rowIndex="1">
                      <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                      </columnConstraints>
@@ -331,8 +392,11 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="10.0" percentHeight="15.0" prefHeight="30.0" vgrow="SOMETIMES" />
                      </rowConstraints>
+                     <children>
+                        <Pane fx:id="museumStr" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #ff9e80;" GridPane.rowIndex="1" />
+                     </children>
                   </GridPane>
-                  <GridPane style="-fx-border-color: black;" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                  <GridPane style="-fx-border-color: black; -fx-background-color: #ff9e80;" GridPane.columnIndex="3" GridPane.rowIndex="1">
                      <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                      </columnConstraints>
@@ -341,6 +405,9 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="10.0" percentHeight="15.0" prefHeight="30.0" vgrow="SOMETIMES" />
                      </rowConstraints>
+                     <children>
+                        <Pane fx:id="opernplatz" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #ff9e80;" GridPane.rowIndex="1" />
+                     </children>
                   </GridPane>
                   <GridPane style="-fx-border-color: black;" GridPane.columnIndex="4" GridPane.rowIndex="1">
                      <columnConstraints>
@@ -351,8 +418,11 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="10.0" percentHeight="15.0" prefHeight="30.0" vgrow="SOMETIMES" />
                      </rowConstraints>
+                     <children>
+                        <Pane fx:id="nordBahnhof" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1" />
+                     </children>
                   </GridPane>
-                  <GridPane style="-fx-border-color: black;" GridPane.columnIndex="5" GridPane.rowIndex="1">
+                  <GridPane style="-fx-border-color: black; -fx-background-color: #fff9c4;" GridPane.columnIndex="5" GridPane.rowIndex="1">
                      <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                      </columnConstraints>
@@ -361,8 +431,11 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="10.0" percentHeight="15.0" prefHeight="30.0" vgrow="SOMETIMES" />
                      </rowConstraints>
+                     <children>
+                        <Pane fx:id="lessingStr" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #fff9c4;" GridPane.rowIndex="1" />
+                     </children>
                   </GridPane>
-                  <GridPane style="-fx-border-color: black;" GridPane.columnIndex="6" GridPane.rowIndex="1">
+                  <GridPane style="-fx-border-color: black; -fx-background-color: #fff9c4;" GridPane.columnIndex="6" GridPane.rowIndex="1">
                      <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                      </columnConstraints>
@@ -371,6 +444,9 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="10.0" percentHeight="15.0" prefHeight="30.0" vgrow="SOMETIMES" />
                      </rowConstraints>
+                     <children>
+                        <Pane fx:id="schillerStr" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #fff9c4;" GridPane.rowIndex="1" />
+                     </children>
                   </GridPane>
                   <GridPane style="-fx-border-color: black;" GridPane.columnIndex="7" GridPane.rowIndex="1">
                      <columnConstraints>
@@ -381,8 +457,11 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="10.0" percentHeight="15.0" prefHeight="30.0" vgrow="SOMETIMES" />
                      </rowConstraints>
+                     <children>
+                        <Pane fx:id="wasserWerk" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1" />
+                     </children>
                   </GridPane>
-                  <GridPane style="-fx-border-color: black;" GridPane.columnIndex="8" GridPane.rowIndex="1">
+                  <GridPane style="-fx-border-color: black; -fx-background-color: #fff9c4;" GridPane.columnIndex="8" GridPane.rowIndex="1">
                      <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                      </columnConstraints>
@@ -391,10 +470,13 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="10.0" percentHeight="15.0" prefHeight="30.0" vgrow="SOMETIMES" />
                      </rowConstraints>
+                     <children>
+                        <Pane fx:id="goetheStr" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #fff9c4;" GridPane.rowIndex="1" />
+                     </children>
                   </GridPane>
                </children>
             </GridPane>
-            <Pane prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black;" GridPane.columnIndex="2" />
+            <Pane fx:id="jailField" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black;" GridPane.columnIndex="2" />
             <GridPane GridPane.columnIndex="2" GridPane.rowIndex="1">
                <columnConstraints>
                   <ColumnConstraints hgrow="SOMETIMES" />
@@ -421,7 +503,7 @@
                   <Pane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
                   <Pane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="7" />
                   <Pane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="8" />
-                  <GridPane style="-fx-border-color: black;">
+                  <GridPane style="-fx-border-color: black; -fx-background-color: #c8e6c9;">
                     <columnConstraints>
                       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="15.0" prefWidth="100.0" />
                       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -430,8 +512,11 @@
                     <rowConstraints>
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
+                     <children>
+                        <Pane fx:id="rathhausPlatz" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #c8e6c9;" GridPane.columnIndex="1" />
+                     </children>
                   </GridPane>
-                  <GridPane style="-fx-border-color: black;" GridPane.rowIndex="1">
+                  <GridPane style="-fx-border-color: black; -fx-background-color: #c8e6c9;" GridPane.rowIndex="1">
                      <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="15.0" prefWidth="100.0" />
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -440,6 +525,9 @@
                      <rowConstraints>
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                      </rowConstraints>
+                     <children>
+                        <Pane fx:id="hauptStr" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #c8e6c9;" GridPane.columnIndex="1" />
+                     </children>
                   </GridPane>
                   <GridPane style="-fx-border-color: black;" GridPane.rowIndex="2">
                      <columnConstraints>
@@ -450,8 +538,11 @@
                      <rowConstraints>
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                      </rowConstraints>
+                     <children>
+                        <Pane fx:id="gemeinschaft3" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" />
+                     </children>
                   </GridPane>
-                  <GridPane style="-fx-border-color: black;" GridPane.rowIndex="3">
+                  <GridPane style="-fx-border-color: black; -fx-background-color: #c8e6c9;" GridPane.rowIndex="3">
                      <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="15.0" prefWidth="100.0" />
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -460,6 +551,9 @@
                      <rowConstraints>
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                      </rowConstraints>
+                     <children>
+                        <Pane fx:id="bahnhofStr" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #c8e6c9;" GridPane.columnIndex="1" />
+                     </children>
                   </GridPane>
                   <GridPane style="-fx-border-color: black;" GridPane.rowIndex="4">
                      <columnConstraints>
@@ -470,6 +564,9 @@
                      <rowConstraints>
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                      </rowConstraints>
+                     <children>
+                        <Pane fx:id="hauptBahnhof" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" />
+                     </children>
                   </GridPane>
                   <GridPane style="-fx-border-color: black;" GridPane.rowIndex="5">
                      <columnConstraints>
@@ -480,8 +577,11 @@
                      <rowConstraints>
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                      </rowConstraints>
+                     <children>
+                        <Pane fx:id="ereignis3" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" />
+                     </children>
                   </GridPane>
-                  <GridPane style="-fx-border-color: black;" GridPane.rowIndex="6">
+                  <GridPane style="-fx-border-color: black; -fx-background-color: #bbdefb;" GridPane.rowIndex="6">
                      <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="15.0" prefWidth="100.0" />
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -490,6 +590,9 @@
                      <rowConstraints>
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                      </rowConstraints>
+                     <children>
+                        <Pane fx:id="parkStr" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #bbdefb;" GridPane.columnIndex="1" />
+                     </children>
                   </GridPane>
                   <GridPane style="-fx-border-color: black;" GridPane.rowIndex="7">
                      <columnConstraints>
@@ -500,8 +603,11 @@
                      <rowConstraints>
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                      </rowConstraints>
+                     <children>
+                        <Pane fx:id="zusatzSt" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" />
+                     </children>
                   </GridPane>
-                  <GridPane style="-fx-border-color: black;" GridPane.rowIndex="8">
+                  <GridPane style="-fx-border-color: black; -fx-background-color: #bbdefb;" GridPane.rowIndex="8">
                      <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="15.0" prefWidth="100.0" />
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -510,10 +616,13 @@
                      <rowConstraints>
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                      </rowConstraints>
+                     <children>
+                        <Pane fx:id="schlossAllee" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #bbdefb;" GridPane.columnIndex="1" />
+                     </children>
                   </GridPane>
                </children>
             </GridPane>
-            <GridPane style="-fx-border-color: black;" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <GridPane GridPane.columnIndex="1" GridPane.rowIndex="1">
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
               </columnConstraints>
@@ -526,8 +635,8 @@
       </GridPane>
       <GridPane fx:id="grid2" GridPane.columnIndex="2">
          <children>
-            <JFXButton fx:id="player0Button" onAction="#player0ButtonAction" prefHeight="80.0" prefWidth="150.0" text="frei" visible="false" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
-            <GridPane GridPane.rowIndex="3">
+            <JFXButton fx:id="player0Button" onAction="#player0ButtonAction" prefHeight="80.0" prefWidth="150.0" text="frei" visible="false" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+            <GridPane GridPane.columnIndex="1" GridPane.rowIndex="3">
                <children>
                   <JFXTextArea fx:id="textArea" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" />
                </children>
@@ -538,7 +647,7 @@
                   <RowConstraints minHeight="10.0" percentHeight="100.0" prefHeight="30.0" vgrow="SOMETIMES" />
                </rowConstraints>
             </GridPane>
-            <GridPane GridPane.rowIndex="5">
+            <GridPane GridPane.columnIndex="1" GridPane.rowIndex="5">
                <children>
                   <ScrollPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
                      <content>
@@ -576,7 +685,7 @@
                   <RowConstraints minHeight="10.0" percentHeight="90.0" prefHeight="30.0" vgrow="SOMETIMES" />
                </rowConstraints>
             </GridPane>
-            <GridPane fx:id="player0Geld" GridPane.rowIndex="1">
+            <GridPane fx:id="player0Geld" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <children>
                   <Label fx:id="geld0" alignment="CENTER" prefHeight="33.0" prefWidth="156.0" />
                </children>
@@ -590,7 +699,8 @@
             </GridPane>
          </children>
          <columnConstraints>
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="10.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="90.0" />
          </columnConstraints>
          <rowConstraints>
             <RowConstraints minHeight="10.0" percentHeight="15.0" prefHeight="30.0" vgrow="SOMETIMES" />
