@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.URL;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -82,9 +81,6 @@ public class LobbyController implements Initializable {
 
     // ID des eigenen Spielers
     private int id = -1;
-
-    // ID von KIs
-    private ArrayList<Integer> kiID = new ArrayList<Integer>();
 
     @FXML
     private Button playButton;
@@ -179,32 +175,77 @@ public class LobbyController implements Initializable {
                     }
                     if (Lobby.getUsers().length >= 2) {
                         name2Label.setText(Lobby.getUsers()[1][1]);
+                        if (Integer.valueOf(Lobby.getUsers()[1][3]) > 0) {
+                            if (id == 0) {
+                                deleteKi1.setVisible(true);
+                            }
+                        }
+                        else {
+                            deleteKi1.setVisible(false);
+                        }
                     }
                     else {
                         name2Label.setText("frei");
+                        deleteKi1.setVisible(false);
                     }
                     if (Lobby.getUsers().length >= 3) {
                         name3Label.setText(Lobby.getUsers()[2][1]);
+                        if (Integer.valueOf(Lobby.getUsers()[2][3]) > 0) {
+                            if (id == 0) {
+                                deleteKi2.setVisible(true);
+                            }
+                        }
+                        else {
+                            deleteKi2.setVisible(false);
+                        }
                     }
                     else {
                         name3Label.setText("frei");
+                        deleteKi2.setVisible(false);
                     }
                     if (Lobby.getUsers().length >= 4) {
                         name4Label.setText(Lobby.getUsers()[3][1]);
+                        if (Integer.valueOf(Lobby.getUsers()[3][3]) > 0) {
+                            if (id == 0) {
+                                deleteKi3.setVisible(true);
+                            }
+                        }
+                        else {
+                            deleteKi3.setVisible(false);
+                        }
                     }
                     else {
                         name4Label.setText("frei");
+                        deleteKi3.setVisible(false);
                     }
                     if (Lobby.getUsers().length >= 5) {
                         name5Label.setText(Lobby.getUsers()[4][1]);
+                        if (Integer.valueOf(Lobby.getUsers()[4][3]) > 0) {
+                            if (id == 0) {
+                                deleteKi4.setVisible(true);
+                            }
+                        }
+                        else {
+                            deleteKi4.setVisible(false);
+                        }
                     }
                     else {
                         name5Label.setText("frei");
+                        deleteKi4.setVisible(false);
                     }
                     if (Lobby.getUsers().length >= 6) {
                         name6Label.setText(Lobby.getUsers()[5][1]);
+                        if (Integer.valueOf(Lobby.getUsers()[5][3]) > 0) {
+                            if (id == 0) {
+                                deleteKi5.setVisible(true);
+                            }
+                        }
+                        else {
+                            deleteKi5.setVisible(false);
+                        }
                     }
                     else {
+                        deleteKi5.setVisible(false);
                         name6Label.setText("frei");
                     }
 
@@ -225,12 +266,54 @@ public class LobbyController implements Initializable {
             @Override
             protected Void call() throws Exception {
                 if (Lobby.getUsers() != null) {
-                    playerColor1.setValue(Color.web(Lobby.getUsers()[0][4]));
-                    playerColor2.setValue(Color.web(Lobby.getUsers()[1][4]));
-                    playerColor3.setValue(Color.web(Lobby.getUsers()[2][4]));
-                    playerColor4.setValue(Color.web(Lobby.getUsers()[3][4]));
-                    playerColor5.setValue(Color.web(Lobby.getUsers()[4][4]));
-                    playerColor6.setValue(Color.web(Lobby.getUsers()[5][4]));
+                    if (name1Label.getText() != "frei") {
+                        playerColor1.setValue(Color.web(Lobby.getUsers()[0][4]));
+
+                    }
+                    else {
+                        playerColor1.setValue(Color.web("FFFFFF"));
+                        playerColor1.setDisable(true);
+                    }
+                    if (name2Label.getText() != "frei") {
+                        playerColor2.setValue(Color.web(Lobby.getUsers()[1][4]));
+
+                    }
+                    else {
+                        playerColor2.setValue(Color.web("FFFFFF"));
+                        playerColor2.setDisable(true);
+                    }
+                    if (name3Label.getText() != "frei") {
+                        playerColor3.setValue(Color.web(Lobby.getUsers()[2][4]));
+
+                    }
+                    else {
+                        playerColor3.setValue(Color.web("FFFFFF"));
+                        playerColor3.setDisable(true);
+                    }
+                    if (name4Label.getText() != "frei") {
+                        playerColor4.setValue(Color.web(Lobby.getUsers()[3][4]));
+
+                    }
+                    else {
+                        playerColor4.setValue(Color.web("FFFFFF"));
+                        playerColor4.setDisable(true);
+                    }
+                    if (name5Label.getText() != "frei") {
+                        playerColor5.setValue(Color.web(Lobby.getUsers()[4][4]));
+
+                    }
+                    else {
+                        playerColor5.setValue(Color.web("FFFFFF"));
+                        playerColor5.setDisable(true);
+                    }
+                    if (name6Label.getText() != "frei") {
+                        playerColor6.setValue(Color.web(Lobby.getUsers()[5][4]));
+
+                    }
+                    else {
+                        playerColor6.setValue(Color.web("FFFFFF"));
+                        playerColor6.setDisable(true);
+                    }
 
                 }
                 return null;
@@ -284,7 +367,6 @@ public class LobbyController implements Initializable {
                             deleteKi1.setOnAction((event) -> {
                                 LobbyService.deleteUser(1);
                             });
-                            kiID.add(1);
                             break;
                         }
                         case 2: {
@@ -293,7 +375,6 @@ public class LobbyController implements Initializable {
                             deleteKi2.setOnAction((event) -> {
                                 LobbyService.deleteUser(2);
                             });
-                            kiID.add(2);
                             break;
                         }
                         case 3: {
@@ -302,7 +383,6 @@ public class LobbyController implements Initializable {
                             deleteKi3.setOnAction((event) -> {
                                 LobbyService.deleteUser(3);
                             });
-                            kiID.add(3);
                             break;
                         }
                         case 4: {
@@ -311,7 +391,6 @@ public class LobbyController implements Initializable {
                             deleteKi4.setOnAction((event) -> {
                                 LobbyService.deleteUser(4);
                             });
-                            kiID.add(4);
                             break;
                         }
                         case 5: {
@@ -320,7 +399,6 @@ public class LobbyController implements Initializable {
                             deleteKi5.setOnAction((event) -> {
                                 LobbyService.deleteUser(5);
                             });
-                            kiID.add(5);
                             break;
                         }
 
@@ -377,61 +455,43 @@ public class LobbyController implements Initializable {
     @FXML
     private void pushColorPick0(ActionEvent event) throws IOException, InterruptedException {
 
-        // Nur die aktiven Farben werden gesendet
-        if (!playerColor1.isDisabled()) {
-            LobbyService.changeColor(playerColor1.getValue());
-        }
+        LobbyService.changeColor(playerColor1.getValue());
 
     }
 
     @FXML
     private void pushColorPick1(ActionEvent event) throws IOException, InterruptedException {
-        if (kiID.contains(1)) {
-            LobbyService.changeColor(playerColor2.getValue(), 1);
-        }
-        else {
-            LobbyService.changeColor(playerColor2.getValue());
-        }
+
+        LobbyService.changeColor(playerColor2.getValue(), Integer.valueOf(Lobby.getUsers()[1][0]));
+
     }
 
     @FXML
     private void pushColorPick2(ActionEvent event) throws IOException, InterruptedException {
-        if (kiID.contains(2)) {
-            LobbyService.changeColor(playerColor3.getValue(), 2);
-        }
-        else {
-            LobbyService.changeColor(playerColor3.getValue());
-        }
+
+        LobbyService.changeColor(playerColor3.getValue(), Integer.valueOf(Lobby.getUsers()[2][0]));
+
     }
 
     @FXML
     private void pushColorPick3(ActionEvent event) throws IOException, InterruptedException {
-        if (kiID.contains(3)) {
-            LobbyService.changeColor(playerColor4.getValue(), 3);
-        }
-        else {
-            LobbyService.changeColor(playerColor4.getValue());
-        }
+
+        LobbyService.changeColor(playerColor4.getValue(), Integer.valueOf(Lobby.getUsers()[3][0]));
+
     }
 
     @FXML
     private void pushColorPick4(ActionEvent event) throws IOException, InterruptedException {
-        if (kiID.contains(4)) {
-            LobbyService.changeColor(playerColor5.getValue(), 4);
-        }
-        else {
-            LobbyService.changeColor(playerColor5.getValue());
-        }
+
+        LobbyService.changeColor(playerColor5.getValue(), Integer.valueOf(Lobby.getUsers()[4][0]));
+
     }
 
     @FXML
     private void pushColorPick5(ActionEvent event) throws IOException, InterruptedException {
-        if (kiID.contains(5)) {
-            LobbyService.changeColor(playerColor6.getValue(), 5);
-        }
-        else {
-            LobbyService.changeColor(playerColor6.getValue());
-        }
+
+        LobbyService.changeColor(playerColor6.getValue(), Integer.valueOf(Lobby.getUsers()[5][0]));
+
     }
 
     public void loadGameLayout() throws IOException {
