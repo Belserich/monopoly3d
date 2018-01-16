@@ -4,14 +4,14 @@ import de.btu.monopoly.GlobalSettings;
 import de.btu.monopoly.core.GameBoard;
 import de.btu.monopoly.core.service.FieldService;
 import de.btu.monopoly.core.service.PlayerService;
-import de.btu.monopoly.data.Tradeable;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.ui.Logger.TextAreaHandler;
+
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 /**
@@ -23,6 +23,11 @@ public class FieldManager {
     private static final Logger LOGGER = Logger.getLogger(FieldService.class.getCanonicalName());
 
     /**
+     * Die Spielbrett-Instanz
+     */
+    private GameBoard board;
+
+    /**
      * Die Felder des Spielbretts
      */
     private final Field[] fields;
@@ -32,8 +37,11 @@ public class FieldManager {
      *
      * @param fields Feld-Array
      */
-    public FieldManager(Field[] fields) {
+    public FieldManager(GameBoard board, Field[] fields) {
+
+        this.board = board;
         this.fields = fields;
+
         Arrays.asList(fields).forEach(f -> f.fieldManager = this);
         if (!GlobalSettings.isRunAsTest() && !GlobalSettings.isRunInConsole()) {
             TextAreaHandler logHandler = new TextAreaHandler();
@@ -48,6 +56,10 @@ public class FieldManager {
         return fields;
     }
 
+    public Field getField(int fieldId) {
+        return fields[fieldId];
+    }
+
     /**
      * @return das "LOS"-Feld
      */
@@ -59,12 +71,12 @@ public class FieldManager {
      * Gibt die Gesamtanzahl der Häuser und Hotels im Spielerbesitz zurück.
      *
      * @param player Spieler
-     * @return Gesamtanzahl der Häuser und Hotels im Spielerbesitz (Index 0 -
-     * Häuser, Index 1 - Hotels)
+     * @return Gesamtanzahl der Häuser und Hotels im Spielerbesitz (Index 0 - Häuser, Index 1 - Hotels)
      */
     public int[] getHouseAndHotelCount(Player player) {
         int[] retObj = new int[2];
-        getOwnedPropertyFields(player)
+        Arrays.stream(getOwnedPropertyFieldIds(player))
+                .mapToObj(i -> fields[i])
                 .filter(p -> p instanceof StreetField)
                 .map(p -> (StreetField) p)
                 .forEach(p -> {
@@ -75,6 +87,23 @@ public class FieldManager {
         return retObj;
     }
 
+    public int[] getOwnedPropertyFieldIds(Player player) {
+        IntStream.Builder builder = IntStream.builder();
+        for (int fieldId = 0; fieldId < fields.length; fieldId++) {
+            if (fields[fieldId] instanceof PropertyField
+                    && ((PropertyField) fields[fieldId]).getOwner() == player) {
+                builder.accept(fieldId);
+            }
+        }
+        return builder.build().toArray();
+    }
+
+    /**
+     * Erzeugt einen Stream aus PropertyFields, welche einem bestimmten Player gehören
+     *
+     * @param player Besitzer
+     * @return Stream von besessenen PropertyFields
+     */
     public Stream<PropertyField> getOwnedPropertyFields(Player player) {
         return Stream.of(fields)
                 .filter(f -> f instanceof PropertyField)
@@ -82,11 +111,18 @@ public class FieldManager {
                 .filter(p -> p.getOwner() == player);
     }
 
-    public List<Tradeable> getTradeableStreets(Player player) {
-        return getOwnedPropertyFields(player)
-                .filter(p -> p instanceof Tradeable)
-                .map(p -> (Tradeable) p)
-                .collect(Collectors.toList());
+    public PropertyField[] getTradeableProperties(Player player) {
+
+        ArrayList<PropertyField> tradeableProperties = new ArrayList<>();
+        int[] ownedPropertyIds = getOwnedPropertyFieldIds(player);
+
+        for (int id : ownedPropertyIds) {
+            Field f = fields[id];
+            if (f instanceof PropertyField) {
+                tradeableProperties.add((PropertyField) f);
+            }
+        }
+        return tradeableProperties.toArray(new PropertyField[0]);
     }
 
     /**
@@ -109,8 +145,7 @@ public class FieldManager {
     }
 
     /**
-     * Bewegt den Spieler zum nächsten Feld des angegebenen Typs. Wird für
-     * einige Karten benötigt.
+     * Bewegt den Spieler zum nächsten Feld des angegebenen Typs. Wird für einige Karten benötigt.
      *
      * @param player Spieler
      * @param nextFieldType Feldtyp
@@ -119,15 +154,14 @@ public class FieldManager {
     public Field movePlayer(Player player, GameBoard.FieldType nextFieldType) {
         int pos = player.getPosition();
         int movedFields = 0;
-        while (GameBoard.FIELD_STRUCTURE[pos + movedFields] != nextFieldType) {
+        while (GameBoard.FIELD_STRUCTURE[(pos + movedFields) % FieldService.FIELD_COUNT] != nextFieldType) {
             movedFields++;
         }
         return movePlayer(player, movedFields);
     }
 
     /**
-     * Kauft ein Haus auf dem gewählten Feld, sofern es ein Straßenfeld ist und
-     * der Spieler genug Geld hat.
+     * Kauft ein Haus auf dem gewählten Feld, sofern es ein Straßenfeld ist und der Spieler genug Geld hat.
      *
      * @param street StreetField
      * @return true, wenn der Kauf erfolgreich war, false sonst
@@ -135,6 +169,7 @@ public class FieldManager {
     public boolean buyHouse(StreetField street) {
         Player player = street.getOwner();
 
+        System.out.println("HAI");
         LOGGER.info(String.format("%s versucht, ein Haus auf %s zu kaufen.", player.getName(), street.getName()));
         if (balanceCheck(street, 1, 0)
                 && PlayerService.checkLiquidity(player, street.getHousePrice())) {
@@ -155,8 +190,7 @@ public class FieldManager {
     }
 
     /**
-     * Kauft ein Haus auf dem gewählten Feld ohne auf die gegebenen Umstände zu
-     * prüfen.
+     * Kauft ein Haus auf dem gewählten Feld ohne auf die gegebenen Umstände zu prüfen.
      *
      * @param street Straßenfeld
      */
@@ -171,8 +205,7 @@ public class FieldManager {
     }
 
     /**
-     * Verkauft ein Haus auf dem gewählten Feld, sofern es ein Straßenfeld ist
-     * und bereits bebaut wurde.
+     * Verkauft ein Haus auf dem gewählten Feld, sofern es ein Straßenfeld ist und bereits bebaut wurde.
      *
      * @param street StreetField
      * @return true, wenn der Verkauf erfolgreich war, false sonst
@@ -194,8 +227,7 @@ public class FieldManager {
     }
 
     /**
-     * Verkauft ein Haus auf dem gewählten Feld ohne auf die gegebenen Umstände
-     * zu prüfen.
+     * Verkauft ein Haus auf dem gewählten Feld ohne auf die gegebenen Umstände zu prüfen.
      *
      * @param street Die betroffene Straße
      */
@@ -210,14 +242,12 @@ public class FieldManager {
     }
 
     /**
-     * Prüft auf gleichmäßige Bebauung eines Straßenzugs innerhalb bestimmter
-     * Toleranzgrenzen.
+     * Prüft auf gleichmäßige Bebauung eines Straßenzugs innerhalb bestimmter Toleranzgrenzen.
      *
      * @param street betroffene Straße
      * @param posTolerance obere Toleranzgrenze
      * @param negTolerance untere Toleranzgrenze
-     * @return ob die Straße innerhalb der Toleranzgrenzen gleichmäßig bebaut
-     * wurde
+     * @return ob die Straße innerhalb der Toleranzgrenzen gleichmäßig bebaut wurde
      */
     public boolean balanceCheck(StreetField street, int posTolerance, int negTolerance) {
         int hc = street.getHouseCount();
@@ -234,12 +264,10 @@ public class FieldManager {
     }
 
     /**
-     * Prüft ob alle Straßen des betroffenen Straßenzugs demselben Spieler
-     * gehören.
+     * Prüft ob alle Straßen des betroffenen Straßenzugs demselben Spieler gehören.
      *
      * @param prop betroffenes Grundstück
-     * @return ob alle Straßen des betroffenen Straßenzugs demselben Spieler
-     * gehören
+     * @return ob alle Straßen des betroffenen Straßenzugs demselben Spieler gehören
      */
     public boolean isComplete(PropertyField prop) {
         Player owner = prop.getOwner();
@@ -349,8 +377,7 @@ public class FieldManager {
     }
 
     /**
-     * Nimmt eine Hypothek fürs betroffene Feld auf, ohne auf den
-     * Hypotheksstatus zu prüfen.
+     * Nimmt eine Hypothek fürs betroffene Feld auf, ohne auf den Hypotheksstatus zu prüfen.
      *
      * @param prop betroffenes Feld
      */
@@ -384,8 +411,7 @@ public class FieldManager {
     }
 
     /**
-     * Zahlt die Hypothek auf einem Feld ab, ohne auf Zahlungsfähigkeit zu
-     * prüfen.
+     * Zahlt die Hypothek auf einem Feld ab, ohne auf Zahlungsfähigkeit zu prüfen.
      *
      * @param prop betroffenes Feld
      */

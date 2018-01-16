@@ -8,6 +8,7 @@ import de.btu.monopoly.core.mechanics.Trade;
 public class PlayerTradeRequest {
     
     private Trade trade;
+    private boolean denied;
     
     public Trade getTrade() {
         return trade;
@@ -15,5 +16,13 @@ public class PlayerTradeRequest {
     
     public void setTrade(Trade trade) {
         this.trade = trade;
+    }
+    
+    public void setDenied(boolean val) {
+        denied = val;
+    }
+    
+    public boolean isDenied() {
+        return denied;
     }
 }

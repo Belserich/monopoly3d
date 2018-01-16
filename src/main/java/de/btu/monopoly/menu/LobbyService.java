@@ -17,13 +17,14 @@ import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.networkClasses.Lobby.*;
 import de.btu.monopoly.net.server.AuctionTable;
 import de.btu.monopoly.ui.SceneManager;
+import javafx.scene.paint.Color;
+
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.scene.paint.Color;
 
 /**
  *
@@ -148,7 +149,7 @@ public class LobbyService extends Listener {
      */
     public static void startGame() throws InterruptedException {
 
-        Game controller = new Game(generatePlayerArray(), lobby.getPlayerClient(), lobby.getRandomSeed());
+        Game controller = new Game(lobby.getPlayerClient(), generatePlayerArray(), lobby.getRandomSeed());
         lobby.setController(controller);
         lobby.getPlayerClient().setGame(controller);
 
@@ -263,7 +264,7 @@ public class LobbyService extends Listener {
                 SceneManager.updateLobbyColors();
             } catch (InterruptedException ex) {
                 LOGGER.log(Level.WARNING, "Lobby konnte nicht geupdated werden{0}", ex);
-                Thread.interrupted();
+                Thread.currentThread().interrupt();
             }
 
             System.out.println("Spieler in Lobby: (Meine ID: " + lobby.getPlayerId() + ")");
@@ -294,7 +295,7 @@ public class LobbyService extends Listener {
                         startGame();
                     } catch (InterruptedException ex) {
                         LOGGER.log(Level.WARNING, "Scene konnte nicht geladen werden{0}", ex);
-                        Thread.interrupted();
+                        Thread.currentThread().interrupt();
                     }
                 }
             };

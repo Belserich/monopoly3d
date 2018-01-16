@@ -6,7 +6,6 @@
 package de.btu.monopoly.input;
 
 import de.btu.monopoly.GlobalSettings;
-import de.btu.monopoly.core.Game;
 import de.btu.monopoly.core.GameBoard;
 import de.btu.monopoly.core.mechanics.Auction;
 import de.btu.monopoly.data.field.PropertyField;
@@ -20,6 +19,7 @@ import de.btu.monopoly.ui.Logger.TextAreaHandler;
 import de.btu.monopoly.ui.SceneManager;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -62,7 +62,7 @@ public class IOService {
         return choice;
     }
 
-    public static int buyPropertyChoice(Player player, PropertyField prop) {
+    public static int buyPropertyChoice(Player player, PropertyField prop, Random random) {
         int choice = -1;
         switch (player.getKiLevel()) {
             case 0:
@@ -76,7 +76,7 @@ public class IOService {
 
                 break;
             case 1:
-                choice = EasyKi.buyPropOption(player, prop);
+                choice = EasyKi.buyPropOption(player, prop, random);
                 break;
             case 2:
                 choice = MediumKi.buyPropOption(player, prop);
@@ -161,20 +161,9 @@ public class IOService {
             return choice;
         }
         else {
-            do {
-                BroadcastPlayerChoiceRequest[] packets = client.getPlayerChoiceObjects();
-                if (packets.length > 1) {
-                    LOGGER.warning("Fehler: Mehr als ein choice-Packet registriert!");
-                    return -1;
-                }
-                else if (packets.length == 1) {
-                    int retVal = packets[0].getChoice();
-                    client.clearPlayerChoiceObjects();
-                    return retVal;
-                }
-            } while (Game.getIS_RUNNING().get());
+            BroadcastPlayerChoiceRequest request = (BroadcastPlayerChoiceRequest) client.waitForObjectOfClass(BroadcastPlayerChoiceRequest.class);
+            return request.getChoice();
         }
-        return -1;
     }
 
     public static int getClientChoiceFromGUI(Player player, int type) {
@@ -201,20 +190,9 @@ public class IOService {
             return choice;
         }
         else {
-            do {
-                BroadcastPlayerChoiceRequest[] packets = client.getPlayerChoiceObjects();
-                if (packets.length > 1) {
-                    LOGGER.warning("Fehler: Mehr als ein choice-Packet registriert!");
-                    return -1;
-                }
-                else if (packets.length == 1) {
-                    int retVal = packets[0].getChoice();
-                    client.clearPlayerChoiceObjects();
-                    return retVal;
-                }
-            } while (Game.getIS_RUNNING().get());
+            BroadcastPlayerChoiceRequest request = (BroadcastPlayerChoiceRequest) client.waitForObjectOfClass(BroadcastPlayerChoiceRequest.class);
+            return request.getChoice();
         }
-        return -1;
     }
 
     public static void sleep(int millis) {

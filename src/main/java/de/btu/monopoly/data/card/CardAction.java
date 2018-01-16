@@ -12,7 +12,7 @@ public enum CardAction {
     MOVE_PLAYER (1),
     PAY_MONEY (1),
     SET_POSITION (1),
-    RENOVATE (2),
+    RENOVATE (1),
     NEXT_SUPPLY (0),
     BIRTHDAY (1),
     PAY_MONEY_ALL (1);

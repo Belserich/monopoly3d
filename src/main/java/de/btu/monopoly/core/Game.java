@@ -6,7 +6,10 @@ import de.btu.monopoly.core.mechanics.TradeOffer;
 import de.btu.monopoly.core.service.AuctionService;
 import de.btu.monopoly.core.service.FieldService;
 import de.btu.monopoly.core.service.PlayerService;
+import de.btu.monopoly.core.service.TradeService;
 import de.btu.monopoly.data.card.Card;
+import de.btu.monopoly.data.card.CardAction;
+import de.btu.monopoly.data.card.CardManager;
 import de.btu.monopoly.data.card.CardStack;
 import de.btu.monopoly.data.field.*;
 import de.btu.monopoly.data.parser.CardStackParser;
@@ -16,25 +19,32 @@ import de.btu.monopoly.input.IOService;
 import de.btu.monopoly.input.InputHandler;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.networkClasses.PlayerTradeRequest;
+import de.btu.monopoly.net.networkClasses.PlayerTradeResponse;
 import de.btu.monopoly.ui.Logger.TextAreaHandler;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.IntStream;
-import javax.xml.parsers.ParserConfigurationException;
-import org.xml.sax.SAXException;
+import java.util.stream.Collectors;
 
 /**
  * @author Christian Prinz
  */
 public class Game {
 
-    private static AtomicBoolean IS_RUNNING = new AtomicBoolean(false);
-
     private static final Logger LOGGER = Logger.getLogger(Game.class.getCanonicalName());
-
+    
+    /**
+     * Spielclient
+     */
+    private final GameClient client;
+    
     /**
      * Spielbrett
      */
@@ -44,26 +54,27 @@ public class Game {
      * Spieler (Zuschauer und aktive Spieler)
      */
     private final Player[] players;
-
-    private final GameClient client;
-
-    private static long SEED;
+    
+    /**
+     * Die Zufallsinstanz für sämtliche zufällige Spielereignisse
+     */
+    private final Random random;
 
     /**
      * Die fachliche Komponente des Spiels als Einheit, bestehend aus einem
      * Spielbrett, den Spielern sowie Zuschauern.
      *
-     * @param players Spieler
      * @param client GameClient
+     * @param players Spieler
      * @param seed RandomSeed
-     *
      */
-    public Game(Player[] players, GameClient client, long seed) {
-        this.players = players;
+    public Game(GameClient client, Player[] players, long seed) {
+    
         this.client = client;
-        this.SEED = seed;
+        this.players = players;
+        random = new Random(seed);
+        
         IOService.setClient(client);
-        System.out.println(GlobalSettings.isRunInConsole());
         if (!GlobalSettings.isRunAsTest() && !GlobalSettings.isRunInConsole()) {
             TextAreaHandler logHandler = new TextAreaHandler();
             LOGGER.addHandler(logHandler);
@@ -71,17 +82,19 @@ public class Game {
     }
 
     public void init() {
-        LOGGER.log(Level.INFO, "Spiel wird initialisiert.");
+        
+        LOGGER.info("Spiel wird initialisiert.");
 
         try {
             CardStack stack = CardStackParser.parse("/data/card_data.xml");
-            LOGGER.log(Level.FINEST, stack.toString());
+            stack.shuffle(random);
+            LOGGER.finest(stack.toString());
             GameBoardParser.setCardLoadout0(stack);
             GameBoardParser.setCardLoadout1(stack);
             board = GameBoardParser.parse("/data/field_data.xml");
             AuctionService.initAuction(players, client);
         } catch (IOException | SAXException | ParserConfigurationException ex) {
-            LOGGER.log(Level.WARNING, "Fehler beim initialisieren des Boards / der Karten.", ex);
+            LOGGER.warning(String.format("Fehler beim initialisieren des Boards / der Karten.", ex));
         }
 
         for (Player player : players) {
@@ -89,7 +102,6 @@ public class Game {
         }
 
         System.err.println("-------------------------");
-        getIS_RUNNING().set(true);
     }
 
     public void start() throws InterruptedException {
@@ -167,7 +179,7 @@ public class Game {
     }
 
     public void processJailRollOption(Player player) {
-        int[] result = PlayerService.roll(player);
+        int[] result = PlayerService.roll(random);
         if (result[0] == result[1]) {
             PlayerService.freeFromJail(player);
         }
@@ -206,7 +218,7 @@ public class Game {
 
         LOGGER.info(String.format("%s ist dran mit würfeln.", player.getName()));
         IOService.sleep(2000);
-        rollResult = PlayerService.roll(player);
+        rollResult = PlayerService.roll(random);
         doubletCount += (rollResult[0] == rollResult[1]) ? 1 : 0;
 
         if (doubletCount >= 3) {
@@ -220,38 +232,51 @@ public class Game {
     }
 
     public void fieldPhase(Player player, int[] rollResult) {
-        GameBoard.FieldType type = GameBoard.FIELD_STRUCTURE[player.getPosition()];
-        switch (type) {
-            case TAX: // Steuerfeld
-                TaxField taxField = (TaxField) board.getFields()[player.getPosition()];
-                LOGGER.fine(String.format("%s steht auf einem Steuer-Zahlen-Feld.", player.getName()));
-                FieldService.payTax(player, taxField);
-                break;
-
-            case CARD: // Kartenfeld
-                CardField cardField = (CardField) board.getFields()[player.getPosition()];
-                LOGGER.fine(String.format("%s steht auf einem Kartenfeld (%s).", player.getName(), cardField.getName()));
-                //board.getCardManager().manageCardAction(player, cardField.nextCard());
-                break;
-
-            case GO_JAIL: // "Gehen Sie Ins Gefaengnis"-Feld
-                LOGGER.info(String.format("%s muss ins Gefaengnis!", player.getName()));
-                FieldService.toJail(player);
-                break;
-
-            case CORNER: // Eckfeld
-                LOGGER.fine(String.format("%s steht auf einem Eckfeld.", player.getName()));
-                break;
-
-            case GO: // "LOS"-Feld
-                LOGGER.fine(String.format("%s steht auf LOS.", player.getName()));
-                break;
-
-            default:
-                PropertyField prop = (PropertyField) board.getFields()[player.getPosition()];
-                processPlayerOnPropertyField(player, prop, rollResult);
-                break;
+        
+        boolean repeatPhase;
+        do {
+            repeatPhase = false;
+            switch (GameBoard.FIELD_STRUCTURE[player.getPosition()]) {
+                
+                case TAX: // Steuerfeld
+                    TaxField taxField = (TaxField) board.getFields()[player.getPosition()];
+                    LOGGER.fine(String.format("%s steht auf einem Steuer-Zahlen-Feld.", player.getName()));
+                    FieldService.payTax(player, taxField);
+                    break;
+        
+                case CARD: // Kartenfeld
+                    CardField cardField = (CardField) board.getFields()[player.getPosition()];
+                    Card nextCard = cardField.nextCard();
+                    LOGGER.fine(String.format("%s steht auf einem Kartenfeld (%s).", player.getName(), cardField.getName()));
+                    board.getCardManager().manageCardActions(player, nextCard);
+                    
+                    if (nextCard.getActions().contains(CardAction.SET_POSITION)
+                            || nextCard.getActions().contains(CardAction.MOVE_PLAYER)
+                            || nextCard.getActions().contains(CardAction.NEXT_SUPPLY)) {
+                        repeatPhase = true;
+                    }
+                    break;
+        
+                case GO_JAIL: // "Gehen Sie Ins Gefaengnis"-Feld
+                    LOGGER.info(String.format("%s muss ins Gefaengnis!", player.getName()));
+                    FieldService.toJail(player);
+                    break;
+        
+                case CORNER: // Eckfeld
+                    LOGGER.fine(String.format("%s steht auf einem Eckfeld.", player.getName()));
+                    break;
+        
+                case GO: // "LOS"-Feld
+                    LOGGER.fine(String.format("%s steht auf LOS.", player.getName()));
+                    break;
+        
+                default:
+                    PropertyField prop = (PropertyField) board.getFields()[player.getPosition()];
+                    processPlayerOnPropertyField(player, prop, rollResult);
+                    break;
+            }
         }
+        while (repeatPhase);
     }
 
     private void processPlayerOnPropertyField(Player player, PropertyField prop, int[] rollResult) {
@@ -274,7 +299,7 @@ public class Game {
     }
 
     private void processBuyPropertyFieldOption(Player player, PropertyField prop) {
-        int choice = IOService.buyPropertyChoice(player, prop);
+        int choice = IOService.buyPropertyChoice(player, prop, random);
 
         switch (choice) {
             case 1: // Kaufen
@@ -311,50 +336,56 @@ public class Game {
                 processPlayerTradeOption(player);
             }
             else if (choice > 1 && choice < 6) {
-                Field[] ownedFields = board.getFieldManager().getOwnedPropertyFields(player).toArray(Field[]::new);
-                Field currField = board.getFields()[InputHandler.askForField(player, ownedFields) - 1]; // Wahl der Strasse
-
-                if (currField instanceof PropertyField) {
-                    PropertyField property = (PropertyField) currField;
-                    switch (choice) {
-                        case 2: // Haus kaufen
-                            if (!(currField instanceof StreetField)) {
-                                LOGGER.info("Gewähltes Feld ist keine Straße!");
-                                break;
-                            }
-                            StreetField streetField = (StreetField) property;
-                            board.getFieldManager().buyHouse(streetField);
+                
+                int[] ownedFieldIds = board.getFieldManager().getOwnedPropertyFieldIds(player);
+                String[] fieldNames = Arrays.stream(ownedFieldIds)
+                        .mapToObj(id -> board.getFieldManager().getField(id).getName())
+                        .toArray(String[]::new);
+                int chosenFieldId = ownedFieldIds[InputHandler.askForField(player, fieldNames) - 1];
+                Field currField = board.getFieldManager().getField(chosenFieldId); // Wahl der Strasse
+    
+                PropertyField property = (PropertyField) currField;
+                switch (choice) {
+                    case 2: // Haus kaufen
+                        if (!(currField instanceof StreetField)) {
+                            LOGGER.info("Gewähltes Feld ist keine Straße!");
                             break;
-
-                        case 3: //Haus verkaufen
-                            if (!(currField instanceof StreetField)) {
-                                LOGGER.info("Gewähltes Feld ist keine Straße!");
-                                break;
-                            }
-                            streetField = (StreetField) property;
-                            board.getFieldManager().sellHouse(streetField);
+                        }
+                        StreetField streetField = (StreetField) property;
+                        board.getFieldManager().buyHouse(streetField);
+                        break;
+        
+                    case 3: //Haus verkaufen
+                        if (!(currField instanceof StreetField)) {
+                            LOGGER.info("Gewähltes Feld ist keine Straße!");
                             break;
-
-                        case 4: // Hypothek aufnehmen
-                            board.getFieldManager().takeMortgage(property);
-                            break;
-
-                        case 5: // Hypothek zurückzahlen
-                            board.getFieldManager().payMortgage(property);
-                            break;
-                    }
+                        }
+                        streetField = (StreetField) property;
+                        board.getFieldManager().sellHouse(streetField);
+                        break;
+        
+                    case 4: // Hypothek aufnehmen
+                        board.getFieldManager().takeMortgage(property);
+                        break;
+        
+                    case 5: // Hypothek zurückzahlen
+                        board.getFieldManager().payMortgage(property);
+                        break;
                 }
             }
-        } while (choice != 1);
+        }
+        while (choice != 1);
     }
 
     private void processPlayerTradeOption(Player player) {
+        
+        PlayerTradeResponse response = null;
+        
         if (isChoiceFromThisClient(player)) {
+            
             PlayerTradeRequest request = new PlayerTradeRequest();
             Trade trade = new Trade();
-
-            trade.setSupply(createTradeOfferFor(player));
-
+    
             List<Player> activePlayers = board.getActivePlayers();
             StringBuilder builder = new StringBuilder("Waehle einen Spieler:\n");
             for (int i = 0; i < activePlayers.size(); i++) {
@@ -365,65 +396,148 @@ public class Game {
             }
             LOGGER.info(builder.toString());
             Player otherPlayer = activePlayers.get(InputHandler.getUserInput(activePlayers.size()) - 1);
+            
+            trade.setSupply(createTradeOfferFor(player));
             trade.setDemand(createTradeOfferFor(otherPlayer));
-
             request.setTrade(trade);
-            client.sendTCP(new PlayerTradeRequest());
+            
+            LOGGER.info(String.format("Zusammenfassung:%n%n%s%nHandelsanfrage wirklich absenden?%n\t[1] - Ja%n\t[2] - Nein",
+                    trade.toString(board)));
+            
+            request.setDenied(InputHandler.getUserInput(2) == 2);
+            
+            client.sendTCP(request);
+            
+            response = (PlayerTradeResponse) client.waitForObjectOfClass(PlayerTradeResponse.class);
+        }
+        else {
+            
+            PlayerTradeRequest request = (PlayerTradeRequest) client.waitForObjectOfClass(PlayerTradeRequest.class);
+            
+            if (request.isDenied()) return;
+            
+            Trade trade = request.getTrade();
+            Player receipt = board.getPlayer(request.getTrade().getDemand().getPlayerId());
+            Player thisPlayer = client.getPlayerOnClient();
+            
+            if (receipt == thisPlayer) {
+                
+                LOGGER.info(String.format("Spieler %s hat dir eine Handelsanfrage gemacht:%n%n%s%n\t[1] - annehmen%n\t[2] - ablehnen",
+                        board.getPlayer(trade.getSupply().getPlayerId()).getName(), trade.toString(board)));
+                int choice = IOService.getClientChoice(receipt, 2);
+    
+                response = new PlayerTradeResponse();
+                response.setRequest(request);
+                response.setAccepted(choice == 1);
+                
+                client.sendTCP(response);
+            }
+            else response = (PlayerTradeResponse) client.waitForObjectOfClass(PlayerTradeResponse.class);
+        }
+    
+        if (response.isAccepted()) {
+            LOGGER.info("<<< HANDEL ANGENOMMEN >>>");
+            TradeService.completeTrade(response.getRequest().getTrade(), board);
+        }
+        else {
+            LOGGER.info("<<< HANDEL ABGELEHNT >>>");
         }
     }
 
     private TradeOffer createTradeOfferFor(Player player) {
+        
         TradeOffer retObj = new TradeOffer();
-
-        IntStream.Builder propertyIdStream = IntStream.builder();
-        IntStream.Builder cardIdStream = IntStream.builder();
-        int money = 0;
-
-        StringBuilder builder;
-        int i, choice;
-        boolean runOnce = false;
+    
+        List<Integer> ownedIds;
+        ArrayList<Integer> chosenIds = new ArrayList<>();
+        
+        boolean runOnce = false,
+                doneChoosing = false;
 
         retObj.setPlayerId(player.getId());
-
-        PropertyField[] ownedProps = board.getFieldManager().getOwnedPropertyFields(player).toArray(PropertyField[]::new);
-        do {
-            builder = new StringBuilder(String.format("Welches Gebaeude bietet Spieler %s%s?%n", player.getName(), runOnce ? " noch" : ""));
-            for (i = 0; i < ownedProps.length; i++) {
-                builder.append(String.format("[%d] - %s%n", i + 1, ownedProps[i].getName()));
-            }
-            builder.append(String.format("[%d] - Keins%n", i + 1));
-            LOGGER.info(builder.toString());
-            choice = InputHandler.getUserInput(ownedProps.length + 1) - 1;
-            propertyIdStream.accept(choice);
+    
+        ownedIds = Arrays.stream(board.getFieldManager().getOwnedPropertyFieldIds(player))
+                .boxed().collect(Collectors.toList());
+        while (!doneChoosing && (ownedIds.size() - chosenIds.size()) > 0) {
+            printPropertyOffer(player, ownedIds, runOnce);
             runOnce = true;
-        } while (choice != ownedProps.length);
-
+            doneChoosing = handleOfferChoice(ownedIds, chosenIds);
+        }
+        
+        retObj.setPropertyIds(chosenIds.stream().mapToInt(i -> i).toArray());
+    
+        doneChoosing = false;
         runOnce = false;
-        Card[] tradeableCards = board.getCardManager().getTradeableCards(player)
-                .map(t -> (Card) t)
-                .toArray(Card[]::new);
-        do {
-            builder = new StringBuilder(String.format("Welche Karte bietet Spieler %s%s?%n", player.getName(), runOnce ? " noch" : ""));
-            for (i = 0; i < tradeableCards.length; i++) {
-                builder.append(String.format("[%d] - %s%n", i + 1, tradeableCards[i].getName()));
-            }
-            builder.append(String.format("[%d] - Keine%n", i + 1));
-            LOGGER.info(builder.toString());
-            choice = InputHandler.getUserInput(tradeableCards.length + 1) - 1;
-            cardIdStream.accept(choice);
+        chosenIds.clear();
+        
+        ownedIds = Arrays.stream(board.getCardManager().getTradeableCardIds(player))
+                .boxed().collect(Collectors.toList());
+        while (!doneChoosing && (ownedIds.size() - chosenIds.size()) > 0) {
+            printCardOffer(player, ownedIds, runOnce);
             runOnce = true;
-        } while (choice != tradeableCards.length);
+            doneChoosing = handleOfferChoice(ownedIds, chosenIds);
+        }
+        
+        retObj.setCardIds(chosenIds.stream().mapToInt(i -> i).toArray());
 
         if (player.getBank().isLiquid()) {
-            LOGGER.info(String.format("Wieviel Geld bietet Spieler %s?%n", player.getName()));
-            money = InputHandler.getUserInput(player.getMoney());
+            
+            LOGGER.info(String.format("Soll %s Geld bieten?%n\t[1] - Ja%n\t[2] - Nein", player.getName()));
+            if (InputHandler.getUserInput(2) == 1) {
+                LOGGER.info(String.format("Wieviel Geld bietet Spieler %s?%n", player.getName()));
+                retObj.setMoney(InputHandler.getUserInput(player.getMoney()));
+            }
         }
 
-        retObj.setPropertyIds(propertyIdStream.build().toArray());
-        retObj.setCardIds(cardIdStream.build().toArray());
-        retObj.setMoney(money);
-
         return retObj;
+    }
+    
+    public boolean handleOfferChoice(List<Integer> ownedIds, List<Integer> chosenIds) {
+        
+        int choice, chosenId;
+        
+        choice = InputHandler.getUserInput(ownedIds.size() + 1) - 1;
+        if (choice != ownedIds.size()) {
+            chosenId = ownedIds.get(choice);
+            chosenIds.add(chosenId);
+            ownedIds.remove(ownedIds.indexOf(chosenId));
+            return false;
+        }
+        else return true;
+    }
+    
+    public void printPropertyOffer(Player player, List<Integer> ownedPropIds, boolean runOnce) {
+        
+        FieldManager fm = board.getFieldManager();
+    
+        StringBuilder builder;
+        int id;
+        
+        builder = new StringBuilder(String.format("Welches Gebaeude bietet Spieler %s%s?%n",
+                player.getName(), runOnce ? " noch" : ""));
+        for (id = 0; id < ownedPropIds.size(); id++) {
+            builder.append(String.format("[%d] - %s%n", id + 1, fm.getField(ownedPropIds.get(id)).getName()));
+        }
+    
+        builder.append(String.format("[%d] - Keins%n", id + 1));
+        LOGGER.info(builder.toString());
+    }
+    
+    public void printCardOffer(Player player, List<Integer> ownedCardIds, boolean runOnce) {
+        
+        CardManager cm = board.getCardManager();
+    
+        StringBuilder builder;
+        int id;
+        
+        builder = new StringBuilder(String.format("Welche Karte bietet Spieler %s%s?%n",
+                player.getName(), runOnce ? " noch" : ""));
+        for (id = 0; id < ownedCardIds.size(); id++) {
+            builder.append(String.format("[%d] - %s%n", id + 1, cm.getCard(player, ownedCardIds.get(id)).getName()));
+        }
+        
+        builder.append(String.format("[%d] - Keine%n", id + 1));
+        LOGGER.info(builder.toString());
     }
 
     public void betPhase(PropertyField property) {
@@ -436,26 +550,5 @@ public class Game {
 
     public Player[] getPlayers() {
         return players;
-    }
-
-    /**
-     * @return the SEED
-     */
-    public static long getSEED() {
-        return SEED;
-    }
-
-    /**
-     * @return the IS_RUNNING
-     */
-    public static AtomicBoolean getIS_RUNNING() {
-        return IS_RUNNING;
-    }
-
-    /**
-     * @param aIS_RUNNING the IS_RUNNING to set
-     */
-    public static void setIS_RUNNING(AtomicBoolean aIS_RUNNING) {
-        IS_RUNNING = aIS_RUNNING;
     }
 }

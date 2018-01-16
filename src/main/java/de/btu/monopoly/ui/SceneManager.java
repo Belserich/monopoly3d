@@ -37,6 +37,8 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+
 /**
  *
  * @author augat
@@ -321,7 +323,7 @@ public class SceneManager extends Stage {
         return -1;
     }
 
-    public static int askForFieldPopup(Player player, Field[] fields) {
+    public static int askForFieldPopup(Player player, String[] fieldNames) {
 
         GridPane gridPane = new GridPane();
 
@@ -349,8 +351,8 @@ public class SceneManager extends Stage {
         button.setBackground(new Background(new BackgroundFill(Color.web("#e1f5fe"), CornerRadii.EMPTY, Insets.EMPTY)));
         label.setFont(Font.font("Tahoma", 14));
 
-        for (Field field : fields) {
-            fieldBox.getItems().add(field.getName());
+        for (String name : fieldNames) {
+            fieldBox.getItems().add(name);
         }
 
         fieldBox.getSelectionModel().selectFirst();
@@ -370,7 +372,7 @@ public class SceneManager extends Stage {
         for (Field field : Lobby.getPlayerClient().getGame().getBoard().getFieldManager().getFields()) {
 
             id++;
-            if (field == fields[fieldBox.getSelectionModel().getSelectedIndex()]) {
+            if (field.getName() == fieldNames[fieldBox.getSelectionModel().getSelectedIndex()]) {
                 return id;
 
             }

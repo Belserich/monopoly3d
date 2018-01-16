@@ -9,7 +9,7 @@ import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.player.Player;
 
 import java.util.logging.Logger;
-import java.util.stream.Stream;
+import java.util.stream.IntStream;
 
 /**
  * @author Maximilian Bels (belsmaxi@b-tu.de)
@@ -24,8 +24,11 @@ public class CardManager {
         this.board = board;
     }
     
-    public void manageCardAction(Player player, Card card) {
+    public void manageCardActions(Player player, Card card) {
+        
+        PropertyField prop;
         LOGGER.info(String.format("%s hat eine Karte gezogen: %s", player.getName(), card));
+        
         for (CardAction action : card.getActions()) {
             int args[] = card.getArgs();
             action.ensureArgs(args);
@@ -72,13 +75,13 @@ public class CardManager {
         
                 case NEXT_SUPPLY:
                     LOGGER.info("Der Spieler rückt bis zum nächsten Werk vor.");
-                    board.getFieldManager().movePlayer(player, GameBoard.FieldType.SUPPLY);
+                    prop = (PropertyField) board.getFieldManager().movePlayer(player, GameBoard.FieldType.SUPPLY);
+                    FieldService.payRent(player, prop, null, 1);
                     break;
         
                 case NEXT_STATION_RENT_AMP:
                     LOGGER.info("Der Spieler rückt bis zum nächsten Bahnhof vor. Die Miete verdoppelt sich.");
-                    FieldManager fm = board.getFieldManager();
-                    PropertyField prop = (PropertyField) fm.movePlayer(player, GameBoard.FieldType.STATION);
+                    prop = (PropertyField) board.getFieldManager().movePlayer(player, GameBoard.FieldType.STATION);
                     FieldService.payRent(player, prop, null, args[0]);
                     break;
         
@@ -113,19 +116,29 @@ public class CardManager {
         else return false;
     }
     
-    public Stream<Tradeable> getTradeableCards(Player player) {
-        return player.getCardStack().cards.stream()
-                .filter(c -> c instanceof Tradeable)
-                .map(c -> (Tradeable) c);
+    public int[] getTradeableCardIds(Player player) {
+        CardStack stack = player.getCardStack();
+        IntStream.Builder builder = IntStream.builder();
+        for (int id = 0; id < stack.cards.size(); id++) {
+            if (stack.cards.get(id) instanceof Tradeable) {
+                builder.accept(id);
+            }
+        }
+        return builder.build().toArray();
     }
     
-    private void processRenovateAction(Player player, int[] args) {
+    public Card getCard(Player player, int id) {
+        CardStack stack = player.getCardStack();
+        return stack.cards.get(id);
+    }
+    
+    public void processRenovateAction(Player player, int[] args) {
         FieldManager fm = board.getFieldManager();
         int[] counts = fm.getHouseAndHotelCount(player);
         
-        LOGGER.info(String.format("Rechnung: %d (Häuser) * %d und %d (Hotels) * %d", counts[0], args[0], counts[1], args[1]));
+        LOGGER.info(String.format("Rechnung: %d (Häuser) * %d und %d (Hotels) * %d", counts[0], args[0], counts[1], args[0] * 5));
         PlayerService.takeMoneyUnchecked(player, counts[0] * args[0]);
-        PlayerService.takeMoneyUnchecked(player, counts[1] * args[1]);
+        PlayerService.takeMoneyUnchecked(player, counts[1] * args[0] * 5);
     }
     
     private void putBackOnStack(Card card) {

@@ -9,34 +9,59 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.FrameworkMessage;
 import com.esotericsoftware.kryonet.Listener;
 import de.btu.monopoly.core.service.NetworkService;
-import de.btu.monopoly.net.networkClasses.BroadcastPlayerChoiceRequest;
-import de.btu.monopoly.net.networkClasses.PlayerTradeRequest;
+
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Optional;
 
 /**
  *
  * @author Christian Prinz
  */
 public class ClientListener extends Listener {
-
-    private UiInteractionThread thread;
-
-    public ClientListener(UiInteractionThread thread) {
-        this.thread = thread;
+    
+    private LinkedList<Object> receivedObjects = new LinkedList<>();
+    
+    public ClientListener() {
+        receivedObjects = new LinkedList<>();
     }
 
-    public synchronized void received(Connection connection, Object object) {
+    public void received(Connection connection, Object object) {
         super.received(connection, object);
 
         if (!(object instanceof FrameworkMessage)) {
-
-            if (object instanceof BroadcastPlayerChoiceRequest) {
-                NetworkService.logServerReceiveMessage(object);
-                thread.receivedPlayerChoiceObjects.add((BroadcastPlayerChoiceRequest) object);
-            }
-            else if (object instanceof PlayerTradeRequest) {
-                NetworkService.logServerReceiveMessage(object);
-                thread.tradeRequestObjects.add((PlayerTradeRequest) object);
+    
+            NetworkService.logServerReceiveMessage(object);
+            synchronized (receivedObjects) {
+                receivedObjects.add(object);
             }
         }
+    }
+    
+    public Optional<Object> waitForObjectOfClass(Class<?> clazz) {
+        
+        do {
+            synchronized (receivedObjects) {
+                Iterator it = receivedObjects.iterator();
+                while (it.hasNext()) {
+                    Object obj = it.next();
+                    if (obj.getClass() == clazz) {
+                        it.remove();
+                        return Optional.of(obj);
+                    }
+                }
+            }
+            
+            try {
+                Thread.sleep(200);
+            }
+            catch (InterruptedException ex) {
+                ex.printStackTrace();
+                Thread.currentThread().interrupt();
+            }
+        }
+        while (!Thread.currentThread().isInterrupted());
+        
+        return Optional.empty();
     }
 }

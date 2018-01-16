@@ -68,7 +68,7 @@ public class Card {
     /**
      * @return Typen der Karte
      */
-    List<CardAction> getActions() {
+    public List<CardAction> getActions() {
         return actions;
     }
 
