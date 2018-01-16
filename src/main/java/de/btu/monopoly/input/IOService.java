@@ -39,7 +39,7 @@ public class IOService {
 
     public static int jailChoice(Player player) {
         int choice = -1;
-        switch (player.getKiLevel()) {
+        switch (player.getAiLevel()) {
             case 0:
                 if (GlobalSettings.RUN_IN_CONSOLE) {
                     choice = getClientChoice(player, 3);
@@ -65,7 +65,7 @@ public class IOService {
 
     public static int buyPropertyChoice(Player player, PropertyField prop, Random random) {
         int choice = -1;
-        switch (player.getKiLevel()) {
+        switch (player.getAiLevel()) {
             case 0:
 
                 if (GlobalSettings.RUN_IN_CONSOLE) {
@@ -94,7 +94,7 @@ public class IOService {
     // wird noch zu void, wenn GUI fertig
     public static int actionSequence(Player player, GameBoard board) {
         int choice = 1; //kommt weg
-        switch (player.getKiLevel()) {
+        switch (player.getAiLevel()) {
             case 0:
                 if (GlobalSettings.RUN_IN_CONSOLE) {
                     choice = getClientChoice(player, 6);
@@ -125,10 +125,10 @@ public class IOService {
         Player rndKi = kiPlayers[0];
 
         for (Player ki : kiPlayers) {
-            rndKi = (ki.getKiLevel() > 0) ? ki : rndKi;
+            rndKi = (ki.getAiLevel() > 0) ? ki : rndKi;
         }
         LOGGER.log(Level.FINE, "{0} (KI) nimmt an Auktion teil.", rndKi.getName());
-        switch (rndKi.getKiLevel()) {
+        switch (rndKi.getAiLevel()) {
             case 0:
                 break;
             case 1:

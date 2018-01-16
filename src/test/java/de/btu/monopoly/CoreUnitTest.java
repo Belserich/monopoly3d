@@ -34,7 +34,7 @@ public class CoreUnitTest {
 
         players = new Player[4];
         for (int i = 0; i < 4; i++) {
-            Player player = new Player("Mathias " + (i + 1), i, 1500);
+            Player player = new Player(board, "Mathias " + (i + 1), i, 1500);
             players[i] = player;
         }
         client = new GameClient(59687, 5000);

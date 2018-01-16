@@ -1,11 +1,17 @@
 package de.btu.monopoly.data.player;
 
+import de.btu.monopoly.core.GameBoard;
 import de.btu.monopoly.data.card.CardStack;
 
 /**
  * @author Maximilian Bels (belsmaxi@b-tu.de)
  */
 public class Player {
+    
+    /**
+     * zugehöriges Spielbrett
+     */
+    private final GameBoard board;
 
     /**
      * Spieler-ID
@@ -50,19 +56,21 @@ public class Player {
     /**
      * der Schwierigkeitsgrad der KI (0 = keine KI ; 1 = leicht ; 2 = mittel ; 3 = schwer)
      */
-    private int kiLevel;
+    private int aiLevel;
 
     /**
      * Erstellt eine neue Spielerinstanz.
      *
+     * @param board zugehöriges Spielbrett
      * @param name Spielername
      * @param id Spieler-ID
      * @param startMoney Kapital des Spielers
      */
-    public Player(String name, int id, int startMoney) {
+    public Player(GameBoard board, String name, int id, int startMoney) {
+        this.board = board;
         this.id = id;
         this.bank = new Bank(startMoney);
-        this.kiLevel = 0;
+        this.aiLevel = 0;
         this.name = name;
         position = 0;
 
@@ -71,7 +79,14 @@ public class Player {
         isInJail = false;
         daysInJail = 0;
     }
-
+    
+    /**
+     * @return Spielbrett
+     */
+    public GameBoard getBoard() {
+        return board;
+    }
+    
     /**
      * @return Spielername
      */
@@ -179,18 +194,18 @@ public class Player {
     /**
      * ob der Spieler eine KI ist
      *
-     * @return the kiLevel
+     * @return the aiLevel
      */
-    public int getKiLevel() {
-        return kiLevel;
+    public int getAiLevel() {
+        return aiLevel;
     }
 
     /**
      * ob der Spieler eine KI ist
      *
-     * @param kiLevel the kiLevel to set
+     * @param aiLevel the aiLevel to set
      */
-    public void setKiLevel(int kiLevel) {
-        this.kiLevel = kiLevel;
+    public void setAiLevel(int aiLevel) {
+        this.aiLevel = aiLevel;
     }
 }
