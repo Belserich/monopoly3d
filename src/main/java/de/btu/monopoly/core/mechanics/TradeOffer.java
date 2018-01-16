@@ -12,9 +12,10 @@ import de.btu.monopoly.data.player.Player;
  */
 public class TradeOffer {
     
-    private int playerId;
     private int[] propertyIds;
     private int[] cardIds;
+    
+    private int playerId;
     private int money;
     
     public int getPlayerId() {
