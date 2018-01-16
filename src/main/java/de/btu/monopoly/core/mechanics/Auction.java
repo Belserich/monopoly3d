@@ -12,11 +12,14 @@ import de.btu.monopoly.net.client.GameClient;
 public class Auction {
 
     private Player[] players;
-    private int[][] aucPlayers;
-    private PropertyField property;
     private Player winner;
+    
+    private PropertyField property;
+    
+    private int[][] aucPlayers;
     private int highestBidder;
     private int highestBid;
+    
     private GameClient client;
     private String playerName;
 
