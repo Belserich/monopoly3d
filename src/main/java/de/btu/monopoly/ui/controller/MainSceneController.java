@@ -10,6 +10,7 @@ import com.jfoenix.controls.JFXTextArea;
 import de.btu.monopoly.data.field.Field;
 import de.btu.monopoly.data.field.FieldManager;
 import de.btu.monopoly.data.field.PropertyField;
+import de.btu.monopoly.data.field.StreetField;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.input.IOService;
 import de.btu.monopoly.menu.Lobby;
@@ -18,6 +19,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
+import javafx.animation.FadeTransition;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
@@ -36,13 +38,16 @@ import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
+import javafx.util.Duration;
 
 /**
  *
@@ -67,6 +72,8 @@ public class MainSceneController implements Initializable {
     @FXML
     private Label geld5;
 
+    @FXML
+    private GridPane mainGrid;
     @FXML
     private GridPane grid;
     @FXML
@@ -394,6 +401,12 @@ public class MainSceneController implements Initializable {
         // User aus Lobby holen und Farben setzen
         client = Lobby.getPlayerClient();
 
+        // Animation
+        mainGrid.setOpacity(0);
+        FadeTransition fadeGrid = new FadeTransition(Duration.millis(800), mainGrid);
+        fadeGrid.setFromValue(0);
+        fadeGrid.setToValue(1);
+        fadeGrid.playFromStart();
     }
 
     /**
@@ -406,14 +419,17 @@ public class MainSceneController implements Initializable {
                 if (Lobby.getUsers() != null) {
                     for (int i = 0; i < Lobby.getUsers().length; i++) {
                         if (Lobby.getPlayerClient().getPlayerOnClient().getName().equals(Lobby.getUsers()[i][1])) {
+                            FadeTransition fadeButton = new FadeTransition(Duration.millis(500), player0Button);
+                            fadeButton.setFromValue(0);
+                            fadeButton.setToValue(1);
+                            fadeButton.playFromStart();
+                            player0.setVisible(true);
                             player0Button.setText(Lobby.getUsers()[i][1]);
                             player0Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[i][4]), CornerRadii.EMPTY, Insets.EMPTY)));
                             if (Color.web(Lobby.getUsers()[i][4]).getBrightness() <= 0.8) {
                                 player0Button.setTextFill(Color.WHITE);
                             }
                             player0.setFill(Color.web(Lobby.getUsers()[0][4]));
-                            player0Button.setVisible(true);
-                            player0.setVisible(true);
                             player0ButtonID = i;
                             player0Button.setOnAction((event) -> {
                                 playerButtonPopup(player0ButtonID);
@@ -423,14 +439,18 @@ public class MainSceneController implements Initializable {
 
                             if (Lobby.getUsers().length >= 2) {
                                 if ("frei".equals(player1Button.getText())) {
+                                    FadeTransition fadeButton = new FadeTransition(Duration.millis(500), player1Button);
+                                    fadeButton.setFromValue(0);
+                                    fadeButton.setToValue(1);
+                                    fadeButton.playFromStart();
+                                    player1.setVisible(true);
                                     player1Button.setText(Lobby.getUsers()[i][1]);
                                     player1Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[i][4]), CornerRadii.EMPTY, Insets.EMPTY)));
                                     if (Color.web(Lobby.getUsers()[i][4]).getBrightness() <= 0.8) {
                                         player1Button.setTextFill(Color.WHITE);
                                     }
                                     player1.setFill(Color.web(Lobby.getUsers()[1][4]));
-                                    player1Button.setVisible(true);
-                                    player1.setVisible(true);
+
                                     player1ButtonID = i;
                                     player1Button.setOnAction((event) -> {
                                         playerButtonPopup(player1ButtonID);
@@ -440,14 +460,17 @@ public class MainSceneController implements Initializable {
                             }
                             if (Lobby.getUsers().length >= 3) {
                                 if ("frei".equals(player2Button.getText())) {
+                                    FadeTransition fadeButton = new FadeTransition(Duration.millis(500), player2Button);
+                                    fadeButton.setFromValue(0);
+                                    fadeButton.setToValue(1);
+                                    fadeButton.playFromStart();
+                                    player2.setVisible(true);
                                     player2Button.setText(Lobby.getUsers()[i][1]);
                                     player2Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[i][4]), CornerRadii.EMPTY, Insets.EMPTY)));
                                     if (Color.web(Lobby.getUsers()[i][4]).getBrightness() <= 0.8) {
                                         player2Button.setTextFill(Color.WHITE);
                                     }
                                     player2.setFill(Color.web(Lobby.getUsers()[2][4]));
-                                    player2Button.setVisible(true);
-                                    player2.setVisible(true);
                                     player2ButtonID = i;
                                     player2Button.setOnAction((event) -> {
                                         playerButtonPopup(player2ButtonID);
@@ -457,14 +480,17 @@ public class MainSceneController implements Initializable {
                             }
                             if (Lobby.getUsers().length >= 4) {
                                 if ("frei".equals(player3Button.getText())) {
+                                    FadeTransition fadeButton = new FadeTransition(Duration.millis(500), player3Button);
+                                    fadeButton.setFromValue(0);
+                                    fadeButton.setToValue(1);
+                                    fadeButton.playFromStart();
+                                    player3.setVisible(true);
                                     player3Button.setText(Lobby.getUsers()[i][1]);
                                     player3Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[i][4]), CornerRadii.EMPTY, Insets.EMPTY)));
                                     if (Color.web(Lobby.getUsers()[i][4]).getBrightness() <= 0.8) {
                                         player3Button.setTextFill(Color.WHITE);
                                     }
                                     player3.setFill(Color.web(Lobby.getUsers()[3][4]));
-                                    player3Button.setVisible(true);
-                                    player3.setVisible(true);
                                     player3ButtonID = i;
                                     player3Button.setOnAction((event) -> {
                                         playerButtonPopup(player3ButtonID);
@@ -474,14 +500,17 @@ public class MainSceneController implements Initializable {
                             }
                             if (Lobby.getUsers().length >= 5) {
                                 if ("frei".equals(player4Button.getText())) {
+                                    FadeTransition fadeButton = new FadeTransition(Duration.millis(500), player4Button);
+                                    fadeButton.setFromValue(0);
+                                    fadeButton.setToValue(1);
+                                    fadeButton.playFromStart();
+                                    player4.setVisible(true);
                                     player4Button.setText(Lobby.getUsers()[i][1]);
                                     player4Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[i][4]), CornerRadii.EMPTY, Insets.EMPTY)));
                                     if (Color.web(Lobby.getUsers()[i][4]).getBrightness() <= 0.8) {
                                         player4Button.setTextFill(Color.WHITE);
                                     }
                                     player4.setFill(Color.web(Lobby.getUsers()[4][4]));
-                                    player4Button.setVisible(true);
-                                    player4.setVisible(true);
                                     player4ButtonID = i;
                                     player4Button.setOnAction((event) -> {
                                         playerButtonPopup(player4ButtonID);
@@ -491,14 +520,17 @@ public class MainSceneController implements Initializable {
                             }
                             if (Lobby.getUsers().length >= 6) {
                                 if ("frei".equals(player5Button.getText())) {
+                                    FadeTransition fadeButton = new FadeTransition(Duration.millis(500), player5Button);
+                                    fadeButton.setFromValue(0);
+                                    fadeButton.setToValue(1);
+                                    fadeButton.playFromStart();
+                                    player5.setVisible(true);
                                     player5Button.setText(Lobby.getUsers()[i][1]);
                                     player5Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[i][4]), CornerRadii.EMPTY, Insets.EMPTY)));
                                     if (Color.web(Lobby.getUsers()[i][4]).getBrightness() <= 0.8) {
                                         player5Button.setTextFill(Color.WHITE);
                                     }
                                     player5.setFill(Color.web(Lobby.getUsers()[5][4]));
-                                    player5Button.setVisible(true);
-                                    player5.setVisible(true);
                                     player5ButtonID = i;
                                     player5Button.setOnAction((event) -> {
                                         playerButtonPopup(player5ButtonID);
@@ -521,6 +553,67 @@ public class MainSceneController implements Initializable {
 
             });
         }
+
+    }
+
+    /**
+     * Erstellt auf dem entsprechenden Feld ein/mehrere Hauser TODO moegliche
+     * Bugfixes
+     */
+    public void hausAnzeigen() {
+        if (Lobby.getPlayerClient().getGame().getBoard() != null) {
+            Field[] currentField = Lobby.getPlayerClient().getGame().getBoard().getFields();
+
+            Task task = new Task() {
+                @Override
+                protected Object call() throws Exception {
+                    HBox hbox = new HBox();
+                    int hausAnzahl = 0;
+                    for (Pane field : Felder) {
+                        for (int i = 0; i < Felder.length; i++) {
+                            if (Felder[i] == field) {
+                                if (currentField[i] instanceof StreetField) {
+                                    hausAnzahl = ((StreetField) currentField[i]).getHouseCount();
+                                    if (hausAnzahl != 0) {
+                                        field.getChildren().addAll(createHaus(10, 10, hausAnzahl));
+
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    return null;
+                }
+
+            };
+            Platform.runLater(task);
+
+        }
+    }
+
+    /**
+     * Erstellt die Figur von Haus
+     *
+     * @param width
+     * @param heigth
+     * @param anzahl der Hauser
+     * @return
+     */
+    public HBox createHaus(int width, int heigth, int anzahl) {
+        HBox hbox = new HBox();
+
+        HBox haus = new HBox();
+        for (int j = 0; j < anzahl; j++) {
+            Rectangle half1 = new Rectangle(width / 2, heigth, Color.web("#82ada9"));
+            Rectangle half2 = new Rectangle(width / 2, heigth, Color.web("#b2dfdb"));
+            haus.getChildren().addAll(half1, half2);
+            haus.setStyle("-fx-effect: dropshadow(gaussian, yellowgreen, 3, 0, 0, 0);");
+            hbox.getChildren().addAll(haus);
+
+            hbox.setSpacing(5);
+        }
+        return hbox;
 
     }
 

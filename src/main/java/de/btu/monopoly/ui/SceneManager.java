@@ -57,10 +57,13 @@ public class SceneManager extends Stage {
         stage.setFullScreen(true);
         stage.setScene(scene);
         stage.show();
+
     }
 
     public static void appendText(String message) {
-        GameController.appendText(message);
+        if (GameController != null) {
+            GameController.appendText(message);
+        }
     }
 
     public static void changeScene(FXMLLoader loader) throws IOException {
@@ -108,19 +111,33 @@ public class SceneManager extends Stage {
     }
 
     public static void playerUpdate() {
-        GameController.playerInitialise();
+        if (GameController != null) {
+            GameController.playerInitialise();
+        }
     }
 
     public static void geldPlayerUpdate() {
-        GameController.geldUpdate();
+        if (GameController != null) {
+            GameController.geldUpdate();
+        }
     }
 
     public static void movePlayerUpdate() {
-        GameController.playerUpdate();
+        if (GameController != null) {
+            GameController.playerUpdate();
+        }
     }
 
     public static void propertyUpdate() {
-        GameController.propertyUpdate();
+        if (GameController != null) {
+            GameController.propertyUpdate();
+        }
+    }
+
+    public static void hausUpdate() {
+        if (GameController != null) {
+            GameController.hausAnzeigen();
+        }
     }
 
     // -----------------------------------------------------------------------
@@ -240,6 +257,7 @@ public class SceneManager extends Stage {
         GridPane gridpane = new GridPane();
         //ScrollPane scroll = new ScrollPane();
         VBox box = new VBox();
+
         gridpane.setAlignment(Pos.CENTER);
         //scroll.setCenterShape(true);
         gridpane.add(box, 0, 0);
@@ -275,6 +293,7 @@ public class SceneManager extends Stage {
         // scroll.add(label, 0, 0);
         String cssLayout = "-fx-background-color: #b9f6ca;\n"
                 + "-fx-border-color: black;\n"
+                + "-fx-effect: dropshadow(gaussian, yellowgreen, 20, 0, 0, 0);"
                 + "-fx-border-insets: 5;\n"
                 + "-fx-border-width: 1;\n"
                 + "-fx-border-style: double;\n";

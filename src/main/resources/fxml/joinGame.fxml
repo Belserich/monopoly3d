@@ -64,7 +64,7 @@
                      <font>
                         <Font size="19.0" />
                      </font></Label>
-                  <JFXButton fx:id="searchButton" minHeight="60.0" minWidth="200.0" onAction="#searchButtonAction" style="-fx-background-color: #212121;" text="Beitreten" textFill="WHITE" GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.valignment="CENTER">
+                  <JFXButton fx:id="searchButton" buttonType="RAISED" minHeight="60.0" minWidth="200.0" onAction="#searchButtonAction" style="-fx-background-color: #212121;" text="Beitreten" textFill="WHITE" GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.valignment="CENTER">
                      <font>
                         <Font size="23.0" />
                      </font></JFXButton>
@@ -73,7 +73,7 @@
                         <Font size="23.0" />
                      </font>
                   </JFXTextField>
-                  <JFXButton fx:id="backButton" minHeight="40.0" minWidth="200.0" onAction="#backButtonAction" style="-fx-background-color: #212121;" text="Zurück" textFill="WHITE" GridPane.halignment="CENTER" GridPane.rowIndex="6" GridPane.valignment="CENTER">
+                  <JFXButton fx:id="backButton" buttonType="RAISED" minHeight="40.0" minWidth="200.0" onAction="#backButtonAction" style="-fx-background-color: #212121;" text="Zurück" textFill="WHITE" GridPane.halignment="CENTER" GridPane.rowIndex="6" GridPane.valignment="CENTER">
                      <font>
                         <Font size="23.0" />
                      </font></JFXButton>
