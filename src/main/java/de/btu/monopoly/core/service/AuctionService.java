@@ -81,6 +81,7 @@ public class AuctionService extends Listener {
                         }
                         auctionRun = false;
                         SceneManager.updateAuctionPopup(auctionStillActive());
+                        sellProperty();
                     }
                     else {
                         SceneManager.updateAuctionPopup(auctionStillActive());
@@ -88,7 +89,9 @@ public class AuctionService extends Listener {
 
                 }
             }
-            sellProperty();
+            if (isRunInConsole) {
+                sellProperty();
+            }
         }
     }
 
