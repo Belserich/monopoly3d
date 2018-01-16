@@ -7,7 +7,6 @@ import de.btu.monopoly.core.service.PlayerService;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.ui.TextAreaHandler;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.logging.Logger;
@@ -23,11 +22,6 @@ public class FieldManager {
     private static final Logger LOGGER = Logger.getLogger(FieldService.class.getCanonicalName());
 
     /**
-     * Die Spielbrett-Instanz
-     */
-    private GameBoard board;
-
-    /**
      * Die Felder des Spielbretts
      */
     private final Field[] fields;
@@ -37,9 +31,8 @@ public class FieldManager {
      *
      * @param fields Feld-Array
      */
-    public FieldManager(GameBoard board, Field[] fields) {
+    public FieldManager(Field[] fields) {
 
-        this.board = board;
         this.fields = fields;
 
         Arrays.asList(fields).forEach(f -> f.fieldManager = this);
@@ -109,20 +102,6 @@ public class FieldManager {
                 .filter(f -> f instanceof PropertyField)
                 .map(f -> (PropertyField) f)
                 .filter(p -> p.getOwner() == player);
-    }
-
-    public PropertyField[] getTradeableProperties(Player player) {
-
-        ArrayList<PropertyField> tradeableProperties = new ArrayList<>();
-        int[] ownedPropertyIds = getOwnedPropertyFieldIds(player);
-
-        for (int id : ownedPropertyIds) {
-            Field f = fields[id];
-            if (f instanceof PropertyField) {
-                tradeableProperties.add((PropertyField) f);
-            }
-        }
-        return tradeableProperties.toArray(new PropertyField[0]);
     }
 
     /**
@@ -249,7 +228,7 @@ public class FieldManager {
      * @param negTolerance untere Toleranzgrenze
      * @return ob die Straße innerhalb der Toleranzgrenzen gleichmäßig bebaut wurde
      */
-    public boolean balanceCheck(StreetField street, int posTolerance, int negTolerance) {
+    private boolean balanceCheck(StreetField street, int posTolerance, int negTolerance) {
         int hc = street.getHouseCount();
         int[] neighbours = FieldService.NEIGHBOUR_IDS[getPropertyId(street)];
         for (Integer neigh : neighbours) {
@@ -303,7 +282,7 @@ public class FieldManager {
         return propertyId;
     }
 
-    public Stream<PropertyField> getOwnedNeighbours(PropertyField prop) {
+    Stream<PropertyField> getOwnedNeighbours(PropertyField prop) {
         Player owner = prop.getOwner();
         Objects.requireNonNull(owner);
 

@@ -54,7 +54,7 @@ public class GameBoard {
      * @param fields Felder des Spielbretts
      */
     public GameBoard(Field[] fields) {
-        this.fieldManager = new FieldManager(this, fields);
+        this.fieldManager = new FieldManager(fields);
         this.cardManager = new CardManager(this);
         activePlayers = new LinkedList<>();
     }
