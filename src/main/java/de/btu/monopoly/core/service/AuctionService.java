@@ -56,10 +56,10 @@ public class AuctionService extends Listener {
         auc.getClient().sendTCP(jaReq);
         SceneManager.AuctionPopup();
         IOService.sleepDeep(1500);
-        if (!GlobalSettings.isRunAsTest()) { // nicht fuer Test
+        if (!GlobalSettings.RUN_AS_TEST) { // nicht fuer Test
             while (auctionRun) {
                 IOService.sleepDeep(500);
-                if (GlobalSettings.isRunInConsole()) { // nur fuer @Console
+                if (GlobalSettings.RUN_IN_CONSOLE) { // nur fuer @Console
                     LOGGER.finest("Wähle [1] für bieten [2] für aussteigen");
                     Scanner scanner = new Scanner(System.in);
                     switch (scanner.nextInt()) {

@@ -41,7 +41,7 @@ public class IOService {
         int choice = -1;
         switch (player.getKiLevel()) {
             case 0:
-                if (GlobalSettings.isRunInConsole()) {
+                if (GlobalSettings.RUN_IN_CONSOLE) {
                     choice = getClientChoice(player, 3);
                 }
                 else {
@@ -68,7 +68,7 @@ public class IOService {
         switch (player.getKiLevel()) {
             case 0:
 
-                if (GlobalSettings.isRunInConsole()) {
+                if (GlobalSettings.RUN_IN_CONSOLE) {
                     choice = getClientChoice(player, 2);
                 }
                 else {
@@ -96,7 +96,7 @@ public class IOService {
         int choice = 1; //kommt weg
         switch (player.getKiLevel()) {
             case 0:
-                if (GlobalSettings.isRunInConsole()) {
+                if (GlobalSettings.RUN_IN_CONSOLE) {
                     choice = getClientChoice(player, 6);
                 }
                 else {
@@ -169,7 +169,7 @@ public class IOService {
 
     public static int getClientChoiceFromGUI(Player player, int type) {
         boolean isChoiceFromThisClient = player == client.getPlayerOnClient();
-        if (!GlobalSettings.isRunAsTest() && !GlobalSettings.isRunInConsole()) {
+        if (!GlobalSettings.RUN_AS_TEST && !GlobalSettings.RUN_IN_CONSOLE) {
             TextAreaHandler logHandler = new TextAreaHandler();
             LOGGER.addHandler(logHandler);
         }

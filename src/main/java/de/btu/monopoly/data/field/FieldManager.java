@@ -43,7 +43,7 @@ public class FieldManager {
         this.fields = fields;
 
         Arrays.asList(fields).forEach(f -> f.fieldManager = this);
-        if (!GlobalSettings.isRunAsTest() && !GlobalSettings.isRunInConsole()) {
+        if (!GlobalSettings.RUN_AS_TEST && !GlobalSettings.RUN_IN_CONSOLE) {
             TextAreaHandler logHandler = new TextAreaHandler();
             LOGGER.addHandler(logHandler);
         }

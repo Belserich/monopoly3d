@@ -38,13 +38,8 @@ public class Launcher extends Application {
      */
     public static void main(String[] args) throws Exception {
         configLoggers();
-        GlobalSettings.setRunInConsole(false);
-        if (GlobalSettings.isRunInConsole()) {
-            initGame();
-        }
-        else {
-            launch(args);
-        }
+        if (GlobalSettings.RUN_IN_CONSOLE) initGame();
+        else launch(args);
     }
 
     public static void initGame() {

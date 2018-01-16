@@ -33,8 +33,8 @@ import java.util.logging.Logger;
 public class LobbyService extends Listener {
 
     private static final Logger LOGGER = Logger.getLogger(LobbyService.class.getCanonicalName());
-    private static final boolean isRunAsTest = GlobalSettings.isRunAsTest();
-    private static final boolean isRunInConsole = GlobalSettings.isRunInConsole();
+    private static final boolean isRunAsTest = GlobalSettings.RUN_AS_TEST;
+    private static final boolean isRunInConsole = GlobalSettings.RUN_IN_CONSOLE;
     private static Lobby lobby;
 
     /**

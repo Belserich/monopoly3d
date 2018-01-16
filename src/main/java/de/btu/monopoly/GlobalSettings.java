@@ -11,36 +11,7 @@ package de.btu.monopoly;
  */
 public class GlobalSettings {
 
-    private static boolean runInConsole;
-    private static boolean runAsTest;
-
-    /**
-     * @return the runInConsole
-     */
-    public static boolean isRunInConsole() {
-        return runInConsole;
-    }
-
-    /**
-     * @param aRunInConsole the runInConsole to set
-     */
-    public static void setRunInConsole(boolean aRunInConsole) {
-        runInConsole = aRunInConsole;
-        runAsTest = false;
-    }
-
-    /**
-     * @return the runAsTest
-     */
-    public static boolean isRunAsTest() {
-        return runAsTest;
-    }
-
-    /**
-     * @param aRunAsTest the runAsTest to set
-     */
-    public static void setRunAsTest(boolean aRunAsTest) {
-        runAsTest = aRunAsTest;
-    }
+    public static final boolean RUN_IN_CONSOLE = false;
+    public static final boolean RUN_AS_TEST = false;
 
 }

@@ -18,7 +18,7 @@ public class TextAreaHandler extends StreamHandler {
     public void publish(LogRecord record) {
         super.publish(record);
         flush();
-        if (!GlobalSettings.isRunInConsole() && !GlobalSettings.isRunAsTest()) {
+        if (!GlobalSettings.RUN_IN_CONSOLE && !GlobalSettings.RUN_AS_TEST) {
             if (boo) {
                 SceneManager.playerUpdate();
                 boo = false;

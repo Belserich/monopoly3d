@@ -37,11 +37,14 @@ import java.util.stream.Collectors;
  * @author Christian Prinz
  */
 public class Game {
-
+    
+    /**
+     * Zentraler Logger der Spiellogik
+     */
     private static final Logger LOGGER = Logger.getLogger(Game.class.getCanonicalName());
     
     /**
-     * Spielclient
+     * Spiel-Client
      */
     private final GameClient client;
     
@@ -75,7 +78,7 @@ public class Game {
         random = new Random(seed);
         
         IOService.setClient(client);
-        if (!GlobalSettings.isRunAsTest() && !GlobalSettings.isRunInConsole()) {
+        if (!GlobalSettings.RUN_AS_TEST && !GlobalSettings.RUN_IN_CONSOLE) {
             TextAreaHandler logHandler = new TextAreaHandler();
             LOGGER.addHandler(logHandler);
         }
@@ -149,7 +152,7 @@ public class Game {
     public void jailPhase(Player player) {
         int choice;
         do {
-            if (GlobalSettings.isRunInConsole()) {
+            if (GlobalSettings.RUN_IN_CONSOLE) {
                 LOGGER.info(String.format(" %s ist im Gefängnis und kann: %n[1] - 3-mal Würfeln, um mit einem Pasch freizukommen "
                         + "%n[2] - Bezahlen (50€) %n[3] - Gefängnis-Frei-Karte benutzen", player.getName()));
             }
@@ -282,7 +285,7 @@ public class Game {
     private void processPlayerOnPropertyField(Player player, PropertyField prop, int[] rollResult) {
         Player other = prop.getOwner();
         if (other == null) { // Feld frei
-            if (GlobalSettings.isRunInConsole()) {
+            if (GlobalSettings.RUN_IN_CONSOLE) {
                 LOGGER.info(String.format("%s steht auf %s. Wähle eine Aktion!%n[1] Kaufen %n[2] Nicht kaufen",
                         player.getName(), prop.getName()));
             }
@@ -326,7 +329,7 @@ public class Game {
 
         int choice;
         do {
-            if (GlobalSettings.isRunInConsole()) {
+            if (GlobalSettings.RUN_IN_CONSOLE) {
                 LOGGER.info(String.format("%s ist an der Reihe! Waehle eine Aktion:%n[1] - Nichts%n[2] - Haus kaufen%n[3] - Haus verkaufen%n[4] - "
                         + "Hypothek aufnehmen%n[5] - Hypothek abbezahlen%n[6] - Handeln", player.getName()));
             }

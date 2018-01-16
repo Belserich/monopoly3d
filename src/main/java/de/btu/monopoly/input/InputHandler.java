@@ -55,7 +55,7 @@ public class InputHandler {
      * @return ein int Wert zu auswaehen einer Strasse
      */
     public static int askForField(Player player, String[] fieldNames) {
-        if (GlobalSettings.isRunInConsole()) {
+        if (GlobalSettings.RUN_IN_CONSOLE) {
             String mesg = player.getName() + "! Wähle ein Feld:\n";
             for (int i = 0; i < fieldNames.length; i++) {
                 mesg += String.format("[%d] - %s%n", i + 1, fieldNames[i]);
