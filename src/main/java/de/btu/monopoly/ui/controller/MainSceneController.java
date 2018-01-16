@@ -7,12 +7,12 @@ package de.btu.monopoly.ui.controller;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextArea;
+import de.btu.monopoly.core.service.IOService;
 import de.btu.monopoly.data.field.Field;
 import de.btu.monopoly.data.field.FieldManager;
 import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.field.StreetField;
 import de.btu.monopoly.data.player.Player;
-import de.btu.monopoly.input.IOService;
 import de.btu.monopoly.menu.Lobby;
 import de.btu.monopoly.net.client.GameClient;
 import javafx.animation.FadeTransition;

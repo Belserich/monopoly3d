@@ -6,12 +6,13 @@
 package de.btu.monopoly.ki;
 
 import de.btu.monopoly.core.GameBoard;
+import de.btu.monopoly.core.service.IOService;
 import de.btu.monopoly.data.card.CardAction;
 import de.btu.monopoly.data.card.CardStack;
 import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.player.Player;
-import de.btu.monopoly.input.IOService;
 import de.btu.monopoly.net.client.GameClient;
+
 import java.util.Arrays;
 import java.util.logging.Logger;
 

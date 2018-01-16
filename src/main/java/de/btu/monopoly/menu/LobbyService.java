@@ -9,10 +9,9 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import de.btu.monopoly.GlobalSettings;
 import de.btu.monopoly.core.Game;
+import de.btu.monopoly.core.service.IOService;
 import de.btu.monopoly.core.service.NetworkService;
 import de.btu.monopoly.data.player.Player;
-import de.btu.monopoly.input.IOService;
-import de.btu.monopoly.input.InputHandler;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.data.lobby.*;
 import de.btu.monopoly.net.server.AuctionTable;
@@ -68,12 +67,12 @@ public class LobbyService extends Listener {
         IOService.sleep(500);
         if (isRunInConsole && !isRunAsTest) { // nur fuer @Console
             System.out.println("Name?:");
-            changeName(InputHandler.askForString());
+            changeName(IOService.askForString());
 
             if (lobby.isHost()) {
                 addKI("Computergegner", 1);
                 System.out.println("Eingabe machen für Spielstart");
-                InputHandler.askForString();
+                IOService.askForString();
                 gamestartRequest();
             }
         }

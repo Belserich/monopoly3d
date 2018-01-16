@@ -1,6 +1,6 @@
 package de.btu.monopoly.ui.controller;
 
-import de.btu.monopoly.input.IOService;
+import de.btu.monopoly.core.service.IOService;
 import de.btu.monopoly.menu.LobbyService;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.ui.SceneManager;

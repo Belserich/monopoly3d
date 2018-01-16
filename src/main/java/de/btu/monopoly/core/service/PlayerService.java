@@ -3,7 +3,6 @@ package de.btu.monopoly.core.service;
 import de.btu.monopoly.core.GameBoard;
 import de.btu.monopoly.data.player.Bank;
 import de.btu.monopoly.data.player.Player;
-import de.btu.monopoly.input.IOService;
 
 import java.util.Random;
 import java.util.logging.Logger;

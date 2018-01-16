@@ -6,7 +6,7 @@
 package de.btu.monopoly.menu;
 
 import de.btu.monopoly.GlobalSettings;
-import de.btu.monopoly.input.InputHandler;
+import de.btu.monopoly.core.service.IOService;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.server.GameServer;
 import de.btu.monopoly.ui.controller.StartGameController;
@@ -29,7 +29,7 @@ public class MainMenu {
     public void start() { //@GUI wird nicht verwendet
         LOGGER.setLevel(Level.FINER);
         LOGGER.fine("HAUPTMENÜ\n[1] Spiel starten\n[2] Spiel beitreten");
-        int choice = InputHandler.getUserInput(2);
+        int choice = IOService.getUserInput(2);
         if (choice == CREATE_GAME) {
             createGame();
         }
@@ -60,7 +60,7 @@ public class MainMenu {
         GameClient client = new GameClient(PORT, 5000);
         if (GlobalSettings.RUN_IN_CONSOLE) {
             LOGGER.fine("Geben sie die IP-Adresse des Servers ein");
-            client.connect(InputHandler.askForString());
+            client.connect(IOService.askForString());
         }
         else {
             client.connect(ip); // while Schleife bis mit Server verbunden (evtl. begrenzte Versuche)

@@ -2,10 +2,7 @@ package de.btu.monopoly.core;
 
 import de.btu.monopoly.GlobalSettings;
 import de.btu.monopoly.core.mechanics.Trade;
-import de.btu.monopoly.core.service.AuctionService;
-import de.btu.monopoly.core.service.FieldService;
-import de.btu.monopoly.core.service.PlayerService;
-import de.btu.monopoly.core.service.TradeService;
+import de.btu.monopoly.core.service.*;
 import de.btu.monopoly.data.card.Card;
 import de.btu.monopoly.data.card.CardAction;
 import de.btu.monopoly.data.card.CardStack;
@@ -13,8 +10,6 @@ import de.btu.monopoly.data.field.*;
 import de.btu.monopoly.data.parser.CardStackParser;
 import de.btu.monopoly.data.parser.GameBoardParser;
 import de.btu.monopoly.data.player.Player;
-import de.btu.monopoly.input.IOService;
-import de.btu.monopoly.input.InputHandler;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.data.PlayerTradeRequest;
 import de.btu.monopoly.net.data.PlayerTradeResponse;
@@ -340,7 +335,7 @@ public class Game {
                 String[] fieldNames = Arrays.stream(ownedFieldIds)
                         .mapToObj(id -> board.getFieldManager().getField(id).getName())
                         .toArray(String[]::new);
-                int chosenFieldId = ownedFieldIds[InputHandler.askForField(player, fieldNames) - 1];
+                int chosenFieldId = ownedFieldIds[IOService.askForField(player, fieldNames) - 1];
                 Field currField = board.getFieldManager().getField(chosenFieldId); // Wahl der Strasse
     
                 PropertyField property = (PropertyField) currField;
@@ -394,7 +389,7 @@ public class Game {
                 }
             }
             LOGGER.info(builder.toString());
-            Player otherPlayer = activePlayers.get(InputHandler.getUserInput(activePlayers.size()) - 1);
+            Player otherPlayer = activePlayers.get(IOService.getUserInput(activePlayers.size()) - 1);
             
             trade.setSupply(TradeService.createTradeOfferFor(player));
             trade.setDemand(TradeService.createTradeOfferFor(otherPlayer));
@@ -403,7 +398,7 @@ public class Game {
             LOGGER.info(String.format("Zusammenfassung:%n%n%s%nHandelsanfrage wirklich absenden?%n\t[1] - Ja%n\t[2] - Nein",
                     trade.toString(board)));
             
-            request.setDenied(InputHandler.getUserInput(2) == 2);
+            request.setDenied(IOService.getUserInput(2) == 2);
             
             client.sendTCP(request);
             

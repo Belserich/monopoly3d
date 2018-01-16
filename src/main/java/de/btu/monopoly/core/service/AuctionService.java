@@ -6,7 +6,6 @@ import de.btu.monopoly.GlobalSettings;
 import de.btu.monopoly.core.mechanics.Auction;
 import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.player.Player;
-import de.btu.monopoly.input.IOService;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.data.BidRequest;
 import de.btu.monopoly.net.data.BroadcastAuctionResponse;

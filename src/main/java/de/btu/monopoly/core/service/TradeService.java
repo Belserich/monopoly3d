@@ -9,7 +9,6 @@ import de.btu.monopoly.data.card.CardStack;
 import de.btu.monopoly.data.field.FieldManager;
 import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.player.Player;
-import de.btu.monopoly.input.InputHandler;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -71,9 +70,9 @@ public class TradeService {
         if (player.getBank().isLiquid()) {
             
             LOGGER.info(String.format("Soll %s Geld bieten?%n\t[1] - Ja%n\t[2] - Nein", player.getName()));
-            if (InputHandler.getUserInput(2) == 1) {
+            if (IOService.getUserInput(2) == 1) {
                 LOGGER.info(String.format("Wieviel Geld bietet Spieler %s?%n", player.getName()));
-                retObj.setMoney(InputHandler.getUserInput(player.getMoney()));
+                retObj.setMoney(IOService.getUserInput(player.getMoney()));
             }
         }
         
@@ -91,7 +90,7 @@ public class TradeService {
         
         int choice, chosenId;
         
-        choice = InputHandler.getUserInput(ownedIds.size() + 1) - 1;
+        choice = IOService.getUserInput(ownedIds.size() + 1) - 1;
         if (choice != ownedIds.size()) {
             chosenId = ownedIds.get(choice);
             chosenIds.add(chosenId);
