@@ -30,11 +30,10 @@ public class TradeService {
      * @param player Spieler
      * @return Angebots-Instanz
      */
-    public static TradeOffer createTradeOfferFor(Player player) {
+    public static TradeOffer createTradeOfferFor(Player player, GameBoard board) {
         
         TradeOffer retObj = new TradeOffer();
         
-        GameBoard board = player.getBoard();
         List<Integer> ownedIds;
         ArrayList<Integer> chosenIds = new ArrayList<>();
         

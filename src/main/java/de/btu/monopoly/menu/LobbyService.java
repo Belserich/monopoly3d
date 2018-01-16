@@ -168,7 +168,7 @@ public class LobbyService extends Listener {
         for (int i = 0; i < users.length; i++) {
             int id = Integer.parseInt(users[i][0]);
             int kilvl = Integer.parseInt(users[i][3]);
-            Player player = new Player(lobby.getController().getBoard(), users[i][1], i, 1500);
+            Player player = new Player(users[i][1], i, 1500);
             player.setAiLevel(kilvl);
 
             //wenn es sich um den aktuellen Spieler handelt

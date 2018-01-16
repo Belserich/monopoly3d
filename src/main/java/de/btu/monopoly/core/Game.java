@@ -391,8 +391,8 @@ public class Game {
             LOGGER.info(builder.toString());
             Player otherPlayer = activePlayers.get(IOService.getUserInput(activePlayers.size()) - 1);
             
-            trade.setSupply(TradeService.createTradeOfferFor(player));
-            trade.setDemand(TradeService.createTradeOfferFor(otherPlayer));
+            trade.setSupply(TradeService.createTradeOfferFor(player, board));
+            trade.setDemand(TradeService.createTradeOfferFor(otherPlayer, board));
             request.setTrade(trade);
             
             LOGGER.info(String.format("Zusammenfassung:%n%n%s%nHandelsanfrage wirklich absenden?%n\t[1] - Ja%n\t[2] - Nein",

@@ -1,17 +1,11 @@
 package de.btu.monopoly.data.player;
 
-import de.btu.monopoly.core.GameBoard;
 import de.btu.monopoly.data.card.CardStack;
 
 /**
  * @author Maximilian Bels (belsmaxi@b-tu.de)
  */
 public class Player {
-    
-    /**
-     * zugehöriges Spielbrett
-     */
-    private final GameBoard board;
 
     /**
      * Spieler-ID
@@ -61,13 +55,11 @@ public class Player {
     /**
      * Erstellt eine neue Spielerinstanz.
      *
-     * @param board zugehöriges Spielbrett
      * @param name Spielername
      * @param id Spieler-ID
      * @param startMoney Kapital des Spielers
      */
-    public Player(GameBoard board, String name, int id, int startMoney) {
-        this.board = board;
+    public Player(String name, int id, int startMoney) {
         this.id = id;
         this.bank = new Bank(startMoney);
         this.aiLevel = 0;
@@ -78,13 +70,6 @@ public class Player {
 
         isInJail = false;
         daysInJail = 0;
-    }
-    
-    /**
-     * @return Spielbrett
-     */
-    public GameBoard getBoard() {
-        return board;
     }
     
     /**
