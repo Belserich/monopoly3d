@@ -118,7 +118,7 @@ public class LobbyController implements Initializable {
         // Festlegen der Optionen in der Combobox
         difficultyComboBox.getItems().addAll("Einfach", "Mittel", "Schwer");
 
-        // Updatet die Spieler in der Lobby
+        // Updatet die Spieler in der lobby
         updateNames();
 
         // playButton kann nur der Host drücken
@@ -349,7 +349,7 @@ public class LobbyController implements Initializable {
     }
 
     /**
-     * Anzeigen der Spielernamen in der Lobby
+     * Anzeigen der Spielernamen in der lobby
      */
     public void updateNames() {
 
@@ -449,7 +449,7 @@ public class LobbyController implements Initializable {
     }
 
     /**
-     * Anzeigen der Spielerfarben in der Lobby
+     * Anzeigen der Spielerfarben in der lobby
      */
     public void updateColors() {
         Task task = new Task<Void>() {
@@ -522,7 +522,7 @@ public class LobbyController implements Initializable {
 
     }
 
-    // Lobby verlassen
+    // lobby verlassen
     @FXML
     private void leaveLobbyButtonAction(ActionEvent event) throws IOException, InterruptedException {
 

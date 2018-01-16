@@ -143,7 +143,7 @@ public class JoinGameController implements Initializable {
         LobbyService.changeName(nameTextField.getText());
 
         if (GuiMessages.getConnectionError() == false) {
-            // Wechselt die Scene auf Lobby
+            // Wechselt die Scene auf lobby
             changeScene(new FXMLLoader(getClass().getResource("/fxml/Lobby.fxml")), true);
         }
         else {

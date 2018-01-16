@@ -1,7 +1,6 @@
-package de.btu.monopoly.ui.Logger;
+package de.btu.monopoly.ui;
 
 import de.btu.monopoly.GlobalSettings;
-import de.btu.monopoly.ui.SceneManager;
 
 import java.util.logging.LogRecord;
 import java.util.logging.StreamHandler;

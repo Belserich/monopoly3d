@@ -3,16 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.btu.monopoly.net.networkClasses;
+package de.btu.monopoly.net.data;
 
 /**
  *
  * @author patrick
  */
-public class BidRequest {
+public class ExitAuctionRequest {
 
     private int playerID;
-    private int bid;
 
     /**
      * @return the playerID
@@ -26,20 +25,6 @@ public class BidRequest {
      */
     public void setPlayerID(int playerID) {
         this.playerID = playerID;
-    }
-
-    /**
-     * @return the bid
-     */
-    public int getBid() {
-        return bid;
-    }
-
-    /**
-     * @param bid the bid to set
-     */
-    public void setBid(int bid) {
-        this.bid = bid;
     }
 
 }

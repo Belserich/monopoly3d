@@ -106,7 +106,7 @@ public class NetDependedUnitTests {
     public void testInitLobby() {
         initLobby();
         LobbyService.setLobby(lobby);
-        Assert.assertTrue("Lobby nicht initialisiert", LobbyService.getLobby() != null);
+        Assert.assertTrue("lobby nicht initialisiert", LobbyService.getLobby() != null);
         Assert.assertTrue("Host nicht gesetzt", LobbyService.getLobby().isHost() == true);
 
         LobbyService.joinRequest();

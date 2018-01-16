@@ -8,12 +8,12 @@ import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.input.IOService;
 import de.btu.monopoly.net.client.GameClient;
-import de.btu.monopoly.net.networkClasses.BidRequest;
-import de.btu.monopoly.net.networkClasses.BroadcastAuctionResponse;
-import de.btu.monopoly.net.networkClasses.ExitAuctionRequest;
-import de.btu.monopoly.net.networkClasses.JoinAuctionRequest;
-import de.btu.monopoly.ui.Logger.TextAreaHandler;
+import de.btu.monopoly.net.data.BidRequest;
+import de.btu.monopoly.net.data.BroadcastAuctionResponse;
+import de.btu.monopoly.net.data.ExitAuctionRequest;
+import de.btu.monopoly.net.data.JoinAuctionRequest;
 import de.btu.monopoly.ui.SceneManager;
+import de.btu.monopoly.ui.TextAreaHandler;
 
 import java.util.Scanner;
 import java.util.logging.Level;

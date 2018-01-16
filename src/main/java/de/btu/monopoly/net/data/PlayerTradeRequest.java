@@ -1,4 +1,4 @@
-package de.btu.monopoly.net.networkClasses;
+package de.btu.monopoly.net.data;
 
 import de.btu.monopoly.core.mechanics.Trade;
 

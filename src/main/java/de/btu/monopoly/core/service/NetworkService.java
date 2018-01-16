@@ -3,8 +3,8 @@ package de.btu.monopoly.core.service;
 import com.esotericsoftware.kryo.Kryo;
 import de.btu.monopoly.core.mechanics.Trade;
 import de.btu.monopoly.core.mechanics.TradeOffer;
-import de.btu.monopoly.net.networkClasses.*;
-import de.btu.monopoly.net.networkClasses.Lobby.*;
+import de.btu.monopoly.net.data.*;
+import de.btu.monopoly.net.data.lobby.*;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;

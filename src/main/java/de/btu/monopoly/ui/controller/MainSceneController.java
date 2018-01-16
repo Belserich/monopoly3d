@@ -388,7 +388,7 @@ public class MainSceneController implements Initializable {
         middlePane.setBackground(new Background(new BackgroundImage(image2, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT)));
         PopupPane.add(middlePane, 0, 1);
 
-        // User aus Lobby holen und Farben setzen
+        // User aus lobby holen und Farben setzen
         client = Lobby.getPlayerClient();
 
         // Animation

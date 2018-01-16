@@ -56,7 +56,7 @@ public class GameClient {
             client.addListener(listener);
             client.addListener(new LobbyService());
             client.addListener(new AuctionService());
-            // Lobby wird in GUI geöffnet
+            // lobby wird in GUI geöffnet
             GuiMessages.setConnectionError(false);
         } catch (IOException ex) {
             LOGGER.log(Level.WARNING, "Client konnte nicht gestartet werden {0}", ex);

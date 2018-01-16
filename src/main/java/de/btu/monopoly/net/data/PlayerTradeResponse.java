@@ -1,4 +1,4 @@
-package de.btu.monopoly.net.networkClasses;
+package de.btu.monopoly.net.data;
 
 /**
  * @author Maximilian Bels (belsmaxi@b-tu.de)

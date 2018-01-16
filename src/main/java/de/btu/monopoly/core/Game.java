@@ -16,9 +16,9 @@ import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.input.IOService;
 import de.btu.monopoly.input.InputHandler;
 import de.btu.monopoly.net.client.GameClient;
-import de.btu.monopoly.net.networkClasses.PlayerTradeRequest;
-import de.btu.monopoly.net.networkClasses.PlayerTradeResponse;
-import de.btu.monopoly.ui.Logger.TextAreaHandler;
+import de.btu.monopoly.net.data.PlayerTradeRequest;
+import de.btu.monopoly.net.data.PlayerTradeResponse;
+import de.btu.monopoly.ui.TextAreaHandler;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;

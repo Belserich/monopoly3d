@@ -66,7 +66,7 @@ public class MainMenu {
             client.connect(ip); // while Schleife bis mit Server verbunden (evtl. begrenzte Versuche)
         }
 
-        // Lobby als Client joinen
+        // lobby als Client joinen
         LobbyService.joinLobby(client, false);
     }
 }

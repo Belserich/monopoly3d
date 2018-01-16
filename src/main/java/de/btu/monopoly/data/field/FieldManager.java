@@ -5,7 +5,7 @@ import de.btu.monopoly.core.GameBoard;
 import de.btu.monopoly.core.service.FieldService;
 import de.btu.monopoly.core.service.PlayerService;
 import de.btu.monopoly.data.player.Player;
-import de.btu.monopoly.ui.Logger.TextAreaHandler;
+import de.btu.monopoly.ui.TextAreaHandler;
 
 import java.util.ArrayList;
 import java.util.Arrays;

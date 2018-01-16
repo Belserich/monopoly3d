@@ -123,7 +123,7 @@ public class StartGameController implements Initializable {
         IOService.sleep(200);
         LobbyService.changeName(nicknameHostTextView.getText());
 
-        // Wechselt die Scene auf Lobby
+        // Wechselt die Scene auf lobby
         changeScene(new FXMLLoader(getClass().getResource("/fxml/Lobby.fxml")), true);
 
     }

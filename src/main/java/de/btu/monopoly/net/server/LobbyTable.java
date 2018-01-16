@@ -9,7 +9,7 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 import de.btu.monopoly.core.service.NetworkService;
-import de.btu.monopoly.net.networkClasses.Lobby.*;
+import de.btu.monopoly.net.data.lobby.*;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -33,7 +33,7 @@ public class LobbyTable extends Listener {
     }
 
     /**
-     * Registriert einen neuen User in der Lobby und verteilt die Liste neu
+     * Registriert einen neuen User in der lobby und verteilt die Liste neu
      *
      * @param name des neuen Users
      * @param connection des Clients, welcher den neuen User besitzt

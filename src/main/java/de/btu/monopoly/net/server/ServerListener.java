@@ -10,9 +10,9 @@ import com.esotericsoftware.kryonet.FrameworkMessage;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 import de.btu.monopoly.core.service.NetworkService;
-import de.btu.monopoly.net.networkClasses.BroadcastPlayerChoiceRequest;
-import de.btu.monopoly.net.networkClasses.PlayerTradeRequest;
-import de.btu.monopoly.net.networkClasses.PlayerTradeResponse;
+import de.btu.monopoly.net.data.BroadcastPlayerChoiceRequest;
+import de.btu.monopoly.net.data.PlayerTradeRequest;
+import de.btu.monopoly.net.data.PlayerTradeResponse;
 
 /**
  *
