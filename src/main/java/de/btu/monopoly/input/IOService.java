@@ -17,6 +17,7 @@ import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.networkClasses.BroadcastPlayerChoiceRequest;
 import de.btu.monopoly.ui.Logger.TextAreaHandler;
 import de.btu.monopoly.ui.SceneManager;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Random;

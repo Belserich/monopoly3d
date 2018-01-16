@@ -7,12 +7,13 @@ package de.btu.monopoly;
 
 import de.btu.monopoly.menu.MainMenu;
 import de.btu.monopoly.ui.SceneManager;
+import javafx.application.Application;
+import javafx.stage.Stage;
+
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
-import javafx.application.Application;
-import javafx.stage.Stage;
 
 /**
  *
