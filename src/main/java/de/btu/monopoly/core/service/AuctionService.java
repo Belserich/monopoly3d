@@ -72,24 +72,22 @@ public class AuctionService extends Listener {
                             break;
                     }
                 }
-                else {
+                else { //Nur fuer @GUI
                     if (!auctionStillActive()) {
-                        if (oneMore != 1) {
-                            for (int i = 5; i != 0; i--) {
-                                LOGGER.fine("Auktion endet in " + i + " Sekunden. Höchstegebot: "
-                                        + auc.getHighestBid() + "€ von " + AuctionService.getPlayer(AuctionService.getHighestBidder()).getName());
-                                IOService.sleep(1000);
-                            }
-                            oneMore++;
+                        for (int i = 5; i != 0; i--) {
+                            LOGGER.fine("Auktion endet in " + i + " Sekunden. Höchstegebot: "
+                                    + auc.getHighestBid() + "€ von " + AuctionService.getPlayer(AuctionService.getHighestBidder()).getName());
+                            IOService.sleep(1000);
                         }
-                        else {
-                            auctionRun = false;
-                        }
+                        auctionRun = false;
+                        SceneManager.updateAuctionPopup(auctionStillActive());
                     }
-                    SceneManager.updateAuctionPopup(auctionStillActive());
+                    else {
+                        SceneManager.updateAuctionPopup(auctionStillActive());
+                    }
+
                 }
             }
-            SceneManager.updateAuctionPopup(false);
             sellProperty();
         }
     }
