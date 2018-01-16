@@ -36,7 +36,7 @@ public class NetDependedUnitTests {
     private CardManager cm;
 
     public NetDependedUnitTests() {
-        GlobalSettings.setRunAsTest(true);
+        GlobalSettings.RUN_AS_TEST = true;
     }
 
     /*

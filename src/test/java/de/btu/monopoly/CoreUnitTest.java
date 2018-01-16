@@ -30,7 +30,7 @@ public class CoreUnitTest {
     private static CardManager cm;
 
     public CoreUnitTest() {
-        GlobalSettings.setRunAsTest(true);
+        GlobalSettings.RUN_AS_TEST = true;
 
         players = new Player[4];
         for (int i = 0; i < 4; i++) {

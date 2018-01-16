@@ -11,7 +11,7 @@ package de.btu.monopoly;
  */
 public class GlobalSettings {
 
-    public static final boolean RUN_IN_CONSOLE = false;
-    public static final boolean RUN_AS_TEST = false;
+    public static boolean RUN_IN_CONSOLE = false;
+    public static boolean RUN_AS_TEST = false;
 
 }
