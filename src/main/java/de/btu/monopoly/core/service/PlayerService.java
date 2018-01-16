@@ -23,6 +23,7 @@ public class PlayerService {
      * @param player Spieler
      */
     static void toJail(Player player) {
+        
         player.setInJail(true);
         player.setDaysInJail(0);
         IOService.sleep(2000);
@@ -50,6 +51,7 @@ public class PlayerService {
      * hinaus).
      */
     public static int movePlayer(Player player, int amount) {
+        
         int pos = player.getPosition();
         pos += amount;
         player.setPosition(pos);
@@ -67,6 +69,7 @@ public class PlayerService {
      * @return true, wenn zahlungsfähig, sonst false
      */
     public static boolean checkLiquidity(Player player, int amount) {
+        
         Bank bank = player.getBank();
         if (bank.checkLiquidity(amount)) {
             LOGGER.fine("Spielerkonto auf Liquidität geprüft. Er besitzt genug Geld.");
@@ -101,6 +104,7 @@ public class PlayerService {
      * @param amount Betrag der dem Spieler abgezogen wird
      */
     public static void takeMoneyUnchecked(Player player, int amount) {
+        
         Bank bank = player.getBank();
         bank.withdraw(amount);
         LOGGER.info(bank.toString() + " (" + (amount >= 0 ? "-" : "+") + Math.abs(amount) + ")");
@@ -130,10 +134,11 @@ public class PlayerService {
     public static void giveMoney(Player player, int amount) {
         Bank bank = player.getBank();
         bank.deposit(amount);
-        LOGGER.info(bank.toString() + " (" + (amount >= 0 ? "+" : "-") + Math.abs(amount) + ")");
+        LOGGER.info(String.format("%s (%s%d)", bank.toString(), amount >= 0 ? "+" : "-", Math.abs(amount)));
     }
 
     /**
+     * Generiert zwei Zufallszahlen zwischen 1 und 6.
      *
      * @return int[] mit den beiden Wuerfelergebnissen
      */
@@ -148,6 +153,8 @@ public class PlayerService {
     }
 
     /**
+     * Setzt einen Spieler bankrott und entfernt ihn aus dem Spiel.
+     *
      * @param player betroffener Spieler
      * @param board Spielbrett-Instanz
      */
