@@ -304,7 +304,7 @@ public class Game {
         switch (choice) {
             case 1: // Kaufen
                 LOGGER.info(String.format("%s >> %s", player.getName(), prop.getName()));
-                if (!FieldService.buyPropertyField(player, prop, prop.getPrice())) {
+                if (!FieldService.buyPropertyField(player, prop)) {
                     LOGGER.warning(String.format("%s hat nicht genug Geld! %s wird zwangsversteigert.",
                             player.getName(), prop.getName()));
                     betPhase(prop);
