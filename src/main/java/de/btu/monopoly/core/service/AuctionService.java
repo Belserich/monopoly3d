@@ -8,22 +8,24 @@ import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.input.IOService;
 import de.btu.monopoly.net.client.GameClient;
-import de.btu.monopoly.net.networkClasses.*;
+import de.btu.monopoly.net.networkClasses.BidRequest;
+import de.btu.monopoly.net.networkClasses.BroadcastAuctionResponse;
+import de.btu.monopoly.net.networkClasses.ExitAuctionRequest;
+import de.btu.monopoly.net.networkClasses.JoinAuctionRequest;
 import de.btu.monopoly.ui.Logger.TextAreaHandler;
 import de.btu.monopoly.ui.SceneManager;
+
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
  * @author patrick
  */
 public class AuctionService extends Listener {
-
+    
     private static final Logger LOGGER = Logger.getLogger(AuctionService.class.getCanonicalName());
-    private static final boolean isRunAsTest = GlobalSettings.isRunAsTest();
-    private static final boolean isRunInConsole = GlobalSettings.isRunInConsole();
+    
     private static Auction auc;
 
     /**
@@ -54,10 +56,10 @@ public class AuctionService extends Listener {
         auc.getClient().sendTCP(jaReq);
         SceneManager.AuctionPopup();
         IOService.sleepDeep(1500);
-        if (!isRunAsTest) { // nicht fuer Test
+        if (!GlobalSettings.isRunAsTest()) { // nicht fuer Test
             while (auctionRun) {
                 IOService.sleepDeep(500);
-                if (isRunInConsole) { // nur fuer @Console
+                if (GlobalSettings.isRunInConsole()) { // nur fuer @Console
                     LOGGER.finest("Wähle [1] für bieten [2] für aussteigen");
                     Scanner scanner = new Scanner(System.in);
                     switch (scanner.nextInt()) {
