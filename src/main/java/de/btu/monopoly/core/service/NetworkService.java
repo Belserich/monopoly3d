@@ -51,18 +51,18 @@ public class NetworkService {
     }
 
     public static void logServerReceiveMessage(Object obj) {
-        LOGGER.log(Level.INFO, "{Server} <- {0}", obj.getClass().getSimpleName());
+        LOGGER.log(Level.INFO, "(Server) <- {0}", obj.getClass().getSimpleName());
     }
 
     public static void logServerSendMessage(Object obj) {
-        LOGGER.log(Level.INFO, "{Server} -> {0}", obj.getClass().getSimpleName());
+        LOGGER.log(Level.INFO, "(Server) -> {0}", obj.getClass().getSimpleName());
     }
 
     public static void logClientReceiveMessage(Object obj, String name) {
-        LOGGER.log(Level.INFO, "{Client} <- {0}({1})", new Object[]{obj.getClass().getSimpleName(), name});
+        LOGGER.log(Level.INFO, "(Client) <- {0}({1})", new Object[]{obj.getClass().getSimpleName(), name});
     }
 
     public static void logClientSendMessage(Object obj, String name) {
-        LOGGER.log(Level.INFO, "{Client} -> {0}({1})", new Object[]{obj.getClass().getSimpleName(), name});
+        LOGGER.log(Level.INFO, "(Client) -> {0}({1})", new Object[]{obj.getClass().getSimpleName(), name});
     }
 }
