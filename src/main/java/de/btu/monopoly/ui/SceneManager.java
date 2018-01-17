@@ -457,7 +457,7 @@ public class SceneManager extends Stage {
         });
     }
 
-    public static void updateAuctionPopup(boolean stillActive) {
+    public static void updateAuctionPopup(boolean stillActive, boolean noBidder) {
 
         Task task = new Task() {
             @Override
@@ -469,20 +469,27 @@ public class SceneManager extends Stage {
         };
         Platform.runLater(task);
 
-        IOService.sleep(2000);
+        IOService.sleep(500);
 
-        if (stillActive == false) {
+        if (!stillActive) {
+
             GameController.resetPopup();
+
             GridPane gp = new GridPane();
-            //ScrollPane scroll = new ScrollPane();
             VBox box = new VBox();
+            Label lbl = new Label();
+
             gp.setAlignment(Pos.CENTER);
-            // scroll.setCenterShape(true);
             gp.add(box, 0, 0);
-            //scroll.setContent(box);
-            Label lbl = new Label(Lobby.getPlayerClient().getGame().getPlayers()[AuctionService.getHighestBidder()].getName()
-                    + " hat die Auktion gewonnen und muss " + AuctionService.getHighestBid() + "€ für das Grundstück "
-                    + AuctionService.getPropertyString() + " zahlen!");
+
+            if (noBidder) {
+                lbl.setText("Das Grundstück " + AuctionService.getPropertyString() + " wurde nicht verkauft!");
+            }
+            else {
+                lbl.setText(Lobby.getPlayerClient().getGame().getPlayers()[AuctionService.getHighestBidder()].getName()
+                        + " hat die Auktion gewonnen und muss " + AuctionService.getHighestBid() + "€ für das Grundstück "
+                        + AuctionService.getPropertyString() + " zahlen!");
+            }
             String cssLayout = "-fx-background-color: #dcedc8;\n"
                     + "-fx-border-color: black;\n"
                     + "-fx-border-insets: 5;\n"
