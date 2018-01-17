@@ -142,6 +142,11 @@ public class SceneManager extends Stage {
             GameController.hausAnzeigen();
         }
     }
+    public static void hypothekUpdate() {
+         if (GameController != null) {
+             GameController.hypothekState();
+         }
+    }
 
     // -----------------------------------------------------------------------
     // Popups
