@@ -47,7 +47,10 @@ public class AuctionService extends Listener {
     public static void startAuction(PropertyField prop) {
 
         int oneMore = 0;
+
         boolean auctionRun = true;
+        boolean noBidder = false;
+
         auc.setProperty(prop);
         JoinAuctionRequest jaReq = new JoinAuctionRequest();
         NetworkService.logClientSendMessage(jaReq, auc.getPlayerName());
@@ -74,17 +77,43 @@ public class AuctionService extends Listener {
                 }
                 else { //Nur fuer @GUI
                     if (!auctionStillActive()) {
-                        for (int i = 5; i != 0; i--) {
-                            LOGGER.fine("Auktion endet in " + i + " Sekunden. Höchstegebot: "
-                                    + auc.getHighestBid() + "€ von " + AuctionService.getPlayer(AuctionService.getHighestBidder()).getName());
-                            IOService.sleep(1000);
+                        if (AuctionService.getHighestBid() == 0) {
+                            noBidder = true;
+                            for (int i = 5; i != 0; i--) {
+                                LOGGER.fine("Es wurde noch nichts geboten, es bleiben noch " + i + " Sekunden!");
+                                IOService.sleep(1000);
+                                if (AuctionService.getHighestBid() != 0) {
+                                    noBidder = false;
+                                    LOGGER.fine("Es wurde " + AuctionService.getHighestBid() + "€ von "
+                                            + AuctionService.getPlayer(AuctionService.getHighestBidder()).getName() + " geboten!");
+                                    IOService.sleep(1000);
+                                    break;
+                                }
+                            }
+                            if (noBidder) {
+                                LOGGER.fine("Das Grundstück " + AuctionService.getPropertyString() + " wurde nicht verkauft!");
+                                auctionRun = false;
+                                SceneManager.updateAuctionPopup(auctionStillActive(), noBidder);
+                            }
+                            else {
+                                auctionRun = false;
+                                SceneManager.updateAuctionPopup(auctionStillActive(), noBidder);
+                                sellProperty();
+                            }
                         }
-                        auctionRun = false;
-                        SceneManager.updateAuctionPopup(auctionStillActive());
-                        sellProperty();
+                        else {
+                            for (int i = 5; i != 0; i--) {
+                                LOGGER.fine("Auktion endet in " + i + " Sekunden. Höchstegebot: "
+                                        + auc.getHighestBid() + "€ von " + AuctionService.getPlayer(AuctionService.getHighestBidder()).getName());
+                                IOService.sleep(1000);
+                            }
+                            auctionRun = false;
+                            SceneManager.updateAuctionPopup(auctionStillActive(), noBidder);
+                            sellProperty();
+                        }
                     }
                     else {
-                        SceneManager.updateAuctionPopup(auctionStillActive());
+                        SceneManager.updateAuctionPopup(auctionStillActive(), noBidder);
                     }
 
                 }
