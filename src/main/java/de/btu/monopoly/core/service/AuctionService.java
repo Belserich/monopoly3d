@@ -76,7 +76,16 @@ public class AuctionService extends Listener {
                     }
                 }
                 else { //Nur fuer @GUI
+                    /*
+                    Falls nur noch ein Bieter uebrig ist, hat dieser dank dem Boolean auctionRun noch
+                    die Moeglichkeit weiterhin zu bieten, so lange der (weiter unten implementierte) Countdown
+                    noch laeuft.
+                     */
                     if (!auctionStillActive()) {
+                        /*
+                        Falls das Gebot 0 betraegt und nur noch 1 Bieter uebrig ist, bekommt dieser
+                        die Chance innerhalb des (weiter unten implementierten) Countdowns zu bieten.
+                         */
                         if (AuctionService.getHighestBid() == 0) {
                             noBidder = true;
                             for (int i = 5; i != 0; i--) {
@@ -90,11 +99,13 @@ public class AuctionService extends Listener {
                                     break;
                                 }
                             }
+                            //Falls sich kein Bieter gefunden hat (Objekt wird NICHT verkauft)
                             if (noBidder) {
                                 LOGGER.fine("Das Grundstück " + AuctionService.getPropertyString() + " wurde nicht verkauft!");
                                 auctionRun = false;
                                 SceneManager.updateAuctionPopup(auctionStillActive(), noBidder);
                             }
+                            //Falls sich ein Bieter gefunden hat
                             else {
                                 auctionRun = false;
                                 SceneManager.updateAuctionPopup(auctionStillActive(), noBidder);
@@ -102,6 +113,7 @@ public class AuctionService extends Listener {
                             }
                         }
                         else {
+                            //Letzter Bieter bekommt nochmal die Moeglichkeit nachzubieten
                             for (int i = 5; i != 0; i--) {
                                 LOGGER.fine("Auktion endet in " + i + " Sekunden. Höchstegebot: "
                                         + auc.getHighestBid() + "€ von " + AuctionService.getPlayer(AuctionService.getHighestBidder()).getName());
