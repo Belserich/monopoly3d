@@ -48,6 +48,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.util.Duration;
+import javax.jws.soap.SOAPBinding.Style;
 
 /**
  *
@@ -58,6 +59,8 @@ public class MainSceneController implements Initializable {
     GameClient client;
     StackPane middlePane;
 
+    Label hypothek = new Label("Hypothek");
+    HBox hbox;
     //Geld Labels
     @FXML
     private Label geld0;
@@ -557,6 +560,43 @@ public class MainSceneController implements Initializable {
     }
 
     /**
+     * der Hypothekzustand jedes PropertyField wurde dargestellt
+     */
+    public void hypothekState() {
+        if (Lobby.getPlayerClient().getGame().getBoard() != null) {
+            Field[] currentField = Lobby.getPlayerClient().getGame().getBoard().getFields();
+
+            Task task = new Task() {
+                @Override
+                protected Object call() throws Exception {
+
+                    for (Pane field : Felder) {
+                        hypothek.setStyle("-fx-background-color:brown;"
+                                + "-fx-rotate: -45");
+
+                        for (int i = 0; i < Felder.length; i++) {
+                            if (Felder[i] == field) {
+
+                                if (currentField[i] instanceof PropertyField && ((PropertyField) currentField[i]).isMortgageTaken()) {
+                                    hypothek.setAlignment(Pos.CENTER);
+                                    field.getChildren().add(hypothek);
+
+                                }
+                                if (currentField[i] instanceof PropertyField && !((PropertyField) currentField[i]).isMortgageTaken()) {
+                                    field.getChildren().remove(hypothek);
+
+                                }
+                            }
+                        }
+                    }
+                    return null;
+                }
+            };
+            Platform.runLater(task);
+        }
+    }
+
+    /**
      * Erstellt auf dem entsprechenden Feld ein/mehrere Hauser TODO moegliche
      * Bugfixes
      */
@@ -601,7 +641,7 @@ public class MainSceneController implements Initializable {
      * @return
      */
     public HBox createHaus(int width, int heigth, int anzahl) {
-        HBox hbox = new HBox();
+        hbox = new HBox();
 
         HBox haus = new HBox();
         for (int j = 0; j < anzahl; j++) {
