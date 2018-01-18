@@ -85,6 +85,11 @@ public class MainSceneController implements Initializable {
     @FXML
     private GridPane PopupPane;
     @FXML
+    private GridPane PopupPane2;
+    @FXML
+    private GridPane centerPane;;
+    
+    @FXML
     private GridPane player0Geld;
     @FXML
     private GridPane player1Geld;
@@ -810,7 +815,8 @@ public class MainSceneController implements Initializable {
                             if (((PropertyField) currentField[i]).isMortgageTaken()) {
                                 Label hypothek = new Label("Hypothek");
                                 hypothek.setStyle("-fx-background-color:brown;");
-                                hypothek.setAlignment(Pos.CENTER);
+                                hypothek.relocate(0, 0);
+                                // hypothek.setAlignment(Pos.CENTER);
                                 //hypothek.layoutXProperty().bind(RentanzeigeFelder[i].widthProperty().subtract(hypothek.getLayoutX()).divide(2));
                                 //hypothek.layoutYProperty().bind(RentanzeigeFelder[i].heightProperty().subtract(hypothek.getLayoutY()).divide(2));
 
@@ -830,8 +836,9 @@ public class MainSceneController implements Initializable {
                                 if (((PropertyField) currentField[i]).isMortgageTaken()) {
                                     Label hypothek = new Label("Hypothek");
                                     hypothek.setStyle("-fx-background-color:brown;");
-                                    hypothek.setAlignment(Pos.CENTER);
-                                    //  hypothek.layoutXProperty().bind(RentanzeigeFelder[i].widthProperty().subtract(hypothek.getLayoutX()).divide(2));
+                                    hypothek.relocate(0,0);
+                                    // hypothek.setAlignment(Pos.CENTER);
+                                    //hypothek.layoutXProperty().bind(RentanzeigeFelder[i].widthProperty().subtract(hypothek.getLayoutX()).divide(2));
                                     // hypothek.layoutYProperty().bind(RentanzeigeFelder[i].heightProperty().subtract(hypothek.getLayoutY()).divide(2));
 
                                     RentanzeigeFelder[i].getChildren().add(hypothek);
@@ -840,26 +847,31 @@ public class MainSceneController implements Initializable {
                             if (hausAnzahl == 1) {
                                 RentanzeigeFelder[i].getChildren().clear();
                                 hauses = createHaus1(10, 10);
+                                hauses.relocate(0,0);
                                 RentanzeigeFelder[i].getChildren().add(hauses);
                             }
                             if (hausAnzahl == 2) {
                                 RentanzeigeFelder[i].getChildren().clear();
                                 hauses = createHaus2(10, 10);
+                                hauses.relocate(0, 0);
                                 RentanzeigeFelder[i].getChildren().add(hauses);
                             }
                             if (hausAnzahl == 3) {
                                 RentanzeigeFelder[i].getChildren().clear();
                                 hauses = createHaus3(10, 10);
+                                hauses.relocate(0, 0);
                                 RentanzeigeFelder[i].getChildren().add(hauses);
                             }
                             if (hausAnzahl == 4) {
                                 RentanzeigeFelder[i].getChildren().clear();
                                 hauses = createHaus4(10, 10);
+                                hauses.relocate(0, 0);
                                 RentanzeigeFelder[i].getChildren().add(hauses);
                             }
                             if (hausAnzahl == 5) {
                                 RentanzeigeFelder[i].getChildren().clear();
-                                hauses = createHotel(20, 10);
+                                hauses = createHotel(30, 20);
+                                hauses.relocate(0,0);
                                 RentanzeigeFelder[i].getChildren().add(hauses);
                             }
 
@@ -1396,6 +1408,20 @@ public class MainSceneController implements Initializable {
         Platform.runLater(task);
 
     }
+    
+    public void setPopupBellow(GridPane gridpane) {
+
+        Task task = new Task() {
+            @Override
+            protected Object call() throws Exception {
+                PopupPane2.getChildren().remove(middlePane);
+                PopupPane2.add(gridpane, 0, 0);
+                return null;
+            }
+        };
+        Platform.runLater(task);
+
+    }
 
     /**
      * Reset des letzten Popups
@@ -1406,6 +1432,17 @@ public class MainSceneController implements Initializable {
             protected Object call() throws Exception {
                 PopupPane.getChildren().clear();
                 PopupPane.add(middlePane, 0, 0);
+                return null;
+            }
+        };
+        Platform.runLater(task);
+    }
+    
+     public void resetPopupBellow() {
+        Task task = new Task() {
+            @Override
+            protected Object call() throws Exception {
+                PopupPane2.getChildren().clear();
                 return null;
             }
         };
