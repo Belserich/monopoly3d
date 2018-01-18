@@ -142,10 +142,11 @@ public class SceneManager extends Stage {
             GameController.hausAnzeigen();
         }
     }
+
     public static void hypothekUpdate() {
-         if (GameController != null) {
-             GameController.hypothekState();
-         }
+        if (GameController != null) {
+            GameController.hypothekState();
+        }
     }
 
     // -----------------------------------------------------------------------
@@ -185,16 +186,16 @@ public class SceneManager extends Stage {
         box.getChildren().addAll(label, buyButton, dontBuyButton);
         box.setAlignment(Pos.CENTER);
 
-        GameController.setPopup(gridpane);
+        GameController.setPopupAbove(gridpane);
 
         while (!buyButton.isPressed() || !dontBuyButton.isPressed()) {
             IOService.sleep(50);
             if (buyButton.isPressed()) {
-                GameController.resetPopup();
+                GameController.resetPopupAbove();
                 return 1;
             }
             if (dontBuyButton.isPressed()) {
-                GameController.resetPopup();
+                GameController.resetPopupAbove();
                 return 2;
             }
         }
@@ -239,20 +240,20 @@ public class SceneManager extends Stage {
         box.getChildren().addAll(label, rollButton, payButton, cardButton);
         box.setAlignment(Pos.CENTER);
 
-        GameController.setPopup(gridpane);
+        GameController.setPopupAbove(gridpane);
 
         while (!rollButton.isPressed() || !payButton.isPressed() || !cardButton.isPressed()) {
             IOService.sleep(50);
             if (rollButton.isPressed()) {
-                GameController.resetPopup();
+                GameController.resetPopupAbove();
                 return 1;
             }
             if (payButton.isPressed()) {
-                GameController.resetPopup();
+                GameController.resetPopupAbove();
                 return 2;
             }
             if (cardButton.isPressed()) {
-                GameController.resetPopup();
+                GameController.resetPopupAbove();
                 return 3;
             }
         }
@@ -312,32 +313,32 @@ public class SceneManager extends Stage {
         box.getChildren().addAll(label, nothingButton, buyHouseButton, removeHouseButton, addMortgageButton, removeMortgageButton, tradeButton);
         box.setAlignment(Pos.CENTER);
 
-        GameController.setPopup(gridpane);
+        GameController.setPopupAbove(gridpane);
 
         while (!nothingButton.isPressed() || !buyHouseButton.isPressed() || !removeHouseButton.isPressed() || !addMortgageButton.isPressed() || !removeMortgageButton.isPressed() || !tradeButton.isPressed()) {
             IOService.sleep(50);
             if (nothingButton.isPressed()) {
-                GameController.resetPopup();
+                GameController.resetPopupAbove();
                 return 1;
             }
             if (buyHouseButton.isPressed()) {
-                GameController.resetPopup();
+                GameController.resetPopupAbove();
                 return 2;
             }
             if (removeHouseButton.isPressed()) {
-                GameController.resetPopup();
+                GameController.resetPopupAbove();
                 return 3;
             }
             if (addMortgageButton.isPressed()) {
-                GameController.resetPopup();
+                GameController.resetPopupAbove();
                 return 4;
             }
             if (removeMortgageButton.isPressed()) {
-                GameController.resetPopup();
+                GameController.resetPopupAbove();
                 return 5;
             }
             if (tradeButton.isPressed()) {
-                GameController.resetPopup();
+                GameController.resetPopupAbove();
                 return 6;
             }
         }
@@ -382,13 +383,13 @@ public class SceneManager extends Stage {
         box.getChildren().addAll(label, fieldBox, button);
         box.setAlignment(Pos.CENTER);
 
-        GameController.setPopup(gridPane);
+        GameController.setPopupAbove(gridPane);
 
         while (!button.isPressed()) {
             IOService.sleep(50);
         }
 
-        GameController.resetPopup();
+        GameController.resetPopupAbove();
 
         int id = 0;
         for (Field field : Lobby.getPlayerClient().getGame().getBoard().getFieldManager().getFields()) {
@@ -438,7 +439,9 @@ public class SceneManager extends Stage {
         box.setCenterShape(true);
         box.getChildren().addAll(hoechstgebotLabel, auctionLabel, label2, tf, bidBut, exitBut);
         box.setAlignment(Pos.CENTER);
-        GameController.setPopup(auctionGP);
+        if (GameController != null) {
+            GameController.setPopupAbove(auctionGP);
+        }
 
         bidBut.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -457,7 +460,7 @@ public class SceneManager extends Stage {
             @Override
             public void handle(ActionEvent event) {
                 AuctionService.playerExit(Lobby.getPlayerClient().getPlayerOnClient().getId());
-                GameController.resetPopup();
+                GameController.resetPopupAbove();
             }
         });
     }
@@ -478,7 +481,7 @@ public class SceneManager extends Stage {
 
         if (!stillActive) {
 
-            GameController.resetPopup();
+            GameController.resetPopupAbove();
 
             GridPane gp = new GridPane();
             VBox box = new VBox();
@@ -508,11 +511,15 @@ public class SceneManager extends Stage {
             box.setCenterShape(true);
             box.getChildren().addAll(lbl);
             box.setAlignment(Pos.CENTER);
-            GameController.setPopup(gp);
+            GameController.setPopupAbove(gp);
             IOService.sleep(3500);
-            GameController.resetPopup();
+            GameController.resetPopupAbove();
         }
 
+    }
+
+    public static void initStreets() {
+        GameController.initStreets();
     }
 
 }

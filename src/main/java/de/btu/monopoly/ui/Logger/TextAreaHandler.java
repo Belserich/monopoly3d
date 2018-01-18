@@ -27,6 +27,7 @@ public class TextAreaHandler extends StreamHandler {
             SceneManager.propertyUpdate();
             SceneManager.hausUpdate();
             SceneManager.hypothekUpdate();
+            SceneManager.initStreets();
         }
         SceneManager.appendText(getFormatter().format(record));
 

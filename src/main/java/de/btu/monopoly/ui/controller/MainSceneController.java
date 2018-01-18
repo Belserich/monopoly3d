@@ -48,7 +48,6 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.util.Duration;
-import javax.jws.soap.SOAPBinding.Style;
 
 /**
  *
@@ -279,6 +278,88 @@ public class MainSceneController implements Initializable {
     private Pane besitz38;
     @FXML
     private Pane besitz39;
+
+    // Straßennamen (Labels)
+    @FXML
+    private Label label0;
+    @FXML
+    private Label label1;
+    @FXML
+    private Label label2;
+    @FXML
+    private Label label3;
+    @FXML
+    private Label label4;
+    @FXML
+    private Label label5;
+    @FXML
+    private Label label6;
+    @FXML
+    private Label label7;
+    @FXML
+    private Label label8;
+    @FXML
+    private Label label9;
+    @FXML
+    private Label label10;
+    @FXML
+    private Label label11;
+    @FXML
+    private Label label12;
+    @FXML
+    private Label label13;
+    @FXML
+    private Label label14;
+    @FXML
+    private Label label15;
+    @FXML
+    private Label label16;
+    @FXML
+    private Label label17;
+    @FXML
+    private Label label18;
+    @FXML
+    private Label label19;
+    @FXML
+    private Label label20;
+    @FXML
+    private Label label21;
+    @FXML
+    private Label label22;
+    @FXML
+    private Label label23;
+    @FXML
+    private Label label24;
+    @FXML
+    private Label label25;
+    @FXML
+    private Label label26;
+    @FXML
+    private Label label27;
+    @FXML
+    private Label label28;
+    @FXML
+    private Label label29;
+    @FXML
+    private Label label30;
+    @FXML
+    private Label label31;
+    @FXML
+    private Label label32;
+    @FXML
+    private Label label33;
+    @FXML
+    private Label label34;
+    @FXML
+    private Label label35;
+    @FXML
+    private Label label36;
+    @FXML
+    private Label label37;
+    @FXML
+    private Label label38;
+    @FXML
+    private Label label39;
 
     private Pane[] Felder;
     private Pane[] BesitzanzeigeFelder;
@@ -707,11 +788,11 @@ public class MainSceneController implements Initializable {
         box.setAlignment(Pos.CENTER);
 
         if (PopupPane.getChildren().contains(middlePane)) {
-            setPopup(player0Pane);
+            setPopupAbove(player0Pane);
         }
 
         exit.setOnAction(e -> {
-            resetPopup();
+            resetPopupAbove();
         });
     }
 
@@ -747,11 +828,11 @@ public class MainSceneController implements Initializable {
         box.setAlignment(Pos.CENTER);
 
         if (PopupPane.getChildren().contains(middlePane)) {
-            setPopup(gp);
+            setPopupAbove(gp);
         }
 
         exit.setOnAction(e -> {
-            resetPopup();
+            resetPopupAbove();
         });
 
     }
@@ -1051,7 +1132,7 @@ public class MainSceneController implements Initializable {
      *
      * @param gridpane
      */
-    public void setPopup(GridPane gridpane) {
+    public void setPopupAbove(GridPane gridpane) {
 
         Task task = new Task() {
             @Override
@@ -1068,7 +1149,7 @@ public class MainSceneController implements Initializable {
     /**
      * Reset des letzten Popups
      */
-    public void resetPopup() {
+    public void resetPopupAbove() {
         Task task = new Task() {
             @Override
             protected Object call() throws Exception {
@@ -1096,6 +1177,63 @@ public class MainSceneController implements Initializable {
             }
         };
         Platform.runLater(task);
+    }
+
+    // -------------------------------------------------------------------------
+    // Initialisierung der Felder
+    public void initStreets() {
+
+        Task task = new Task() {
+            @Override
+            protected Object call() throws Exception {
+                if (Lobby.getPlayerClient().getGame().getBoard() != null) {
+                    // Los Feld, da Bild eingefügt wurde
+                    // label0.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[0].getName());
+                    label1.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[1].getName());
+                    label2.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[2].getName());
+                    label3.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[3].getName());
+                    label4.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[4].getName());
+                    label5.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[5].getName());
+                    label6.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[6].getName());
+                    label7.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[7].getName());
+                    label8.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[8].getName());
+                    label9.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[9].getName());
+                    label10.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[10].getName());
+                    label11.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[11].getName());
+                    label12.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[12].getName());
+                    label13.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[13].getName());
+                    label14.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[14].getName());
+                    label15.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[15].getName());
+                    label16.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[16].getName());
+                    label17.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[17].getName());
+                    label18.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[18].getName());
+                    label19.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[19].getName());
+                    label20.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[20].getName());
+                    label21.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[21].getName());
+                    label22.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[22].getName());
+                    label23.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[23].getName());
+                    label24.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[24].getName());
+                    label25.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[25].getName());
+                    label26.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[26].getName());
+                    label27.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[27].getName());
+                    label28.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[28].getName());
+                    label29.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[29].getName());
+                    label30.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[30].getName());
+                    label31.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[31].getName());
+                    label32.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[32].getName());
+                    label33.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[33].getName());
+                    label34.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[34].getName());
+                    label35.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[35].getName());
+                    label36.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[36].getName());
+                    label37.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[37].getName());
+                    label38.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[38].getName());
+                    label39.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[39].getName());
+                }
+                return null;
+            }
+        };
+        Platform.runLater(task);
+
     }
 
 }
