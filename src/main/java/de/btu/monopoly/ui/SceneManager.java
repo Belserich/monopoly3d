@@ -16,6 +16,7 @@ import de.btu.monopoly.menu.Lobby;
 import de.btu.monopoly.ui.controller.LobbyController;
 import de.btu.monopoly.ui.controller.MainSceneController;
 import java.io.IOException;
+import java.util.Optional;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
@@ -25,7 +26,10 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -36,6 +40,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 /**
  *
@@ -61,6 +66,23 @@ public class SceneManager extends Stage {
         stage.setScene(scene);
         stage.show();
 
+        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent event) {
+                Alert alert = new Alert(AlertType.CONFIRMATION);
+                alert.setTitle("Monopoly-Information");
+                alert.setHeaderText("Du beendest gerade Monopoly!");
+                alert.setContentText("Bist du sicher?");
+
+                Optional<ButtonType> result = alert.showAndWait();
+                if (result.get() == ButtonType.OK) {
+                    System.exit(0);
+                } else {
+                    event.consume();
+                }
+
+            }
+        });
     }
 
     public static void appendText(String message) {
@@ -492,8 +514,7 @@ public class SceneManager extends Stage {
 
             if (noBidder) {
                 lbl.setText("Das Grundstück " + AuctionService.getPropertyString() + " wurde nicht verkauft!");
-            }
-            else {
+            } else {
                 lbl.setText(Lobby.getPlayerClient().getGame().getPlayers()[AuctionService.getHighestBidder()].getName()
                         + " hat die Auktion gewonnen und muss " + AuctionService.getHighestBid() + "€ für das Grundstück "
                         + AuctionService.getPropertyString() + " zahlen!");
