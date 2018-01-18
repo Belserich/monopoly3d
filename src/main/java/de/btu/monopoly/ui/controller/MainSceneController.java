@@ -660,6 +660,8 @@ public class MainSceneController implements Initializable {
                         if (currentField[i] instanceof PropertyField) {
                             if (((PropertyField) currentField[i]).isMortgageTaken()) {
                                 hypothek.setAlignment(Pos.CENTER);
+                                hypothek.layoutXProperty().bind(Felder[i].widthProperty().subtract(hypothek.getLayoutX()).divide(2));
+                                hypothek.layoutYProperty().bind(Felder[i].heightProperty().subtract(hypothek.getLayoutY()).divide(2));
                                 Felder[i].getChildren().add(hypothek);
                             } else {
                                 for (int j = 0; j < Felder[i].getChildren().size(); j++) {
