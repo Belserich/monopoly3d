@@ -159,17 +159,13 @@ public class SceneManager extends Stage {
         }
     }
 
-    public static void hausUpdate() {
+    public static void propertyStateUpdate() {
         if (GameController != null) {
-            GameController.hausAnzeigen();
+            GameController.propertyState();
         }
     }
 
-    public static void hypothekUpdate() {
-        if (GameController != null) {
-            GameController.hypothekState();
-        }
-    }
+    
 
     // -----------------------------------------------------------------------
     // Popups
