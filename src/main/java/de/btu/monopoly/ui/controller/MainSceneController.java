@@ -58,7 +58,7 @@ public class MainSceneController implements Initializable {
     GameClient client;
     StackPane middlePane;
 
-    Label hypothek = new Label("Hypothek");
+    // Label hypothek = new Label("Hypothek");
     HBox hbox;
     //Geld Labels
     @FXML
@@ -644,37 +644,42 @@ public class MainSceneController implements Initializable {
      * der Hypothekzustand jedes PropertyField wurde dargestellt
      */
     public void hypothekState() {
-        if (Lobby.getPlayerClient().getGame().getBoard() != null) {
-            Field[] currentField = Lobby.getPlayerClient().getGame().getBoard().getFields();
 
-            Task task = new Task() {
-                @Override
-                protected Object call() throws Exception {
+        Task task = new Task() {
+            @Override
+            protected Object call() throws Exception {
+                if (Lobby.getPlayerClient().getGame().getBoard() != null) {
+                    Field[] currentField = Lobby.getPlayerClient().getGame().getBoard().getFields();
+                    Label hypothek = new Label("Hypothek");
 
-                    for (Pane field : Felder) {
-                        hypothek.setStyle("-fx-background-color:brown;"
-                                + "-fx-rotate: -45");
+                    hypothek.setStyle("-fx-background-color:brown;"
+                            + "-fx-rotate: -45");
 
-                        for (int i = 0; i < Felder.length; i++) {
-                            if (Felder[i] == field) {
+                    for (int i = 0; i < Felder.length; i++) {
 
-                                if (currentField[i] instanceof PropertyField && ((PropertyField) currentField[i]).isMortgageTaken()) {
-                                    hypothek.setAlignment(Pos.CENTER);
-                                    field.getChildren().add(hypothek);
+                        if (currentField[i] instanceof PropertyField) {
+                            if (((PropertyField) currentField[i]).isMortgageTaken()) {
+                                hypothek.setAlignment(Pos.CENTER);
+                                Felder[i].getChildren().add(hypothek);
+                            }
+                            else {
+                                for (int j = 0; j < Felder[i].getChildren().size(); j++) {
+                                    if (Felder[i].getChildren().get(j) instanceof Label) {
+                                        Felder[i].getChildren().remove(j);
+                                    }
+                                    else {
 
-                                }
-                                if (currentField[i] instanceof PropertyField && !((PropertyField) currentField[i]).isMortgageTaken()) {
-                                    field.getChildren().remove(hypothek);
-
+                                    }
                                 }
                             }
                         }
                     }
-                    return null;
                 }
-            };
-            Platform.runLater(task);
-        }
+
+                return null;
+            }
+        };
+        Platform.runLater(task);
     }
 
     /**
