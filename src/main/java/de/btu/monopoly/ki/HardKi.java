@@ -9,12 +9,14 @@ import de.btu.monopoly.core.GameBoard;
 import de.btu.monopoly.core.service.AuctionService;
 import de.btu.monopoly.data.card.CardAction;
 import de.btu.monopoly.data.card.CardStack;
+import de.btu.monopoly.data.field.FieldManager;
 import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.input.IOService;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 /**
  * @author Christian Prinz
@@ -22,6 +24,7 @@ import java.util.logging.Logger;
 public class HardKi {
 
     private static final Logger LOGGER = Logger.getLogger(HardKi.class.getCanonicalName());
+    private static final FieldManager FM = IOService.getGame().getBoard().getFieldManager();
 
     // Ab wieviel verkauften Strassen im Gefaengnis bleiben (x von 24)
     private static final int PROPERTY_CAP_FOR_STAYING_IN_PRISON = 9;
@@ -86,7 +89,7 @@ public class HardKi {
      */
     public static int buyPropOption(Player player, PropertyField prop) {
         boolean buy = false;
-        int propertyId = IOService.getGame().getBoard().getFieldManager().getFieldId(prop);
+        int propertyId = FM.getFieldId(prop);
         int amount = player.getMoney();
 
         // Ist die KI superreich kauft sie aus Zone 1, 2 und 3
@@ -112,16 +115,15 @@ public class HardKi {
 
     public static int processActionSequence(Player player, GameBoard board) {
         int amount = player.getMoney();
-        int buildings = IOService.getGame().getBoard().getFieldManager().getHouseAndHotelCount(player)[0]
-                + IOService.getGame().getBoard().getFieldManager().getHouseAndHotelCount(player)[1];
+        int buildings = FM.getHouseAndHotelCount(player)[0] + FM.getHouseAndHotelCount(player)[1];
 
         if (amount < POOR) {                     // Wenn die ki arm ist
             if (buildings > 0) {                        // verkauft sie erst Haeuser
-                sellBuilding();
+                sellBuilding(player);
                 return 3;
             }
-            else if (numberOfMortgages(player) > 0) {   // und nimmt dann Hypotheken auf
-                takeMortgage();
+            else if (numberOfMortgages(player) < (int) FM.getOwnedPropertyFields(player).count()) {   // und nimmt dann Hypotheken auf
+                takeMortgage(player);
                 return 4;
             }
             else {                                      // ist nichts vorhanden, beendet sie
@@ -134,11 +136,12 @@ public class HardKi {
         else if (amount < RICH) {                // Wenn sie reich ist
             if (getSoldProperties() < BEGINNING) {    // zu Spielbeginn
                 if (numberOfMortgages(player) > 0) {    // zahlt sie zuerst Hypotheken ab
-                    payMortgage();
+                    payMortgage(player);
                     return 5;
                 }
                 else {                                  // und kauft dann Haeuser
-                    buyBuilding();
+                    //TODO wenn nicht möglich dann was?
+                    buyBuilding(player);
                     return 2;
                 }
             }
@@ -148,11 +151,12 @@ public class HardKi {
         }
         else {                                   // Wenn sie superreich ist
             if (numberOfMortgages(player) > 0) {        // zahlt sie zuerst Hypotheken ab
-                payMortgage();
+                payMortgage(player);
                 return 5;
             }
             else {                                      // und kauft dann Haeuser
-                buyBuilding();
+                //TODO wenn nicht möglich dann was?
+                buyBuilding(player);
                 return 2;
             }
         }
@@ -200,9 +204,7 @@ public class HardKi {
      * @return Anzahl der Hypotheken, welche die Ki insgesamt aufgenommen hat
      */
     private static int numberOfMortgages(Player player) {
-        return (int) IOService.getGame().getBoard().getFieldManager().getOwnedPropertyFields(player)
-                .filter(p -> p.isMortgageTaken())
-                .count();
+        return (int) FM.getOwnedPropertyFields(player).filter(p -> p.isMortgageTaken()).count();
     }
 
     /**
@@ -211,8 +213,7 @@ public class HardKi {
      * @return Gibt an, ob bereits Strassen des selben Strassenzuges, wie dem der uebergebenen Strasse im Besitz sind
      */
     private static boolean areThereAlreadyNeighboursOwned(PropertyField prop, Player player) {
-        List<PropertyField> neighborList = IOService.getGame().getBoard().getFieldManager()
-                .getNeighborList(prop);
+        List<PropertyField> neighborList = FM.getNeighborList(prop);
         return neighborList.stream().anyMatch((neigh) -> (neigh.getOwner() == player));
     }
 
@@ -229,22 +230,36 @@ public class HardKi {
      * jeweils in der Methode ausgewählten Feldes. Diese ID wird später in Game.java für die actionPhase verwendet, um die
      * wirklichen Methoden auszuführen.
      */
-    private static void sellBuilding() {
+    private static void sellBuilding(Player player) {
         // TODO
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    private static void takeMortgage() {
-        // TODO
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    /**
+     * nimmt eine Hypothek für die billigste Strasse auf
+     *
+     * @param player
+     */
+    private static void takeMortgage(Player player) {
+        List<PropertyField> props = FM.getOwnedPropertyFields(player)
+                .filter(p -> !p.isMortgageTaken()).collect(Collectors.toList());
+        // check auf isEmpty bereit in processActionPhase()
+        FM.takeMortgage(props.get(0));
     }
 
-    private static void payMortgage() {
-        // TODO
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    /**
+     * zahlt die Hypothek für die billigste Strasse ab (um soviele wie möglich wieder in den Umlauf zu bringen)
+     *
+     * @param player
+     */
+    private static void payMortgage(Player player) {
+        List<PropertyField> props = FM.getOwnedPropertyFields(player)
+                .filter(p -> p.isMortgageTaken()).collect(Collectors.toList());
+        // check auf isEmpty bereit in processActionPhase()
+        FM.payMortgage(props.get(0));
     }
 
-    private static void buyBuilding() {
+    private static void buyBuilding(Player player) {
         // TODO
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
