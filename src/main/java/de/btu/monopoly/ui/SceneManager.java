@@ -332,7 +332,7 @@ public class SceneManager extends Stage {
 
         vbox.setStyle(cssLayout);
         box.setSpacing(10);
-        box.setPrefSize(700, 200);
+        box.setPrefSize(500, 200);
         vbox1.getChildren().addAll(nothingButton, buyHouseButton, removeHouseButton);
         vbox1.setAlignment(Pos.CENTER);
         vbox1.setSpacing(5);
@@ -438,7 +438,8 @@ public class SceneManager extends Stage {
 
         //initialisierung der benoetigten Objekte
         //ScrollPane scroll = new ScrollPane();
-        VBox box = new VBox();
+        HBox box = new HBox();
+        VBox vbox = new VBox();
         auctionGP.setAlignment(Pos.CENTER);
         // scroll.setCenterShape(true);
         auctionGP.add(box, 0, 0);
@@ -465,9 +466,12 @@ public class SceneManager extends Stage {
 
         box.setStyle(cssLayout);
         box.setSpacing(10);
-        box.setPrefSize(200, 300);
+        box.setPrefSize(700, 200);
         box.setCenterShape(true);
-        box.getChildren().addAll(hoechstgebotLabel, auctionLabel, label2, tf, bidBut, exitBut);
+        vbox.getChildren().addAll(bidBut, exitBut);
+        vbox.setSpacing(10);
+        vbox.setAlignment(Pos.CENTER);
+        box.getChildren().addAll(hoechstgebotLabel, auctionLabel, label2, tf, vbox);
         box.setAlignment(Pos.CENTER);
         if (GameController != null) {
             GameController.setPopupBellow(auctionGP);

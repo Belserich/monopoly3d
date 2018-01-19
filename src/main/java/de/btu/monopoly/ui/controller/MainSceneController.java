@@ -87,8 +87,8 @@ public class MainSceneController implements Initializable {
     @FXML
     private GridPane PopupPane2;
     @FXML
-    private GridPane centerPane;;
-    
+    private GridPane centerPane;
+
     @FXML
     private GridPane player0Geld;
     @FXML
@@ -547,21 +547,21 @@ public class MainSceneController implements Initializable {
         RentanzeigeFelder[8] = haus8;
         RentanzeigeFelder[9] = haus9;
         RentanzeigeFelder[11] = haus11;
-        haus11.setStyle(style);
+        // haus11.setStyle(style);
         RentanzeigeFelder[12] = haus12;
-        haus12.setStyle(style);
+        // haus12.setStyle(style);
         RentanzeigeFelder[13] = haus13;
-        haus13.setStyle(style);
+        // haus13.setStyle(style);
         RentanzeigeFelder[14] = haus14;
-        haus14.setStyle(style);
+        // haus14.setStyle(style);
         RentanzeigeFelder[15] = haus15;
-        haus15.setStyle(style);
+        // haus15.setStyle(style);
         RentanzeigeFelder[16] = haus16;
-        haus16.setStyle(style);
+        // haus16.setStyle(style);
         RentanzeigeFelder[18] = haus18;
-        haus18.setStyle(style);
+        // haus18.setStyle(style);
         RentanzeigeFelder[19] = haus19;
-        haus19.setStyle(style);
+        // haus19.setStyle(style);
         RentanzeigeFelder[21] = haus21;
         RentanzeigeFelder[23] = haus23;
         RentanzeigeFelder[24] = haus24;
@@ -571,17 +571,17 @@ public class MainSceneController implements Initializable {
         RentanzeigeFelder[28] = haus28;
         RentanzeigeFelder[29] = haus29;
         RentanzeigeFelder[31] = haus31;
-        haus31.setStyle(style);
+        // haus31.setStyle(style);
         RentanzeigeFelder[32] = haus32;
-        haus32.setStyle(style);
+        // haus32.setStyle(style);
         RentanzeigeFelder[34] = haus34;
-        haus34.setStyle(style);
+        // haus34.setStyle(style);
         RentanzeigeFelder[35] = haus35;
-        haus35.setStyle(style);
+        //haus35.setStyle(style);
         RentanzeigeFelder[37] = haus37;
-        haus37.setStyle(style);
+        // haus37.setStyle(style);
         RentanzeigeFelder[39] = haus39;
-        haus39.setStyle(style);
+        //  haus39.setStyle(style);
 
         //Bilder hinzufuegen
         /*Background*/
@@ -836,7 +836,7 @@ public class MainSceneController implements Initializable {
                                 if (((PropertyField) currentField[i]).isMortgageTaken()) {
                                     Label hypothek = new Label("Hypothek");
                                     hypothek.setStyle("-fx-background-color:brown;");
-                                    hypothek.relocate(0,0);
+                                    hypothek.relocate(0, 0);
                                     // hypothek.setAlignment(Pos.CENTER);
                                     //hypothek.layoutXProperty().bind(RentanzeigeFelder[i].widthProperty().subtract(hypothek.getLayoutX()).divide(2));
                                     // hypothek.layoutYProperty().bind(RentanzeigeFelder[i].heightProperty().subtract(hypothek.getLayoutY()).divide(2));
@@ -847,7 +847,7 @@ public class MainSceneController implements Initializable {
                             if (hausAnzahl == 1) {
                                 RentanzeigeFelder[i].getChildren().clear();
                                 hauses = createHaus1(10, 10);
-                                hauses.relocate(0,0);
+                                hauses.relocate(0, 0);
                                 RentanzeigeFelder[i].getChildren().add(hauses);
                             }
                             if (hausAnzahl == 2) {
@@ -870,8 +870,8 @@ public class MainSceneController implements Initializable {
                             }
                             if (hausAnzahl == 5) {
                                 RentanzeigeFelder[i].getChildren().clear();
-                                hauses = createHotel(30, 20);
-                                hauses.relocate(0,0);
+                                hauses = createHotel(12, 30);
+                                hauses.relocate(0, 0);
                                 RentanzeigeFelder[i].getChildren().add(hauses);
                             }
 
@@ -1408,7 +1408,7 @@ public class MainSceneController implements Initializable {
         Platform.runLater(task);
 
     }
-    
+
     public void setPopupBellow(GridPane gridpane) {
 
         Task task = new Task() {
@@ -1437,8 +1437,8 @@ public class MainSceneController implements Initializable {
         };
         Platform.runLater(task);
     }
-    
-     public void resetPopupBellow() {
+
+    public void resetPopupBellow() {
         Task task = new Task() {
             @Override
             protected Object call() throws Exception {
@@ -1477,7 +1477,7 @@ public class MainSceneController implements Initializable {
                 if (Lobby.getPlayerClient().getGame().getBoard() != null) {
                     if (initToggle) {
                         // Los Feld, da Bild eingefügt wurde
-                        // label0.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[0].getName());
+                        label0.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[0].getName());
                         label1.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[1].getName());
                         label2.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[2].getName());
                         label3.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[3].getName());
