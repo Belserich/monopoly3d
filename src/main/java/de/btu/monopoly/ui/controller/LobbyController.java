@@ -693,7 +693,7 @@ public class LobbyController implements Initializable {
 
         try {
             // Wechselt die Scene auf Game
-            SceneManager.changeSceneToGame(new FXMLLoader(getClass().getResource("/fxml/mainScene.fxml")));
+            SceneManager.changeSceneToGame(new FXMLLoader(getClass().getResource("/fxml/mainScene_1.fxml")));
         } catch (IOException ex) {
             Logger.getLogger(LobbyController.class.getName()).log(Level.SEVERE, null, ex);
         }

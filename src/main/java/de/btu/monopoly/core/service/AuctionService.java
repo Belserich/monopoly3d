@@ -48,7 +48,10 @@ public class AuctionService extends Listener {
     public static void startAuction(PropertyField prop) {
 
         int oneMore = 0;
+
         boolean auctionRun = true;
+        boolean noBidder = false;
+
         auc.setProperty(prop);
         JoinAuctionRequest jaReq = new JoinAuctionRequest();
         NetworkService.logClientSendMessage(jaReq, auc.getPlayerName());
@@ -73,25 +76,64 @@ public class AuctionService extends Listener {
                             break;
                     }
                 }
-                else {
+                else { //Nur fuer @GUI
+                    /*
+                    Falls nur noch ein Bieter uebrig ist, hat dieser dank dem Boolean auctionRun noch
+                    die Moeglichkeit weiterhin zu bieten, so lange der (weiter unten implementierte) Countdown
+                    noch laeuft.
+                     */
                     if (!auctionStillActive()) {
-                        if (oneMore != 1) {
+                        /*
+                        Falls das Gebot 0 betraegt und nur noch 1 Bieter uebrig ist, bekommt dieser
+                        die Chance innerhalb des (weiter unten implementierten) Countdowns zu bieten.
+                         */
+                        if (AuctionService.getHighestBid() == 0) {
+                            noBidder = true;
+                            for (int i = 5; i != 0; i--) {
+                                LOGGER.fine("Es wurde noch nichts geboten, es bleiben noch " + i + " Sekunden!");
+                                IOService.sleep(1000);
+                                if (AuctionService.getHighestBid() != 0) {
+                                    noBidder = false;
+                                    LOGGER.fine("Es wurde " + AuctionService.getHighestBid() + "€ von "
+                                            + AuctionService.getPlayer(AuctionService.getHighestBidder()).getName() + " geboten!");
+                                    IOService.sleep(1000);
+                                    break;
+                                }
+                            }
+                            //Falls sich kein Bieter gefunden hat (Objekt wird NICHT verkauft)
+                            if (noBidder) {
+                                LOGGER.fine("Das Grundstück " + AuctionService.getPropertyString() + " wurde nicht verkauft!");
+                                auctionRun = false;
+                                SceneManager.updateAuctionPopup(auctionStillActive(), noBidder);
+                            }
+                            //Falls sich ein Bieter gefunden hat
+                            else {
+                                auctionRun = false;
+                                SceneManager.updateAuctionPopup(auctionStillActive(), noBidder);
+                                sellProperty();
+                            }
+                        }
+                        else {
+                            //Letzter Bieter bekommt nochmal die Moeglichkeit nachzubieten
                             for (int i = 5; i != 0; i--) {
                                 LOGGER.fine("Auktion endet in " + i + " Sekunden. Höchstegebot: "
                                         + auc.getHighestBid() + "€ von " + AuctionService.getPlayer(AuctionService.getHighestBidder()).getName());
                                 IOService.sleep(1000);
                             }
-                            oneMore++;
-                        }
-                        else {
                             auctionRun = false;
+                            SceneManager.updateAuctionPopup(auctionStillActive(), noBidder);
+                            sellProperty();
                         }
                     }
-                    SceneManager.updateAuctionPopup(auctionStillActive());
+                    else {
+                        SceneManager.updateAuctionPopup(auctionStillActive(), noBidder);
+                    }
+
                 }
             }
-            SceneManager.updateAuctionPopup(false);
-            sellProperty();
+            if (isRunInConsole) {
+                sellProperty();
+            }
         }
     }
 

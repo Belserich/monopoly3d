@@ -9,12 +9,14 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
 import de.btu.monopoly.core.service.AuctionService;
-import de.btu.monopoly.core.service.IOService;
 import de.btu.monopoly.data.field.Field;
 import de.btu.monopoly.data.player.Player;
+import de.btu.monopoly.input.IOService;
 import de.btu.monopoly.menu.Lobby;
 import de.btu.monopoly.ui.controller.LobbyController;
 import de.btu.monopoly.ui.controller.MainSceneController;
+import java.io.IOException;
+import java.util.Optional;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
@@ -24,15 +26,22 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
-import javafx.scene.layout.*;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
-
-import java.io.IOException;
+import javafx.stage.WindowEvent;
 
 /**
  *
@@ -58,6 +67,24 @@ public class SceneManager extends Stage {
         stage.setScene(scene);
         stage.show();
 
+        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent event) {
+                Alert alert = new Alert(AlertType.CONFIRMATION);
+                alert.setTitle("Monopoly-Information");
+                alert.setHeaderText("Du beendest gerade Monopoly!");
+                alert.setContentText("Bist du sicher?");
+
+                Optional<ButtonType> result = alert.showAndWait();
+                if (result.get() == ButtonType.OK) {
+                    System.exit(0);
+                }
+                else {
+                    event.consume();
+                }
+
+            }
+        });
     }
 
     public static void appendText(String message) {
@@ -134,9 +161,9 @@ public class SceneManager extends Stage {
         }
     }
 
-    public static void hausUpdate() {
+    public static void propertyStateUpdate() {
         if (GameController != null) {
-            GameController.hausAnzeigen();
+            GameController.propertyState();
         }
     }
 
@@ -177,16 +204,16 @@ public class SceneManager extends Stage {
         box.getChildren().addAll(label, buyButton, dontBuyButton);
         box.setAlignment(Pos.CENTER);
 
-        GameController.setPopup(gridpane);
+        GameController.setPopupBellow(gridpane);
 
         while (!buyButton.isPressed() || !dontBuyButton.isPressed()) {
             IOService.sleep(50);
             if (buyButton.isPressed()) {
-                GameController.resetPopup();
+                GameController.resetPopupBellow();
                 return 1;
             }
             if (dontBuyButton.isPressed()) {
-                GameController.resetPopup();
+                GameController.resetPopupBellow();
                 return 2;
             }
         }
@@ -231,20 +258,20 @@ public class SceneManager extends Stage {
         box.getChildren().addAll(label, rollButton, payButton, cardButton);
         box.setAlignment(Pos.CENTER);
 
-        GameController.setPopup(gridpane);
+        GameController.setPopupBellow(gridpane);
 
         while (!rollButton.isPressed() || !payButton.isPressed() || !cardButton.isPressed()) {
             IOService.sleep(50);
             if (rollButton.isPressed()) {
-                GameController.resetPopup();
+                GameController.resetPopupBellow();
                 return 1;
             }
             if (payButton.isPressed()) {
-                GameController.resetPopup();
+                GameController.resetPopupBellow();
                 return 2;
             }
             if (cardButton.isPressed()) {
-                GameController.resetPopup();
+                GameController.resetPopupBellow();
                 return 3;
             }
         }
@@ -256,14 +283,19 @@ public class SceneManager extends Stage {
 
         GridPane gridpane = new GridPane();
         //ScrollPane scroll = new ScrollPane();
-        VBox box = new VBox();
+        VBox vbox = new VBox();
+        VBox vbox1 = new VBox();
+        VBox vbox2 = new VBox();
+
+        HBox box = new HBox();
 
         gridpane.setAlignment(Pos.CENTER);
         //scroll.setCenterShape(true);
-        gridpane.add(box, 0, 0);
+
         // scroll.setContent(box);
         Label label = new Label("Was möchtest du noch tun?");
 
+        gridpane.getChildren().add(vbox);
         JFXButton nothingButton = new JFXButton();
         JFXButton buyHouseButton = new JFXButton();
         JFXButton removeHouseButton = new JFXButton();
@@ -298,38 +330,47 @@ public class SceneManager extends Stage {
                 + "-fx-border-width: 1;\n"
                 + "-fx-border-style: double;\n";
 
-        box.setStyle(cssLayout);
+        vbox.setStyle(cssLayout);
         box.setSpacing(10);
-        box.setPrefSize(200, 300);
-        box.getChildren().addAll(label, nothingButton, buyHouseButton, removeHouseButton, addMortgageButton, removeMortgageButton, tradeButton);
+        box.setPrefSize(500, 200);
+        vbox1.getChildren().addAll(nothingButton, buyHouseButton, removeHouseButton);
+        vbox1.setAlignment(Pos.CENTER);
+        vbox1.setSpacing(5);
+        vbox2.getChildren().addAll(tradeButton, addMortgageButton, removeMortgageButton);
+        vbox2.setSpacing(5);
+        vbox2.setAlignment(Pos.CENTER);
+        box.setSpacing(40);
+        box.getChildren().addAll(vbox1, vbox2);
+        vbox.getChildren().addAll(label, box);
         box.setAlignment(Pos.CENTER);
+        vbox.setAlignment(Pos.CENTER);
 
-        GameController.setPopup(gridpane);
+        GameController.setPopupBellow(gridpane);
 
         while (!nothingButton.isPressed() || !buyHouseButton.isPressed() || !removeHouseButton.isPressed() || !addMortgageButton.isPressed() || !removeMortgageButton.isPressed() || !tradeButton.isPressed()) {
             IOService.sleep(50);
             if (nothingButton.isPressed()) {
-                GameController.resetPopup();
+                GameController.resetPopupBellow();
                 return 1;
             }
             if (buyHouseButton.isPressed()) {
-                GameController.resetPopup();
+                GameController.resetPopupBellow();
                 return 2;
             }
             if (removeHouseButton.isPressed()) {
-                GameController.resetPopup();
+                GameController.resetPopupBellow();
                 return 3;
             }
             if (addMortgageButton.isPressed()) {
-                GameController.resetPopup();
+                GameController.resetPopupBellow();
                 return 4;
             }
             if (removeMortgageButton.isPressed()) {
-                GameController.resetPopup();
+                GameController.resetPopupBellow();
                 return 5;
             }
             if (tradeButton.isPressed()) {
-                GameController.resetPopup();
+                GameController.resetPopupBellow();
                 return 6;
             }
         }
@@ -337,16 +378,14 @@ public class SceneManager extends Stage {
         return -1;
     }
 
-    public static int askForFieldPopup(Player player, String[] fieldNames) {
+    public static int askForFieldPopup(Player player, Field[] fields) {
 
         GridPane gridPane = new GridPane();
-
-        //ScrollPane scroll = new ScrollPane();
         VBox box = new VBox();
+
         gridPane.setAlignment(Pos.CENTER);
-        //scroll.setCenterShape(true);
         gridPane.add(box, 0, 0);
-        // scroll.setContent(box);
+
         Label label = new Label("Wähle ein Feld:");
         JFXComboBox fieldBox = new JFXComboBox();
         Button button = new Button();
@@ -365,8 +404,8 @@ public class SceneManager extends Stage {
         button.setBackground(new Background(new BackgroundFill(Color.web("#e1f5fe"), CornerRadii.EMPTY, Insets.EMPTY)));
         label.setFont(Font.font("Tahoma", 14));
 
-        for (String name : fieldNames) {
-            fieldBox.getItems().add(name);
+        for (Field field : fields) {
+            fieldBox.getItems().add(field.getName());
         }
 
         fieldBox.getSelectionModel().selectFirst();
@@ -374,19 +413,19 @@ public class SceneManager extends Stage {
         box.getChildren().addAll(label, fieldBox, button);
         box.setAlignment(Pos.CENTER);
 
-        GameController.setPopup(gridPane);
+        GameController.setPopupBellow(gridPane);
 
         while (!button.isPressed()) {
             IOService.sleep(50);
         }
 
-        GameController.resetPopup();
+        GameController.resetPopupBellow();
 
         int id = 0;
         for (Field field : Lobby.getPlayerClient().getGame().getBoard().getFieldManager().getFields()) {
 
             id++;
-            if (field.getName() == fieldNames[fieldBox.getSelectionModel().getSelectedIndex()]) {
+            if (field == fields[fieldBox.getSelectionModel().getSelectedIndex()]) {
                 return id;
 
             }
@@ -399,25 +438,46 @@ public class SceneManager extends Stage {
 
         //initialisierung der benoetigten Objekte
         //ScrollPane scroll = new ScrollPane();
-        VBox box = new VBox();
+        HBox box = new HBox();
+        VBox vbox = new VBox();
         auctionGP.setAlignment(Pos.CENTER);
         // scroll.setCenterShape(true);
-        auctionGP.add(box, 0, 0);
-        // scroll.setContent(box);
 
+        // scroll.setContent(box);
         hoechstgebotLabel.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
         Label label2 = new Label("Dein Gebot für \n" + AuctionService.getPropertyString() + ":");
-        label2.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
-
         JFXTextField tf = new JFXTextField();
-        tf.setAlignment(Pos.CENTER);
         JFXButton bidBut = new JFXButton("Bieten");
-        bidBut.setBackground(new Background(new BackgroundFill(Color.web("#e1f5fe"), CornerRadii.EMPTY, Insets.EMPTY)));
-
         JFXButton exitBut = new JFXButton("Aussteigen");
+
+        //Eventhandler(n)
+        EventHandler bid = new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                try {
+                    AuctionService.setBid(Lobby.getPlayerClient().getPlayerOnClient().getId(), Integer.parseInt(tf.getText()));
+                } catch (NumberFormatException e) {
+                    tf.setText("");
+                    tf.setPromptText("Bitte nur Zahlen eingeben!");
+                }
+            }
+        };
+
+        //Einstellung der benoetigten Objekte
+        auctionGP.setAlignment(Pos.CENTER);
+        auctionGP.add(box, 0, 0);
+        hoechstgebotLabel.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
+        label2.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
+        tf.setAlignment(Pos.CENTER);
+
+        bidBut.setBackground(new Background(new BackgroundFill(Color.web("#e1f5fe"), CornerRadii.EMPTY, Insets.EMPTY)));
         exitBut.setBackground(new Background(new BackgroundFill(Color.web("#e1f5fe"), CornerRadii.EMPTY, Insets.EMPTY)));
 
         tf.setPromptText(" ");
+
+        //Damit der Cursor direkt im Textfield liegt TODO @ Patrick
+//        tf.requestFocus();
+//        tf.positionCaret(0);
         String cssLayout = "-fx-background-color: #dcedc8;\n"
                 + "-fx-border-color: black;\n"
                 + "-fx-border-insets: 5;\n"
@@ -426,35 +486,30 @@ public class SceneManager extends Stage {
 
         box.setStyle(cssLayout);
         box.setSpacing(10);
-        box.setPrefSize(200, 300);
+        box.setPrefSize(700, 200);
         box.setCenterShape(true);
-        box.getChildren().addAll(hoechstgebotLabel, auctionLabel, label2, tf, bidBut, exitBut);
+        vbox.getChildren().addAll(bidBut, exitBut);
+        vbox.setSpacing(10);
+        vbox.setAlignment(Pos.CENTER);
+        box.getChildren().addAll(hoechstgebotLabel, auctionLabel, label2, tf, vbox);
         box.setAlignment(Pos.CENTER);
-        GameController.setPopup(auctionGP);
+        if (GameController != null) {
+            GameController.setPopupBellow(auctionGP);
+        }
 
-        bidBut.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                try {
-                    AuctionService.setBid(Lobby.getPlayerClient().getPlayerOnClient().getId(), Integer.parseInt(tf.getText()));
-                    // GameController.resetPopup(auctionGP);
-                } catch (NumberFormatException e) {
-                    tf.setText("");
-                    tf.setPromptText("Bitte nur Zahlen eingeben!");
-                }
-            }
-        });
-
+        //Verknuepfung mit EventHandler(n)
+        tf.setOnAction(bid);
+        bidBut.setOnAction(bid);
         exitBut.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 AuctionService.playerExit(Lobby.getPlayerClient().getPlayerOnClient().getId());
-                GameController.resetPopup();
+                GameController.resetPopupBellow();
             }
         });
     }
 
-    public static void updateAuctionPopup(boolean stillActive) {
+    public static void updateAuctionPopup(boolean stillActive, boolean noBidder) {
 
         Task task = new Task() {
             @Override
@@ -466,20 +521,27 @@ public class SceneManager extends Stage {
         };
         Platform.runLater(task);
 
-        IOService.sleep(2000);
+        IOService.sleep(500);
 
-        if (stillActive == false) {
-            GameController.resetPopup();
+        if (!stillActive) {
+
+            GameController.resetPopupBellow();
+
             GridPane gp = new GridPane();
-            //ScrollPane scroll = new ScrollPane();
             VBox box = new VBox();
+            Label lbl = new Label();
+
             gp.setAlignment(Pos.CENTER);
-            // scroll.setCenterShape(true);
             gp.add(box, 0, 0);
-            //scroll.setContent(box);
-            Label lbl = new Label(Lobby.getPlayerClient().getGame().getPlayers()[AuctionService.getHighestBidder()].getName()
-                    + " hat die Auktion gewonnen und muss " + AuctionService.getHighestBid() + "€ für das Grundstück "
-                    + AuctionService.getPropertyString() + " zahlen!");
+
+            if (noBidder) {
+                lbl.setText("Das Grundstück " + AuctionService.getPropertyString() + " wurde nicht verkauft!");
+            }
+            else {
+                lbl.setText(Lobby.getPlayerClient().getGame().getPlayers()[AuctionService.getHighestBidder()].getName()
+                        + " hat die Auktion gewonnen und muss " + AuctionService.getHighestBid() + "€ für das Grundstück "
+                        + AuctionService.getPropertyString() + " zahlen!");
+            }
             String cssLayout = "-fx-background-color: #dcedc8;\n"
                     + "-fx-border-color: black;\n"
                     + "-fx-border-insets: 5;\n"
@@ -493,11 +555,15 @@ public class SceneManager extends Stage {
             box.setCenterShape(true);
             box.getChildren().addAll(lbl);
             box.setAlignment(Pos.CENTER);
-            GameController.setPopup(gp);
+            GameController.setPopupBellow(gp);
             IOService.sleep(3500);
-            GameController.resetPopup();
+            GameController.resetPopupBellow();
         }
 
+    }
+
+    public static void initStreets() {
+        GameController.initStreets();
     }
 
 }

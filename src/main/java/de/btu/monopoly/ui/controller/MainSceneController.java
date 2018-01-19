@@ -11,7 +11,9 @@ import de.btu.monopoly.core.service.IOService;
 import de.btu.monopoly.data.field.Field;
 import de.btu.monopoly.data.field.FieldManager;
 import de.btu.monopoly.data.field.PropertyField;
+import de.btu.monopoly.data.field.StationField;
 import de.btu.monopoly.data.field.StreetField;
+import de.btu.monopoly.data.field.SupplyField;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.menu.Lobby;
 import de.btu.monopoly.net.client.GameClient;
@@ -48,6 +50,8 @@ public class MainSceneController implements Initializable {
     GameClient client;
     StackPane middlePane;
 
+    // Label hypothek = new Label("Hypothek");
+    HBox hbox;
     //Geld Labels
     @FXML
     private Label geld0;
@@ -70,6 +74,11 @@ public class MainSceneController implements Initializable {
     private GridPane grid2;
     @FXML
     private GridPane PopupPane;
+    @FXML
+    private GridPane PopupPane2;
+    @FXML
+    private GridPane centerPane;
+
     @FXML
     private GridPane player0Geld;
     @FXML
@@ -267,8 +276,150 @@ public class MainSceneController implements Initializable {
     @FXML
     private Pane besitz39;
 
+    // Straßennamen (Labels)
+    @FXML
+    private Label label0;
+    @FXML
+    private Label label1;
+    @FXML
+    private Label label2;
+    @FXML
+    private Label label3;
+    @FXML
+    private Label label4;
+    @FXML
+    private Label label5;
+    @FXML
+    private Label label6;
+    @FXML
+    private Label label7;
+    @FXML
+    private Label label8;
+    @FXML
+    private Label label9;
+    @FXML
+    private Label label10;
+    @FXML
+    private Label label11;
+    @FXML
+    private Label label12;
+    @FXML
+    private Label label13;
+    @FXML
+    private Label label14;
+    @FXML
+    private Label label15;
+    @FXML
+    private Label label16;
+    @FXML
+    private Label label17;
+    @FXML
+    private Label label18;
+    @FXML
+    private Label label19;
+    @FXML
+    private Label label20;
+    @FXML
+    private Label label21;
+    @FXML
+    private Label label22;
+    @FXML
+    private Label label23;
+    @FXML
+    private Label label24;
+    @FXML
+    private Label label25;
+    @FXML
+    private Label label26;
+    @FXML
+    private Label label27;
+    @FXML
+    private Label label28;
+    @FXML
+    private Label label29;
+    @FXML
+    private Label label30;
+    @FXML
+    private Label label31;
+    @FXML
+    private Label label32;
+    @FXML
+    private Label label33;
+    @FXML
+    private Label label34;
+    @FXML
+    private Label label35;
+    @FXML
+    private Label label36;
+    @FXML
+    private Label label37;
+    @FXML
+    private Label label38;
+    @FXML
+    private Label label39;
+    private boolean initToggle = true;
+
+    //Häser/Hypothek Anzeige
+    @FXML
+    private Pane haus1;
+    @FXML
+    private Pane haus3;
+    @FXML
+    private Pane haus5;
+    @FXML
+    private Pane haus6;
+    @FXML
+    private Pane haus8;
+    @FXML
+    private Pane haus9;
+    @FXML
+    private Pane haus11;
+    @FXML
+    private Pane haus12;
+    @FXML
+    private Pane haus13;
+    @FXML
+    private Pane haus14;
+    @FXML
+    private Pane haus15;
+    @FXML
+    private Pane haus16;
+    @FXML
+    private Pane haus18;
+    @FXML
+    private Pane haus19;
+    @FXML
+    private Pane haus21;
+    @FXML
+    private Pane haus23;
+    @FXML
+    private Pane haus24;
+    @FXML
+    private Pane haus25;
+    @FXML
+    private Pane haus26;
+    @FXML
+    private Pane haus27;
+    @FXML
+    private Pane haus28;
+    @FXML
+    private Pane haus29;
+    @FXML
+    private Pane haus31;
+    @FXML
+    private Pane haus32;
+    @FXML
+    private Pane haus34;
+    @FXML
+    private Pane haus35;
+    @FXML
+    private Pane haus37;
+    @FXML
+    private Pane haus39;
+
     private Pane[] Felder;
     private Pane[] BesitzanzeigeFelder;
+    private Pane[] RentanzeigeFelder;
 
     // Speichert die letzte Position für das Vorrücken
     private int lastPosPlayer0 = 0;
@@ -375,6 +526,52 @@ public class MainSceneController implements Initializable {
         BesitzanzeigeFelder[37] = besitz37;
         BesitzanzeigeFelder[38] = besitz38;
         BesitzanzeigeFelder[39] = besitz39;
+
+        RentanzeigeFelder = new Pane[40];
+        String style = "-fx-rotate:90";
+
+        RentanzeigeFelder[1] = haus1;
+        RentanzeigeFelder[3] = haus3;
+        RentanzeigeFelder[5] = haus5;
+        RentanzeigeFelder[6] = haus6;
+        RentanzeigeFelder[8] = haus8;
+        RentanzeigeFelder[9] = haus9;
+        RentanzeigeFelder[11] = haus11;
+        // haus11.setStyle(style);
+        RentanzeigeFelder[12] = haus12;
+        // haus12.setStyle(style);
+        RentanzeigeFelder[13] = haus13;
+        // haus13.setStyle(style);
+        RentanzeigeFelder[14] = haus14;
+        // haus14.setStyle(style);
+        RentanzeigeFelder[15] = haus15;
+        // haus15.setStyle(style);
+        RentanzeigeFelder[16] = haus16;
+        // haus16.setStyle(style);
+        RentanzeigeFelder[18] = haus18;
+        // haus18.setStyle(style);
+        RentanzeigeFelder[19] = haus19;
+        // haus19.setStyle(style);
+        RentanzeigeFelder[21] = haus21;
+        RentanzeigeFelder[23] = haus23;
+        RentanzeigeFelder[24] = haus24;
+        RentanzeigeFelder[25] = haus25;
+        RentanzeigeFelder[26] = haus26;
+        RentanzeigeFelder[27] = haus27;
+        RentanzeigeFelder[28] = haus28;
+        RentanzeigeFelder[29] = haus29;
+        RentanzeigeFelder[31] = haus31;
+        // haus31.setStyle(style);
+        RentanzeigeFelder[32] = haus32;
+        // haus32.setStyle(style);
+        RentanzeigeFelder[34] = haus34;
+        // haus34.setStyle(style);
+        RentanzeigeFelder[35] = haus35;
+        //haus35.setStyle(style);
+        RentanzeigeFelder[37] = haus37;
+        // haus37.setStyle(style);
+        RentanzeigeFelder[39] = haus39;
+        //  haus39.setStyle(style);
 
         //Bilder hinzufuegen
         /*Background*/
@@ -547,29 +744,127 @@ public class MainSceneController implements Initializable {
     }
 
     /**
+     * der Hypothekzustand jedes PropertyField wurde dargestellt
+     */
+//    public void hypothekState() {
+//
+//        Task task = new Task() {
+//            @Override
+//            protected Object call() throws Exception {
+//                if (Lobby.getPlayerClient().getGame().getBoard() != null) {
+//                    Field[] currentField = Lobby.getPlayerClient().getGame().getBoard().getFields();
+//                    Label hypothek = new Label("Hypothek");
+//
+//                    hypothek.setStyle("-fx-background-color:brown;"
+//                            + "-fx-rotate: -45");
+//
+//                    for (int i = 0; i < Felder.length; i++) {
+//
+//                        if (currentField[i] instanceof PropertyField) {
+//                            if (((PropertyField) currentField[i]).isMortgageTaken()) {
+//                                hypothek.setAlignment(Pos.CENTER);
+//                                hypothek.layoutXProperty().bind(Felder[i].widthProperty().subtract(hypothek.getLayoutX()).divide(2));
+//                                hypothek.layoutYProperty().bind(Felder[i].heightProperty().subtract(hypothek.getLayoutY()).divide(2));
+//                                Felder[i].getChildren().add(hypothek);
+//                            }
+//                            else {
+//                                for (int j = 0; j < Felder[i].getChildren().size(); j++) {
+//                                    if (Felder[i].getChildren().get(j) instanceof Label) {
+//                                        Felder[i].getChildren().remove(j);
+//                                    }
+//                                    else {
+//
+//                                    }
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//
+//                return null;
+//            }
+//        };
+//        Platform.runLater(task);
+//    }
+    /**
      * Erstellt auf dem entsprechenden Feld ein/mehrere Hauser TODO moegliche
      * Bugfixes
      */
-    public void hausAnzeigen() {
+    public void propertyState() {
         if (Lobby.getPlayerClient().getGame().getBoard() != null) {
             Field[] currentField = Lobby.getPlayerClient().getGame().getBoard().getFields();
 
             Task task = new Task() {
                 @Override
                 protected Object call() throws Exception {
-                    HBox hbox = new HBox();
                     int hausAnzahl = 0;
-                    for (Pane field : Felder) {
-                        for (int i = 0; i < Felder.length; i++) {
-                            if (Felder[i] == field) {
-                                if (currentField[i] instanceof StreetField) {
-                                    hausAnzahl = ((StreetField) currentField[i]).getHouseCount();
-                                    if (hausAnzahl != 0) {
-                                        field.getChildren().addAll(createHaus(10, 10, hausAnzahl));
+                    HBox hauses;
 
-                                    }
+                    for (int i = 0; i < Felder.length; i++) {
+                        if (currentField[i] instanceof SupplyField || currentField[i] instanceof StationField) {
+                            if (((PropertyField) currentField[i]).isMortgageTaken()) {
+                                Label hypothek = new Label("Hypothek");
+                                hypothek.setStyle("-fx-background-color:brown;");
+                                hypothek.relocate(0, 0);
+                                // hypothek.setAlignment(Pos.CENTER);
+                                //hypothek.layoutXProperty().bind(RentanzeigeFelder[i].widthProperty().subtract(hypothek.getLayoutX()).divide(2));
+                                //hypothek.layoutYProperty().bind(RentanzeigeFelder[i].heightProperty().subtract(hypothek.getLayoutY()).divide(2));
+
+                                RentanzeigeFelder[i].getChildren().add(hypothek);
+                            }
+                            if (!((PropertyField) currentField[i]).isMortgageTaken()) {
+                                RentanzeigeFelder[i].getChildren().clear();
+
+                            }
+                        }
+
+                        if (currentField[i] instanceof StreetField) {
+                            hausAnzahl = ((StreetField) currentField[i]).getHouseCount();
+
+                            if (hausAnzahl == 0) {
+                                RentanzeigeFelder[i].getChildren().clear();
+                                if (((PropertyField) currentField[i]).isMortgageTaken()) {
+                                    Label hypothek = new Label("Hypothek");
+                                    hypothek.setStyle("-fx-background-color:brown;");
+                                    hypothek.relocate(0, 0);
+                                    // hypothek.setAlignment(Pos.CENTER);
+                                    //hypothek.layoutXProperty().bind(RentanzeigeFelder[i].widthProperty().subtract(hypothek.getLayoutX()).divide(2));
+                                    // hypothek.layoutYProperty().bind(RentanzeigeFelder[i].heightProperty().subtract(hypothek.getLayoutY()).divide(2));
+
+                                    RentanzeigeFelder[i].getChildren().add(hypothek);
                                 }
                             }
+                            if (hausAnzahl == 1) {
+                                RentanzeigeFelder[i].getChildren().clear();
+                                hauses = createHaus1(10, 10);
+                                hauses.relocate(0, 0);
+                                RentanzeigeFelder[i].getChildren().add(hauses);
+                            }
+                            if (hausAnzahl == 2) {
+                                RentanzeigeFelder[i].getChildren().clear();
+                                hauses = createHaus2(10, 10);
+                                hauses.relocate(0, 0);
+                                RentanzeigeFelder[i].getChildren().add(hauses);
+                            }
+                            if (hausAnzahl == 3) {
+                                RentanzeigeFelder[i].getChildren().clear();
+                                hauses = createHaus3(10, 10);
+                                hauses.relocate(0, 0);
+                                RentanzeigeFelder[i].getChildren().add(hauses);
+                            }
+                            if (hausAnzahl == 4) {
+                                RentanzeigeFelder[i].getChildren().clear();
+                                hauses = createHaus4(10, 10);
+                                hauses.relocate(0, 0);
+                                RentanzeigeFelder[i].getChildren().add(hauses);
+                            }
+                            if (hausAnzahl == 5) {
+                                RentanzeigeFelder[i].getChildren().clear();
+                                hauses = createHotel(12, 30);
+                                hauses.relocate(0, 0);
+                                RentanzeigeFelder[i].getChildren().add(hauses);
+                            }
+
                         }
                     }
 
@@ -590,8 +885,97 @@ public class MainSceneController implements Initializable {
      * @param anzahl der Hauser
      * @return
      */
+    public HBox createHaus1(int width, int heigth) {
+        hbox = new HBox();
+
+        HBox haus = new HBox();
+        Rectangle half1 = new Rectangle(width / 2, heigth, Color.web("#82ada9"));
+        Rectangle half2 = new Rectangle(width / 2, heigth, Color.web("#b2dfdb"));
+        haus.getChildren().addAll(half1, half2);
+        haus.setStyle("-fx-effect: dropshadow(gaussian, yellowgreen, 3, 0, 0, 0);");
+        hbox.getChildren().add(haus);
+
+        hbox.setSpacing(5);
+
+        return hbox;
+
+    }
+
+    public HBox createHaus2(int width, int heigth) {
+        HBox box = new HBox();
+        HBox haus;
+        for (int i = 0; i < 2; i++) {
+            haus = new HBox();
+            Rectangle half1 = new Rectangle(width / 2, heigth, Color.web("#82ada9"));
+            Rectangle half2 = new Rectangle(width / 2, heigth, Color.web("#b2dfdb"));
+            haus.getChildren().addAll(half1, half2);
+            haus.setStyle("-fx-effect: dropshadow(gaussian, yellowgreen, 3, 0, 0, 0);");
+            box.getChildren().addAll(haus);
+        }
+        box.setSpacing(5);
+
+        return box;
+
+    }
+
+    public HBox createHaus3(int width, int heigth) {
+        HBox box = new HBox();
+        HBox haus;
+        for (int i = 0; i < 3; i++) {
+            haus = new HBox();
+            Rectangle half1 = new Rectangle(width / 2, heigth, Color.web("#82ada9"));
+            Rectangle half2 = new Rectangle(width / 2, heigth, Color.web("#b2dfdb"));
+            haus.getChildren().addAll(half1, half2);
+            haus.setStyle("-fx-effect: dropshadow(gaussian, yellowgreen, 3, 0, 0, 0);");
+            box.getChildren().addAll(haus);
+        }
+        box.setSpacing(5);
+
+        return box;
+
+    }
+
+    public HBox createHaus4(int width, int heigth) {
+        HBox box = new HBox();
+        HBox haus;
+        for (int i = 0; i < 4; i++) {
+            haus = new HBox();
+            Rectangle half1 = new Rectangle(width / 2, heigth, Color.web("#82ada9"));
+            Rectangle half2 = new Rectangle(width / 2, heigth, Color.web("#b2dfdb"));
+            haus.getChildren().addAll(half1, half2);
+            haus.setStyle("-fx-effect: dropshadow(gaussian, yellowgreen, 3, 0, 0, 0);");
+            box.getChildren().addAll(haus);
+        }
+        box.setSpacing(5);
+
+        return box;
+
+    }
+
+    public HBox createHotel(int width, int heigth) {
+        HBox box = new HBox();
+        HBox haus;
+        haus = new HBox();
+        Rectangle half1 = new Rectangle(width, heigth / 2, Color.web("#c97b63"));
+        Rectangle half2 = new Rectangle(width, heigth / 2, Color.web("#ffab91"));
+        haus.getChildren().addAll(half1, half2);
+        haus.setStyle("-fx-effect: dropshadow(gaussian, brown, 3, 0, 0, 0);");
+        box.getChildren().addAll(haus);
+
+        return box;
+
+    }
+
+    /**
+     * Erstellt die Figur von Haus
+     *
+     * @param width
+     * @param heigth
+     * @param anzahl der Hauser
+     * @return
+     */
     public HBox createHaus(int width, int heigth, int anzahl) {
-        HBox hbox = new HBox();
+        hbox = new HBox();
 
         HBox haus = new HBox();
         for (int j = 0; j < anzahl; j++) {
@@ -657,11 +1041,11 @@ public class MainSceneController implements Initializable {
         box.setAlignment(Pos.CENTER);
 
         if (PopupPane.getChildren().contains(middlePane)) {
-            setPopup(player0Pane);
+            setPopupAbove(player0Pane);
         }
 
         exit.setOnAction(e -> {
-            resetPopup();
+            resetPopupAbove();
         });
     }
 
@@ -697,11 +1081,11 @@ public class MainSceneController implements Initializable {
         box.setAlignment(Pos.CENTER);
 
         if (PopupPane.getChildren().contains(middlePane)) {
-            setPopup(gp);
+            setPopupAbove(gp);
         }
 
         exit.setOnAction(e -> {
-            resetPopup();
+            resetPopupAbove();
         });
 
     }
@@ -845,52 +1229,46 @@ public class MainSceneController implements Initializable {
         Player[] players = Lobby.getPlayerClient().getGame().getPlayers();
 
         if (players.length >= 1) {
-            for (int i = lastPosPlayer0; i < players[0].getPosition(); i++) {
-                playerUpdate0(players, i);
+            while (lastPosPlayer0 != players[0].getPosition()) {
+                lastPosPlayer0 = ++lastPosPlayer0 % 40;
+                playerUpdate0(players, lastPosPlayer0);
                 IOService.sleep(300);
             }
-            playerUpdate0(players, players[0].getPosition());
-            lastPosPlayer0 = players[0].getPosition();
         }
         if (players.length >= 2) {
-            for (int i = lastPosPlayer1; i < players[1].getPosition(); i++) {
-                playerUpdate1(players, i);
+            while (lastPosPlayer1 != players[1].getPosition()) {
+                lastPosPlayer1 = ++lastPosPlayer1 % 40;
+                playerUpdate1(players, lastPosPlayer1);
                 IOService.sleep(300);
             }
-            playerUpdate1(players, players[1].getPosition());
-            lastPosPlayer1 = players[1].getPosition();
         }
         if (players.length >= 3) {
-            for (int i = lastPosPlayer2; i < players[2].getPosition(); i++) {
-                playerUpdate2(players, i);
+            while (lastPosPlayer2 != players[2].getPosition()) {
+                lastPosPlayer2 = ++lastPosPlayer2 % 40;
+                playerUpdate2(players, lastPosPlayer2);
                 IOService.sleep(300);
             }
-            playerUpdate2(players, players[2].getPosition());
-            lastPosPlayer2 = players[2].getPosition();
         }
         if (players.length >= 4) {
-            for (int i = lastPosPlayer3; i < players[3].getPosition(); i++) {
-                playerUpdate3(players, i);
+            while (lastPosPlayer3 != players[3].getPosition()) {
+                lastPosPlayer3 = ++lastPosPlayer3 % 40;
+                playerUpdate3(players, lastPosPlayer3);
                 IOService.sleep(300);
             }
-            playerUpdate3(players, players[3].getPosition());
-            lastPosPlayer3 = players[3].getPosition();
         }
         if (players.length >= 5) {
-            for (int i = lastPosPlayer4; i < players[4].getPosition(); i++) {
-                playerUpdate4(players, i);
+            while (lastPosPlayer4 != players[4].getPosition()) {
+                lastPosPlayer4 = ++lastPosPlayer4 % 40;
+                playerUpdate4(players, lastPosPlayer4);
                 IOService.sleep(300);
             }
-            playerUpdate4(players, players[4].getPosition());
-            lastPosPlayer4 = players[4].getPosition();
         }
         if (players.length >= 6) {
-            for (int i = lastPosPlayer5; i < players[5].getPosition(); i++) {
-                playerUpdate5(players, i);
+            while (lastPosPlayer5 != players[5].getPosition()) {
+                lastPosPlayer5 = ++lastPosPlayer5 % 40;
+                playerUpdate5(players, lastPosPlayer5);
                 IOService.sleep(300);
             }
-            playerUpdate5(players, players[5].getPosition());
-            lastPosPlayer5 = players[5].getPosition();
         }
 
     }
@@ -1001,7 +1379,7 @@ public class MainSceneController implements Initializable {
      *
      * @param gridpane
      */
-    public void setPopup(GridPane gridpane) {
+    public void setPopupAbove(GridPane gridpane) {
 
         Task task = new Task() {
             @Override
@@ -1015,15 +1393,40 @@ public class MainSceneController implements Initializable {
 
     }
 
+    public void setPopupBellow(GridPane gridpane) {
+
+        Task task = new Task() {
+            @Override
+            protected Object call() throws Exception {
+                PopupPane2.getChildren().remove(middlePane);
+                PopupPane2.add(gridpane, 0, 0);
+                return null;
+            }
+        };
+        Platform.runLater(task);
+
+    }
+
     /**
      * Reset des letzten Popups
      */
-    public void resetPopup() {
+    public void resetPopupAbove() {
         Task task = new Task() {
             @Override
             protected Object call() throws Exception {
                 PopupPane.getChildren().clear();
                 PopupPane.add(middlePane, 0, 0);
+                return null;
+            }
+        };
+        Platform.runLater(task);
+    }
+
+    public void resetPopupBellow() {
+        Task task = new Task() {
+            @Override
+            protected Object call() throws Exception {
+                PopupPane2.getChildren().clear();
                 return null;
             }
         };
@@ -1046,6 +1449,66 @@ public class MainSceneController implements Initializable {
             }
         };
         Platform.runLater(task);
+    }
+
+    // -------------------------------------------------------------------------
+    // Initialisierung der Felder
+    public void initStreets() {
+
+        Task task = new Task() {
+            @Override
+            protected Object call() throws Exception {
+                if (Lobby.getPlayerClient().getGame().getBoard() != null) {
+                    if (initToggle) {
+                        // Los Feld, da Bild eingefügt wurde
+                        label0.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[0].getName());
+                        label1.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[1].getName());
+                        label2.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[2].getName());
+                        label3.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[3].getName());
+                        label4.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[4].getName());
+                        label5.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[5].getName());
+                        label6.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[6].getName());
+                        label7.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[7].getName());
+                        label8.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[8].getName());
+                        label9.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[9].getName());
+                        label10.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[10].getName());
+                        label11.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[11].getName());
+                        label12.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[12].getName());
+                        label13.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[13].getName());
+                        label14.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[14].getName());
+                        label15.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[15].getName());
+                        label16.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[16].getName());
+                        label17.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[17].getName());
+                        label18.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[18].getName());
+                        label19.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[19].getName());
+                        label20.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[20].getName());
+                        label21.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[21].getName());
+                        label22.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[22].getName());
+                        label23.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[23].getName());
+                        label24.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[24].getName());
+                        label25.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[25].getName());
+                        label26.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[26].getName());
+                        label27.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[27].getName());
+                        label28.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[28].getName());
+                        label29.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[29].getName());
+                        label30.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[30].getName());
+                        label31.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[31].getName());
+                        label32.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[32].getName());
+                        label33.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[33].getName());
+                        label34.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[34].getName());
+                        label35.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[35].getName());
+                        label36.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[36].getName());
+                        label37.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[37].getName());
+                        label38.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[38].getName());
+                        label39.setText(Lobby.getPlayerClient().getGame().getBoard().getFields()[39].getName());
+                        initToggle = false;
+                    }
+                }
+                return null;
+            }
+        };
+        Platform.runLater(task);
+
     }
 
 }

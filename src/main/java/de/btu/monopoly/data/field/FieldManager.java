@@ -116,10 +116,12 @@ public class FieldManager {
 
         if (pos >= fields.length) {
             pos %= fields.length;
-            player.setPosition(pos);
             PlayerService.giveMoney(player, getGoField().getAmount());
         }
-
+        player.setPosition(pos);
+        if (amount >= 0) {
+            LOGGER.info(String.format("%s wurde %d Felder weiter bewegt.", player.getName(), amount));
+        }
         return fields[pos];
     }
 
@@ -150,8 +152,9 @@ public class FieldManager {
 
         System.out.println("HAI");
         LOGGER.info(String.format("%s versucht, ein Haus auf %s zu kaufen.", player.getName(), street.getName()));
-        if (balanceCheck(street, 1, 0)
-                && PlayerService.checkLiquidity(player, street.getHousePrice())) {
+        // if (isComplete(street)) {
+        // if (balanceCheck(street, 1, 0)
+        if (PlayerService.checkLiquidity(player, street.getHousePrice())) {
             if (street.getHouseCount() < 5) {
                 if (!street.isMortgageTaken()) {
                     buyHouseUnchecked(street);
@@ -166,6 +169,13 @@ public class FieldManager {
             }
         }
         return false;
+        //  }
+//        else {
+//            LOGGER.warning(String.format("Auf %s kann kein Haus bebaut werden, weil nicht alle Strassen des Spielers "
+//                    + "gehören.", street.getName()));
+//
+//        }
+//        return false;
     }
 
     /**
@@ -193,15 +203,15 @@ public class FieldManager {
         Player player = street.getOwner();
 
         LOGGER.info(String.format("%s versucht, ein Haus auf %s zu verkaufen.", player.getName(), street.getName()));
-        if (balanceCheck(street, 0, 1)) {
-            if (street.getHouseCount() > 0) {
-                sellHouseUnchecked(street);
-                return true;
-            }
-            else {
-                LOGGER.warning(String.format("Auf %s stehen keine Haeuser.", street.getName()));
-            }
+        //  if (balanceCheck(street, 0, 1)) {
+        if (street.getHouseCount() > 0) {
+            sellHouseUnchecked(street);
+            return true;
         }
+//            else {
+//                LOGGER.warning(String.format("Auf %s stehen keine Haeuser.", street.getName()));
+//            }
+        //  }
         return false;
     }
 
@@ -350,6 +360,10 @@ public class FieldManager {
                 LOGGER.warning("Es wurde bereits eine Hypothek für dieses gebäude aufgenommen!");
                 return;
             }
+        }
+        if (prop.isMortgageTaken() && (prop instanceof SupplyField || prop instanceof StationField)) {
+            LOGGER.warning("Es wurde bereits eine Hypothek für dieses gebäude aufgenommen!");
+            return;
         }
 
         takeMortgageUnchecked(prop);

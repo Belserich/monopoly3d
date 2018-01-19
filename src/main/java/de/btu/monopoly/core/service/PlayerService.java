@@ -53,10 +53,6 @@ public class PlayerService {
         
         int pos = player.getPosition();
         pos += amount;
-        player.setPosition(pos);
-        if (amount >= 0) {
-            LOGGER.info(String.format("%s wurde %d Felder weiter bewegt.", player.getName(), amount));
-        }
         return pos;
     }
 

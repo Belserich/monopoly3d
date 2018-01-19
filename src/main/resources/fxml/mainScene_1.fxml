@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.jfoenix.controls.*?>
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.effect.Glow?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.paint.RadialGradient?>
-<?import javafx.scene.paint.Stop?>
+<?import javafx.scene.text.*?>
 <?import javafx.scene.shape.*?>
-<GridPane gridLinesVisible="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="720.0" minWidth="1280.0" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.btu.monopoly.ui.controller.MainSceneController">
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.paint.*?>
+<?import com.jfoenix.controls.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<GridPane fx:id="mainGrid" gridLinesVisible="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="720.0" minWidth="1280.0" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.btu.monopoly.ui.controller.MainSceneController">
     <columnConstraints>
         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
         <ColumnConstraints minWidth="720.0" percentWidth="56.25" />
@@ -18,7 +20,7 @@
         <RowConstraints minHeight="720.0" prefHeight="720.0" vgrow="SOMETIMES" />
     </rowConstraints>
     <children>
-        <GridPane onMouseMoved="#showName" GridPane.columnIndex="1" GridPane.hgrow="NEVER">
+        <GridPane GridPane.columnIndex="1" GridPane.hgrow="NEVER">
             <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="13.0" prefWidth="100.0" />
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="74.0" prefWidth="100.0" />
@@ -75,6 +77,12 @@
                             </rowConstraints>
                             <children>
                                 <Pane fx:id="badStr" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #e1bee7;" GridPane.rowIndex="1" />
+                        <Label fx:id="label1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                           <font>
+                              <Font size="9.0" />
+                           </font>
+                        </Label>
+                        <Pane fx:id="haus1" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="2" />
                             </children>
                         </GridPane>
                         <GridPane style="-fx-border-color: black;" GridPane.columnIndex="7">
@@ -88,6 +96,11 @@
                             </rowConstraints>
                             <children>
                                 <Pane fx:id="gemeinschaft1" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1" />
+                        <Label fx:id="label2" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                           <font>
+                              <Font size="9.0" />
+                           </font>
+                        </Label>
                             </children>
                         </GridPane>
                         <GridPane style="-fx-border-color: black; -fx-background-color: #e1bee7;" GridPane.columnIndex="6">
@@ -101,6 +114,12 @@
                             </rowConstraints>
                             <children>
                                 <Pane fx:id="turmStr" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #e1bee7;" GridPane.rowIndex="1" />
+                        <Label fx:id="label3" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                           <font>
+                              <Font size="9.0" />
+                           </font>
+                        </Label>
+                        <Pane fx:id="haus3" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="2" />
                             </children>
                         </GridPane>
                         <GridPane style="-fx-border-color: black;" GridPane.columnIndex="5">
@@ -114,6 +133,14 @@
                             </rowConstraints>
                             <children>
                                 <Pane fx:id="einkommenSt" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1" />
+                        <Label fx:id="label4" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                           <font>
+                              <Font size="9.0" />
+                           </font>
+                           <GridPane.margin>
+                              <Insets />
+                           </GridPane.margin>
+                        </Label>
                             </children>
                         </GridPane>
                         <GridPane style="-fx-border-color: black;" GridPane.columnIndex="4">
@@ -127,6 +154,12 @@
                             </rowConstraints>
                             <children>
                                 <Pane fx:id="suedBahnhof" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1" />
+                        <Label fx:id="label5" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                           <font>
+                              <Font size="9.0" />
+                           </font>
+                        </Label>
+                        <Pane fx:id="haus5" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="2" />
                             </children>
                         </GridPane>
                         <GridPane style="-fx-border-color: black; -fx-background-color: #cfd8dc;" GridPane.columnIndex="3">
@@ -140,6 +173,12 @@
                             </rowConstraints>
                             <children>
                                 <Pane fx:id="chauseeStr" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #cfd8dc;" GridPane.rowIndex="1" />
+                        <Label fx:id="label6" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                           <font>
+                              <Font size="9.0" />
+                           </font>
+                        </Label>
+                        <Pane fx:id="haus6" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="2" />
                             </children>
                         </GridPane>
                         <GridPane style="-fx-border-color: black;" GridPane.columnIndex="2">
@@ -153,6 +192,11 @@
                             </rowConstraints>
                             <children>
                                 <Pane fx:id="ereignis1" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1" />
+                        <Label fx:id="label7" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                           <font>
+                              <Font size="9.0" />
+                           </font>
+                        </Label>
                             </children>
                         </GridPane>
                         <GridPane style="-fx-border-color: black; -fx-background-color: #cfd8dc;" GridPane.columnIndex="1">
@@ -166,6 +210,12 @@
                             </rowConstraints>
                             <children>
                                 <Pane fx:id="elisenStr" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #cfd8dc;" GridPane.rowIndex="1" />
+                        <Label fx:id="label8" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                           <font>
+                              <Font size="9.0" />
+                           </font>
+                        </Label>
+                        <Pane fx:id="haus8" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="2" />
                             </children>
                         </GridPane>
                         <GridPane style="-fx-border-color: black; -fx-background-color: #cfd8dc;">
@@ -179,11 +229,20 @@
                             </rowConstraints>
                             <children>
                                 <Pane fx:id="postStr" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #cfd8dc;" GridPane.rowIndex="1" />
+                        <Label fx:id="label9" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                           <font>
+                              <Font size="9.0" />
+                           </font>
+                        </Label>
+                        <Pane fx:id="haus9" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="2" />
                             </children>
                         </GridPane>
                     </children>
                 </GridPane>
-                <Pane fx:id="besuch" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black;" GridPane.rowIndex="2" />
+                <Pane fx:id="besuch" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black;" GridPane.rowIndex="2">
+               <children>
+                  <Label fx:id="label10" alignment="CENTER" layoutY="14.0" prefHeight="60.0" prefWidth="94.0" wrapText="true" />
+               </children></Pane>
                 <GridPane GridPane.rowIndex="1">
                     <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" percentWidth="10.0" />
@@ -221,6 +280,12 @@
                             </rowConstraints>
                             <children>
                                 <Pane fx:id="berlinerStr" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #ffe0b2;" GridPane.columnIndex="1" />
+                        <Label fx:id="label19" alignment="CENTER" minWidth="57.0" rotate="90.0" textAlignment="JUSTIFY" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                           <font>
+                              <Font size="9.0" />
+                           </font>
+                        </Label>
+                        <Pane fx:id="haus19" prefHeight="200.0" prefWidth="200.0" />
                             </children>
                         </GridPane>
                         <GridPane style="-fx-border-color: black; -fx-background-color: #ffe0b2;" GridPane.columnIndex="1" GridPane.rowIndex="1">
@@ -234,6 +299,12 @@
                             </rowConstraints>
                             <children>
                                 <Pane fx:id="wienerStr" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #ffe0b2;" GridPane.columnIndex="1" />
+                        <Label fx:id="label18" alignment="CENTER" minWidth="57.0" rotate="90.0" textAlignment="JUSTIFY" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                           <font>
+                              <Font size="9.0" />
+                           </font>
+                        </Label>
+                        <Pane fx:id="haus18" prefHeight="200.0" prefWidth="200.0" />
                             </children>
                         </GridPane>
                         <GridPane style="-fx-border-color: black;" GridPane.columnIndex="1" GridPane.rowIndex="2">
@@ -247,6 +318,11 @@
                             </rowConstraints>
                             <children>
                                 <Pane fx:id="gemeinschaft2" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" />
+                        <Label fx:id="label17" alignment="CENTER" minWidth="57.0" rotate="90.0" textAlignment="JUSTIFY" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                           <font>
+                              <Font size="9.0" />
+                           </font>
+                        </Label>
                             </children>
                         </GridPane>
                         <GridPane style="-fx-border-color: black; -fx-background-color: #ffe0b2;" GridPane.columnIndex="1" GridPane.rowIndex="3">
@@ -260,9 +336,15 @@
                             </rowConstraints>
                             <children>
                                 <Pane fx:id="muenchenerStr" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #ffe0b2;" GridPane.columnIndex="1" />
+                        <Label fx:id="label16" alignment="CENTER" minWidth="57.0" rotate="90.0" textAlignment="JUSTIFY" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                           <font>
+                              <Font size="9.0" />
+                           </font>
+                        </Label>
+                        <Pane fx:id="haus16" prefHeight="200.0" prefWidth="200.0" />
                             </children>
                         </GridPane>
-                        <GridPane style="-fx-border-color: black; -fx-background-color: grey;" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                        <GridPane style="-fx-border-color: black;" GridPane.columnIndex="1" GridPane.rowIndex="4">
                             <columnConstraints>
                                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="30.0" prefWidth="100.0" />
                                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -273,6 +355,12 @@
                             </rowConstraints>
                             <children>
                                 <Pane fx:id="westBahnhof" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" />
+                        <Label fx:id="label15" alignment="CENTER" minWidth="57.0" rotate="90.0" textAlignment="JUSTIFY" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                           <font>
+                              <Font size="9.0" />
+                           </font>
+                        </Label>
+                        <Pane fx:id="haus15" prefHeight="200.0" prefWidth="200.0" />
                             </children>
                         </GridPane>
                         <GridPane style="-fx-border-color: black; -fx-background-color: #f8bbd0;" GridPane.columnIndex="1" GridPane.rowIndex="5">
@@ -286,6 +374,12 @@
                             </rowConstraints>
                             <children>
                                 <Pane fx:id="neueStr" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #f8bbd0;" GridPane.columnIndex="1" />
+                        <Label fx:id="label14" alignment="CENTER" minWidth="57.0" rotate="90.0" textAlignment="JUSTIFY" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                           <font>
+                              <Font size="9.0" />
+                           </font>
+                        </Label>
+                        <Pane fx:id="haus14" prefHeight="200.0" prefWidth="200.0" />
                             </children>
                         </GridPane>
                         <GridPane style="-fx-border-color: black; -fx-background-color: #f8bbd0;" GridPane.columnIndex="1" GridPane.rowIndex="6">
@@ -299,37 +393,58 @@
                             </rowConstraints>
                             <children>
                                 <Pane fx:id="hafenStr" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #f8bbd0;" GridPane.columnIndex="1" />
+                        <Label fx:id="label13" alignment="CENTER" minWidth="57.0" rotate="90.0" textAlignment="JUSTIFY" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                           <font>
+                              <Font size="9.0" />
+                           </font>
+                        </Label>
+                        <Pane fx:id="haus13" prefHeight="200.0" prefWidth="200.0" />
                             </children>
                         </GridPane>
                         <GridPane style="-fx-border-color: black;" GridPane.columnIndex="1" GridPane.rowIndex="7">
                             <columnConstraints>
                                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="30.0" prefWidth="100.0" />
                                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="15.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="15.0" prefWidth="100.0" />
                             </columnConstraints>
                             <rowConstraints>
                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                             </rowConstraints>
                             <children>
                                 <Pane fx:id="elWerk" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" />
+                        <Label fx:id="label12" alignment="CENTER" minWidth="57.0" rotate="90.0" textAlignment="JUSTIFY" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                           <font>
+                              <Font size="9.0" />
+                           </font>
+                        </Label>
+                        <Pane fx:id="haus12" prefHeight="200.0" prefWidth="200.0" />
                             </children>
                         </GridPane>
                         <GridPane style="-fx-border-color: black; -fx-background-color: #f8bbd0;" GridPane.columnIndex="1" GridPane.rowIndex="8">
                             <columnConstraints>
                                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="30.0" prefWidth="100.0" />
                                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="15.0" prefWidth="100.0" />
+                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="15.0" prefWidth="30.0" />
                             </columnConstraints>
                             <rowConstraints>
-                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                <RowConstraints minHeight="10.0" prefHeight="100.0" vgrow="SOMETIMES" />
                             </rowConstraints>
                             <children>
                                 <Pane fx:id="seeStr" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #f8bbd0;" GridPane.columnIndex="1" />
+                        <Label fx:id="label11" alignment="CENTER" minWidth="57.0" rotate="90.0" textAlignment="JUSTIFY" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                           <font>
+                              <Font size="9.0" />
+                           </font>
+                        </Label>
+                        <Pane fx:id="haus11" prefHeight="200.0" prefWidth="200.0" />
                             </children>
                         </GridPane>
                     </children>
                 </GridPane>
-                <Pane fx:id="parkplatz" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black;" />
+                <Pane fx:id="parkplatz" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black;">
+               <children>
+                  <Label fx:id="label20" alignment="CENTER" layoutX="3.0" layoutY="47.0" text="" />
+               </children></Pane>
                 <GridPane GridPane.columnIndex="1">
                     <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -367,6 +482,12 @@
                             </rowConstraints>
                             <children>
                                 <Pane fx:id="theaterStr" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #ff9e80;" GridPane.rowIndex="1" />
+                        <Label fx:id="label21" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                           <font>
+                              <Font size="9.0" />
+                           </font>
+                        </Label>
+                        <Pane fx:id="haus21" prefHeight="200.0" prefWidth="200.0" />
                             </children>
                         </GridPane>
                         <GridPane style="-fx-border-color: black;" GridPane.columnIndex="1" GridPane.rowIndex="1">
@@ -380,6 +501,11 @@
                             </rowConstraints>
                             <children>
                                 <Pane fx:id="ereignis2" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1" />
+                        <Label fx:id="label22" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                           <font>
+                              <Font size="9.0" />
+                           </font>
+                        </Label>
                             </children>
                         </GridPane>
                         <GridPane style="-fx-border-color: black; -fx-background-color: #ff9e80;" GridPane.columnIndex="2" GridPane.rowIndex="1">
@@ -393,6 +519,12 @@
                             </rowConstraints>
                             <children>
                                 <Pane fx:id="museumStr" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #ff9e80;" GridPane.rowIndex="1" />
+                        <Label fx:id="label23" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                           <font>
+                              <Font size="9.0" />
+                           </font>
+                        </Label>
+                        <Pane fx:id="haus23" prefHeight="200.0" prefWidth="200.0" />
                             </children>
                         </GridPane>
                         <GridPane style="-fx-border-color: black; -fx-background-color: #ff9e80;" GridPane.columnIndex="3" GridPane.rowIndex="1">
@@ -406,6 +538,12 @@
                             </rowConstraints>
                             <children>
                                 <Pane fx:id="opernplatz" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #ff9e80;" GridPane.rowIndex="1" />
+                        <Label fx:id="label24" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                           <font>
+                              <Font size="9.0" />
+                           </font>
+                        </Label>
+                        <Pane fx:id="haus24" prefHeight="200.0" prefWidth="200.0" />
                             </children>
                         </GridPane>
                         <GridPane style="-fx-border-color: black;" GridPane.columnIndex="4" GridPane.rowIndex="1">
@@ -419,6 +557,12 @@
                             </rowConstraints>
                             <children>
                                 <Pane fx:id="nordBahnhof" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1" />
+                        <Label fx:id="label25" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                           <font>
+                              <Font size="9.0" />
+                           </font>
+                        </Label>
+                        <Pane fx:id="haus25" prefHeight="200.0" prefWidth="200.0" />
                             </children>
                         </GridPane>
                         <GridPane style="-fx-border-color: black; -fx-background-color: #fff9c4;" GridPane.columnIndex="5" GridPane.rowIndex="1">
@@ -432,6 +576,12 @@
                             </rowConstraints>
                             <children>
                                 <Pane fx:id="lessingStr" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #fff9c4;" GridPane.rowIndex="1" />
+                        <Label fx:id="label26" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                           <font>
+                              <Font size="9.0" />
+                           </font>
+                        </Label>
+                        <Pane fx:id="haus26" prefHeight="200.0" prefWidth="200.0" />
                             </children>
                         </GridPane>
                         <GridPane style="-fx-border-color: black; -fx-background-color: #fff9c4;" GridPane.columnIndex="6" GridPane.rowIndex="1">
@@ -445,6 +595,12 @@
                             </rowConstraints>
                             <children>
                                 <Pane fx:id="schillerStr" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #fff9c4;" GridPane.rowIndex="1" />
+                        <Label fx:id="label27" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                           <font>
+                              <Font size="9.0" />
+                           </font>
+                        </Label>
+                        <Pane fx:id="haus27" prefHeight="200.0" prefWidth="200.0" />
                             </children>
                         </GridPane>
                         <GridPane style="-fx-border-color: black;" GridPane.columnIndex="7" GridPane.rowIndex="1">
@@ -458,6 +614,12 @@
                             </rowConstraints>
                             <children>
                                 <Pane fx:id="wasserWerk" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1" />
+                        <Label fx:id="label28" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                           <font>
+                              <Font size="9.0" />
+                           </font>
+                        </Label>
+                        <Pane fx:id="haus28" prefHeight="200.0" prefWidth="200.0" />
                             </children>
                         </GridPane>
                         <GridPane style="-fx-border-color: black; -fx-background-color: #fff9c4;" GridPane.columnIndex="8" GridPane.rowIndex="1">
@@ -471,11 +633,20 @@
                             </rowConstraints>
                             <children>
                                 <Pane fx:id="goetheStr" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #fff9c4;" GridPane.rowIndex="1" />
+                        <Label fx:id="label29" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                           <font>
+                              <Font size="9.0" />
+                           </font>
+                        </Label>
+                        <Pane fx:id="haus29" prefHeight="200.0" prefWidth="200.0" />
                             </children>
                         </GridPane>
                     </children>
                 </GridPane>
-                <Pane fx:id="jailField" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black;" GridPane.columnIndex="2" />
+                <Pane fx:id="jailField" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black;" GridPane.columnIndex="2">
+               <children>
+                  <Label fx:id="label30" alignment="CENTER" prefHeight="94.0" prefWidth="94.0" wrapText="true" />
+               </children></Pane>
                 <GridPane GridPane.columnIndex="2" GridPane.rowIndex="1">
                     <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" percentWidth="90.0" />
@@ -513,6 +684,12 @@
                             </rowConstraints>
                             <children>
                                 <Pane fx:id="rathhausPlatz" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #c8e6c9;" GridPane.columnIndex="1" />
+                        <Label fx:id="label31" alignment="CENTER" minWidth="57.0" rotate="270.0" textAlignment="JUSTIFY" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                           <font>
+                              <Font size="9.0" />
+                           </font>
+                        </Label>
+                        <Pane fx:id="haus31" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" />
                             </children>
                         </GridPane>
                         <GridPane style="-fx-border-color: black; -fx-background-color: #c8e6c9;" GridPane.rowIndex="1">
@@ -526,6 +703,12 @@
                             </rowConstraints>
                             <children>
                                 <Pane fx:id="hauptStr" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #c8e6c9;" GridPane.columnIndex="1" />
+                        <Label fx:id="label32" alignment="CENTER" minWidth="57.0" rotate="270.0" textAlignment="JUSTIFY" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                           <font>
+                              <Font size="9.0" />
+                           </font>
+                        </Label>
+                        <Pane fx:id="haus32" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" />
                             </children>
                         </GridPane>
                         <GridPane style="-fx-border-color: black;" GridPane.rowIndex="2">
@@ -539,6 +722,11 @@
                             </rowConstraints>
                             <children>
                                 <Pane fx:id="gemeinschaft3" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" />
+                        <Label fx:id="label33" alignment="CENTER" minWidth="57.0" rotate="270.0" textAlignment="JUSTIFY" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                           <font>
+                              <Font size="9.0" />
+                           </font>
+                        </Label>
                             </children>
                         </GridPane>
                         <GridPane style="-fx-border-color: black; -fx-background-color: #c8e6c9;" GridPane.rowIndex="3">
@@ -552,6 +740,12 @@
                             </rowConstraints>
                             <children>
                                 <Pane fx:id="bahnhofStr" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #c8e6c9;" GridPane.columnIndex="1" />
+                        <Label fx:id="label34" alignment="CENTER" minWidth="57.0" rotate="270.0" textAlignment="JUSTIFY" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                           <font>
+                              <Font size="9.0" />
+                           </font>
+                        </Label>
+                        <Pane fx:id="haus34" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" />
                             </children>
                         </GridPane>
                         <GridPane style="-fx-border-color: black;" GridPane.rowIndex="4">
@@ -565,6 +759,12 @@
                             </rowConstraints>
                             <children>
                                 <Pane fx:id="hauptBahnhof" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" />
+                        <Label fx:id="label35" alignment="CENTER" minWidth="57.0" rotate="270.0" textAlignment="JUSTIFY" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                           <font>
+                              <Font size="9.0" />
+                           </font>
+                        </Label>
+                        <Pane fx:id="haus35" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" />
                             </children>
                         </GridPane>
                         <GridPane style="-fx-border-color: black;" GridPane.rowIndex="5">
@@ -578,6 +778,11 @@
                             </rowConstraints>
                             <children>
                                 <Pane fx:id="ereignis3" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" />
+                        <Label fx:id="label36" alignment="CENTER" minWidth="57.0" rotate="270.0" textAlignment="JUSTIFY" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                           <font>
+                              <Font size="9.0" />
+                           </font>
+                        </Label>
                             </children>
                         </GridPane>
                         <GridPane style="-fx-border-color: black; -fx-background-color: #bbdefb;" GridPane.rowIndex="6">
@@ -591,9 +796,15 @@
                             </rowConstraints>
                             <children>
                                 <Pane fx:id="parkStr" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #bbdefb;" GridPane.columnIndex="1" />
+                        <Label fx:id="label37" alignment="CENTER" minWidth="57.0" rotate="270.0" textAlignment="JUSTIFY" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                           <font>
+                              <Font size="9.0" />
+                           </font>
+                        </Label>
+                        <Pane fx:id="haus37" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" />
                             </children>
                         </GridPane>
-                        <GridPane style="-fx-border-color: black;" GridPane.rowIndex="7">
+                        <GridPane style="-fx-border-color: black;" GridPane.halignment="CENTER" GridPane.rowIndex="7" GridPane.valignment="CENTER">
                             <columnConstraints>
                                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="15.0" prefWidth="100.0" />
                                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -604,6 +815,11 @@
                             </rowConstraints>
                             <children>
                                 <Pane fx:id="zusatzSt" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" />
+                        <Label fx:id="label38" alignment="CENTER" minWidth="57.0" rotate="270.0" textAlignment="JUSTIFY" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                           <font>
+                              <Font size="9.0" />
+                           </font>
+                        </Label>
                             </children>
                         </GridPane>
                         <GridPane style="-fx-border-color: black; -fx-background-color: #bbdefb;" GridPane.rowIndex="8">
@@ -617,13 +833,19 @@
                             </rowConstraints>
                             <children>
                                 <Pane fx:id="schlossAllee" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #bbdefb;" GridPane.columnIndex="1" />
+                        <Label fx:id="label39" alignment="CENTER" minWidth="57.0" rotate="270.0" textAlignment="JUSTIFY" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                           <font>
+                              <Font size="9.0" />
+                           </font>
+                        </Label>
+                        <Pane fx:id="haus39" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" />
                             </children>
                         </GridPane>
                     </children>
                 </GridPane>
-                <GridPane GridPane.columnIndex="1" GridPane.rowIndex="1">
+                <GridPane fx:id="centerPane" GridPane.columnIndex="1" GridPane.rowIndex="1">
                     <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="100.0" prefWidth="100.0" />
                     </columnConstraints>
                     <rowConstraints>
                         <RowConstraints minHeight="10.0" percentHeight="75.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -638,7 +860,7 @@
                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                             </rowConstraints>
                         </GridPane>
-                        <GridPane GridPane.rowIndex="1">
+                        <GridPane fx:id="PopupPane2" GridPane.rowIndex="1">
                             <columnConstraints>
                                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                             </columnConstraints>
@@ -648,7 +870,7 @@
                         </GridPane>
                     </children>
                 </GridPane>
-            <Pane fx:id="goField" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black;" styleClass="losBackground" stylesheets="@../styles/Styles.css" GridPane.columnIndex="2" GridPane.rowIndex="2">
+            <Pane fx:id="goField" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black;" stylesheets="@../styles/Styles.css" GridPane.columnIndex="2" GridPane.rowIndex="2">
                <children>
                   <Circle fx:id="player0" fill="WHITE" layoutX="36.0" layoutY="41.0" radius="11.0" stroke="BLACK" strokeType="INSIDE" visible="false" />
                   <Circle fx:id="player1" fill="WHITE" layoutX="61.0" layoutY="50.0" radius="11.0" stroke="BLACK" strokeType="INSIDE" visible="false" />
@@ -656,13 +878,14 @@
                   <Circle fx:id="player3" fill="WHITE" layoutX="36.0" layoutY="70.0" radius="11.0" stroke="BLACK" strokeType="INSIDE" visible="false" />
                   <Circle fx:id="player4" fill="WHITE" layoutX="67.0" layoutY="74.0" radius="11.0" stroke="BLACK" strokeType="INSIDE" visible="false" />
                   <Circle fx:id="player5" fill="WHITE" layoutX="69.0" layoutY="23.0" radius="11.0" stroke="BLACK" strokeType="INSIDE" visible="false" />
+                  <Label fx:id="label0" alignment="CENTER" layoutX="24.0" layoutY="32.0" />
                </children>
             </Pane>
             </children>
         </GridPane>
         <GridPane fx:id="grid2" GridPane.columnIndex="2">
             <children>
-                <JFXButton fx:id="player0Button" prefHeight="80.0" prefWidth="150.0" text="frei" visible="false" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+                <JFXButton fx:id="player0Button" opacity="0.0" prefHeight="80.0" prefWidth="150.0" text="frei" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
                 <GridPane GridPane.columnIndex="1" GridPane.rowIndex="3">
                     <children>
                         <JFXTextArea fx:id="textArea" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" />
@@ -738,20 +961,20 @@
                 <RowConstraints minHeight="10.0" percentHeight="37.0" prefHeight="30.0" vgrow="SOMETIMES" />
             </rowConstraints>
         </GridPane>
-        <GridPane fx:id="grid1">
+        <GridPane fx:id="grid">
             <children>
-                <JFXButton fx:id="player1Button1" prefHeight="80.0" prefWidth="150.0" text="frei" visible="false" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
-                <JFXButton fx:id="player2Button1" prefHeight="80.0" prefWidth="150.0" text="frei" visible="false" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                <JFXButton fx:id="player1Button" opacity="0.0" prefHeight="80.0" prefWidth="150.0" text="frei" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+                <JFXButton fx:id="player2Button" opacity="0.0" prefHeight="80.0" prefWidth="150.0" text="frei" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
                     <GridPane.margin>
-                        <Insets />
+                  
                     </GridPane.margin>
                 </JFXButton>
-                <JFXButton fx:id="player3Button1" prefHeight="80.0" prefWidth="150.0" text="frei" visible="false" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER" />
-                <JFXButton fx:id="player4Button1" prefHeight="80.0" prefWidth="150.0" text="frei" visible="false" GridPane.halignment="CENTER" GridPane.rowIndex="6" GridPane.valignment="CENTER" />
-                <JFXButton fx:id="player5Button1" prefHeight="80.0" prefWidth="150.0" text="frei" visible="false" GridPane.halignment="CENTER" GridPane.rowIndex="8" GridPane.valignment="CENTER" />
-                <GridPane fx:id="player1Geld1" GridPane.rowIndex="1">
+                <JFXButton fx:id="player3Button" opacity="0.0" prefHeight="80.0" prefWidth="150.0" text="frei" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER" />
+                <JFXButton fx:id="player4Button" opacity="0.0" prefHeight="80.0" prefWidth="150.0" text="frei" GridPane.halignment="CENTER" GridPane.rowIndex="6" GridPane.valignment="CENTER" />
+                <JFXButton fx:id="player5Button" opacity="0.0" prefHeight="80.0" prefWidth="150.0" text="frei" GridPane.halignment="CENTER" GridPane.rowIndex="8" GridPane.valignment="CENTER" />
+                <GridPane fx:id="player1Geld" GridPane.rowIndex="1">
                     <children>
-                        <Label fx:id="geld11" alignment="CENTER" layoutX="10.0" layoutY="21.0" prefHeight="33.0" prefWidth="156.0" />
+                        <Label fx:id="geld1" alignment="CENTER" layoutX="10.0" layoutY="21.0" prefHeight="33.0" prefWidth="156.0" />
                     </children>
                     <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -761,9 +984,9 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                 </GridPane>
-                <GridPane fx:id="player2Geld1" layoutX="10.0" layoutY="172.0" GridPane.rowIndex="3">
+                <GridPane fx:id="player2Geld" layoutX="10.0" layoutY="172.0" GridPane.rowIndex="3">
                     <children>
-                        <Label fx:id="geld21" alignment="CENTER" prefHeight="33.0" prefWidth="156.0" />
+                        <Label fx:id="geld2" alignment="CENTER" prefHeight="33.0" prefWidth="156.0" />
                     </children>
                     <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -773,9 +996,9 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                 </GridPane>
-                <GridPane fx:id="player3Geld1" layoutX="10.0" layoutY="388.0" GridPane.rowIndex="5">
+                <GridPane fx:id="player3Geld" layoutX="10.0" layoutY="388.0" GridPane.rowIndex="5">
                     <children>
-                        <Label fx:id="geld31" alignment="CENTER" prefHeight="33.0" prefWidth="156.0" />
+                        <Label fx:id="geld3" alignment="CENTER" prefHeight="33.0" prefWidth="156.0" />
                     </children>
                     <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -785,9 +1008,9 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                 </GridPane>
-                <GridPane fx:id="player4Geld1" layoutX="10.0" layoutY="604.0" GridPane.rowIndex="7">
+                <GridPane fx:id="player4Geld" layoutX="10.0" layoutY="604.0" GridPane.rowIndex="7">
                     <children>
-                        <Label fx:id="geld41" alignment="CENTER" prefHeight="33.0" prefWidth="156.0" />
+                        <Label fx:id="geld4" alignment="CENTER" prefHeight="33.0" prefWidth="156.0" />
                     </children>
                     <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -797,9 +1020,9 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                 </GridPane>
-                <GridPane fx:id="player5Geld1" layoutX="10.0" layoutY="820.0" GridPane.rowIndex="9">
+                <GridPane fx:id="player5Geld" layoutX="10.0" layoutY="820.0" GridPane.rowIndex="9">
                     <children>
-                        <Label fx:id="geld51" alignment="CENTER" prefHeight="33.0" prefWidth="156.0" />
+                        <Label fx:id="geld5" alignment="CENTER" prefHeight="33.0" prefWidth="156.0" />
                     </children>
                     <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
