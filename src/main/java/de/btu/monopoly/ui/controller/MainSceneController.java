@@ -1417,7 +1417,7 @@ public class MainSceneController implements Initializable {
         Platform.runLater(task);
     }
 
-    public void resetPopupBellow() {
+    public void resetPopupBelow() {
         Task task = new Task() {
             @Override
             protected Object call() throws Exception {
