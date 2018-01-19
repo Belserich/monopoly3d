@@ -447,17 +447,38 @@ public class SceneManager extends Stage {
 
         hoechstgebotLabel.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
         Label label2 = new Label("Dein Gebot für \n" + AuctionService.getPropertyString() + ":");
-        label2.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
-
         JFXTextField tf = new JFXTextField();
-        tf.setAlignment(Pos.CENTER);
         JFXButton bidBut = new JFXButton("Bieten");
-        bidBut.setBackground(new Background(new BackgroundFill(Color.web("#e1f5fe"), CornerRadii.EMPTY, Insets.EMPTY)));
-
         JFXButton exitBut = new JFXButton("Aussteigen");
+
+        //Eventhandler(n)
+        EventHandler bid = new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                try {
+                    AuctionService.setBid(Lobby.getPlayerClient().getPlayerOnClient().getId(), Integer.parseInt(tf.getText()));
+                } catch (NumberFormatException e) {
+                    tf.setText("");
+                    tf.setPromptText("Bitte nur Zahlen eingeben!");
+                }
+            }
+        };
+
+        //Einstellung der benoetigten Objekte
+        auctionGP.setAlignment(Pos.CENTER);
+        auctionGP.add(box, 0, 0);
+        hoechstgebotLabel.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
+        label2.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
+        tf.setAlignment(Pos.CENTER);
+
+        bidBut.setBackground(new Background(new BackgroundFill(Color.web("#e1f5fe"), CornerRadii.EMPTY, Insets.EMPTY)));
         exitBut.setBackground(new Background(new BackgroundFill(Color.web("#e1f5fe"), CornerRadii.EMPTY, Insets.EMPTY)));
 
         tf.setPromptText(" ");
+
+        //Damit der Cursor direkt im Textfield liegt TODO @ Patrick
+//        tf.requestFocus();
+//        tf.positionCaret(0);
         String cssLayout = "-fx-background-color: #dcedc8;\n"
                 + "-fx-border-color: black;\n"
                 + "-fx-border-insets: 5;\n"
@@ -477,18 +498,9 @@ public class SceneManager extends Stage {
             GameController.setPopupBellow(auctionGP);
         }
 
-        bidBut.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                try {
-                    AuctionService.setBid(Lobby.getPlayerClient().getPlayerOnClient().getId(), Integer.parseInt(tf.getText()));
-                } catch (NumberFormatException e) {
-                    tf.setText("");
-                    tf.setPromptText("Bitte nur Zahlen eingeben!");
-                }
-            }
-        });
-
+        //Verknuepfung mit EventHandler(n)
+        tf.setOnAction(bid);
+        bidBut.setOnAction(bid);
         exitBut.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
