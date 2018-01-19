@@ -332,7 +332,7 @@ public class SceneManager extends Stage {
 
         vbox.setStyle(cssLayout);
         box.setSpacing(10);
-        box.setPrefSize(700, 200);
+        box.setPrefSize(500, 200);
         vbox1.getChildren().addAll(nothingButton, buyHouseButton, removeHouseButton);
         vbox1.setAlignment(Pos.CENTER);
         vbox1.setSpacing(5);
@@ -438,7 +438,8 @@ public class SceneManager extends Stage {
 
         //initialisierung der benoetigten Objekte
         //ScrollPane scroll = new ScrollPane();
-        VBox box = new VBox();
+        HBox box = new HBox();
+        VBox vbox = new VBox();
         auctionGP.setAlignment(Pos.CENTER);
         // scroll.setCenterShape(true);
         auctionGP.add(box, 0, 0);
@@ -446,34 +447,12 @@ public class SceneManager extends Stage {
 
         hoechstgebotLabel.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
         Label label2 = new Label("Dein Gebot für \n" + AuctionService.getPropertyString() + ":");
-        label2.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
-
         JFXTextField tf = new JFXTextField();
-        tf.setAlignment(Pos.CENTER);
         JFXButton bidBut = new JFXButton("Bieten");
-        bidBut.setBackground(new Background(new BackgroundFill(Color.web("#e1f5fe"), CornerRadii.EMPTY, Insets.EMPTY)));
-
         JFXButton exitBut = new JFXButton("Aussteigen");
-        exitBut.setBackground(new Background(new BackgroundFill(Color.web("#e1f5fe"), CornerRadii.EMPTY, Insets.EMPTY)));
 
-        tf.setPromptText(" ");
-        String cssLayout = "-fx-background-color: #dcedc8;\n"
-                + "-fx-border-color: black;\n"
-                + "-fx-border-insets: 5;\n"
-                + "-fx-border-width: 1;\n"
-                + "-fx-border-style: double;\n";
-
-        box.setStyle(cssLayout);
-        box.setSpacing(10);
-        box.setPrefSize(200, 300);
-        box.setCenterShape(true);
-        box.getChildren().addAll(hoechstgebotLabel, auctionLabel, label2, tf, bidBut, exitBut);
-        box.setAlignment(Pos.CENTER);
-        if (GameController != null) {
-            GameController.setPopupBellow(auctionGP);
-        }
-
-        bidBut.setOnAction(new EventHandler<ActionEvent>() {
+        //Eventhandler(n)
+        EventHandler bid = new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 try {
@@ -483,8 +462,45 @@ public class SceneManager extends Stage {
                     tf.setPromptText("Bitte nur Zahlen eingeben!");
                 }
             }
-        });
+        };
 
+        //Einstellung der benoetigten Objekte
+        auctionGP.setAlignment(Pos.CENTER);
+        auctionGP.add(box, 0, 0);
+        hoechstgebotLabel.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
+        label2.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
+        tf.setAlignment(Pos.CENTER);
+
+        bidBut.setBackground(new Background(new BackgroundFill(Color.web("#e1f5fe"), CornerRadii.EMPTY, Insets.EMPTY)));
+        exitBut.setBackground(new Background(new BackgroundFill(Color.web("#e1f5fe"), CornerRadii.EMPTY, Insets.EMPTY)));
+
+        tf.setPromptText(" ");
+
+        //Damit der Cursor direkt im Textfield liegt TODO @ Patrick
+//        tf.requestFocus();
+//        tf.positionCaret(0);
+        String cssLayout = "-fx-background-color: #dcedc8;\n"
+                + "-fx-border-color: black;\n"
+                + "-fx-border-insets: 5;\n"
+                + "-fx-border-width: 1;\n"
+                + "-fx-border-style: double;\n";
+
+        box.setStyle(cssLayout);
+        box.setSpacing(10);
+        box.setPrefSize(700, 200);
+        box.setCenterShape(true);
+        vbox.getChildren().addAll(bidBut, exitBut);
+        vbox.setSpacing(10);
+        vbox.setAlignment(Pos.CENTER);
+        box.getChildren().addAll(hoechstgebotLabel, auctionLabel, label2, tf, vbox);
+        box.setAlignment(Pos.CENTER);
+        if (GameController != null) {
+            GameController.setPopupBellow(auctionGP);
+        }
+
+        //Verknuepfung mit EventHandler(n)
+        tf.setOnAction(bid);
+        bidBut.setOnAction(bid);
         exitBut.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
