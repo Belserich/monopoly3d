@@ -442,9 +442,8 @@ public class SceneManager extends Stage {
         VBox vbox = new VBox();
         auctionGP.setAlignment(Pos.CENTER);
         // scroll.setCenterShape(true);
-        auctionGP.add(box, 0, 0);
-        // scroll.setContent(box);
 
+        // scroll.setContent(box);
         hoechstgebotLabel.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
         Label label2 = new Label("Dein Gebot für \n" + AuctionService.getPropertyString() + ":");
         JFXTextField tf = new JFXTextField();
