@@ -11,6 +11,7 @@ import de.btu.monopoly.data.card.CardAction;
 import de.btu.monopoly.data.card.CardStack;
 import de.btu.monopoly.data.field.FieldManager;
 import de.btu.monopoly.data.field.PropertyField;
+import de.btu.monopoly.data.field.StreetField;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.input.IOService;
 import java.util.Arrays;
@@ -24,7 +25,7 @@ import java.util.stream.Collectors;
 public class HardKi {
 
     private static final Logger LOGGER = Logger.getLogger(HardKi.class.getCanonicalName());
-    private static final FieldManager FM = IOService.getGame().getBoard().getFieldManager();
+    private static final FieldManager FIELDMANAGER = IOService.getGame().getBoard().getFieldManager();
 
     // Ab wieviel verkauften Strassen im Gefaengnis bleiben (x von 24)
     private static final int PROPERTY_CAP_FOR_STAYING_IN_PRISON = 9;
@@ -89,7 +90,7 @@ public class HardKi {
      */
     public static int buyPropOption(Player player, PropertyField prop) {
         boolean buy = false;
-        int propertyId = FM.getFieldId(prop);
+        int propertyId = FIELDMANAGER.getFieldId(prop);
         int amount = player.getMoney();
 
         // Ist die KI superreich kauft sie aus Zone 1, 2 und 3
@@ -115,14 +116,14 @@ public class HardKi {
 
     public static int processActionSequence(Player player, GameBoard board) {
         int amount = player.getMoney();
-        int buildings = FM.getHouseAndHotelCount(player)[0] + FM.getHouseAndHotelCount(player)[1];
+        int buildings = FIELDMANAGER.getHouseAndHotelCount(player)[0] + FIELDMANAGER.getHouseAndHotelCount(player)[1];
 
         if (amount < POOR) {                     // Wenn die ki arm ist
             if (buildings > 0) {                        // verkauft sie erst Haeuser
                 sellBuilding(player);
                 return 3;
             }
-            else if (numberOfMortgages(player) < (int) FM.getOwnedPropertyFields(player).count()) {   // und nimmt dann Hypotheken auf
+            else if (numberOfMortgages(player) < (int) FIELDMANAGER.getOwnedPropertyFields(player).count()) {   // und nimmt dann Hypotheken auf
                 takeMortgage(player);
                 return 4;
             }
@@ -139,10 +140,12 @@ public class HardKi {
                     payMortgage(player);
                     return 5;
                 }
-                else {                                  // und kauft dann Haeuser
-                    //TODO wenn nicht möglich dann was?
+                else if (!buyableBuildingsList(player).isEmpty()) { // und kauft dann Haeuser
                     buyBuilding(player);
                     return 2;
+                }
+                else {
+                    return 1;
                 }
             }
             else {                                    // zum Spielende hin
@@ -154,10 +157,12 @@ public class HardKi {
                 payMortgage(player);
                 return 5;
             }
-            else {                                      // und kauft dann Haeuser
-                //TODO wenn nicht möglich dann was?
+            else if (!buyableBuildingsList(player).isEmpty()) { // und kauft dann Haeuser
                 buyBuilding(player);
                 return 2;
+            }
+            else {
+                return 1;
             }
         }
     }
@@ -204,7 +209,7 @@ public class HardKi {
      * @return Anzahl der Hypotheken, welche die Ki insgesamt aufgenommen hat
      */
     private static int numberOfMortgages(Player player) {
-        return (int) FM.getOwnedPropertyFields(player).filter(p -> p.isMortgageTaken()).count();
+        return (int) FIELDMANAGER.getOwnedPropertyFields(player).filter(p -> p.isMortgageTaken()).count();
     }
 
     /**
@@ -213,7 +218,7 @@ public class HardKi {
      * @return Gibt an, ob bereits Strassen des selben Strassenzuges, wie dem der uebergebenen Strasse im Besitz sind
      */
     private static boolean areThereAlreadyNeighboursOwned(PropertyField prop, Player player) {
-        List<PropertyField> neighborList = FM.getNeighborList(prop);
+        List<PropertyField> neighborList = FIELDMANAGER.getNeighborList(prop);
         return neighborList.stream().anyMatch((neigh) -> (neigh.getOwner() == player));
     }
 
@@ -231,8 +236,18 @@ public class HardKi {
      * wirklichen Methoden auszuführen.
      */
     private static void sellBuilding(Player player) {
-        // TODO
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        /*
+         * potentielle Strassen auf denen Haeuser verkauft werden koennen: Grundstuecke im Besitz -> Strassen im Besitz -> aus
+         * komplettem Strassenzug -> bei denen beim verkauf eines Hauses die Balance gewaehrleistet bleibt -> die noch Haueser zum
+         * Verkauf haben
+         */
+        List<PropertyField> props = FIELDMANAGER.getOwnedPropertyFields(player)
+                .filter(p -> p instanceof StreetField).map(p -> (StreetField) p)
+                .filter(p -> FIELDMANAGER.isComplete(p)).filter(p -> FIELDMANAGER.balanceCheck(p, 0, 1))
+                .filter(p -> p.getHouseCount() > 0)
+                .collect(Collectors.toList());
+        // check auf isEmpty() bereits in processActionPhase()
+        chosenFieldId = FIELDMANAGER.getFieldId(props.get(0));
     }
 
     /**
@@ -241,10 +256,10 @@ public class HardKi {
      * @param player
      */
     private static void takeMortgage(Player player) {
-        List<PropertyField> props = FM.getOwnedPropertyFields(player)
+        List<PropertyField> props = FIELDMANAGER.getOwnedPropertyFields(player)
                 .filter(p -> !p.isMortgageTaken()).collect(Collectors.toList());
         // check auf isEmpty bereit in processActionPhase()
-        FM.takeMortgage(props.get(0));
+        chosenFieldId = FIELDMANAGER.getFieldId(props.get(0));
     }
 
     /**
@@ -253,15 +268,37 @@ public class HardKi {
      * @param player
      */
     private static void payMortgage(Player player) {
-        List<PropertyField> props = FM.getOwnedPropertyFields(player)
+        List<PropertyField> props = FIELDMANAGER.getOwnedPropertyFields(player)
                 .filter(p -> p.isMortgageTaken()).collect(Collectors.toList());
         // check auf isEmpty bereit in processActionPhase()
-        FM.payMortgage(props.get(0));
+        chosenFieldId = FIELDMANAGER.getFieldId(props.get(0));
     }
 
     private static void buyBuilding(Player player) {
-        // TODO
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        /*
+         * potentielle Strassen auf denen Haeuser gekauft werden koennen: Grundstuecke im Besitz -> Strassen im Besitz -> aus
+         * komplettem Strassenzug -> bei denen beim kauf eines Hauses die Balance gewaehrleistet bleibt -> die noch Platz fuer
+         * Haeuser haben
+         */
+        List<PropertyField> props = buyableBuildingsList(player);
+
+        // lukrative Strassen aussuchen:
+        List<PropertyField> best = null;
+        props.stream().filter((b) -> (FIELDMANAGER.getFieldId(b) > BEGIN_LUCRATIVE_AREA
+                && FIELDMANAGER.getFieldId(b) < END_LUCTRATIVE_AREA)).forEachOrdered(best::add);
+
+        // chosenFieldId uebergeben (wenn moeglich lukrative Strasse)
+        chosenFieldId = (best.isEmpty()) ? chosenFieldId = FIELDMANAGER.getFieldId(props.get(0))
+                : FIELDMANAGER.getFieldId(best.get(0));
     }
 
+    private static List<PropertyField> buyableBuildingsList(Player player) {
+        List<PropertyField> props = FIELDMANAGER.getOwnedPropertyFields(player)
+                .filter(p -> p instanceof StreetField).map(p -> (StreetField) p)
+                .filter(p -> FIELDMANAGER.isComplete(p)).filter(p -> FIELDMANAGER.balanceCheck(p, 1, 0))
+                .filter(p -> p.getHouseCount() < 5)
+                .collect(Collectors.toList());
+
+        return props;
+    }
 }
