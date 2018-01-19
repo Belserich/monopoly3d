@@ -101,10 +101,12 @@ public class FieldManager {
 
         if (pos >= fields.length) {
             pos %= fields.length;
-            player.setPosition(pos);
             PlayerService.giveMoney(player, getGoField().getAmount());
         }
-
+        player.setPosition(pos);
+        if (amount >= 0) {
+            LOGGER.info(String.format("%s wurde %d Felder weiter bewegt.", player.getName(), amount));
+        }
         return fields[pos];
     }
 

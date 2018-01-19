@@ -87,8 +87,9 @@ public class MainSceneController implements Initializable {
     @FXML
     private GridPane PopupPane2;
     @FXML
-    private GridPane centerPane;;
-    
+    private GridPane centerPane;
+    ;
+
     @FXML
     private GridPane player0Geld;
     @FXML
@@ -836,7 +837,7 @@ public class MainSceneController implements Initializable {
                                 if (((PropertyField) currentField[i]).isMortgageTaken()) {
                                     Label hypothek = new Label("Hypothek");
                                     hypothek.setStyle("-fx-background-color:brown;");
-                                    hypothek.relocate(0,0);
+                                    hypothek.relocate(0, 0);
                                     // hypothek.setAlignment(Pos.CENTER);
                                     //hypothek.layoutXProperty().bind(RentanzeigeFelder[i].widthProperty().subtract(hypothek.getLayoutX()).divide(2));
                                     // hypothek.layoutYProperty().bind(RentanzeigeFelder[i].heightProperty().subtract(hypothek.getLayoutY()).divide(2));
@@ -847,7 +848,7 @@ public class MainSceneController implements Initializable {
                             if (hausAnzahl == 1) {
                                 RentanzeigeFelder[i].getChildren().clear();
                                 hauses = createHaus1(10, 10);
-                                hauses.relocate(0,0);
+                                hauses.relocate(0, 0);
                                 RentanzeigeFelder[i].getChildren().add(hauses);
                             }
                             if (hausAnzahl == 2) {
@@ -871,7 +872,7 @@ public class MainSceneController implements Initializable {
                             if (hausAnzahl == 5) {
                                 RentanzeigeFelder[i].getChildren().clear();
                                 hauses = createHotel(30, 20);
-                                hauses.relocate(0,0);
+                                hauses.relocate(0, 0);
                                 RentanzeigeFelder[i].getChildren().add(hauses);
                             }
 
@@ -1239,52 +1240,46 @@ public class MainSceneController implements Initializable {
         Player[] players = Lobby.getPlayerClient().getGame().getPlayers();
 
         if (players.length >= 1) {
-            for (int i = lastPosPlayer0; i < players[0].getPosition(); i++) {
-                playerUpdate0(players, i);
+            while (lastPosPlayer0 != players[0].getPosition()) {
+                lastPosPlayer0 = ++lastPosPlayer0 % 40;
+                playerUpdate0(players, lastPosPlayer0);
                 IOService.sleep(300);
             }
-            playerUpdate0(players, players[0].getPosition());
-            lastPosPlayer0 = players[0].getPosition();
         }
         if (players.length >= 2) {
-            for (int i = lastPosPlayer1; i < players[1].getPosition(); i++) {
-                playerUpdate1(players, i);
+            while (lastPosPlayer1 != players[1].getPosition()) {
+                lastPosPlayer1 = ++lastPosPlayer1 % 40;
+                playerUpdate1(players, lastPosPlayer1);
                 IOService.sleep(300);
             }
-            playerUpdate1(players, players[1].getPosition());
-            lastPosPlayer1 = players[1].getPosition();
         }
         if (players.length >= 3) {
-            for (int i = lastPosPlayer2; i < players[2].getPosition(); i++) {
-                playerUpdate2(players, i);
+            while (lastPosPlayer2 != players[2].getPosition()) {
+                lastPosPlayer2 = ++lastPosPlayer2 % 40;
+                playerUpdate2(players, lastPosPlayer2);
                 IOService.sleep(300);
             }
-            playerUpdate2(players, players[2].getPosition());
-            lastPosPlayer2 = players[2].getPosition();
         }
         if (players.length >= 4) {
-            for (int i = lastPosPlayer3; i < players[3].getPosition(); i++) {
-                playerUpdate3(players, i);
+            while (lastPosPlayer3 != players[3].getPosition()) {
+                lastPosPlayer3 = ++lastPosPlayer3 % 40;
+                playerUpdate3(players, lastPosPlayer3);
                 IOService.sleep(300);
             }
-            playerUpdate3(players, players[3].getPosition());
-            lastPosPlayer3 = players[3].getPosition();
         }
         if (players.length >= 5) {
-            for (int i = lastPosPlayer4; i < players[4].getPosition(); i++) {
-                playerUpdate4(players, i);
+            while (lastPosPlayer4 != players[4].getPosition()) {
+                lastPosPlayer4 = ++lastPosPlayer4 % 40;
+                playerUpdate4(players, lastPosPlayer4);
                 IOService.sleep(300);
             }
-            playerUpdate4(players, players[4].getPosition());
-            lastPosPlayer4 = players[4].getPosition();
         }
         if (players.length >= 6) {
-            for (int i = lastPosPlayer5; i < players[5].getPosition(); i++) {
-                playerUpdate5(players, i);
+            while (lastPosPlayer5 != players[5].getPosition()) {
+                lastPosPlayer5 = ++lastPosPlayer5 % 40;
+                playerUpdate5(players, lastPosPlayer5);
                 IOService.sleep(300);
             }
-            playerUpdate5(players, players[5].getPosition());
-            lastPosPlayer5 = players[5].getPosition();
         }
 
     }
@@ -1408,7 +1403,7 @@ public class MainSceneController implements Initializable {
         Platform.runLater(task);
 
     }
-    
+
     public void setPopupBellow(GridPane gridpane) {
 
         Task task = new Task() {
@@ -1437,8 +1432,8 @@ public class MainSceneController implements Initializable {
         };
         Platform.runLater(task);
     }
-    
-     public void resetPopupBellow() {
+
+    public void resetPopupBellow() {
         Task task = new Task() {
             @Override
             protected Object call() throws Exception {
