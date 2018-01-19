@@ -131,7 +131,7 @@ public class AuctionService extends Listener {
 
                 }
             }
-            if (isRunInConsole) {
+            if (GlobalSettings.RUN_IN_CONSOLE) {
                 sellProperty();
             }
         }

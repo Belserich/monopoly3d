@@ -16,7 +16,6 @@ import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 /**
- *
  * @author Markus Uhlig (markus.uhlig@b-tu.de)
  */
 public class Launcher extends Application {

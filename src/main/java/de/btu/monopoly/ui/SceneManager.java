@@ -9,14 +9,12 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
 import de.btu.monopoly.core.service.AuctionService;
+import de.btu.monopoly.core.service.IOService;
 import de.btu.monopoly.data.field.Field;
 import de.btu.monopoly.data.player.Player;
-import de.btu.monopoly.input.IOService;
 import de.btu.monopoly.menu.Lobby;
 import de.btu.monopoly.ui.controller.LobbyController;
 import de.btu.monopoly.ui.controller.MainSceneController;
-import java.io.IOException;
-import java.util.Optional;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
@@ -31,17 +29,15 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+
+import java.io.IOException;
+import java.util.Optional;
 
 /**
  *
@@ -378,7 +374,7 @@ public class SceneManager extends Stage {
         return -1;
     }
 
-    public static int askForFieldPopup(Player player, Field[] fields) {
+    public static int askForFieldPopup(Player player, String[] fields) {
 
         GridPane gridPane = new GridPane();
         VBox box = new VBox();
@@ -404,8 +400,8 @@ public class SceneManager extends Stage {
         button.setBackground(new Background(new BackgroundFill(Color.web("#e1f5fe"), CornerRadii.EMPTY, Insets.EMPTY)));
         label.setFont(Font.font("Tahoma", 14));
 
-        for (Field field : fields) {
-            fieldBox.getItems().add(field.getName());
+        for (String fieldName : fields) {
+            fieldBox.getItems().add(fieldName);
         }
 
         fieldBox.getSelectionModel().selectFirst();
@@ -425,7 +421,7 @@ public class SceneManager extends Stage {
         for (Field field : Lobby.getPlayerClient().getGame().getBoard().getFieldManager().getFields()) {
 
             id++;
-            if (field == fields[fieldBox.getSelectionModel().getSelectedIndex()]) {
+            if (field.getName().equals(fields[fieldBox.getSelectionModel().getSelectedIndex()])) {
                 return id;
 
             }
