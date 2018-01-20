@@ -115,7 +115,7 @@ public class LobbyController implements Initializable {
         }
 
         // Festlegen der Optionen in der Combobox
-        difficultyComboBox.getItems().addAll("Trainee", "Professional");
+        difficultyComboBox.getItems().addAll("Anfänger", "Experte");
 
         // Updatet die Spieler in der lobby
         updateNames();
@@ -602,11 +602,11 @@ public class LobbyController implements Initializable {
                     int difficulty;
 
                     switch ((String) difficultyComboBox.getSelectionModel().getSelectedItem()) {
-                        case "Trainee": {
+                        case "Anfänger": {
                             difficulty = 1;
                             break;
                         }
-                        case "Professional": {
+                        case "Experte": {
                             difficulty = 2;
                             break;
                         }
