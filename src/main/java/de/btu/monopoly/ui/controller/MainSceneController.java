@@ -12,6 +12,10 @@ import de.btu.monopoly.data.field.*;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.menu.Lobby;
 import de.btu.monopoly.net.client.GameClient;
+import java.net.URL;
+import java.util.List;
+import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 import javafx.animation.FadeTransition;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
@@ -30,11 +34,6 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.util.Duration;
-
-import java.net.URL;
-import java.util.List;
-import java.util.ResourceBundle;
-import java.util.stream.Collectors;
 
 /**
  *
@@ -613,8 +612,11 @@ public class MainSceneController implements Initializable {
                             }
                             player0.setFill(Color.web(Lobby.getUsers()[0][4]));
                             player0ButtonID = i;
-                            player0Button.setOnAction((event) -> {
+                            player0Button.setOnMouseEntered((event) -> {
                                 playerButtonPopup(player0ButtonID);
+                            });
+                            player0Button.setOnMouseExited((event) -> {
+                                resetPopupAbove();
                             });
                         }
                         else {
@@ -634,8 +636,11 @@ public class MainSceneController implements Initializable {
                                     player1.setFill(Color.web(Lobby.getUsers()[1][4]));
 
                                     player1ButtonID = i;
-                                    player1Button.setOnAction((event) -> {
+                                    player1Button.setOnMouseEntered((event) -> {
                                         playerButtonPopup(player1ButtonID);
+                                    });
+                                    player1Button.setOnMouseExited((event) -> {
+                                        resetPopupAbove();
                                     });
                                     continue;
                                 }
@@ -654,8 +659,11 @@ public class MainSceneController implements Initializable {
                                     }
                                     player2.setFill(Color.web(Lobby.getUsers()[2][4]));
                                     player2ButtonID = i;
-                                    player2Button.setOnAction((event) -> {
+                                    player2Button.setOnMouseEntered((event) -> {
                                         playerButtonPopup(player2ButtonID);
+                                    });
+                                    player2Button.setOnMouseExited((event) -> {
+                                        resetPopupAbove();
                                     });
                                     continue;
                                 }
@@ -674,8 +682,11 @@ public class MainSceneController implements Initializable {
                                     }
                                     player3.setFill(Color.web(Lobby.getUsers()[3][4]));
                                     player3ButtonID = i;
-                                    player3Button.setOnAction((event) -> {
+                                    player3Button.setOnMouseEntered((event) -> {
                                         playerButtonPopup(player3ButtonID);
+                                    });
+                                    player3Button.setOnMouseExited((event) -> {
+                                        resetPopupAbove();
                                     });
                                     continue;
                                 }
@@ -694,8 +705,11 @@ public class MainSceneController implements Initializable {
                                     }
                                     player4.setFill(Color.web(Lobby.getUsers()[4][4]));
                                     player4ButtonID = i;
-                                    player4Button.setOnAction((event) -> {
+                                    player4Button.setOnMouseEntered((event) -> {
                                         playerButtonPopup(player4ButtonID);
+                                    });
+                                    player4Button.setOnMouseExited((event) -> {
+                                        resetPopupAbove();
                                     });
                                     continue;
                                 }
@@ -714,8 +728,11 @@ public class MainSceneController implements Initializable {
                                     }
                                     player5.setFill(Color.web(Lobby.getUsers()[5][4]));
                                     player5ButtonID = i;
-                                    player5Button.setOnAction((event) -> {
+                                    player5Button.setOnMouseEntered((event) -> {
                                         playerButtonPopup(player5ButtonID);
+                                    });
+                                    player5Button.setOnMouseExited((event) -> {
+                                        resetPopupAbove();
                                     });
                                 }
                             }
@@ -1021,8 +1038,6 @@ public class MainSceneController implements Initializable {
 
         JFXButton player = new JFXButton();
 
-        JFXButton exit = new JFXButton("Exit");
-
         Label jail = new Label(" ist in Gefängnis seit : " + playeronbutton.getDaysInJail());
 
         player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[id][4]), CornerRadii.EMPTY, Insets.EMPTY)));
@@ -1032,16 +1047,12 @@ public class MainSceneController implements Initializable {
         }
         player.setPrefSize(150, 10);
 
-        box.getChildren().addAll(player, geld, jail, fields, exit);
+        box.getChildren().addAll(player, geld, jail, fields);
         box.setAlignment(Pos.CENTER);
 
         if (PopupPane.getChildren().contains(middlePane)) {
             setPopupAbove(player0Pane);
         }
-
-        exit.setOnAction(e -> {
-            resetPopupAbove();
-        });
     }
 
     /**
@@ -1417,7 +1428,7 @@ public class MainSceneController implements Initializable {
         Platform.runLater(task);
     }
 
-    public void resetPopupBellow() {
+    public void resetPopupBelow() {
         Task task = new Task() {
             @Override
             protected Object call() throws Exception {

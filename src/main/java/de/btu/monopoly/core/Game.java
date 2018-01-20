@@ -11,14 +11,13 @@ import de.btu.monopoly.data.parser.GameBoardParser;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.ui.TextAreaHandler;
-import org.xml.sax.SAXException;
-
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.xml.parsers.ParserConfigurationException;
+import org.xml.sax.SAXException;
 
 /**
  * @author Christian Prinz
@@ -218,44 +217,44 @@ public class Game {
     }
 
     public void fieldPhase(Player player, int[] rollResult) {
-        
+
         boolean repeatPhase;
         do {
             repeatPhase = false;
             switch (GameBoard.FIELD_STRUCTURE[player.getPosition()]) {
-                
+
                 case TAX: // Steuerfeld
                     TaxField taxField = (TaxField) board.getFields()[player.getPosition()];
                     LOGGER.fine(String.format("%s steht auf einem Steuer-Zahlen-Feld.", player.getName()));
                     FieldService.payTax(player, taxField);
                     break;
-        
+
                 case CARD: // Kartenfeld
                     CardField cardField = (CardField) board.getFields()[player.getPosition()];
                     Card nextCard = cardField.nextCard();
                     LOGGER.fine(String.format("%s steht auf einem Kartenfeld (%s).", player.getName(), cardField.getName()));
                     board.getCardManager().manageCardActions(player, nextCard);
-                    
+
                     if (nextCard.getActions().contains(CardAction.SET_POSITION)
                             || nextCard.getActions().contains(CardAction.MOVE_PLAYER)
                             || nextCard.getActions().contains(CardAction.NEXT_SUPPLY)) {
                         repeatPhase = true;
                     }
                     break;
-        
+
                 case GO_JAIL: // "Gehen Sie Ins Gefaengnis"-Feld
                     LOGGER.info(String.format("%s muss ins Gefaengnis!", player.getName()));
                     FieldService.toJail(player);
                     break;
-        
+
                 case CORNER: // Eckfeld
                     LOGGER.fine(String.format("%s steht auf einem Eckfeld.", player.getName()));
                     break;
-        
+
                 case GO: // "LOS"-Feld
                     LOGGER.fine(String.format("%s steht auf LOS.", player.getName()));
                     break;
-        
+
                 default:
                     PropertyField prop = (PropertyField) board.getFields()[player.getPosition()];
                     processPlayerOnPropertyField(player, prop, rollResult);
@@ -322,14 +321,14 @@ public class Game {
                 processPlayerTradeOption(player);
             }
             else if (choice > 1 && choice < 6) {
-                
+
                 int[] ownedFieldIds = board.getFieldManager().getOwnedPropertyFieldIds(player);
                 String[] fieldNames = Arrays.stream(ownedFieldIds)
                         .mapToObj(id -> board.getFieldManager().getField(id).getName())
                         .toArray(String[]::new);
                 int chosenFieldId = ownedFieldIds[IOService.askForField(player, fieldNames) - 1];
                 Field currField = board.getFieldManager().getField(chosenFieldId); // Wahl der Strasse
-    
+
                 PropertyField property = (PropertyField) currField;
                 switch (choice) {
                     case 2: // Haus kaufen
@@ -340,7 +339,7 @@ public class Game {
                         StreetField streetField = (StreetField) property;
                         board.getFieldManager().buyHouse(streetField);
                         break;
-        
+
                     case 3: //Haus verkaufen
                         if (!(currField instanceof StreetField)) {
                             LOGGER.info("Gewähltes Feld ist keine Straße!");
@@ -349,11 +348,11 @@ public class Game {
                         streetField = (StreetField) property;
                         board.getFieldManager().sellHouse(streetField);
                         break;
-        
+
                     case 4: // Hypothek aufnehmen
                         board.getFieldManager().takeMortgage(property);
                         break;
-        
+
                     case 5: // Hypothek zurückzahlen
                         board.getFieldManager().payMortgage(property);
                         break;

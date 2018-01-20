@@ -11,10 +11,9 @@ import de.btu.monopoly.data.card.CardManager;
 import de.btu.monopoly.data.field.*;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.net.client.GameClient;
+import java.util.Random;
 import org.junit.Assert;
 import org.junit.Test;
-
-import java.util.Random;
 
 /**
  *
@@ -134,31 +133,30 @@ public class CoreUnitTest {
 
     @Test
     public void testRenovateAction() {
-        
+
         Player p = players[0];
-        
+
         CardManager cm = board.getCardManager();
         cm.processRenovateAction(p, new int[]{25});
     }
-    
+
     @Test
     public void testCardActions() {
-        
+
         Player p = players[0];
         CardField field = ((CardField) board.getFieldManager().getField(2));
-        
+
         for (int i = 0; i < 2; i++) {
-            
+
             Card first = field.nextCard();
             Card card = first;
             do {
                 board.getCardManager().manageCardActions(p, card);
                 card = field.nextCard();
-            }
-            while (card != first);
+            } while (card != first);
         }
     }
-    
+
     @Test
     public void testBuyStreet() {
 
@@ -230,7 +228,8 @@ public class CoreUnitTest {
         StreetField street = (StreetField) fields[11];
         StreetField street2 = (StreetField) fields[13];
         StreetField street3 = (StreetField) fields[14];
-
+        int expHousesStr = 0;
+        int expHousesStr2 = 1;
         int expMoney = player.getMoney();
 
         street.setOwner(player);
@@ -243,16 +242,15 @@ public class CoreUnitTest {
         fm.buyHouse(street3);
 
         fm.sellHouse(street); // wenn du das Haus hier wieder verkaufst kann danach die Anzahl Häuser auf dem Feld nicht 1 sein!
-        int expHouses = 1;
 
-        expMoney = expMoney - street.getHousePrice() - street2.getHousePrice() - street3.getHousePrice() + (street.getHousePrice() / 2);
+        expMoney = expMoney - street.getHousePrice() - (street2.getHousePrice() * 2) - street3.getHousePrice() + (street.getHousePrice() / 2);
         Assert.assertEquals(expMoney, player.getMoney());
-        Assert.assertEquals(0, street.getHouseCount()); // expHouses durch 0 ersetzt
+        Assert.assertEquals(expHousesStr, street.getHouseCount());
 
         expMoney += street.getHousePrice() / 2;
         fm.sellHouse(street2);
-        Assert.assertEquals(0, street2.getHouseCount());
-        Assert.assertEquals(expMoney, player.getMoney()); // 1600 durch expMoney ersetzt
+        Assert.assertEquals(expHousesStr2, street2.getHouseCount());
+        Assert.assertEquals(expMoney, player.getMoney());
     }
 
     @Test

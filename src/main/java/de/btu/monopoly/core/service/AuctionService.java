@@ -13,7 +13,6 @@ import de.btu.monopoly.net.data.ExitAuctionRequest;
 import de.btu.monopoly.net.data.JoinAuctionRequest;
 import de.btu.monopoly.ui.SceneManager;
 import de.btu.monopoly.ui.TextAreaHandler;
-
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,9 +21,9 @@ import java.util.logging.Logger;
  * @author patrick
  */
 public class AuctionService extends Listener {
-    
+
     private static final Logger LOGGER = Logger.getLogger(AuctionService.class.getCanonicalName());
-    
+
     private static Auction auc;
 
     /**
@@ -56,8 +55,8 @@ public class AuctionService extends Listener {
         JoinAuctionRequest jaReq = new JoinAuctionRequest();
         NetworkService.logClientSendMessage(jaReq, auc.getPlayerName());
         auc.getClient().sendTCP(jaReq);
-        SceneManager.AuctionPopup();
-        IOService.sleepDeep(1500);
+        SceneManager.auctionPopup();
+        SceneManager.bidTextFieldFocus();
         if (!GlobalSettings.RUN_AS_TEST) { // nicht fuer Test
             while (auctionRun) {
                 IOService.sleepDeep(500);
