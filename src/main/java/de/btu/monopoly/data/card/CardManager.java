@@ -7,7 +7,7 @@ import de.btu.monopoly.data.Tradeable;
 import de.btu.monopoly.data.field.FieldManager;
 import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.player.Player;
-
+import de.btu.monopoly.ui.TextAreaHandler;
 import java.util.logging.Logger;
 import java.util.stream.IntStream;
 
@@ -15,20 +15,22 @@ import java.util.stream.IntStream;
  * @author Maximilian Bels (belsmaxi@b-tu.de)
  */
 public class CardManager {
-    
+
     private static final Logger LOGGER = Logger.getLogger(CardManager.class.getCanonicalName());
-    
+
     private GameBoard board;
-    
+
     public CardManager(GameBoard board) {
         this.board = board;
+        TextAreaHandler textHandler = new TextAreaHandler();
+        LOGGER.addHandler(textHandler);
     }
-    
+
     public void manageCardActions(Player player, Card card) {
-        
+
         PropertyField prop;
         LOGGER.info(String.format("%s hat eine Karte gezogen: %s", player.getName(), card));
-        
+
         for (CardAction action : card.getActions()) {
             int args[] = card.getArgs();
             action.ensureArgs(args);
@@ -38,32 +40,32 @@ public class CardManager {
                     card.getCardStack().removeCard(card);
                     player.getCardStack().addCard(card);
                     break;
-        
+
                 case GIVE_MONEY:
                     LOGGER.info("Der Spieler bekommt Geld.");
                     PlayerService.giveMoney(player, args[0]);
                     break;
-        
+
                 case GO_JAIL:
                     LOGGER.info("Der Spieler muss ins Gefängnis.");
                     FieldService.toJail(player);
                     break;
-        
+
                 case PAY_MONEY:
                     LOGGER.info("Der Spieler muss Geld zahlen.");
                     PlayerService.takeMoney(player, args[0]);
                     break;
-        
+
                 case MOVE_PLAYER:
                     LOGGER.info("Der Spieler wird bewegt.");
                     board.getFieldManager().movePlayer(player, args[0]);
                     break;
-        
+
                 case SET_POSITION:
                     LOGGER.info("Der Spieler bekommt eine neue Position.");
                     board.getFieldManager().movePlayer(player, args[0] - player.getPosition());
                     break;
-        
+
                 case PAY_MONEY_ALL:
                     LOGGER.info("Der Spieler muss Geld an sämtliche Mitspieler zahlen.");
                     board.getActivePlayers().forEach(p -> {
@@ -72,19 +74,19 @@ public class CardManager {
                         }
                     });
                     break;
-        
+
                 case NEXT_SUPPLY:
                     LOGGER.info("Der Spieler rückt bis zum nächsten Werk vor.");
                     prop = (PropertyField) board.getFieldManager().movePlayer(player, GameBoard.FieldType.SUPPLY);
                     FieldService.payRent(player, prop, null, 1);
                     break;
-        
+
                 case NEXT_STATION_RENT_AMP:
                     LOGGER.info("Der Spieler rückt bis zum nächsten Bahnhof vor. Die Miete verdoppelt sich.");
                     prop = (PropertyField) board.getFieldManager().movePlayer(player, GameBoard.FieldType.STATION);
                     FieldService.payRent(player, prop, null, args[0]);
                     break;
-        
+
                 case BIRTHDAY:
                     LOGGER.info("Der Spieler bekommt Geld von seinen Mitspielern.");
                     board.getActivePlayers().forEach(p -> {
@@ -93,17 +95,18 @@ public class CardManager {
                         }
                     });
                     break;
-                    
+
                 case RENOVATE:
                     LOGGER.info("Der Spieler muss für jedes Haus und Hotel seinem Besitz Geld zahlen.");
                     processRenovateAction(player, args);
                     break;
-                    
-                default: throw new RuntimeException("Unknown card action-type!");
+
+                default:
+                    throw new RuntimeException("Unknown card action-type!");
             }
         }
     }
-    
+
     public boolean useJailCard(Player player) {
         LOGGER.info(String.format("%s benutzt eine Gefaengnis-Frei-Karte.", player.getName()));
         CardStack stack = player.getCardStack();
@@ -113,9 +116,11 @@ public class CardManager {
             PlayerService.freeFromJail(player);
             return true;
         }
-        else return false;
+        else {
+            return false;
+        }
     }
-    
+
     public int[] getTradeableCardIds(Player player) {
         CardStack stack = player.getCardStack();
         IntStream.Builder builder = IntStream.builder();
@@ -126,25 +131,25 @@ public class CardManager {
         }
         return builder.build().toArray();
     }
-    
+
     public Card getCard(Player player, int id) {
         CardStack stack = player.getCardStack();
         return stack.cards.get(id);
     }
-    
+
     public void processRenovateAction(Player player, int[] args) {
         FieldManager fm = board.getFieldManager();
         int[] counts = fm.getHouseAndHotelCount(player);
-        
+
         LOGGER.info(String.format("Rechnung: %d (Häuser) * %d und %d (Hotels) * %d", counts[0], args[0], counts[1], args[0] * 5));
         PlayerService.takeMoneyUnchecked(player, counts[0] * args[0]);
         PlayerService.takeMoneyUnchecked(player, counts[1] * args[0] * 5);
     }
-    
+
     private void putBackOnStack(Card card) {
         card.getCardStack().addCard(card);
     }
-    
+
     public void bankrupt(Player player) {
         LOGGER.info(String.format("%s's gesammelte Karten werden wieder zurück auf ihre Stapel gelegt.", player.getName()));
         CardStack stack = player.getCardStack();
