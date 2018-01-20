@@ -1,7 +1,6 @@
 package de.btu.monopoly.core;
 
 import de.btu.monopoly.GlobalSettings;
-import de.btu.monopoly.core.mechanics.Trade;
 import de.btu.monopoly.core.service.*;
 import de.btu.monopoly.data.card.Card;
 import de.btu.monopoly.data.card.CardAction;
@@ -11,15 +10,12 @@ import de.btu.monopoly.data.parser.CardStackParser;
 import de.btu.monopoly.data.parser.GameBoardParser;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.net.client.GameClient;
-import de.btu.monopoly.net.data.PlayerTradeRequest;
-import de.btu.monopoly.net.data.PlayerTradeResponse;
 import de.btu.monopoly.ui.TextAreaHandler;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -168,10 +164,6 @@ public class Game {
         } while (player.isInJail() && choice != 1);
     }
 
-    private boolean isChoiceFromThisClient(Player player) {
-        return player == client.getPlayerOnClient();
-    }
-
     public void processJailRollOption(Player player) {
         int[] result = PlayerService.roll(random);
         if (result[0] == result[1]) {
@@ -301,13 +293,13 @@ public class Game {
                 if (!FieldService.buyPropertyField(player, prop)) {
                     LOGGER.warning(String.format("%s hat nicht genug Geld! %s wird zwangsversteigert.",
                             player.getName(), prop.getName()));
-                    betPhase(prop);
+                    processAuction(prop);
                 }
                 break;
 
             case 2: // Auktion
                 LOGGER.log(Level.INFO, "{0} hat sich gegen den Kauf entschieden, die Stra\u00dfe wird nun versteigert.", player.getName());
-                betPhase(prop);
+                processAuction(prop);
                 break;
 
             default:
@@ -317,7 +309,7 @@ public class Game {
     }
 
     private void actionPhase(Player player) {
-
+        
         int choice;
         do {
             if (GlobalSettings.RUN_IN_CONSOLE) {
@@ -370,75 +362,22 @@ public class Game {
         }
         while (choice != 1);
     }
-
+    
+    /**
+     * Initiiert einen Tausch/Handel ausgehend von einem speziellen Spieler.
+     *
+     * @param player Spieler
+     */
     private void processPlayerTradeOption(Player player) {
-        
-        PlayerTradeResponse response = null;
-        
-        if (isChoiceFromThisClient(player)) {
-            
-            PlayerTradeRequest request = new PlayerTradeRequest();
-            Trade trade = new Trade();
-    
-            List<Player> activePlayers = board.getActivePlayers();
-            StringBuilder builder = new StringBuilder("Waehle einen Spieler:\n");
-            for (int i = 0; i < activePlayers.size(); i++) {
-                Player p = activePlayers.get(i);
-                if (p != player) {
-                    builder.append(String.format("[%d] - %s%n", i + 1, p.toString()));
-                }
-            }
-            LOGGER.info(builder.toString());
-            Player otherPlayer = activePlayers.get(IOService.getUserInput(activePlayers.size()) - 1);
-            
-            trade.setSupply(TradeService.createTradeOfferFor(player, board));
-            trade.setDemand(TradeService.createTradeOfferFor(otherPlayer, board));
-            request.setTrade(trade);
-            
-            LOGGER.info(String.format("Zusammenfassung:%n%n%s%nHandelsanfrage wirklich absenden?%n\t[1] - Ja%n\t[2] - Nein",
-                    trade.toString(board)));
-            
-            request.setDenied(IOService.getUserInput(2) == 2);
-            
-            client.sendTCP(request);
-            
-            response = (PlayerTradeResponse) client.waitForObjectOfClass(PlayerTradeResponse.class);
-        }
-        else {
-            
-            PlayerTradeRequest request = (PlayerTradeRequest) client.waitForObjectOfClass(PlayerTradeRequest.class);
-            
-            if (request.isDenied()) return;
-            
-            Trade trade = request.getTrade();
-            Player receipt = board.getPlayer(request.getTrade().getDemand().getPlayerId());
-            Player thisPlayer = client.getPlayerOnClient();
-            
-            if (receipt == thisPlayer) {
-                
-                LOGGER.info(String.format("Spieler %s hat dir eine Handelsanfrage gemacht:%n%n%s%n\t[1] - annehmen%n\t[2] - ablehnen",
-                        board.getPlayer(trade.getSupply().getPlayerId()).getName(), trade.toString(board)));
-                int choice = IOService.getClientChoice(receipt, 2);
-    
-                response = new PlayerTradeResponse();
-                response.setRequest(request);
-                response.setAccepted(choice == 1);
-                
-                client.sendTCP(response);
-            }
-            else response = (PlayerTradeResponse) client.waitForObjectOfClass(PlayerTradeResponse.class);
-        }
-    
-        if (response.isAccepted()) {
-            LOGGER.info("<<< HANDEL ANGENOMMEN >>>");
-            TradeService.completeTrade(response.getRequest().getTrade(), board);
-        }
-        else {
-            LOGGER.info("<<< HANDEL ABGELEHNT >>>");
-        }
+        TradeService.processPlayerTradeOption(player, client, board);
     }
-
-    public void betPhase(PropertyField property) {
+    
+    /**
+     * Initiiert die Auktion eines angegebenen Grundstuecks.
+     *
+     * @param property Grundstueck
+     */
+    public void processAuction(PropertyField property) {
         AuctionService.startAuction(property);
     }
 

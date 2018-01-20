@@ -3,6 +3,7 @@ package de.btu.monopoly.core.service;
 import de.btu.monopoly.core.GameBoard;
 import de.btu.monopoly.data.player.Bank;
 import de.btu.monopoly.data.player.Player;
+import de.btu.monopoly.net.client.GameClient;
 
 import java.util.Random;
 import java.util.logging.Logger;
@@ -28,7 +29,18 @@ public class PlayerService {
         IOService.sleep(2000);
         LOGGER.info(String.format("%s ist jetzt im Gefaengnis.", player.getName()));
     }
-
+    
+    /**
+     * Gibt an, ob die
+     *
+     * @param player gewählter Spieler
+     * @param client Spielclient
+     * @return true, wenn der gewählte Spieler, der Hauptspieler des Clienten ist.
+     */
+    public static boolean isMainPlayer(Player player, GameClient client) {
+        return client.getPlayerOnClient() == player;
+    }
+    
     /**
      * Befreit den Spieler aus dem Gefaengnis.
      *
