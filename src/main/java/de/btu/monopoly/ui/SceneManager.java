@@ -506,6 +506,7 @@ public class SceneManager extends Stage {
             protected Object call() throws Exception {
                 auctionLabel.setText(String.valueOf(AuctionService.getHighestBid()) + " €");
                 hoechstgebotLabel.setText("Höchstgebot von \n" + AuctionService.getPlayer(AuctionService.getHighestBidder()).getName() + ":");
+                bidTextField.requestFocus();
                 return null;
             }
         };

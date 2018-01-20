@@ -1,5 +1,6 @@
 package de.btu.monopoly.data.card;
 
+import de.btu.monopoly.GlobalSettings;
 import de.btu.monopoly.core.GameBoard;
 import de.btu.monopoly.core.service.FieldService;
 import de.btu.monopoly.core.service.PlayerService;
@@ -22,8 +23,10 @@ public class CardManager {
 
     public CardManager(GameBoard board) {
         this.board = board;
-        TextAreaHandler textHandler = new TextAreaHandler();
-        LOGGER.addHandler(textHandler);
+        if (!GlobalSettings.RUN_AS_TEST && !GlobalSettings.RUN_IN_CONSOLE) {
+            TextAreaHandler textHandler = new TextAreaHandler();
+            LOGGER.addHandler(textHandler);
+        }
     }
 
     public void manageCardActions(Player player, Card card) {
