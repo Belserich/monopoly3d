@@ -13,32 +13,32 @@ import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.data.PlayerTradeRequest;
 import de.btu.monopoly.net.data.PlayerTradeResponse;
+import de.btu.monopoly.ui.SceneManager;
 import de.btu.monopoly.ui.TextAreaHandler;
-import org.xml.sax.SAXException;
-
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.xml.parsers.ParserConfigurationException;
+import org.xml.sax.SAXException;
 
 /**
  * @author Christian Prinz
  */
 public class Game {
-    
+
     /**
      * Zentraler Logger der Spiellogik
      */
     private static final Logger LOGGER = Logger.getLogger(Game.class.getCanonicalName());
-    
+
     /**
      * Spiel-Client
      */
     private final GameClient client;
-    
+
     /**
      * Spielbrett
      */
@@ -48,26 +48,25 @@ public class Game {
      * Spieler (Zuschauer und aktive Spieler)
      */
     private final Player[] players;
-    
+
     /**
      * Die Zufallsinstanz für sämtliche zufällige Spielereignisse
      */
     private final Random random;
 
     /**
-     * Die fachliche Komponente des Spiels als Einheit, bestehend aus einem
-     * Spielbrett, den Spielern sowie Zuschauern.
+     * Die fachliche Komponente des Spiels als Einheit, bestehend aus einem Spielbrett, den Spielern sowie Zuschauern.
      *
      * @param client GameClient
      * @param players Spieler
      * @param seed RandomSeed
      */
     public Game(GameClient client, Player[] players, long seed) {
-    
+
         this.client = client;
         this.players = players;
         random = new Random(seed);
-        
+
         IOService.setClient(client);
         if (!GlobalSettings.RUN_AS_TEST && !GlobalSettings.RUN_IN_CONSOLE) {
             TextAreaHandler logHandler = new TextAreaHandler();
@@ -76,7 +75,7 @@ public class Game {
     }
 
     public void init() {
-        
+
         LOGGER.info("Spiel wird initialisiert.");
 
         try {
@@ -226,51 +225,50 @@ public class Game {
     }
 
     public void fieldPhase(Player player, int[] rollResult) {
-        
+
         boolean repeatPhase;
         do {
             repeatPhase = false;
             switch (GameBoard.FIELD_STRUCTURE[player.getPosition()]) {
-                
+
                 case TAX: // Steuerfeld
                     TaxField taxField = (TaxField) board.getFields()[player.getPosition()];
                     LOGGER.fine(String.format("%s steht auf einem Steuer-Zahlen-Feld.", player.getName()));
                     FieldService.payTax(player, taxField);
                     break;
-        
+
                 case CARD: // Kartenfeld
                     CardField cardField = (CardField) board.getFields()[player.getPosition()];
                     Card nextCard = cardField.nextCard();
                     LOGGER.fine(String.format("%s steht auf einem Kartenfeld (%s).", player.getName(), cardField.getName()));
                     board.getCardManager().manageCardActions(player, nextCard);
-                    
+
                     if (nextCard.getActions().contains(CardAction.SET_POSITION)
                             || nextCard.getActions().contains(CardAction.MOVE_PLAYER)
                             || nextCard.getActions().contains(CardAction.NEXT_SUPPLY)) {
                         repeatPhase = true;
                     }
                     break;
-        
+
                 case GO_JAIL: // "Gehen Sie Ins Gefaengnis"-Feld
                     LOGGER.info(String.format("%s muss ins Gefaengnis!", player.getName()));
                     FieldService.toJail(player);
                     break;
-        
+
                 case CORNER: // Eckfeld
                     LOGGER.fine(String.format("%s steht auf einem Eckfeld.", player.getName()));
                     break;
-        
+
                 case GO: // "LOS"-Feld
                     LOGGER.fine(String.format("%s steht auf LOS.", player.getName()));
                     break;
-        
+
                 default:
                     PropertyField prop = (PropertyField) board.getFields()[player.getPosition()];
                     processPlayerOnPropertyField(player, prop, rollResult);
                     break;
             }
-        }
-        while (repeatPhase);
+        } while (repeatPhase);
     }
 
     private void processPlayerOnPropertyField(Player player, PropertyField prop, int[] rollResult) {
@@ -330,14 +328,14 @@ public class Game {
                 processPlayerTradeOption(player);
             }
             else if (choice > 1 && choice < 6) {
-                
+
                 int[] ownedFieldIds = board.getFieldManager().getOwnedPropertyFieldIds(player);
                 String[] fieldNames = Arrays.stream(ownedFieldIds)
                         .mapToObj(id -> board.getFieldManager().getField(id).getName())
                         .toArray(String[]::new);
                 int chosenFieldId = ownedFieldIds[IOService.askForField(player, fieldNames) - 1];
                 Field currField = board.getFieldManager().getField(chosenFieldId); // Wahl der Strasse
-    
+
                 PropertyField property = (PropertyField) currField;
                 switch (choice) {
                     case 2: // Haus kaufen
@@ -348,7 +346,7 @@ public class Game {
                         StreetField streetField = (StreetField) property;
                         board.getFieldManager().buyHouse(streetField);
                         break;
-        
+
                     case 3: //Haus verkaufen
                         if (!(currField instanceof StreetField)) {
                             LOGGER.info("Gewähltes Feld ist keine Straße!");
@@ -357,29 +355,31 @@ public class Game {
                         streetField = (StreetField) property;
                         board.getFieldManager().sellHouse(streetField);
                         break;
-        
+
                     case 4: // Hypothek aufnehmen
                         board.getFieldManager().takeMortgage(property);
                         break;
-        
+
                     case 5: // Hypothek zurückzahlen
                         board.getFieldManager().payMortgage(property);
                         break;
                 }
             }
-        }
-        while (choice != 1);
+        } while (choice != 1);
     }
 
     private void processPlayerTradeOption(Player player) {
-        
+
+        //GUI Aufruf
+        SceneManager.initTradePopup();
+
         PlayerTradeResponse response = null;
-        
+
         if (isChoiceFromThisClient(player)) {
-            
+
             PlayerTradeRequest request = new PlayerTradeRequest();
             Trade trade = new Trade();
-    
+
             List<Player> activePlayers = board.getActivePlayers();
             StringBuilder builder = new StringBuilder("Waehle einen Spieler:\n");
             for (int i = 0; i < activePlayers.size(); i++) {
@@ -390,45 +390,49 @@ public class Game {
             }
             LOGGER.info(builder.toString());
             Player otherPlayer = activePlayers.get(IOService.getUserInput(activePlayers.size()) - 1);
-            
+
             trade.setSupply(TradeService.createTradeOfferFor(player, board));
             trade.setDemand(TradeService.createTradeOfferFor(otherPlayer, board));
             request.setTrade(trade);
-            
+
             LOGGER.info(String.format("Zusammenfassung:%n%n%s%nHandelsanfrage wirklich absenden?%n\t[1] - Ja%n\t[2] - Nein",
                     trade.toString(board)));
-            
+
             request.setDenied(IOService.getUserInput(2) == 2);
-            
+
             client.sendTCP(request);
-            
+
             response = (PlayerTradeResponse) client.waitForObjectOfClass(PlayerTradeResponse.class);
         }
         else {
-            
+
             PlayerTradeRequest request = (PlayerTradeRequest) client.waitForObjectOfClass(PlayerTradeRequest.class);
-            
-            if (request.isDenied()) return;
-            
+
+            if (request.isDenied()) {
+                return;
+            }
+
             Trade trade = request.getTrade();
             Player receipt = board.getPlayer(request.getTrade().getDemand().getPlayerId());
             Player thisPlayer = client.getPlayerOnClient();
-            
+
             if (receipt == thisPlayer) {
-                
+
                 LOGGER.info(String.format("Spieler %s hat dir eine Handelsanfrage gemacht:%n%n%s%n\t[1] - annehmen%n\t[2] - ablehnen",
                         board.getPlayer(trade.getSupply().getPlayerId()).getName(), trade.toString(board)));
                 int choice = IOService.getClientChoice(receipt, 2);
-    
+
                 response = new PlayerTradeResponse();
                 response.setRequest(request);
                 response.setAccepted(choice == 1);
-                
+
                 client.sendTCP(response);
             }
-            else response = (PlayerTradeResponse) client.waitForObjectOfClass(PlayerTradeResponse.class);
+            else {
+                response = (PlayerTradeResponse) client.waitForObjectOfClass(PlayerTradeResponse.class);
+            }
         }
-    
+
         if (response.isAccepted()) {
             LOGGER.info("<<< HANDEL ANGENOMMEN >>>");
             TradeService.completeTrade(response.getRequest().getTrade(), board);
