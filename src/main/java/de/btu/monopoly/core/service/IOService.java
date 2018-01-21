@@ -6,21 +6,19 @@
 package de.btu.monopoly.core.service;
 
 import de.btu.monopoly.GlobalSettings;
+import de.btu.monopoly.core.Game;
 import de.btu.monopoly.core.GameBoard;
 import de.btu.monopoly.core.mechanics.Auction;
 import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.ki.EasyKi;
 import de.btu.monopoly.ki.HardKi;
-import de.btu.monopoly.ki.MediumKi;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.data.BroadcastPlayerChoiceRequest;
 import de.btu.monopoly.ui.SceneManager;
 import de.btu.monopoly.ui.TextAreaHandler;
-
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Random;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -53,10 +51,7 @@ public class IOService {
                 choice = EasyKi.jailOption(player);
                 break;
             case 2:
-                choice = MediumKi.jailOption(player);
-                break;
-            case 3:
-                choice = HardKi.jailOption(player, client);
+                choice = HardKi.jailOption(player);
                 break;
             default:
                 LOGGER.warning("Illegale KI-Stufe in JailChoice registriert");
@@ -64,7 +59,7 @@ public class IOService {
         return choice;
     }
 
-    public static int buyPropertyChoice(Player player, PropertyField prop, Random random) {
+    public static int buyPropertyChoice(Player player, PropertyField prop) {
         int choice = -1;
         switch (player.getAiLevel()) {
             case 0:
@@ -78,12 +73,9 @@ public class IOService {
 
                 break;
             case 1:
-                choice = EasyKi.buyPropOption(player, prop, random);
+                choice = EasyKi.buyPropOption(player, prop);
                 break;
             case 2:
-                choice = MediumKi.buyPropOption(player, prop);
-                break;
-            case 3:
                 choice = HardKi.buyPropOption(player, prop);
                 break;
             default:
@@ -92,9 +84,8 @@ public class IOService {
         return choice;
     }
 
-    // wird noch zu void, wenn GUI fertig
     public static int actionSequence(Player player, GameBoard board) {
-        int choice = 1; //kommt weg
+        int choice = 1;
         switch (player.getAiLevel()) {
             case 0:
                 if (GlobalSettings.RUN_IN_CONSOLE) {
@@ -105,13 +96,10 @@ public class IOService {
                 }
                 break;
             case 1:
-                choice = EasyKi.processActionSequence(player, board);
+                choice = EasyKi.processActionSequence();
                 break;
             case 2:
-                MediumKi.processActionSequence(player, board);
-                break;
-            case 3:
-                HardKi.processActionSequence(player, board);
+                choice = HardKi.processActionSequence(player, board);
                 break;
             default:
                 LOGGER.warning("Illegale KI-Stufe in JailChoice registriert");
@@ -133,13 +121,10 @@ public class IOService {
             case 0:
                 break;
             case 1:
-                EasyKi.processBetSequence(rndKi);
+                EasyKi.processBetSequence(rndKi, EasyKi.getMAXIMUM_BID());
                 break;
             case 2:
-                MediumKi.processBetSequence();
-                break;
-            case 3:
-                HardKi.processBetSequence();
+                HardKi.processBetSequence(rndKi);
                 break;
             default:
                 LOGGER.warning("Illegale KI-Stufe in BetSequence registriert");
@@ -216,7 +201,7 @@ public class IOService {
             Thread.currentThread().interrupt();
         }
     }
-    
+
     /**
      * Nimmt Spielereingaben entgegen.
      *
@@ -233,15 +218,14 @@ public class IOService {
             } catch (NumberFormatException ex) {
                 LOGGER.log(Level.WARNING, "Fehler: falsche Eingabe!");
             }
-            
+
             if (output < 1 || output > max) {
                 LOGGER.log(Level.INFO, "Deine Eingabe liegt nicht im Wertebereich! Bitte erneut versuchen.");
             }
-        }
-        while (output < 1 || output > max);
+        } while (output < 1 || output > max);
         return output;
     }
-    
+
     /**
      * Methode zum Auswaehen einer Strasse die Bearbeitet werden soll in der actionPhase()
      *
@@ -262,9 +246,13 @@ public class IOService {
             return SceneManager.askForFieldPopup(player, fieldNames);
         }
     }
-    
+
     public static String askForString() {
         Scanner scanner = new Scanner(System.in);
         return scanner.nextLine();
+    }
+
+    public static Game getGame() {
+        return client.getGame();
     }
 }

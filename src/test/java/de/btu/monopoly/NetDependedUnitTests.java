@@ -17,8 +17,8 @@ import de.btu.monopoly.menu.Lobby;
 import de.btu.monopoly.menu.LobbyService;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.server.GameServer;
+import java.util.Arrays;
 import org.junit.Assert;
-import org.junit.Test;
 
 /**
  *
@@ -90,62 +90,75 @@ public class NetDependedUnitTests {
         players = null;
         fm = null;
         cm = null;
-        System.out.println("\nCLEAR GAME ---- ALLES ZURUECKGESETZT!!!\n");
+        System.out.println("\nCLEAR GAME ---- ALLES ZURUECKGESETZT!!!");
         IOService.sleep(100);
     }
 
-    @Test
+    private void testOutput(String testName) {
+        System.out.println("\n__________________________________________________\n"
+                + "STARTE TEST: " + testName);
+    }
+
+    private void test(String message, boolean condition) {
+        Assert.assertTrue(message, condition);
+    }
+
+//    @Test
     public void testInitNetwork() {
+        testOutput("testInitNetwork");
         initNetwork();
-        Assert.assertTrue("Server nicht initialisiert", server != null);
-        Assert.assertTrue("Client nicht initialisiert", client != null);
+        test("Server nicht initialisiert", server != null);
+        test("Client nicht initialisiert", client != null);
         clearGame();
     }
 
 //    @Test
     public void testInitLobby() {
+        testOutput("testInitLobby");
         initLobby();
         LobbyService.setLobby(lobby);
-        Assert.assertTrue("lobby nicht initialisiert", LobbyService.getLobby() != null);
-        Assert.assertTrue("Host nicht gesetzt", LobbyService.getLobby().isHost() == true);
+        test("Lobby nicht initialisiert", LobbyService.getLobby() != null);
+        test("Host nicht gesetzt", LobbyService.getLobby().isHost() == true);
 
         LobbyService.joinRequest();
         IOService.sleep(100);
-        Assert.assertTrue("Spieler nicht registriert", LobbyService.getLobby().getUsers() != null);
-        Assert.assertTrue("Spieler nicht menschlich", Integer.parseInt(LobbyService.getLobby().getUsers()[0][3]) == 0);
+        test("Spieler nicht registriert", LobbyService.getLobby().getUsers() != null);
+        test("Spieler nicht menschlich", Integer.parseInt(LobbyService.getLobby().getUsers()[0][3]) == 0);
 
         LobbyService.changeName("TestSpieler");
         IOService.sleep(100);
-        Assert.assertTrue("Spielernamen nicht geändert", "TestSpieler".equals(LobbyService.getLobby().getUsers()[0][1]));
+        test("Spielernamen nicht geändert", "TestSpieler".equals(LobbyService.getLobby().getUsers()[0][1]));
 
         LobbyService.addKI("Gegner", 1);
         IOService.sleep(100);
-        Assert.assertTrue("KI nicht hizugefügt", LobbyService.getLobby().getUsers().length == 2);
-        Assert.assertTrue("KI-Stufe nicht gesetzt", Integer.parseInt(LobbyService.getLobby().getUsers()[1][3]) == 1);
-        Assert.assertTrue("KI-Name nicht gesetzt", "Gegner".equals(LobbyService.getLobby().getUsers()[1][1]));
+        test("KI nicht hizugefügt", LobbyService.getLobby().getUsers().length == 2);
+        test("KI-Stufe nicht gesetzt", Integer.parseInt(LobbyService.getLobby().getUsers()[1][3]) == 1);
+        test("KI-Name nicht gesetzt", "Gegner".equals(LobbyService.getLobby().getUsers()[1][1]));
 
         Game controller = new Game(lobby.getPlayerClient(), LobbyService.generatePlayerArray(), lobby.getRandomSeed());
         lobby.setController(controller);
         lobby.getPlayerClient().setGame(controller);
-        Assert.assertTrue("Game nicht erstellt", LobbyService.getLobby().getController() != null);
-        Assert.assertTrue("PlayerOnClient nicht erstellt", LobbyService.getLobby().getPlayerClient() != null);
+        test("Game nicht erstellt", LobbyService.getLobby().getController() != null);
+        test("PlayerOnClient nicht erstellt", LobbyService.getLobby().getPlayerClient() != null);
 
         clearGame();
     }
 
 //    @Test
     public void testInitGame() {
+        testOutput("testInitGame");
         initGame();
-        Assert.assertTrue("Game nicht initialisiert", game != null);
-        Assert.assertTrue("board nicht initialisiert", board != null);
-        Assert.assertTrue("players nicht initialisiert", players != null);
-        Assert.assertTrue("FieldManager nicht initialisiert", fm != null);
-        Assert.assertTrue("CardManager nicht initialisiert", cm != null);
+        test("Game nicht initialisiert", game != null);
+        test("board nicht initialisiert", board != null);
+        test("players nicht initialisiert", players != null);
+        test("FieldManager nicht initialisiert", fm != null);
+        test("CardManager nicht initialisiert", cm != null);
         clearGame();
     }
 
 //    @Test
-    public void testKiJailOption() {
+    public void testEasyKiJailOption() {
+        testOutput("testEasyKiJailOption");
         initGame();
         // KI ins Gefängnis setzen
         Player ki = players[1];
@@ -154,22 +167,99 @@ public class NetDependedUnitTests {
 
         //KI sollte sich freikaufen
         game.jailPhase(ki);
-        Assert.assertTrue("KI hat nicht bezahlt", !ki.isInJail());
+        test("KI hat nicht bezahlt", !ki.isInJail());
 
         //KI sollte sich freiwuerfeln
         ki.getBank().withdraw(ki.getMoney());
         int choice = IOService.jailChoice(ki);
-        Assert.assertTrue("KI will sich nicht freiwürfeln", choice == 1);
+        test("KI will sich nicht freiwürfeln", choice == 1);
+        clearGame();
+    }
+
+//    @Test
+    public void testHardKiJailOption() {
+        testOutput("testHardKiJailOption");
+        initGame();
+        Player ki = players[1];
+        ki.setAiLevel(2);
+
+        // KI ins Gefängnis setzen
+        ki.setInJail(true);
+        ki.setPosition(10);
+
+        //KI sollte sich freikaufen
+        game.jailPhase(ki);
+        test("KI hat nicht bezahlt", !ki.isInJail());
+
+        // Alle Strassen verkaufen
+        Arrays.stream(board.getFields())
+                .filter(p -> p instanceof PropertyField).map(p -> (PropertyField) p)
+                .forEach(p -> p.setOwner(ki));
+
+        test("Strassen wurden nicht verkauft", ((PropertyField) board.getFields()[1]).getOwner() != null);
+
+        //KI sollte sich jetzt freiwuerfeln
+        int choice = IOService.jailChoice(ki);
+        test("KI will sich nicht freiwürfeln", choice == 1);
+        clearGame();
+    }
+
+//    @Test
+    public void testHardKiBuyProperty() {
+        testOutput("testHardKiBuyProperty");
+        initGame();
+        Player ki = players[1];
+        ki.setAiLevel(2);
+        ki.getBank().withdraw(ki.getMoney());
+        ki.getBank().deposit(1000);
+
+        // Strassen
+        PropertyField cheap = (PropertyField) IOService.getGame().getBoard().getFields()[1];
+        PropertyField lurca = (PropertyField) IOService.getGame().getBoard().getFields()[21];
+        PropertyField expan = (PropertyField) IOService.getGame().getBoard().getFields()[39];
+
+        // superreich kauft alle Straßen
+        test("supperreich kauft nicht billig", IOService.buyPropertyChoice(ki, cheap) == 1);
+        test("supperreich kauft nicht lukrativ", IOService.buyPropertyChoice(ki, lurca) == 1);
+        test("supperreich kauft nicht teuer", IOService.buyPropertyChoice(ki, expan) == 1);
+
+        // reich kauft nur teuer und lukrativ
+        ki.getBank().withdraw(250); //Stand 750 -> reich
+        test("reich kauft billig", IOService.buyPropertyChoice(ki, cheap) == 2);
+        test("reich kauft nicht lukrativ", IOService.buyPropertyChoice(ki, lurca) == 1);
+        test("reich kauft nicht teuer", IOService.buyPropertyChoice(ki, expan) == 1);
+
+        // fluessig kauft nur lukrativ
+        ki.getBank().withdraw(200); //Stand 550 -> fluessig
+        test("flüssig kauft billig", IOService.buyPropertyChoice(ki, cheap) == 2);
+        test("flüssig kauft nicht lukrativ", IOService.buyPropertyChoice(ki, lurca) == 1);
+        test("flüssig kauft teuer", IOService.buyPropertyChoice(ki, expan) == 2);
+
+        // arm kauft nichts
+        ki.getBank().withdraw(300); //Stand 250 -> arm
+        test("arm kauft billig", IOService.buyPropertyChoice(ki, cheap) == 2);
+        test("arm kauft lukrativ", IOService.buyPropertyChoice(ki, lurca) == 2);
+        test("arm kauft teuer", IOService.buyPropertyChoice(ki, expan) == 2);
+
+        // es sei denn sie hat bereits eine Nachbarstrasse
+        ((PropertyField) IOService.getGame().getBoard().getFields()[3]).setOwner(ki);
+        test("arm kauft billigen Nachbar nicht", IOService.buyPropertyChoice(ki, cheap) == 1);
+
+        // aber auch nur wenn er genügend Geld hat
+        ((PropertyField) IOService.getGame().getBoard().getFields()[37]).setOwner(ki);
+        test("arm kauft teuren Nachbar trotzdem", IOService.buyPropertyChoice(ki, expan) == 2);
+
         clearGame();
     }
 
 //    @Test
     public void testAuctionEnter() {
+        testOutput("testAuctionEnter");
         initGame();
-        Assert.assertTrue("Auktion nicht initialisiert", AuctionService.getAuc() != null);
+        test("Auktion nicht initialisiert", AuctionService.getAuc() != null);
 
         AuctionService.startAuction((PropertyField) fm.getFields()[1]);
-        Assert.assertTrue("Spieler nicht in Auktion", AuctionService.getAuc().getAucPlayers() != null);
+        test("Spieler nicht in Auktion", AuctionService.getAuc().getAucPlayers() != null);
         clearGame();
     }
 

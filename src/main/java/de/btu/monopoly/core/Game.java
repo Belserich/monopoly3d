@@ -9,6 +9,7 @@ import de.btu.monopoly.data.field.*;
 import de.btu.monopoly.data.parser.CardStackParser;
 import de.btu.monopoly.data.parser.GameBoardParser;
 import de.btu.monopoly.data.player.Player;
+import de.btu.monopoly.ki.HardKi;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.ui.TextAreaHandler;
 import java.io.IOException;
@@ -23,17 +24,17 @@ import org.xml.sax.SAXException;
  * @author Christian Prinz
  */
 public class Game {
-    
+
     /**
      * Zentraler Logger der Spiellogik
      */
     private static final Logger LOGGER = Logger.getLogger(Game.class.getCanonicalName());
-    
+
     /**
      * Spiel-Client
      */
     private final GameClient client;
-    
+
     /**
      * Spielbrett
      */
@@ -43,26 +44,25 @@ public class Game {
      * Spieler (Zuschauer und aktive Spieler)
      */
     private final Player[] players;
-    
+
     /**
      * Die Zufallsinstanz für sämtliche zufällige Spielereignisse
      */
     private final Random random;
 
     /**
-     * Die fachliche Komponente des Spiels als Einheit, bestehend aus einem
-     * Spielbrett, den Spielern sowie Zuschauern.
+     * Die fachliche Komponente des Spiels als Einheit, bestehend aus einem Spielbrett, den Spielern sowie Zuschauern.
      *
      * @param client GameClient
      * @param players Spieler
      * @param seed RandomSeed
      */
     public Game(GameClient client, Player[] players, long seed) {
-    
+
         this.client = client;
         this.players = players;
         random = new Random(seed);
-        
+
         IOService.setClient(client);
         if (!GlobalSettings.RUN_AS_TEST && !GlobalSettings.RUN_IN_CONSOLE) {
             TextAreaHandler logHandler = new TextAreaHandler();
@@ -71,12 +71,12 @@ public class Game {
     }
 
     public void init() {
-        
+
         LOGGER.info("Spiel wird initialisiert.");
 
         try {
             CardStack stack = CardStackParser.parse("/data/card_data.xml");
-            stack.shuffle(random);
+            stack.shuffle(getRandom());
             LOGGER.finest(stack.toString());
             GameBoardParser.setCardLoadout0(stack);
             GameBoardParser.setCardLoadout1(stack);
@@ -164,7 +164,7 @@ public class Game {
     }
 
     public void processJailRollOption(Player player) {
-        int[] result = PlayerService.roll(random);
+        int[] result = PlayerService.roll(getRandom());
         if (result[0] == result[1]) {
             PlayerService.freeFromJail(player);
         }
@@ -203,7 +203,7 @@ public class Game {
 
         LOGGER.info(String.format("%s ist dran mit würfeln.", player.getName()));
         IOService.sleep(2000);
-        rollResult = PlayerService.roll(random);
+        rollResult = PlayerService.roll(getRandom());
         doubletCount += (rollResult[0] == rollResult[1]) ? 1 : 0;
 
         if (doubletCount >= 3) {
@@ -260,8 +260,7 @@ public class Game {
                     processPlayerOnPropertyField(player, prop, rollResult);
                     break;
             }
-        }
-        while (repeatPhase);
+        } while (repeatPhase);
     }
 
     private void processPlayerOnPropertyField(Player player, PropertyField prop, int[] rollResult) {
@@ -284,7 +283,7 @@ public class Game {
     }
 
     private void processBuyPropertyFieldOption(Player player, PropertyField prop) {
-        int choice = IOService.buyPropertyChoice(player, prop, random);
+        int choice = IOService.buyPropertyChoice(player, prop);
 
         switch (choice) {
             case 1: // Kaufen
@@ -308,14 +307,13 @@ public class Game {
     }
 
     private void actionPhase(Player player) {
-        
+
         int choice;
         do {
             if (GlobalSettings.RUN_IN_CONSOLE) {
                 LOGGER.info(String.format("%s ist an der Reihe! Waehle eine Aktion:%n[1] - Nichts%n[2] - Haus kaufen%n[3] - Haus verkaufen%n[4] - "
                         + "Hypothek aufnehmen%n[5] - Hypothek abbezahlen%n[6] - Handeln", player.getName()));
             }
-//            choice = getClientChoice(player, 6);
             choice = IOService.actionSequence(player, board);
             if (choice == 6) {
                 processPlayerTradeOption(player);
@@ -326,7 +324,14 @@ public class Game {
                 String[] fieldNames = Arrays.stream(ownedFieldIds)
                         .mapToObj(id -> board.getFieldManager().getField(id).getName())
                         .toArray(String[]::new);
-                int chosenFieldId = ownedFieldIds[IOService.askForField(player, fieldNames) - 1];
+                int chosenFieldId;
+                if (player.getAiLevel() < 2) {
+                    chosenFieldId = ownedFieldIds[IOService.askForField(player, fieldNames) - 1];
+                }
+                else {
+                    // Das hier verwendete Feld wurde vorher in HardKi.processActionSequence() festgelegt.
+                    chosenFieldId = HardKi.getChosenFieldId();
+                }
                 Field currField = board.getFieldManager().getField(chosenFieldId); // Wahl der Strasse
 
                 PropertyField property = (PropertyField) currField;
@@ -358,10 +363,9 @@ public class Game {
                         break;
                 }
             }
-        }
-        while (choice != 1);
+        } while (choice != 1);
     }
-    
+
     /**
      * Initiiert einen Tausch/Handel ausgehend von einem speziellen Spieler.
      *
@@ -370,7 +374,7 @@ public class Game {
     private void processPlayerTradeOption(Player player) {
         TradeService.processPlayerTradeOption(player, client, board);
     }
-    
+
     /**
      * Initiiert die Auktion eines angegebenen Grundstuecks.
      *
@@ -386,5 +390,14 @@ public class Game {
 
     public Player[] getPlayers() {
         return players;
+    }
+
+    /**
+     * Die Zufallsinstanz für sämtliche zufällige Spielereignisse
+     *
+     * @return the random
+     */
+    public Random getRandom() {
+        return random;
     }
 }
