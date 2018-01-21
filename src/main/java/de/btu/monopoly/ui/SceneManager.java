@@ -16,11 +16,8 @@ import de.btu.monopoly.menu.Lobby;
 import de.btu.monopoly.ui.controller.LobbyController;
 import de.btu.monopoly.ui.controller.MainSceneController;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Optional;
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -562,69 +559,6 @@ public class SceneManager extends Stage {
 
     public static void initStreets() {
         GameController.initStreets();
-    }
-
-    /*
-    Popups fuer den Handel
-     */
-    public static void initTradePopup() {
-
-        ObservableList<String> choosePlayerOptions = FXCollections.observableArrayList(tradePlayersNames());
-
-        //initialisierung der benoetigten Objekte
-        //Geruest
-        GridPane initTradeGP = new GridPane();
-        HBox initTradeHBox = new HBox();
-        VBox initTradeVBox = new VBox();
-        //Objekte
-        Label initTradeLabel = new Label("Wähle einen Spieler, mit dem du handeln möchtest.");
-        JFXComboBox choosePlayerBox = new JFXComboBox(choosePlayerOptions);
-        JFXButton acceptPlayerButton = new JFXButton("Handeln");
-        JFXButton cancelTradeButton = new JFXButton("Abbrechen");
-
-        //Einstellung der benoetigten Objekte
-        initTradeGP.setAlignment(Pos.CENTER);
-        initTradeGP.add(initTradeVBox, 0, 0);
-        initTradeLabel.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
-        acceptPlayerButton.setBackground(new Background(new BackgroundFill(Color.web("#e1f5fe"), CornerRadii.EMPTY, Insets.EMPTY)));
-        cancelTradeButton.setBackground(new Background(new BackgroundFill(Color.web("#e1f5fe"), CornerRadii.EMPTY, Insets.EMPTY)));
-
-        String cssLayout = "-fx-background-color: #dcedc8;\n"
-                + "-fx-border-color: black;\n"
-                + "-fx-border-insets: 5;\n"
-                + "-fx-border-width: 1;\n"
-                + "-fx-border-style: double;\n";
-
-        //Einstellen HBox
-        initTradeHBox.getChildren().addAll(acceptPlayerButton, cancelTradeButton);
-        initTradeHBox.setSpacing(10);
-        initTradeHBox.setAlignment(Pos.CENTER);
-
-        //Einstellen VBox
-        initTradeVBox.setStyle(cssLayout);
-        initTradeVBox.setSpacing(10);
-        initTradeVBox.setPrefSize(700, 200);
-        initTradeVBox.setCenterShape(true);
-        initTradeVBox.getChildren().addAll(initTradeLabel, choosePlayerBox, initTradeHBox);
-        initTradeVBox.setAlignment(Pos.CENTER);
-        if (GameController != null) {
-            GameController.setPopupBellow(initTradeGP);
-        }
-
-    }
-
-    private static ArrayList<String> tradePlayersNames() {
-
-        int playerCount = Lobby.getPlayerClient().getGame().getBoard().getActivePlayers().size();
-        ArrayList<String> tradePlayers = new ArrayList<>();
-
-        for (int i = 0; i < playerCount; i++) {
-            if (Lobby.getPlayerClient().getGame().getPlayers()[i] != Lobby.getPlayerClient().getPlayerOnClient()) {
-                tradePlayers.add(Lobby.getPlayerClient().getGame().getPlayers()[i].getName());
-            }
-        }
-
-        return tradePlayers;
     }
 
 }
