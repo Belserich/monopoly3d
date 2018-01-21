@@ -869,7 +869,7 @@
                         </GridPane>
                     </children>
                 </GridPane>
-            <Pane fx:id="goField" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black;" stylesheets="@../styles/Styles.css" GridPane.columnIndex="2" GridPane.rowIndex="2">
+            <Pane fx:id="goField" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black;" stylesheets="@../styles/styles.css" GridPane.columnIndex="2" GridPane.rowIndex="2">
                <children>
                   <Circle fx:id="player0" fill="WHITE" layoutX="36.0" layoutY="41.0" radius="11.0" stroke="BLACK" strokeType="INSIDE" visible="false" />
                   <Circle fx:id="player1" fill="WHITE" layoutX="61.0" layoutY="50.0" radius="11.0" stroke="BLACK" strokeType="INSIDE" visible="false" />

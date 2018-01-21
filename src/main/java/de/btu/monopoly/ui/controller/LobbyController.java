@@ -104,7 +104,7 @@ public class LobbyController implements Initializable {
 
         difficultyComboBox.setStyle("-fx-font: 22px \"System\";");
 
-        String image = " -fx-background-image: url(\"/images/Lobby_Background.jpg\") ;\n"
+        String image = " -fx-background-image: url('/images/Lobby_Background.jpg');\n"
                 + "    -fx-background-position: center;\n"
                 + "    -fx-background-size: stretch;";
         grid.setStyle(image);
@@ -531,7 +531,7 @@ public class LobbyController implements Initializable {
         System.exit(0); //NOSONAR
 
         // Wechselt die Scene auf Menu
-        // SceneManager.changeScene(new FXMLLoader(getClass().getResource("/fxml/Menu.fxml")));
+        // SceneManager.changeScene(new FXMLLoader(getClass().getResource("/fxml/menu_scene.fxml")));
     }
 
     @FXML
@@ -693,7 +693,7 @@ public class LobbyController implements Initializable {
 
         try {
             // Wechselt die Scene auf Game
-            SceneManager.changeSceneToGame(new FXMLLoader(getClass().getResource("/fxml/mainScene_1.fxml")));
+            SceneManager.changeSceneToGame(new FXMLLoader(getClass().getResource("/fxml/main_scene_1.fxml")));
         } catch (IOException ex) {
             Logger.getLogger(LobbyController.class.getName()).log(Level.SEVERE, null, ex);
         }

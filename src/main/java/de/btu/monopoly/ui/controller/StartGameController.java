@@ -53,7 +53,7 @@ public class StartGameController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
-        String image = " -fx-background-image: url(\"/images/Main_Background.png\") ;\n"
+        String image = " -fx-background-image: url('/images/Main_Background.png');\n"
                 + "    -fx-background-position: center;\n"
                 + "    -fx-background-size: stretch;";
         grid.setStyle(image);
@@ -95,7 +95,7 @@ public class StartGameController implements Initializable {
     }
 
     //-----------------------------------------------------------------------------------------
-    // startGame.fxml
+    // start_game_scene.fxml
     //-----------------------------------------------------------------------------------------
     @FXML
     private void enterStartsLobby(KeyEvent event) throws IOException {
@@ -113,7 +113,7 @@ public class StartGameController implements Initializable {
     private void backButtonAction(ActionEvent event) throws IOException {
 
         // Wechselt die Scene auf Menu
-        changeScene(new FXMLLoader(getClass().getResource("/fxml/Menu.fxml")), false);
+        changeScene(new FXMLLoader(getClass().getResource("/fxml/menu_scene.fxml")), false);
     }
 
     private void joinLobby() {
@@ -124,7 +124,7 @@ public class StartGameController implements Initializable {
         LobbyService.changeName(nicknameHostTextView.getText());
 
         // Wechselt die Scene auf lobby
-        changeScene(new FXMLLoader(getClass().getResource("/fxml/Lobby.fxml")), true);
+        changeScene(new FXMLLoader(getClass().getResource("/fxml/lobby_scene.fxml")), true);
 
     }
 
