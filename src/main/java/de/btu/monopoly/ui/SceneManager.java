@@ -10,7 +10,6 @@ import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
 import de.btu.monopoly.core.service.AuctionService;
 import de.btu.monopoly.core.service.IOService;
-import de.btu.monopoly.data.field.Field;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.menu.Lobby;
 import de.btu.monopoly.ui.controller.LobbyController;
@@ -416,17 +415,7 @@ public class SceneManager extends Stage {
 
         GameController.resetPopupBelow();
 
-        int id = 0;
-        for (Field field : Lobby.getPlayerClient().getGame().getBoard().getFieldManager().getFields()) {
-
-            id++;
-            if (field.getName().equals(fields[fieldBox.getSelectionModel().getSelectedIndex()])) {
-                return id;
-
-            }
-        }
-
-        return -1;
+        return fieldBox.getSelectionModel().getSelectedIndex() + 1;
     }
 
     public static void auctionPopup() {
