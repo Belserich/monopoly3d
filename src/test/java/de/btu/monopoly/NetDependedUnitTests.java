@@ -19,7 +19,6 @@ import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.server.GameServer;
 import java.util.Arrays;
 import org.junit.Assert;
-import org.junit.Test;
 
 /**
  *
@@ -104,7 +103,7 @@ public class NetDependedUnitTests {
         Assert.assertTrue(message, condition);
     }
 
-    @Test
+//    @Test
     public void testInitNetwork() {
         testOutput("testInitNetwork");
         initNetwork();
@@ -113,7 +112,7 @@ public class NetDependedUnitTests {
         clearGame();
     }
 
-    @Test
+//    @Test
     public void testInitLobby() {
         testOutput("testInitLobby");
         initLobby();
@@ -145,7 +144,7 @@ public class NetDependedUnitTests {
         clearGame();
     }
 
-    @Test
+//    @Test
     public void testInitGame() {
         testOutput("testInitGame");
         initGame();
@@ -157,7 +156,7 @@ public class NetDependedUnitTests {
         clearGame();
     }
 
-    @Test
+//    @Test
     public void testEasyKiJailOption() {
         testOutput("testEasyKiJailOption");
         initGame();
@@ -205,7 +204,7 @@ public class NetDependedUnitTests {
         clearGame();
     }
 
-    @Test
+//    @Test
     public void testHardKiBuyProperty() {
         testOutput("testHardKiBuyProperty");
         initGame();
