@@ -343,6 +343,7 @@ public class Game {
                     chosenFieldId = ownedFieldIds[InputHandler.askForField(player, fieldNames) - 1];
                 }
                 else {
+                    // Das hier verwendete Feld wurde vorher in HardKi.processActionSequence() festgelegt.
                     chosenFieldId = HardKi.getChosenFieldId();
                 }
                 Field currField = board.getFieldManager().getField(chosenFieldId); // Wahl der Strasse

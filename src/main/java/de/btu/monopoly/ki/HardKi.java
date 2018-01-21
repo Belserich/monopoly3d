@@ -40,9 +40,9 @@ public class HardKi {
     // nach der lukrativen Zone teure Strassen, die aber trotzdem kaufenswert sind (Zone 3)
 
     // Reichtumsbereiche (bis zu...): (arm -> fluessig -> reich -> superreich)
-    private static final int RICH = 800;    // reich
-    private static final int LIQUID = 600;   // fluessig
-    private static final int POOR = 300;    // arm
+    private static final int RICH = 800;        // reich
+    private static final int LIQUID = 600;      // fluessig
+    private static final int POOR = 300;        // arm
 
     // Auktion:
     private static final int HIGH_BID = 120;    // Maiximalgebot (in %) fuer eine gute Strasse
@@ -114,6 +114,16 @@ public class HardKi {
         return buy ? 1 : 2;
     }
 
+    /**
+     * Hier entscheidet die KI nach den vordefinierten Kriterien (siehe git -> Readme.md), wie sie in der ActionPhase() vorgeht.
+     * Geht es darum eine Strasse zu manipulieren (Hypothek, Haus), dann speichert sie die ID des Feldes in der statischen
+     * Variablen chosenFieldId, welche später in der ActionPhase() wieder aufgerufen wird. Hier wird lediglich die Art der Aktion
+     * entschieden und das jeweilige Feld festgelegt.
+     *
+     * @param player Ki
+     * @param board board
+     * @return int fuer die choice in der actionPhase() in game()
+     */
     public static int processActionSequence(Player player, GameBoard board) {
         int amount = player.getMoney();
         int buildings = FIELDMANAGER.getHouseAndHotelCount(player)[0] + FIELDMANAGER.getHouseAndHotelCount(player)[1];
@@ -122,8 +132,8 @@ public class HardKi {
             if (buildings > 0) {                        // verkauft sie erst Haeuser
                 sellBuilding(player);
                 return 3;
-            }
-            else if (numberOfMortgages(player) < (int) FIELDMANAGER.getOwnedPropertyFields(player).count()) {   // und nimmt dann Hypotheken auf
+            }                                           // und nimmt dann Hypotheken auf
+            else if (numberOfMortgages(player) < (int) FIELDMANAGER.getOwnedPropertyFields(player).count()) {
                 takeMortgage(player);
                 return 4;
             }
@@ -135,12 +145,12 @@ public class HardKi {
             return 1;                                   // beendet sie die AktionsPhase
         }
         else if (amount < RICH) {                // Wenn sie reich ist
-            if (getSoldProperties() < BEGINNING) {    // zu Spielbeginn
-                if (numberOfMortgages(player) > 0) {    // zahlt sie zuerst Hypotheken ab
+            if (getSoldProperties() < BEGINNING) {      // zu Spielbeginn
+                if (numberOfMortgages(player) > 0) {        // zahlt sie zuerst Hypotheken ab
                     payMortgage(player);
                     return 5;
-                }
-                else if (!buyableBuildingsList(player).isEmpty()) { // und kauft dann Haeuser
+                }                                           // und kauft dann Haeuser
+                else if (!buyableBuildingsList(player).isEmpty()) {
                     buyBuilding(player);
                     return 2;
                 }
@@ -148,16 +158,16 @@ public class HardKi {
                     return 1;
                 }
             }
-            else {                                    // zum Spielende hin
-                return 1;                               // beendet sie die Aktionsphase
+            else {                                      // zum Spielende hin
+                return 1;                                   // beendet sie die Aktionsphase
             }
         }
         else {                                   // Wenn sie superreich ist
             if (numberOfMortgages(player) > 0) {        // zahlt sie zuerst Hypotheken ab
                 payMortgage(player);
                 return 5;
-            }
-            else if (!buyableBuildingsList(player).isEmpty()) { // und kauft dann Haeuser
+            }                                           // und kauft dann Haeuser
+            else if (!buyableBuildingsList(player).isEmpty()) {
                 buyBuilding(player);
                 return 2;
             }
@@ -235,6 +245,11 @@ public class HardKi {
      * jeweils in der Methode ausgewählten Feldes. Diese ID wird später in Game.java für die actionPhase verwendet, um die
      * wirklichen Methoden auszuführen.
      */
+    /**
+     * sucht die billigste Strasse aus, auf der noch Haueser zum verkauf stehen
+     *
+     * @param player Ki
+     */
     private static void sellBuilding(Player player) {
         /*
          * potentielle Strassen auf denen Haeuser verkauft werden koennen: Grundstuecke im Besitz -> Strassen im Besitz -> aus
@@ -251,7 +266,7 @@ public class HardKi {
     }
 
     /**
-     * nimmt eine Hypothek für die billigste Strasse auf
+     * sucht die billigste Strasse fuer das Aufnehmen einer Hypothek aus
      *
      * @param player
      */
@@ -263,7 +278,7 @@ public class HardKi {
     }
 
     /**
-     * zahlt die Hypothek für die billigste Strasse ab (um soviele wie möglich wieder in den Umlauf zu bringen)
+     * sucht die billigste Strasse fuer das Auszahlen einer Hypothek aus (um soviele wie möglich wieder in den Umlauf zu bringen)
      *
      * @param player
      */
@@ -274,6 +289,11 @@ public class HardKi {
         chosenFieldId = FIELDMANAGER.getFieldId(props.get(0));
     }
 
+    /**
+     * sucht die beste Strasse aus, auf der ein Haus gebaut werden soll
+     *
+     * @param player Ki
+     */
     private static void buyBuilding(Player player) {
         /*
          * potentielle Strassen auf denen Haeuser gekauft werden koennen: Grundstuecke im Besitz -> Strassen im Besitz -> aus
@@ -292,6 +312,12 @@ public class HardKi {
                 : FIELDMANAGER.getFieldId(best.get(0));
     }
 
+    /**
+     * Hilfsmethode für <code>buyBuilding(Player player)</code>
+     *
+     * @param player Ki
+     * @return Liste aus Properties, auf denen ein Haus gebaut werden kann.
+     */
     private static List<PropertyField> buyableBuildingsList(Player player) {
         List<PropertyField> props = FIELDMANAGER.getOwnedPropertyFields(player)
                 .filter(p -> p instanceof StreetField).map(p -> (StreetField) p)
