@@ -6,8 +6,6 @@ import de.btu.monopoly.core.service.FieldService;
 import de.btu.monopoly.core.service.PlayerService;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.ui.TextAreaHandler;
-
-import de.btu.monopoly.ui.Logger.TextAreaHandler;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -250,7 +248,7 @@ public class FieldManager {
      * @param negTolerance untere Toleranzgrenze
      * @return ob die Straße innerhalb der Toleranzgrenzen gleichmäßig bebaut wurde
      */
-    private boolean balanceCheck(StreetField street, int posTolerance, int negTolerance) {
+    public boolean balanceCheck(StreetField street, int posTolerance, int negTolerance) {
         int hc = street.getHouseCount();
         int[] neighbours = FieldService.NEIGHBOUR_IDS[getPropertyId(street)];
         for (Integer neigh : neighbours) {
@@ -291,7 +289,7 @@ public class FieldManager {
         List<PropertyField> list = new ArrayList();
         int[] neighbourIds = FieldService.NEIGHBOUR_IDS[getPropertyId(prop)];
         for (int i = 0; i < neighbourIds.length; i++) {
-            list.add((PropertyField) board.getFields()[neighbourIds[i]]);
+            list.add((PropertyField) fields[neighbourIds[i]]);
         }
         return list;
     }

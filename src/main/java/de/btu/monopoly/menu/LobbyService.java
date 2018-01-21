@@ -156,8 +156,7 @@ public class LobbyService extends Listener {
     }
 
     /**
-     * erzeugt aus dem users[][] ein Player[], welches fuer das Spiel benoetigt
-     * wird
+     * erzeugt aus dem users[][] ein Player[], welches fuer das Spiel benoetigt wird
      *
      * @return Player[] fuer den Parameter der Game Instanz
      */
@@ -256,7 +255,7 @@ public class LobbyService extends Listener {
             RefreshLobbyResponse refres = (RefreshLobbyResponse) object;
             lobby.setUsers(refres.getUsers());
 
-            if (!GlobalSettings.isRunAsTest() && !GlobalSettings.isRunInConsole()) {
+            if (!GlobalSettings.RUN_AS_TEST && !GlobalSettings.RUN_IN_CONSOLE) {
                 try {
                     // Lobby updaten
                     SceneManager.updateLobby();

@@ -7,13 +7,13 @@ package de.btu.monopoly.ki;
 
 import de.btu.monopoly.core.GameBoard;
 import de.btu.monopoly.core.service.AuctionService;
+import de.btu.monopoly.core.service.IOService;
 import de.btu.monopoly.data.card.CardAction;
 import de.btu.monopoly.data.card.CardStack;
 import de.btu.monopoly.data.field.FieldManager;
 import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.field.StreetField;
 import de.btu.monopoly.data.player.Player;
-import de.btu.monopoly.input.IOService;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
@@ -258,7 +258,7 @@ public class HardKi {
          */
         List<PropertyField> props = FIELDMANAGER.getOwnedPropertyFields(player)
                 .filter(p -> p instanceof StreetField).map(p -> (StreetField) p)
-                .filter(p -> FIELDMANAGER.isComplete(p)).filter(p -> FIELDMANAGER.balanceCheck(p, 0, 1))
+                .filter(p -> FIELDMANAGER.isComplete(p)).filter((StreetField p) -> FIELDMANAGER.balanceCheck(p, 0, 1))
                 .filter(p -> p.getHouseCount() > 0)
                 .collect(Collectors.toList());
         // check auf isEmpty() bereits in processActionPhase()
