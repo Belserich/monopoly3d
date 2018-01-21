@@ -35,6 +35,7 @@ public class IOService {
     private static int JAIL = 0;
     private static int ACTION = 1;
     private static int BUY = 2;
+    private static int FIELD = 3;
 
     public static int jailChoice(Player player) {
         int choice = -1;
@@ -44,7 +45,7 @@ public class IOService {
                     choice = getClientChoice(player, 3);
                 }
                 else {
-                    choice = getClientChoiceFromGUI(player, JAIL);
+                    choice = getClientChoiceFromGUI(player, JAIL, null);
                 }
                 break;
             case 1:
@@ -68,7 +69,7 @@ public class IOService {
                     choice = getClientChoice(player, 2);
                 }
                 else {
-                    choice = getClientChoiceFromGUI(player, BUY);
+                    choice = getClientChoiceFromGUI(player, BUY, null);
                 }
 
                 break;
@@ -92,7 +93,7 @@ public class IOService {
                     choice = getClientChoice(player, 6);
                 }
                 else {
-                    choice = getClientChoiceFromGUI(player, ACTION);
+                    choice = getClientChoiceFromGUI(player, ACTION, null);
                 }
                 break;
             case 1:
@@ -153,7 +154,7 @@ public class IOService {
         }
     }
 
-    public static int getClientChoiceFromGUI(Player player, int type) {
+    public static int getClientChoiceFromGUI(Player player, int type, String[] fields) {
         boolean isChoiceFromThisClient = player == client.getPlayerOnClient();
         if (!GlobalSettings.RUN_AS_TEST && !GlobalSettings.RUN_IN_CONSOLE) {
             TextAreaHandler logHandler = new TextAreaHandler();
@@ -169,6 +170,9 @@ public class IOService {
             }
             if (type == BUY) {
                 choice = SceneManager.buyPropertyPopup();
+            }
+            if (type == FIELD) {
+                choice = SceneManager.askForFieldPopup(player, fields);
             }
 
             BroadcastPlayerChoiceRequest packet = new BroadcastPlayerChoiceRequest();
@@ -227,23 +231,25 @@ public class IOService {
     }
 
     /**
-     * Methode zum Auswaehen einer Strasse die Bearbeitet werden soll in der actionPhase()
+     * Methode zum Auswaehen einer Strasse die Bearbeitet werden soll in der
+     * actionPhase()
      *
      * @param player Spieler der eine Eingabe machen soll
      * @param fieldNames Namen der zur Wahl stehenden Felder
      * @return ein int Wert zu auswaehen einer Strasse
      */
     public static int askForField(Player player, String[] fieldNames) {
+
+        String mesg = player.getName() + "! Wähle ein Feld:\n";
+        for (int i = 0; i < fieldNames.length; i++) {
+            mesg += String.format("[%d] - %s%n", i + 1, fieldNames[i]);
+        }
+        LOGGER.info(mesg);
         if (GlobalSettings.RUN_IN_CONSOLE) {
-            String mesg = player.getName() + "! Wähle ein Feld:\n";
-            for (int i = 0; i < fieldNames.length; i++) {
-                mesg += String.format("[%d] - %s%n", i + 1, fieldNames[i]);
-            }
-            LOGGER.info(mesg);
             return IOService.getClientChoice(player, 39);
         }
         else {
-            return SceneManager.askForFieldPopup(player, fieldNames);
+            return IOService.getClientChoiceFromGUI(player, FIELD, fieldNames);
         }
     }
 

@@ -577,7 +577,7 @@ public class MainSceneController implements Initializable {
         middlePane = new StackPane();
         Image image2 = new Image("/images/Monopoly_Logo.png");
         middlePane.setBackground(new Background(new BackgroundImage(image2, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT)));
-        PopupPane.add(middlePane, 0, 1);
+        PopupPane.add(middlePane, 0, 0);
 
         // User aus lobby holen und Farben setzen
         client = Lobby.getPlayerClient();
@@ -747,57 +747,58 @@ public class MainSceneController implements Initializable {
 
         // Initialisierung für FeldPopups (Miete, etc.)
         for (Pane field : Felder) {
-            field.setOnMouseClicked((event) -> {
+            field.setOnMouseEntered((event) -> {
                 fieldPopup(field);
-
+            });
+            field.setOnMouseExited((event) -> {
+                resetPopupAbove();
             });
         }
-
     }
 
     /**
      * der Hypothekzustand jedes PropertyField wurde dargestellt
      */
-//    public void hypothekState() {
-//
-//        Task task = new Task() {
-//            @Override
-//            protected Object call() throws Exception {
-//                if (Lobby.getPlayerClient().getGame().getBoard() != null) {
-//                    Field[] currentField = Lobby.getPlayerClient().getGame().getBoard().getFields();
-//                    Label hypothek = new Label("Hypothek");
-//
-//                    hypothek.setStyle("-fx-background-color:brown;"
-//                            + "-fx-rotate: -45");
-//
-//                    for (int i = 0; i < Felder.length; i++) {
-//
-//                        if (currentField[i] instanceof PropertyField) {
-//                            if (((PropertyField) currentField[i]).isMortgageTaken()) {
-//                                hypothek.setAlignment(Pos.CENTER);
-//                                hypothek.layoutXProperty().bind(Felder[i].widthProperty().subtract(hypothek.getLayoutX()).divide(2));
-//                                hypothek.layoutYProperty().bind(Felder[i].heightProperty().subtract(hypothek.getLayoutY()).divide(2));
-//                                Felder[i].getChildren().add(hypothek);
-//                            }
-//                            else {
-//                                for (int j = 0; j < Felder[i].getChildren().size(); j++) {
-//                                    if (Felder[i].getChildren().get(j) instanceof Label) {
-//                                        Felder[i].getChildren().remove(j);
-//                                    }
-//                                    else {
-//
-//                                    }
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
-//
-//                return null;
-//            }
-//        };
-//        Platform.runLater(task);
-//    }
+    //    public void hypothekState() {
+    //
+    //        Task task = new Task() {
+    //            @Override
+    //            protected Object call() throws Exception {
+    //                if (Lobby.getPlayerClient().getGame().getBoard() != null) {
+    //                    Field[] currentField = Lobby.getPlayerClient().getGame().getBoard().getFields();
+    //                    Label hypothek = new Label("Hypothek");
+    //
+    //                    hypothek.setStyle("-fx-background-color:brown;"
+    //                            + "-fx-rotate: -45");
+    //
+    //                    for (int i = 0; i < Felder.length; i++) {
+    //
+    //                        if (currentField[i] instanceof PropertyField) {
+    //                            if (((PropertyField) currentField[i]).isMortgageTaken()) {
+    //                                hypothek.setAlignment(Pos.CENTER);
+    //                                hypothek.layoutXProperty().bind(Felder[i].widthProperty().subtract(hypothek.getLayoutX()).divide(2));
+    //                                hypothek.layoutYProperty().bind(Felder[i].heightProperty().subtract(hypothek.getLayoutY()).divide(2));
+    //                                Felder[i].getChildren().add(hypothek);
+    //                            }
+    //                            else {
+    //                                for (int j = 0; j < Felder[i].getChildren().size(); j++) {
+    //                                    if (Felder[i].getChildren().get(j) instanceof Label) {
+    //                                        Felder[i].getChildren().remove(j);
+    //                                    }
+    //                                    else {
+    //
+    //                                    }
+    //                                }
+    //                            }
+    //                        }
+    //                    }
+    //                }
+    //
+    //                return null;
+    //            }
+    //        };
+    //        Platform.runLater(task);
+    //    }
     /**
      * Erstellt auf dem entsprechenden Feld ein/mehrere Hauser TODO moegliche
      * Bugfixes
@@ -1079,9 +1080,8 @@ public class MainSceneController implements Initializable {
             }
         }
         Label info = new Label(text);
-        JFXButton exit = new JFXButton("Exit");
 
-        box.getChildren().addAll(info, exit);
+        box.getChildren().addAll(info);
         box.setBackground(new Background(new BackgroundFill(Color.web("#e0f2f1"), CornerRadii.EMPTY, Insets.EMPTY)));
         box.setPrefWidth(200);
         box.setAlignment(Pos.CENTER);
@@ -1089,10 +1089,6 @@ public class MainSceneController implements Initializable {
         if (PopupPane.getChildren().contains(middlePane)) {
             setPopupAbove(gp);
         }
-
-        exit.setOnAction(e -> {
-            resetPopupAbove();
-        });
 
     }
 

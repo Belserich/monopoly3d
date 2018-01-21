@@ -51,7 +51,8 @@ public class Game {
     private final Random random;
 
     /**
-     * Die fachliche Komponente des Spiels als Einheit, bestehend aus einem Spielbrett, den Spielern sowie Zuschauern.
+     * Die fachliche Komponente des Spiels als Einheit, bestehend aus einem
+     * Spielbrett, den Spielern sowie Zuschauern.
      *
      * @param client GameClient
      * @param players Spieler
@@ -326,7 +327,14 @@ public class Game {
                         .toArray(String[]::new);
                 int chosenFieldId;
                 if (player.getAiLevel() < 2) {
-                    chosenFieldId = ownedFieldIds[IOService.askForField(player, fieldNames) - 1];
+                    int chosenFieldChoice = IOService.askForField(player, fieldNames) - 1;
+                    if (chosenFieldChoice < 0) {
+                        chosenFieldId = 5;
+                    }
+                    else {
+
+                        chosenFieldId = ownedFieldIds[chosenFieldChoice];
+                    }
                 }
                 else {
                     // Das hier verwendete Feld wurde vorher in HardKi.processActionSequence() festgelegt.
@@ -338,8 +346,14 @@ public class Game {
                 switch (choice) {
                     case 2: // Haus kaufen
                         if (!(currField instanceof StreetField)) {
-                            LOGGER.info("Gewähltes Feld ist keine Straße!");
-                            break;
+                            if (chosenFieldId != 5) {
+                                LOGGER.info("Gewähltes Feld ist keine Straße!");
+                                break;
+                            }
+                            else {
+                                LOGGER.info("Kein Feld ausgewählt!");
+                                break;
+                            }
                         }
                         StreetField streetField = (StreetField) property;
                         board.getFieldManager().buyHouse(streetField);
@@ -355,10 +369,18 @@ public class Game {
                         break;
 
                     case 4: // Hypothek aufnehmen
+                        if (chosenFieldId == 5) {
+                            LOGGER.info("Kein Feld ausgewählt!");
+                            break;
+                        }
                         board.getFieldManager().takeMortgage(property);
                         break;
 
                     case 5: // Hypothek zurückzahlen
+                        if (chosenFieldId == 5) {
+                            LOGGER.info("Kein Feld ausgewählt!");
+                            break;
+                        }
                         board.getFieldManager().payMortgage(property);
                         break;
                 }
