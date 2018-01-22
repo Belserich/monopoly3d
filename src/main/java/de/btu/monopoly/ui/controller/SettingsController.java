@@ -54,9 +54,15 @@ public class SettingsController implements Initializable {
         stackPane.setBackground(new Background(new BackgroundImage(new Image(getClass().getResourceAsStream("/images/Lobby_Background.jpg")), BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT)));
 
         // Animation
+        grid.setOpacity(0);
         test1.setOpacity(0);
         test2.setOpacity(0);
         backButton.setOpacity(0);
+
+        FadeTransition fadeGrid = new FadeTransition(Duration.millis(800), grid);
+        fadeGrid.setFromValue(0);
+        fadeGrid.setToValue(1);
+        fadeGrid.playFromStart();
 
         FadeTransition fadeInButton1
                 = new FadeTransition(Duration.millis(500), test1);
@@ -80,7 +86,13 @@ public class SettingsController implements Initializable {
     // Button back
     @FXML
     private void backButtonAction(ActionEvent event) throws IOException {
-        SceneManager.changeSceneBackToLobby();
+        FadeTransition fadeGrid = new FadeTransition(Duration.millis(400), grid);
+        fadeGrid.setFromValue(1);
+        fadeGrid.setToValue(0);
+        fadeGrid.playFromStart();
+        fadeGrid.setOnFinished((event1) -> {
+            SceneManager.changeSceneBackToLobby();
+        });
     }
 
     private void changeScene(FXMLLoader loader) {

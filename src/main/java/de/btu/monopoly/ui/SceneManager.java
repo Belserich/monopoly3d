@@ -112,6 +112,7 @@ public class SceneManager extends Stage {
 
     public static void changeSceneBackToLobby() {
         scene.setRoot(lobbyRoot);
+        LobbyController.animation();
     }
 
     public static void changeSceneToGame(FXMLLoader loader) throws IOException {

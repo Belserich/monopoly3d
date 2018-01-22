@@ -708,6 +708,23 @@ public class LobbyController implements Initializable {
 
     @FXML
     private void optionButtonAction(ActionEvent event) throws IOException {
-        SceneManager.changeScene(new FXMLLoader(getClass().getResource("/fxml/settings.fxml")));
+        FadeTransition fadeGrid = new FadeTransition(Duration.millis(400), grid);
+        fadeGrid.setFromValue(1);
+        fadeGrid.setToValue(0);
+        fadeGrid.playFromStart();
+        fadeGrid.setOnFinished((event1) -> {
+            try {
+                SceneManager.changeScene(new FXMLLoader(getClass().getResource("/fxml/settings.fxml")));
+            } catch (IOException ex) {
+                Logger.getLogger(LobbyController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
+    }
+
+    public void animation() {
+        FadeTransition fadeGrid = new FadeTransition(Duration.millis(800), grid);
+        fadeGrid.setFromValue(0);
+        fadeGrid.setToValue(1);
+        fadeGrid.playFromStart();
     }
 }
