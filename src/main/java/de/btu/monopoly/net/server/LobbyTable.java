@@ -10,7 +10,6 @@ import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 import de.btu.monopoly.core.service.NetworkService;
 import de.btu.monopoly.net.data.lobby.*;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.logging.Logger;
@@ -199,6 +198,10 @@ public class LobbyTable extends Listener {
                 NetworkService.logServerSendMessage(new JoinImpossibleResponse());
                 connection.sendTCP(new JoinImpossibleResponse());
             }
+        }
+        else if (object instanceof DeleteUserRequest) {
+            DeleteUserRequest del = (DeleteUserRequest) object;
+            deleteUser(connection, del.getId());
         }
         else if (object instanceof AddKiRequest) {
             NetworkService.logServerReceiveMessage(object);
