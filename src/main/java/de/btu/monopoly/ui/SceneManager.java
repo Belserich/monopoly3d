@@ -451,9 +451,10 @@ public class SceneManager extends Stage {
             public void handle(ActionEvent event) {
                 try {
                     AuctionService.setBid(Lobby.getPlayerClient().getPlayerOnClient().getId(), Integer.parseInt(bidTextField.getText()));
+                    bidTextField.setText("");
                 } catch (NumberFormatException e) {
                     bidTextField.setText("");
-                    bidTextField.setPromptText("Bitte nur Zahlen eingeben!");
+                    bidTextField.setPromptText("Nur Zahlen eingeben!");
                 }
             }
         };
