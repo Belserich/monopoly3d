@@ -12,14 +12,19 @@ import de.btu.monopoly.core.GameBoard;
 import de.btu.monopoly.core.service.AuctionService;
 import de.btu.monopoly.core.service.IOService;
 import de.btu.monopoly.core.service.TradeService;
+import de.btu.monopoly.data.card.CardAction;
 import de.btu.monopoly.data.field.Field;
+import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.menu.Lobby;
 import de.btu.monopoly.ui.controller.LobbyController;
 import de.btu.monopoly.ui.controller.MainSceneController;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -35,7 +40,9 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuButton;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -58,6 +65,7 @@ public class SceneManager extends Stage {
     private static Label hoechstgebotLabel = new Label("Höchstgebot:");
     private static JFXTextField bidTextField = new JFXTextField();
     //Handelsspezifisch
+    private static Player tradePartner;
     private static boolean partnerIsChoosen = false;
     private static boolean exitTrade = false;
 
@@ -574,19 +582,24 @@ public class SceneManager extends Stage {
      */
     public static void initTradePopup() {
 
+        //Liste(n)
         ObservableList<String> choosePlayerOptions = FXCollections.observableArrayList(tradePlayersNames());
 
         //initialisierung der benoetigten Objekte
-        //Geruest
+        //GridPane(s)
         GridPane initTradeGP = new GridPane();
+        //HBox(en)
         HBox initTradeHBox = new HBox();
+        //VBox(en)
         VBox initTradeVBox = new VBox();
-        //Objekte
+        //Label(s)
         Label initTradeLabel = new Label("Wähle einen Spieler, mit dem du handeln möchtest.");
+        //Button(s)
         JFXButton acceptPlayerButton = new JFXButton("Handeln");
+        //ComboBox(en)
         JFXComboBox choosePlayerBox = new JFXComboBox(choosePlayerOptions);
 
-        //Eventhandler(n)
+        //Eventhandler
         EventHandler selectPlayer = new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -595,15 +608,14 @@ public class SceneManager extends Stage {
                     Nimmt die Auswahl aus der Combobox und übergibt Sie dem Handel
                      */
                     String tradePartnersName = (String) choosePlayerBox.getSelectionModel().getSelectedItem();
-                    Player trader = Lobby.getPlayerClient().getPlayerOnClient();
-                    Player tradePartner;
                     GameBoard board = Lobby.getPlayerClient().getGame().getBoard();
 
                     for (int i = 0; i < Lobby.getPlayerClient().getGame().getBoard().getActivePlayers().size(); i++) {
                         if (tradePartnersName.equals(Lobby.getPlayerClient().getGame().getPlayers()[i].getName())) {
                             tradePartner = Lobby.getPlayerClient().getGame().getPlayers()[i];
 
-                            TradeService.trade.setSupply(TradeService.createTradeOffer(trader, board));
+                            //selectTradeOfferPopup();
+                            TradeService.trade.setSupply(TradeService.createTradeOffer(Lobby.getPlayerClient().getPlayerOnClient(), board));
                             TradeService.trade.setDemand(TradeService.createTradeOffer(tradePartner, board));
                             partnerIsChoosen = true;
                             break;
@@ -621,7 +633,6 @@ public class SceneManager extends Stage {
         initTradeGP.add(initTradeVBox, 0, 0);
         initTradeLabel.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
         acceptPlayerButton.setBackground(new Background(new BackgroundFill(Color.web("#e1f5fe"), CornerRadii.EMPTY, Insets.EMPTY)));
-        //cancelTradeButton.setBackground(new Background(new BackgroundFill(Color.web("#e1f5fe"), CornerRadii.EMPTY, Insets.EMPTY)));
 
         String cssLayout = "-fx-background-color: #dcedc8;\n"
                 + "-fx-border-color: black;\n"
@@ -645,13 +656,16 @@ public class SceneManager extends Stage {
             GameController.setPopupBellow(initTradeGP);
         }
 
-        //Verkünpfung mit Eventhandlern
+        //Verkünpfung mit Eventhandler(n)
         acceptPlayerButton.setOnAction(selectPlayer);
-        //choosePlayerBox.setOnAction(selectPlayer);
-        //cancelTradeButton.setOnAction(cancelTrade);
 
     }
 
+    /**
+     * Erzeugt eine Liste von Namen aller Spieler ausser des aktiven Spielers
+     *
+     * @return
+     */
     private static ArrayList<String> tradePlayersNames() {
 
         int playerCount = Lobby.getPlayerClient().getGame().getBoard().getActivePlayers().size();
@@ -672,6 +686,142 @@ public class SceneManager extends Stage {
 
     public static void resetPartnerIsChoosen() {
         partnerIsChoosen = false;
+    }
+
+    public static void selectTradeOfferPopup() {
+
+        GameController.resetPopupBelow();
+
+        //Liste(n)
+        List<CheckMenuItem> playersProps = tradePlayersProps(Lobby.getPlayerClient().getPlayerOnClient());
+        List<CheckMenuItem> rivalsProps = FXCollections.observableArrayList(tradePlayersProps(tradePartner));
+        //Initialisierung der benoetigten Objekte
+        //GridPane(s)
+        GridPane tradeOfferGridPane = new GridPane();
+        //HBox(en)
+        HBox tradeOfferHBox = new HBox();
+        //VBox(en)
+        VBox tradeOfferVBox = new VBox();
+        VBox yourPropsOfferVBox = new VBox();
+        VBox yourTradeOfferVBox = new VBox();
+        VBox rivalsTradeOfferVBox = new VBox();
+        VBox rivalsPropsOfferVBox = new VBox();
+        //Label(s) mit Einstellung
+        Label generallOfferLabel = new Label("Wähle dein Angebot!");
+        generallOfferLabel.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
+
+        Label yourSideLabel = new Label("Deine Seite!");
+        yourSideLabel.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
+
+        Label yourInfoLabel = new Label("Mehrere Grundstücke möglich!");
+        yourInfoLabel.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
+
+        Label yourPropsLabel = new Label("Welche Grundstücke bietest du:");
+        yourPropsLabel.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
+
+        Label yourMoneyLabel = new Label("Du hast " + Lobby.getPlayerClient().getPlayerOnClient().getMoney() + "€");
+        yourMoneyLabel.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
+
+        Label yourOfferMoneyLabel = new Label("Wieviel Geld bietetst du:");
+        yourOfferMoneyLabel.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
+
+        Label yourCardLabel = new Label("Du hast " + Lobby.getPlayerClient().getPlayerOnClient().getCardStack().countCardsOfAction(CardAction.JAIL) + " Gefängnisfreikarten");
+        yourCardLabel.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
+
+        Label yourOfferCardLabel = new Label("Wie viele Karten bietest du:");
+        yourOfferCardLabel.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
+
+        Label rivalsSideLabel = new Label("Seite von " + tradePartner.getName());
+        rivalsSideLabel.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
+
+        Label rivalsInfoLabel = new Label("Mehrere Grundstücke möglich!");
+        rivalsInfoLabel.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
+
+        Label rivalsPropsLabel = new Label("Welche Grundstücke willst du:");
+        rivalsPropsLabel.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
+
+        Label rivalsMoneyLabel = new Label(tradePartner.getName() + " hat " + tradePartner.getMoney() + "€");
+        rivalsMoneyLabel.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
+
+        Label rivalsOfferMoneyLabel = new Label("Wieviel Geld willst du:");
+        rivalsOfferMoneyLabel.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
+
+        Label rivalsCardLabel = new Label(tradePartner.getName() + " hat " + tradePartner.getCardStack().countCardsOfAction(CardAction.JAIL)
+                + " Gefängnisfreikarten");
+        rivalsCardLabel.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
+
+        Label rivalsOfferCardLabel = new Label("Wie viele Karten willst du:");
+        rivalsOfferCardLabel.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
+
+        //Button(s)
+        JFXButton offerTradeButton = new JFXButton("Anbieten");
+        //TextField(s)
+        JFXTextField yourMoneyTextField = new JFXTextField("0");
+        JFXTextField yourCardsTextField = new JFXTextField("0");
+        JFXTextField rivalsMoneyTextField = new JFXTextField("0");
+        JFXTextField rivalsCardsTextField = new JFXTextField("0");
+        //MenuButton(s)
+        MenuButton yourPropsMeButton = new MenuButton();
+        MenuButton rivalsPropsMeButton = new MenuButton();
+
+        //Einstellung der benoetigten Objekte
+        //MenuBotton(s) fuellen
+        yourPropsMeButton.getItems().addAll(playersProps);
+        rivalsPropsMeButton.getItems().addAll(rivalsProps);
+        //GridPane(s)
+        tradeOfferGridPane.setAlignment(Pos.CENTER);
+        //Button(s)
+        offerTradeButton.setBackground(new Background(new BackgroundFill(Color.web("#e1f5fe"), CornerRadii.EMPTY, Insets.EMPTY)));
+
+        String cssLayout = "-fx-background-color: #dcedc8;\n"
+                + "-fx-border-color: black;\n"
+                + "-fx-border-insets: 5;\n"
+                + "-fx-border-width: 1;\n"
+                + "-fx-border-style: double;\n";
+
+        //Anordnen des GUI
+        tradeOfferGridPane.add(tradeOfferVBox, 0, 0);
+        //Main VBox
+        tradeOfferVBox.setStyle(cssLayout);
+        tradeOfferVBox.setSpacing(10);
+        tradeOfferVBox.setPrefSize(700, 200);
+        tradeOfferVBox.setCenterShape(true);
+        tradeOfferVBox.getChildren().addAll(generallOfferLabel, tradeOfferHBox);
+        //MainHBoy
+        tradeOfferHBox.getChildren().addAll(yourPropsOfferVBox, yourTradeOfferVBox, rivalsPropsOfferVBox, rivalsTradeOfferVBox);
+        //VBox(en)
+        yourPropsOfferVBox.getChildren().addAll(yourSideLabel, yourInfoLabel, yourPropsLabel, yourPropsMeButton, offerTradeButton);
+        yourTradeOfferVBox.getChildren().addAll(yourMoneyLabel, yourOfferMoneyLabel, yourMoneyTextField, yourCardLabel, yourOfferCardLabel, yourCardsTextField);
+        rivalsPropsOfferVBox.getChildren().addAll(rivalsSideLabel, rivalsInfoLabel, rivalsPropsLabel, rivalsPropsMeButton);
+        rivalsTradeOfferVBox.getChildren().addAll(rivalsMoneyLabel, rivalsOfferMoneyLabel, rivalsMoneyTextField, rivalsCardLabel, rivalsOfferCardLabel, rivalsCardsTextField);
+
+        if (GameController != null) {
+            GameController.setPopupBellow(tradeOfferGridPane);
+        }
+
+    }
+
+    /**
+     * Erzeugt eine Liste von Namen aller Propertys des uebergebenen Spielers
+     *
+     * @param player
+     * @return
+     */
+    private static List<CheckMenuItem> tradePlayersProps(Player player) {
+
+        //Benoetigte Objekte
+        //Liste aller Propertys im Besitzt des Spielers
+        List<PropertyField> playersProps = Lobby.getPlayerClient().getGame().getBoard().getFieldManager()
+                .getOwnedPropertyFields(player).collect(Collectors.toList());
+        //Liste fuer MenuButton Eintraege
+        List<CheckMenuItem> items = new LinkedList<>();
+
+        //Einer ArrayList werden alle Namen der Propertys mitgeteilt
+        for (PropertyField field : playersProps) {
+            items.add(new CheckMenuItem(field.getName()));
+        }
+
+        return items;
     }
 
 }

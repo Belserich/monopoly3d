@@ -114,7 +114,6 @@ public class TradeService {
 
         PlayerTradeRequest request = new PlayerTradeRequest();
         request.setTrade(createTrade(supplier, board));
-        LOGGER.info("Here I am");
         request.setDenied(IOService.getUserInput(2) == 2);
         return request;
     }
@@ -240,14 +239,20 @@ public class TradeService {
         StringBuilder builder;
         int id;
 
-        builder = new StringBuilder(String.format("Welches Gebaeude bietet Spieler %s%s?%n",
-                player.getName(), runOnce ? " noch" : ""));
-        for (id = 0; id < ownedPropIds.size(); id++) {
-            builder.append(String.format("[%d] - %s%n", id + 1, fm.getField(ownedPropIds.get(id)).getName()));
-        }
+        if (GlobalSettings.RUN_IN_CONSOLE) {
 
-        builder.append(String.format("[%d] - Keins%n", id + 1));
-        LOGGER.info(builder.toString());
+            builder = new StringBuilder(String.format("Welches Gebaeude bietet Spieler %s%s?%n",
+                    player.getName(), runOnce ? " noch" : ""));
+            for (id = 0; id < ownedPropIds.size(); id++) {
+                builder.append(String.format("[%d] - %s%n", id + 1, fm.getField(ownedPropIds.get(id)).getName()));
+            }
+
+            builder.append(String.format("[%d] - Keins%n", id + 1));
+            LOGGER.info(builder.toString());
+        }
+        else {
+            SceneManager.selectTradeOfferPopup();
+        }
     }
 
     /**
