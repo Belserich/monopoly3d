@@ -356,6 +356,7 @@ public class LobbyController implements Initializable {
         };
         Platform.runLater(task);
 
+        updateColors();
     }
 
     /**

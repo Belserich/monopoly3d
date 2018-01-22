@@ -53,7 +53,6 @@ public class MenuController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
         //Image image = new Image(getClass().getResourceAsStream("/images/Main_Background.png"), 1200, 800, false, false);
         String image = " -fx-background-image: url(\"/images/Main_Background.png\") ;\n"
                 + "    -fx-background-position: center;\n"

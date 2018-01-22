@@ -13,6 +13,7 @@ import de.btu.monopoly.net.data.lobby.*;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.logging.Logger;
+import javafx.scene.paint.Color;
 
 /**
  *
@@ -67,7 +68,8 @@ public class LobbyTable extends Listener {
         tempusers[slot][1] = name;
         tempusers[slot][2] = connectionString;
         tempusers[slot][3] = Integer.toString(kiLevel);
-        tempusers[slot][4] = "0xffffffff";
+        tempusers[slot][4] = (new Color(Math.random(), Math.random(), Math.random(), 1)).toString();
+
         users = tempusers;
 
         if (kiLevel == 0) {
