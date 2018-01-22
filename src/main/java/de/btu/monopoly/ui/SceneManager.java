@@ -30,6 +30,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -43,8 +44,9 @@ import javafx.stage.WindowEvent;
  */
 public class SceneManager extends Stage {
 
-    private Stage stage;
+    private static Stage stage;
     private static Scene scene;
+    private static Parent lobbyRoot;
     private static LobbyController LobbyController;
     private static MainSceneController GameController;
     private static Label auctionLabel = new Label("0 €");
@@ -56,6 +58,11 @@ public class SceneManager extends Stage {
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/Menu.fxml"));
 
         scene = new Scene(root);
+        scene.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.F11) {
+                fullscreen();
+            }
+        });
 
         stage.setFullScreen(true);
         stage.setScene(scene);
@@ -99,7 +106,12 @@ public class SceneManager extends Stage {
         LobbyController = loader.getController();
 
         scene.setRoot(root);
+        lobbyRoot = root;
 
+    }
+
+    public static void changeSceneBackToLobby() {
+        scene.setRoot(lobbyRoot);
     }
 
     public static void changeSceneToGame(FXMLLoader loader) throws IOException {
@@ -548,6 +560,10 @@ public class SceneManager extends Stage {
 
     public static void initStreets() {
         GameController.initStreets();
+    }
+
+    public static void fullscreen() {
+        stage.setFullScreen(true);
     }
 
 }

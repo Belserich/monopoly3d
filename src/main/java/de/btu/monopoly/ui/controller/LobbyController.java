@@ -65,6 +65,9 @@ public class LobbyController implements Initializable {
     private Button leaveLobbyButton;
 
     @FXML
+    private Button optionButton;
+
+    @FXML
     private GridPane grid;
 
     @FXML
@@ -120,13 +123,6 @@ public class LobbyController implements Initializable {
         // Updatet die Spieler in der lobby
         updateNames();
 
-        // playButton kann nur der Host drücken
-        if (Lobby.getUsers() != null) {
-            if (Lobby.getUsers().length != 1) {
-                playButton.setDisable(true);
-            }
-        }
-
         // Funktion des eigenen Colorpickers aktivieren und ID im Controller festlegen
         if (Lobby.getUsers().length == 1) {
             playerColor1.setDisable(false);
@@ -174,12 +170,15 @@ public class LobbyController implements Initializable {
         playButton.setOpacity(0);
         leaveLobbyButton.setOpacity(0);
         grid.setOpacity(0);
+        optionButton.setOpacity(0);
 
         // Deaktivieren der KI Steuerung
         if (id != 0) {
+            playButton.setDisable(true);
             kiButton.setDisable(true);
             kiNameTextField.setDisable(true);
             difficultyComboBox.setDisable(true);
+            optionButton.setDisable(true);
         }
 
         Task task = new Task() {
@@ -306,6 +305,12 @@ public class LobbyController implements Initializable {
                         fadeInButton18.setFromValue(0);
                         fadeInButton18.setToValue(1);
                         fadeInButton18.playFromStart();
+
+                        FadeTransition fadeInButton19
+                                = new FadeTransition(Duration.millis(800), optionButton);
+                        fadeInButton19.setFromValue(0);
+                        fadeInButton19.setToValue(1);
+                        fadeInButton19.playFromStart();
                     }
                     else {
                         FadeTransition fadeInButton15
@@ -331,6 +336,12 @@ public class LobbyController implements Initializable {
                         fadeInButton18.setFromValue(0);
                         fadeInButton18.setToValue(0.5);
                         fadeInButton18.playFromStart();
+
+                        FadeTransition fadeInButton19
+                                = new FadeTransition(Duration.millis(800), optionButton);
+                        fadeInButton19.setFromValue(0);
+                        fadeInButton19.setToValue(0.5);
+                        fadeInButton19.playFromStart();
                     }
 
                     FadeTransition fadeInButton19
@@ -695,4 +706,8 @@ public class LobbyController implements Initializable {
 
     }
 
+    @FXML
+    private void optionButtonAction(ActionEvent event) throws IOException {
+        SceneManager.changeScene(new FXMLLoader(getClass().getResource("/fxml/settings.fxml")));
+    }
 }
