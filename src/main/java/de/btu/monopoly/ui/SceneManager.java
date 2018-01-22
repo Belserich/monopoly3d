@@ -605,10 +605,10 @@ public class SceneManager extends Stage {
 
                             TradeService.trade.setSupply(TradeService.createTradeOffer(trader, board));
                             TradeService.trade.setDemand(TradeService.createTradeOffer(tradePartner, board));
+                            partnerIsChoosen = true;
                             break;
                         }
                     }
-                    partnerIsChoosen = true;
 
                 } catch (NullPointerException e) {
                     //Fehler
@@ -647,7 +647,7 @@ public class SceneManager extends Stage {
 
         //Verkünpfung mit Eventhandlern
         acceptPlayerButton.setOnAction(selectPlayer);
-        choosePlayerBox.setOnAction(selectPlayer);
+        //choosePlayerBox.setOnAction(selectPlayer);
         //cancelTradeButton.setOnAction(cancelTrade);
 
     }
