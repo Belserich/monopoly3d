@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.paint.*?>
+<?import com.jfoenix.controls.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.Glow?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.RadialGradient?>
+<?import javafx.scene.paint.Stop?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
+
+
+  <GridPane fx:id="grid" minHeight="720.0" minWidth="220.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.btu.monopoly.ui.controller.MainSceneController">
+      <children>
+          <JFXButton fx:id="player1Button" opacity="0.0" prefHeight="80.0" prefWidth="150.0" text="frei" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+          <JFXButton fx:id="player2Button" opacity="0.0" prefHeight="80.0" prefWidth="150.0" text="frei" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+              <GridPane.margin>
+                  
+                    </GridPane.margin>
+          </JFXButton>
+          <JFXButton fx:id="player3Button" opacity="0.0" prefHeight="80.0" prefWidth="150.0" text="frei" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER" />
+          <JFXButton fx:id="player4Button" opacity="0.0" prefHeight="80.0" prefWidth="150.0" text="frei" GridPane.halignment="CENTER" GridPane.rowIndex="6" GridPane.valignment="CENTER" />
+          <JFXButton fx:id="player5Button" opacity="0.0" prefHeight="80.0" prefWidth="150.0" text="frei" GridPane.halignment="CENTER" GridPane.rowIndex="8" GridPane.valignment="CENTER" />
+          <GridPane fx:id="player1Geld" GridPane.rowIndex="1">
+              <children>
+                  <Label fx:id="geld1" alignment="CENTER" layoutX="10.0" layoutY="21.0" prefHeight="33.0" prefWidth="156.0" />
+              </children>
+              <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+          </GridPane>
+          <GridPane fx:id="player2Geld" layoutX="10.0" layoutY="172.0" GridPane.rowIndex="3">
+              <children>
+                  <Label fx:id="geld2" alignment="CENTER" prefHeight="33.0" prefWidth="156.0" />
+              </children>
+              <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+          </GridPane>
+          <GridPane fx:id="player3Geld" layoutX="10.0" layoutY="388.0" GridPane.rowIndex="5">
+              <children>
+                  <Label fx:id="geld3" alignment="CENTER" prefHeight="33.0" prefWidth="156.0" />
+              </children>
+              <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+          </GridPane>
+          <GridPane fx:id="player4Geld" layoutX="10.0" layoutY="604.0" GridPane.rowIndex="7">
+              <children>
+                  <Label fx:id="geld4" alignment="CENTER" prefHeight="33.0" prefWidth="156.0" />
+              </children>
+              <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+          </GridPane>
+          <GridPane fx:id="player5Geld" layoutX="10.0" layoutY="820.0" GridPane.rowIndex="9">
+              <children>
+                  <Label fx:id="geld5" alignment="CENTER" prefHeight="33.0" prefWidth="156.0" />
+              </children>
+              <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+          </GridPane>
+      </children>
+      <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="100.0" prefWidth="100.0" />
+      </columnConstraints>
+      <rowConstraints>
+          <RowConstraints minHeight="10.0" percentHeight="15.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" percentHeight="5.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" percentHeight="15.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" percentHeight="5.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" percentHeight="15.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" percentHeight="5.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" percentHeight="15.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" percentHeight="5.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" percentHeight="15.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" percentHeight="5.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      </rowConstraints>
+  </GridPane>
