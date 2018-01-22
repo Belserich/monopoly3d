@@ -55,9 +55,9 @@ public class AuctionService extends Listener {
         JoinAuctionRequest jaReq = new JoinAuctionRequest();
         NetworkService.logClientSendMessage(jaReq, auc.getPlayerName());
         auc.getClient().sendTCP(jaReq);
-        SceneManager.auctionPopup();
-        SceneManager.bidTextFieldFocus();
         if (!GlobalSettings.RUN_AS_TEST) { // nicht fuer Test
+            SceneManager.auctionPopup();
+            SceneManager.bidTextFieldFocus();
             while (auctionRun) {
                 IOService.sleepDeep(500);
                 if (GlobalSettings.RUN_IN_CONSOLE) { // nur fuer @Console
@@ -77,14 +77,13 @@ public class AuctionService extends Listener {
                 }
                 else { //Nur fuer @GUI
                     /*
-                    Falls nur noch ein Bieter uebrig ist, hat dieser dank dem Boolean auctionRun noch
-                    die Moeglichkeit weiterhin zu bieten, so lange der (weiter unten implementierte) Countdown
-                    noch laeuft.
+                     * Falls nur noch ein Bieter uebrig ist, hat dieser dank dem Boolean auctionRun noch die Moeglichkeit
+                     * weiterhin zu bieten, so lange der (weiter unten implementierte) Countdown noch laeuft.
                      */
                     if (!auctionStillActive()) {
                         /*
-                        Falls das Gebot 0 betraegt und nur noch 1 Bieter uebrig ist, bekommt dieser
-                        die Chance innerhalb des (weiter unten implementierten) Countdowns zu bieten.
+                         * Falls das Gebot 0 betraegt und nur noch 1 Bieter uebrig ist, bekommt dieser die Chance innerhalb des
+                         * (weiter unten implementierten) Countdowns zu bieten.
                          */
                         if (AuctionService.getHighestBid() == 0) {
                             noBidder = true;

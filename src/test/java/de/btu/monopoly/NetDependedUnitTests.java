@@ -90,12 +90,12 @@ public class NetDependedUnitTests {
         players = null;
         fm = null;
         cm = null;
-        System.out.println("\nCLEAR GAME ---- ALLES ZURUECKGESETZT!!!");
+        System.out.println("CLEAR GAME ---- ALLES ZURUECKGESETZT!!!");
         IOService.sleep(100);
     }
 
     private void testOutput(String testName) {
-        System.out.println("\n__________________________________________________\n"
+        System.out.println("___________________________________________________________________________________________\n\n"
                 + "STARTE TEST: " + testName);
     }
 

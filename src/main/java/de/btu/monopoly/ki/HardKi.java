@@ -14,6 +14,7 @@ import de.btu.monopoly.data.field.FieldManager;
 import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.field.StreetField;
 import de.btu.monopoly.data.player.Player;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
@@ -303,7 +304,7 @@ public class HardKi {
         List<PropertyField> props = buyableBuildingsList(player);
 
         // lukrative Strassen aussuchen:
-        List<PropertyField> best = null;
+        List<PropertyField> best = new ArrayList<>();
         props.stream().filter((b) -> (FIELDMANAGER.getFieldId(b) > BEGIN_LUCRATIVE_AREA
                 && FIELDMANAGER.getFieldId(b) < END_LUCTRATIVE_AREA)).forEachOrdered(best::add);
 
