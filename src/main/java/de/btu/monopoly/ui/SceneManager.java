@@ -59,6 +59,8 @@ public class SceneManager extends Stage {
 
         stage.setFullScreen(true);
         stage.setScene(scene);
+        stage.setMinHeight(720);
+        stage.setMinWidth(1280);
         stage.show();
 
         stage.setOnCloseRequest(new EventHandler<WindowEvent>() {

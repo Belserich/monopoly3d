@@ -53,7 +53,7 @@ public class AuctionService extends Listener {
 
         auc.setProperty(prop);
         JoinAuctionRequest jaReq = new JoinAuctionRequest();
-        NetworkService.logClientSendMessage(jaReq, auc.getPlayerName());
+        
         auc.getClient().sendTCP(jaReq);
         if (!GlobalSettings.RUN_AS_TEST) { // nicht fuer Test
             SceneManager.auctionPopup();
@@ -161,7 +161,7 @@ public class AuctionService extends Listener {
             BidRequest bidReq = new BidRequest();
             bidReq.setBid(bid);
             bidReq.setPlayerID(playerID);
-            NetworkService.logClientSendMessage(bidReq, auc.getPlayerName());
+            
             auc.getClient().sendTCP(bidReq);
         }
 
@@ -177,7 +177,7 @@ public class AuctionService extends Listener {
 
         ExitAuctionRequest exReq = new ExitAuctionRequest();
         exReq.setPlayerID(playerID);
-        NetworkService.logClientSendMessage(exReq, auc.getPlayerName());
+        
         auc.getClient().sendTCP(exReq);
 
     }
@@ -224,7 +224,7 @@ public class AuctionService extends Listener {
     public void received(Connection connection, Object object) {
 
         if (object instanceof BroadcastAuctionResponse) {
-            NetworkService.logClientReceiveMessage(object, auc.getPlayerName());
+            
             auc.setAucPlayers(((BroadcastAuctionResponse) object).getAucPlayers());
             auc.setHighestBid(((BroadcastAuctionResponse) object).getHighestBid());
             auc.setHighestBidder(((BroadcastAuctionResponse) object).getHighestBidder());

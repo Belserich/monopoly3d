@@ -8,7 +8,6 @@ package de.btu.monopoly.net.server;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
-import de.btu.monopoly.core.service.NetworkService;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.net.data.BidRequest;
 import de.btu.monopoly.net.data.BroadcastAuctionResponse;
@@ -70,7 +69,6 @@ public class AuctionTable extends Listener {
         res.setAucPlayers(aucPlayers);
         res.setHighestBid(highestBid);
         res.setHighestBidder(highestBidder);
-        NetworkService.logServerSendMessage(res);
         server.sendToAllTCP(res);
     }
 
@@ -79,17 +77,14 @@ public class AuctionTable extends Listener {
     public void received(Connection connection, Object object) {
 
         if (object instanceof JoinAuctionRequest) {
-            NetworkService.logServerReceiveMessage(object);
             generateAuctionPlayerList();
             broadcastList();
         }
         else if (object instanceof BidRequest) {
-            NetworkService.logServerReceiveMessage(object);
             BidRequest req = (BidRequest) object;
             setBid(req.getPlayerID(), req.getBid());
         }
         else if (object instanceof ExitAuctionRequest) {
-            NetworkService.logServerReceiveMessage(object);
             ExitAuctionRequest req = (ExitAuctionRequest) object;
             exitPlayer(req.getPlayerID());
         }
