@@ -748,11 +748,11 @@ public class MainSceneController implements Initializable {
             field.setOnMouseEntered((event) -> {
                 fieldPopup(field);
             });
-            
+
             field.setOnMouseMoved((event) -> {
-                 fieldPopup(field);
+                fieldPopup(field);
             });
-            
+
             field.setOnMouseExited((event) -> {
                 resetPopupAbove();
 
@@ -1059,11 +1059,11 @@ public class MainSceneController implements Initializable {
         fields.setFont(Font.font("Tahoma", FontPosture.ITALIC, 10));
         fields.setTextFill(Color.MIDNIGHTBLUE);
 
-        Label geld = new Label(" hat in Konto: " + playeronbutton.getMoney());
-
         JFXButton player = new JFXButton();
-
+        Label geld = new Label(" hat in Konto : " + playeronbutton.getMoney());
         Label jail = new Label(" ist in Gefängnis seit : " + playeronbutton.getDaysInJail());
+        Label idNummer = new Label("ID : "+id);
+        Label karten = new Label(""+playeronbutton.getCardStack());
 
         player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[id][4]), CornerRadii.EMPTY, Insets.EMPTY)));
         player.setText(Lobby.getUsers()[id][1]);
@@ -1072,7 +1072,7 @@ public class MainSceneController implements Initializable {
         }
         player.setPrefSize(150, 10);
 
-        box.getChildren().addAll(player, geld, jail, fields);
+        box.getChildren().addAll(player, geld, jail,idNummer,karten, fields);
         box.setAlignment(Pos.CENTER);
 
         if (PopupPane.getChildren().contains(middlePane)) {
@@ -1094,19 +1094,26 @@ public class MainSceneController implements Initializable {
         gp.getChildren().add(box);
 
         String text = "";
+        Label owner = new Label();
+        Label rent = new Label();
         for (int i = 0; i < Felder.length; i++) {
             if (Felder[i] == feld) {
+                owner.setText(("\tBesitzer : " + ((PropertyField) currentField[i]).getOwner()));
+                rent.setText("\n Aktuelle Miete : " + ((PropertyField) currentField[i]).getRent());
+                rent.setTextFill(Color.BROWN);
+                owner.setTextFill(Color.DARKBLUE);
                 if ((currentField[i] instanceof CardField) || (currentField[i] instanceof TaxField)) {
                     text = "";
                     resetPopupAbove();
                 }
                 else {
-                    text = "" + currentField[i];
+                    text = "\n\t" + currentField[i];
                 }
             }
         }
+
         Label info = new Label(text);
-        box.getChildren().addAll(info);
+        box.getChildren().addAll(owner, info, rent);
         // box.setBackground(new Background(new BackgroundFill(Color.web(feld.getStyle()), CornerRadii.EMPTY, Insets.EMPTY)));
         box.setStyle(feld.getStyle());
         box.setPrefWidth(200);
