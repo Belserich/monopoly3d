@@ -6,6 +6,7 @@
 package de.btu.monopoly.ki;
 
 import de.btu.monopoly.core.GameBoard;
+import de.btu.monopoly.core.mechanics.Trade;
 import de.btu.monopoly.core.service.AuctionService;
 import de.btu.monopoly.core.service.IOService;
 import de.btu.monopoly.data.card.CardAction;
@@ -51,6 +52,24 @@ public class HardKi {
 
     // Aktionsphase:
     private static int chosenFieldId;
+
+    /**
+     * (0)PROPERTY_CAP_FOR_STAYING_IN_PRISON, (1)BEGINNING, (2)BEGIN_LUCRATIVE_AREA, (3)END_LUCTRATIVE_AREA, (4)RICH, (5)LIQUID,
+     * (6)POOR, (7)HIGH_BID, (8)LOW_BID
+     *
+     * @return int[] parameters
+     */
+    public static int[] getParameters() {
+        int[] para = {
+            PROPERTY_CAP_FOR_STAYING_IN_PRISON,
+            BEGINNING,
+            BEGIN_LUCRATIVE_AREA, END_LUCTRATIVE_AREA,
+            RICH, LIQUID, POOR,
+            HIGH_BID, LOW_BID
+        };
+
+        return para;
+    }
 
     /**
      * @param player ki
@@ -204,11 +223,21 @@ public class HardKi {
         }
     }
 
+    /**
+     * Der KI wird ein Trade übergeben, sie liest es aus und entscheidet dann, ob sie annimmt, oder ablehnt.
+     *
+     * @param trade Handel
+     * @return Gibt an, ob die KI mit dem Handel einverstanden ist
+     */
+    public static boolean calculateTradingChoice(Trade trade, Player ki) {
+        return TradeAi.calculateChoice(trade, ki);
+    }
+
     //________________________HILFSMETHODEN________________________________________________________
     /**
      * @return Anzahl der Properties die einen Besitzer haben
      */
-    private static int getSoldProperties() {
+    static int getSoldProperties() {
         return (int) Arrays.stream(IOService.getGame().getBoard().getFields())
                 .filter(p -> p instanceof PropertyField).map(p -> (PropertyField) p)
                 .filter(p -> p.getOwner() != null)
@@ -228,7 +257,7 @@ public class HardKi {
      * @param player Ki
      * @return Gibt an, ob bereits Strassen des selben Strassenzuges, wie dem der uebergebenen Strasse im Besitz sind
      */
-    private static boolean areThereAlreadyNeighboursOwned(PropertyField prop, Player player) {
+    static boolean areThereAlreadyNeighboursOwned(PropertyField prop, Player player) {
         List<PropertyField> neighborList = FIELDMANAGER.getNeighborList(prop);
         return neighborList.stream().anyMatch((neigh) -> (neigh.getOwner() == player));
     }
@@ -327,5 +356,15 @@ public class HardKi {
                 .collect(Collectors.toList());
 
         return props;
+    }
+
+    /**
+     * Dieser Methode werden Strings uebergeben, welche an den Chat weitergeleitet werden (Netzwerk / Lokal)
+     *
+     * @param string Inhalt der Chatnachricht
+     * @param isLocal ob die Nachricht lokal gesendet wird
+     */
+    static void chat(String string, boolean isLocal) { //TODO
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
