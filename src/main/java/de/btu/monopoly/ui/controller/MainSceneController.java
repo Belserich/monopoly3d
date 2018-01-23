@@ -748,8 +748,14 @@ public class MainSceneController implements Initializable {
             field.setOnMouseEntered((event) -> {
                 fieldPopup(field);
             });
+            
+            field.setOnMouseMoved((event) -> {
+                 fieldPopup(field);
+            });
+            
             field.setOnMouseExited((event) -> {
                 resetPopupAbove();
+
             });
         }
     }
@@ -1075,7 +1081,7 @@ public class MainSceneController implements Initializable {
     }
 
     /**
-     * Öffnen des Feldpopups zu angeklicktem Feld
+     * Öffnen des Feldpopups
      *
      * @param feld
      */
@@ -1083,24 +1089,26 @@ public class MainSceneController implements Initializable {
         Field[] currentField = Lobby.getPlayerClient().getGame().getBoard().getFields();
 
         GridPane gp = new GridPane();
-        ScrollPane scroll = new ScrollPane();
         VBox box = new VBox();
         gp.setAlignment(Pos.CENTER);
-        scroll.setCenterShape(true);
-        gp.add(scroll, 0, 0);
-        scroll.setContent(box);
+        gp.getChildren().add(box);
 
         String text = "";
         for (int i = 0; i < Felder.length; i++) {
             if (Felder[i] == feld) {
-
-                text = "" + currentField[i];
+                if ((currentField[i] instanceof CardField) || (currentField[i] instanceof TaxField)) {
+                    text = "";
+                    resetPopupAbove();
+                }
+                else {
+                    text = "" + currentField[i];
+                }
             }
         }
         Label info = new Label(text);
-
         box.getChildren().addAll(info);
-        box.setBackground(new Background(new BackgroundFill(Color.web("#e0f2f1"), CornerRadii.EMPTY, Insets.EMPTY)));
+        // box.setBackground(new Background(new BackgroundFill(Color.web(feld.getStyle()), CornerRadii.EMPTY, Insets.EMPTY)));
+        box.setStyle(feld.getStyle());
         box.setPrefWidth(200);
         box.setAlignment(Pos.CENTER);
 
