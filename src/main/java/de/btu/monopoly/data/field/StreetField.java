@@ -1,7 +1,5 @@
 package de.btu.monopoly.data.field;
 
-import de.btu.monopoly.core.service.FieldService;
-
 /**
  * @author Maximilian Bels (belsmaxi@b-tu.de)
  */
@@ -34,6 +32,8 @@ public class StreetField extends PropertyField {
      * @param rent4 Miete mit 4 Haeusern
      * @param rent5 Miete mit Hotel
      * @param housePrice Preis fuer ein Haus
+     * @param mortgage Hypothekswert
+     * @param mortgageBack Hypotheksrueckkaufwert
      */
     public StreetField(String name,
             int price,
@@ -63,13 +63,16 @@ public class StreetField extends PropertyField {
     /**
      * @return Miete der Strasse
      */
+    @Override
     public int getRent() {
         System.out.println(houseCount);
         if (!isMortgageTaken() && getOwner() != null) {
             if (fieldManager.isComplete(this) && houseCount == 0) {
-                   return rents[0] * 2;
+                return rents[0] * 2;
             }
-            else return rents[houseCount];
+            else {
+                return rents[houseCount];
+            }
         }
         return 0;
     }
@@ -97,5 +100,10 @@ public class StreetField extends PropertyField {
         return String.format("[Straßenfeld] %nName: %s, %nPreis: %s, %nMiete0: %s, %nMiete1: %s, %nMiete2: %s, %nMiete3: %s, %nMiete4: %s"
                 + ", %nMiete5: %s, %nHauspreis: %s, %nHypothekswert: %s, %nHypotheksrückwert: %s",
                 getName(), getPrice(), rents[0], rents[1], rents[2], rents[3], rents[4], rents[5], housePrice, getMortgageValue(), getMortgageBack());
+    }
+
+    @Override
+    public int getTradingValue() {
+        return getPrice() + (houseCount * housePrice);
     }
 }
