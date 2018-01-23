@@ -12,7 +12,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundImage;
@@ -27,7 +27,7 @@ import javafx.util.Duration;
  *
  * @author augat
  */
-public class SettingsController implements Initializable {
+public class RulesController implements Initializable {
 
     @FXML
     private GridPane grid;
@@ -36,13 +36,10 @@ public class SettingsController implements Initializable {
     private StackPane stackPane;
 
     @FXML
-    private CheckBox test1;
-
-    @FXML
-    private CheckBox test2;
-
-    @FXML
     private Button backButton;
+
+    @FXML
+    private Label labelRegeln;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -54,66 +51,42 @@ public class SettingsController implements Initializable {
         stackPane.setBackground(new Background(new BackgroundImage(new Image(getClass().getResourceAsStream("/images/Lobby_Background.jpg")), BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT)));
 
         // Animation
-        grid.setOpacity(0);
-        test1.setOpacity(0);
-        test2.setOpacity(0);
         backButton.setOpacity(0);
-
-        FadeTransition fadeGrid = new FadeTransition(Duration.millis(800), grid);
-        fadeGrid.setFromValue(0);
-        fadeGrid.setToValue(1);
-        fadeGrid.playFromStart();
-
-        FadeTransition fadeInButton1
-                = new FadeTransition(Duration.millis(500), test1);
-        fadeInButton1.setFromValue(0);
-        fadeInButton1.setToValue(1);
-        fadeInButton1.playFromStart();
-
-        FadeTransition fadeInButton2
-                = new FadeTransition(Duration.millis(500), test2);
-        fadeInButton2.setFromValue(0);
-        fadeInButton2.setToValue(1);
-        fadeInButton2.playFromStart();
+        labelRegeln.setOpacity(0);
 
         FadeTransition fadeInButton3
                 = new FadeTransition(Duration.millis(500), backButton);
         fadeInButton3.setFromValue(0);
         fadeInButton3.setToValue(1);
         fadeInButton3.playFromStart();
+
+        FadeTransition fadeInButton2 = new FadeTransition(Duration.millis(500), labelRegeln);
+        fadeInButton2.setFromValue(0);
+        fadeInButton2.setToValue(1);
+        fadeInButton2.playFromStart();
     }
 
     // Button back
     @FXML
     private void backButtonAction(ActionEvent event) throws IOException {
-        FadeTransition fadeGrid = new FadeTransition(Duration.millis(400), grid);
-        fadeGrid.setFromValue(1);
-        fadeGrid.setToValue(0);
-        fadeGrid.playFromStart();
-        fadeGrid.setOnFinished((event1) -> {
-            SceneManager.changeSceneBackToLobby();
-        });
+
+        changeScene(new FXMLLoader(getClass().getResource("/fxml/Menu.fxml")));
+
     }
 
     private void changeScene(FXMLLoader loader) {
+        FadeTransition fadeInButton4
+                = new FadeTransition(Duration.millis(500), labelRegeln);
+        fadeInButton4.setFromValue(1);
+        fadeInButton4.setToValue(0);
+        fadeInButton4.playFromStart();
+
         FadeTransition fadeInButton1
                 = new FadeTransition(Duration.millis(500), backButton);
         fadeInButton1.setFromValue(1);
         fadeInButton1.setToValue(0);
         fadeInButton1.playFromStart();
-
-        FadeTransition fadeInButton2
-                = new FadeTransition(Duration.millis(500), test1);
-        fadeInButton2.setFromValue(1);
-        fadeInButton2.setToValue(0);
-        fadeInButton2.playFromStart();
-
-        FadeTransition fadeInButton4
-                = new FadeTransition(Duration.millis(500), test2);
-        fadeInButton4.setFromValue(1);
-        fadeInButton4.setToValue(0);
-        fadeInButton4.playFromStart();
-        fadeInButton4.setOnFinished((event) -> {
+        fadeInButton1.setOnFinished((event) -> {
             try {
                 SceneManager.changeScene(loader);
             } catch (IOException ex) {

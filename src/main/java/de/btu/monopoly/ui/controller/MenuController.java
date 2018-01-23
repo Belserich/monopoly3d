@@ -37,7 +37,7 @@ public class MenuController implements Initializable {
     private Button startGameButton;
 
     @FXML
-    private Button settingsButton;
+    private Button ruleButton;
 
     @FXML
     private Button closeButton;
@@ -53,7 +53,6 @@ public class MenuController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
         //Image image = new Image(getClass().getResourceAsStream("/images/Main_Background.png"), 1200, 800, false, false);
         String image = " -fx-background-image: url(\"/images/Main_Background.png\") ;\n"
                 + "    -fx-background-position: center;\n"
@@ -66,7 +65,7 @@ public class MenuController implements Initializable {
         closeButton.setOpacity(0);
         joinGameButton.setOpacity(0);
         startGameButton.setOpacity(0);
-        settingsButton.setOpacity(0);
+        ruleButton.setOpacity(0);
 
         FadeTransition fadeInButton1
                 = new FadeTransition(Duration.millis(1000), joinGameButton);
@@ -81,7 +80,7 @@ public class MenuController implements Initializable {
         fadeInButton2.playFromStart();
 
         FadeTransition fadeInButton3
-                = new FadeTransition(Duration.millis(1000), settingsButton);
+                = new FadeTransition(Duration.millis(1000), ruleButton);
         fadeInButton3.setFromValue(0);
         fadeInButton3.setToValue(1);
         fadeInButton3.playFromStart();
@@ -116,9 +115,9 @@ public class MenuController implements Initializable {
 
     // Button Einstellungen
     @FXML
-    private void settingButtonAction(ActionEvent event) throws IOException {
+    private void ruleButtonAction(ActionEvent event) throws IOException {
 
-        changeScene(new FXMLLoader(getClass().getResource("/fxml/settings.fxml")));
+        changeScene(new FXMLLoader(getClass().getResource("/fxml/rules.fxml")));
         // Wechselt die Scene auf Einstellungen
 
     }
@@ -147,7 +146,7 @@ public class MenuController implements Initializable {
         fadeInButton2.playFromStart();
 
         FadeTransition fadeInButton3
-                = new FadeTransition(Duration.millis(500), settingsButton);
+                = new FadeTransition(Duration.millis(500), ruleButton);
         fadeInButton3.setFromValue(1);
         fadeInButton3.setToValue(0);
         fadeInButton3.playFromStart();

@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.*?>
 <?import com.jfoenix.controls.*?>
 <?import java.lang.*?>
 <?import javafx.scene.text.*?>
 <?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXCheckBox?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 
-<GridPane fx:id="grid" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.btu.monopoly.ui.controller.MenuController">
+<GridPane fx:id="grid" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.btu.monopoly.ui.controller.RulesController">
    <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="100.0" />
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="1.0" prefWidth="100.0" />
@@ -48,23 +50,15 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <JFXButton fx:id="startGameButton" buttonType="RAISED" contentDisplay="RIGHT" onAction="#startGameButtonAction" prefHeight="80.0" prefWidth="200.0" ripplerFill="RED" style="-fx-background-color: #212121;" text="Spiel erstellen" textFill="WHITE" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                  <JFXButton fx:id="backButton" buttonType="RAISED" onAction="#backButtonAction" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #212121;" text="Zurück" textFill="WHITE" GridPane.halignment="CENTER" GridPane.rowIndex="9" GridPane.valignment="CENTER">
                      <font>
                         <Font size="23.0" />
                      </font></JFXButton>
-                  <JFXButton fx:id="closeButton" buttonType="RAISED" onAction="#closeButtonAction" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #212121;" text="Schließen" textFill="WHITE" GridPane.halignment="CENTER" GridPane.rowIndex="9" GridPane.valignment="CENTER">
+                  <Label fx:id="labelRegeln" text="Regeln" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
                      <font>
-                        <Font size="23.0" />
-                     </font></JFXButton>
-                  <JFXButton fx:id="joinGameButton" buttonType="RAISED" onAction="#joinGameButtonAction" prefHeight="80.0" prefWidth="200.0" style="-fx-background-color: #212121;" text="Spiel beitreten" textFill="WHITE" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER">
-                     <font>
-                        <Font size="23.0" />
-                     </font></JFXButton>
-                  <JFXButton fx:id="ruleButton" buttonType="RAISED" onAction="#ruleButtonAction" prefHeight="80.0" prefWidth="200.0" style="-fx-background-color: #212121;" text="Regeln" textFill="WHITE" GridPane.halignment="CENTER" GridPane.rowIndex="6">
-                     <font>
-                        <Font size="23.0" />
+                        <Font size="40.0" />
                      </font>
-                  </JFXButton>
+                  </Label>
                </children>
             </GridPane>
          </children>
