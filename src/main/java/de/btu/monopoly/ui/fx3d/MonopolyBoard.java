@@ -61,7 +61,7 @@ public class MonopolyBoard extends Group
         init();
     }
     
-    public void init()
+    private void init()
     {
         initBoard();
         initFields();

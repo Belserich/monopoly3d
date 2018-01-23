@@ -46,9 +46,6 @@ public class MonopolySceneData
     
     private void initScene()
     {
-        if (!Assets.loaded()) {
-            Assets.load();
-        }
         gameSub.setFill(Color.LIGHTGRAY);
         
         gameSub.widthProperty().bind(scene.widthProperty());

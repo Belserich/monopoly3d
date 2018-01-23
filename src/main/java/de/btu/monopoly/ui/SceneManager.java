@@ -14,8 +14,8 @@ import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.menu.Lobby;
 import de.btu.monopoly.ui.controller.LobbyController;
 import de.btu.monopoly.ui.controller.MainSceneController;
-import java.io.IOException;
-import java.util.Optional;
+import de.btu.monopoly.ui.fx3d.MonopolySceneData;
+import de.btu.monopoly.ui.util.Assets;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
@@ -38,6 +38,9 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
+import java.io.IOException;
+import java.util.Optional;
+
 /**
  *
  * @author augat
@@ -55,6 +58,11 @@ public class SceneManager extends Stage {
 
     public SceneManager() throws IOException {
         stage = this;
+        
+        if (!Assets.loaded()) {
+            Assets.load();
+        }
+        
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/Menu.fxml"));
 
         scene = new Scene(root);
@@ -117,10 +125,13 @@ public class SceneManager extends Stage {
 
     public static void changeSceneToGame(FXMLLoader loader) throws IOException {
 
-        Parent root = loader.load();
-        GameController = loader.getController();
-
-        scene.setRoot(root);
+//        Parent root = loader.load();
+//        GameController = loader.getController();
+    
+        Platform.runLater(() -> {
+            stage.setScene(new MonopolySceneData().getScene());
+            stage.setFullScreen(true);
+        });
 
     }
 
