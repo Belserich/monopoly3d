@@ -172,8 +172,8 @@ public class Player {
     
     @Override
     public String toString() {
-        return String.format("[Spieler] Name: %s, ID: %d, %s %s %n\t%s %n\t%s",
-                name, id, isInJail ? "(" + daysInJail + " Tage im Gefängnis)" : "", isBankrupt ? "(Pleite)" : "", bank, stack);
+        return String.format("\t[Spieler] %n\tName: %s, ID: %d, %s %s %n\t%s %n\t%s",
+                name, id, isInJail ? "%n(" + daysInJail + " Tage im Gefängnis)" : "", isBankrupt ? "%n(Pleite)" : "", bank, stack);
     }
 
     /**
