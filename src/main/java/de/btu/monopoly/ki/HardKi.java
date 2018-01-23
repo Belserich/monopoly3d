@@ -364,7 +364,7 @@ public class HardKi {
      * @param string Inhalt der Chatnachricht
      * @param isLocal ob die Nachricht lokal gesendet wird
      */
-    static void chat(String string, boolean isLocal) { //TODO
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    static void chat(String string, boolean isLocal) {
+        ChatAi.sendChatMessage(string, isLocal);
     }
 }

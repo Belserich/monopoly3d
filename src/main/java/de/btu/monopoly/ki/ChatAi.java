@@ -14,8 +14,11 @@ import java.util.Random;
  */
 public class ChatAi {
 
+    public static void sendChatMessage(String message, boolean isLocal) {
+        //TODO
+    }
+
     static void tradeResultMessage(int balance, int MINIMUM_ACCEPT_AMOUNT) {
-        // TODO
         Random ran = new Random();
         String mess = "";
 
@@ -110,8 +113,7 @@ public class ChatAi {
                     mess += "Also wenn ich das nicht annehmen würde, wäre ich kein Geschäftsmann!";
             }
         }
-
-        HardKi.chat(mess, true);
+        sendChatMessage(mess, true);
     }
 
     private static void propertyMessage(int balance) {
