@@ -9,8 +9,8 @@ import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Transform;
 import javafx.scene.transform.Translate;
 
-import static de.btu.monopoly.ui.fx3d.FieldBase.FIELD_HEIGHT;
-import static de.btu.monopoly.ui.fx3d.FieldBase.FIELD_WIDTH;
+import static de.btu.monopoly.ui.fx3d.Fx3dField.FIELD_HEIGHT;
+import static de.btu.monopoly.ui.fx3d.Fx3dField.FIELD_WIDTH;
 
 public class TextUtils
 {

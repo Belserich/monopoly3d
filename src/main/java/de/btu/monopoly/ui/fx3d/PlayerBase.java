@@ -1,6 +1,6 @@
 package de.btu.monopoly.ui.fx3d;
 
-import de.btu.monopoly.ui.util.FXHelper;
+import de.btu.monopoly.ui.util.FxHelper;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Cylinder;
 
@@ -14,7 +14,7 @@ public class PlayerBase extends Cylinder
     public PlayerBase(Color color)
     {
         super(PLAYER_RADIUS, PLAYER_HEIGHT);
-        setMaterial(FXHelper.getMaterialFor(color));
+        setMaterial(FxHelper.getMaterialFor(color));
         
         position = 0;
     }

@@ -12,7 +12,7 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.Sphere;
 
-public class FXHelper
+public class FxHelper
 {
     public static Material getMaterialFor(Color color)
     {
