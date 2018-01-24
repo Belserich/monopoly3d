@@ -8,12 +8,12 @@ package de.btu.monopoly.net.server;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
-import de.btu.monopoly.core.service.NetworkService;
 import de.btu.monopoly.net.data.lobby.*;
+import javafx.scene.paint.Color;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.logging.Logger;
-import javafx.scene.paint.Color;
 
 /**
  *

@@ -12,13 +12,14 @@ import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.ki.HardKi;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.ui.TextAreaHandler;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.xml.parsers.ParserConfigurationException;
-import org.xml.sax.SAXException;
 
 /**
  * @author Christian Prinz

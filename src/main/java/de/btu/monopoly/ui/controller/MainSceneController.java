@@ -12,10 +12,6 @@ import de.btu.monopoly.data.field.*;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.menu.Lobby;
 import de.btu.monopoly.net.client.GameClient;
-import java.net.URL;
-import java.util.List;
-import java.util.ResourceBundle;
-import java.util.stream.Collectors;
 import javafx.animation.FadeTransition;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
@@ -34,6 +30,11 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.util.Duration;
+
+import java.net.URL;
+import java.util.List;
+import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -944,7 +945,6 @@ public class MainSceneController implements Initializable {
      *
      * @param width
      * @param heigth
-     * @param anzahl der Hauser
      * @return
      */
     public HBox createHaus1(int width, int heigth) {

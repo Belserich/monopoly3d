@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -112,7 +113,7 @@ public class MenuController implements Initializable {
     @FXML
     private void ruleButtonAction(ActionEvent event) throws IOException {
 
-        changeScene(new FXMLLoader(getClass().getResource("/fxml/rules.fxml")));
+        changeScene(new FXMLLoader(getClass().getResource("/fxml/rules_scene.fxml")));
         // Wechselt die Scene auf Einstellungen
 
     }

@@ -17,8 +17,9 @@ import de.btu.monopoly.menu.Lobby;
 import de.btu.monopoly.menu.LobbyService;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.server.GameServer;
-import java.util.Arrays;
 import org.junit.Assert;
+
+import java.util.Arrays;
 
 /**
  *

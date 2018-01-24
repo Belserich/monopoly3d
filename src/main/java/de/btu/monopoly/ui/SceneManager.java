@@ -14,8 +14,6 @@ import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.menu.Lobby;
 import de.btu.monopoly.ui.controller.LobbyController;
 import de.btu.monopoly.ui.controller.MainSceneController;
-import java.io.IOException;
-import java.util.Optional;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
@@ -37,6 +35,9 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+
+import java.io.IOException;
+import java.util.Optional;
 
 /**
  *

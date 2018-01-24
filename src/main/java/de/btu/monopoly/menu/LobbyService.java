@@ -15,13 +15,14 @@ import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.data.lobby.*;
 import de.btu.monopoly.net.server.AuctionTable;
 import de.btu.monopoly.ui.SceneManager;
+import javafx.scene.paint.Color;
+
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.scene.paint.Color;
 
 /**
  *

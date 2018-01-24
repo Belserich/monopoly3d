@@ -16,6 +16,7 @@ import de.btu.monopoly.core.service.NetworkService;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.menu.LobbyService;
 import de.btu.monopoly.ui.controller.GuiMessages;
+
 import java.io.IOException;
 import java.util.Optional;
 import java.util.logging.Level;
