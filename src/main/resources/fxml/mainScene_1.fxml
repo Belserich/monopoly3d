@@ -945,7 +945,11 @@
                 </GridPane>
                 <GridPane fx:id="player0Geld" GridPane.columnIndex="1" GridPane.rowIndex="1">
                     <children>
-                        <Label fx:id="geld0" alignment="CENTER" prefHeight="33.0" prefWidth="156.0" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+                        <Label fx:id="geld0" alignment="CENTER" prefHeight="33.0" prefWidth="156.0" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                            <font>
+                              <Font size="18.0" />
+                           </font>    
+                        </Label>
                     </children>
                     <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -997,7 +1001,11 @@
                 </JFXButton>
                 <GridPane fx:id="player1Geld" GridPane.rowIndex="1">
                     <children>
-                        <Label fx:id="geld1" alignment="CENTER" layoutX="10.0" layoutY="21.0" prefHeight="33.0" prefWidth="156.0" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+                        <Label fx:id="geld1" alignment="CENTER" layoutX="10.0" layoutY="21.0" prefHeight="33.0" prefWidth="156.0" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                            <font>
+                              <Font size="18.0" />
+                           </font>    
+                        </Label>
                     </children>
                     <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -1008,7 +1016,11 @@
                 </GridPane>
                 <GridPane fx:id="player2Geld" layoutX="10.0" layoutY="172.0" GridPane.rowIndex="3">
                     <children>
-                        <Label fx:id="geld2" alignment="CENTER" prefHeight="33.0" prefWidth="156.0" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+                        <Label fx:id="geld2" alignment="CENTER" prefHeight="33.0" prefWidth="156.0" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                            <font>
+                              <Font size="18.0" />
+                           </font>    
+                        </Label>
                     </children>
                     <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -1019,7 +1031,11 @@
                 </GridPane>
                 <GridPane fx:id="player3Geld" layoutX="10.0" layoutY="388.0" GridPane.rowIndex="5">
                     <children>
-                        <Label fx:id="geld3" alignment="CENTER" prefHeight="33.0" prefWidth="156.0" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+                        <Label fx:id="geld3" alignment="CENTER" prefHeight="33.0" prefWidth="156.0" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                   <font>
+                              <Font size="18.0" />
+                           </font>    
+                        </Label>
                     </children>
                     <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -1030,7 +1046,11 @@
                 </GridPane>
                 <GridPane fx:id="player4Geld" layoutX="10.0" layoutY="604.0" GridPane.rowIndex="7">
                     <children>
-                        <Label fx:id="geld4" alignment="CENTER" prefHeight="33.0" prefWidth="156.0" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+                        <Label fx:id="geld4" alignment="CENTER" prefHeight="33.0" prefWidth="156.0" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                            <font>
+                              <Font size="18.0" />
+                           </font>    
+                        </Label>
                     </children>
                     <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -1041,7 +1061,11 @@
                 </GridPane>
                 <GridPane fx:id="player5Geld" layoutX="10.0" layoutY="820.0" GridPane.rowIndex="9">
                     <children>
-                        <Label fx:id="geld5" alignment="CENTER" prefHeight="33.0" prefWidth="156.0" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+                        <Label fx:id="geld5" alignment="CENTER" prefHeight="33.0" prefWidth="156.0" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                            <font>
+                              <Font size="18.0" />
+                           </font>    
+                        </Label>
                     </children>
                     <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />

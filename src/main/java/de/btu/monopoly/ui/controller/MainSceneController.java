@@ -610,7 +610,7 @@ public class MainSceneController implements Initializable {
                                 player0Button.setText(Lobby.getUsers()[i][1]);
                             }
                             player0Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[i][4]), CornerRadii.EMPTY, Insets.EMPTY)));
-                            if (Color.web(Lobby.getUsers()[i][4]).getBrightness() <= 0.8) {
+                            if (Color.web(Lobby.getUsers()[i][4]).getBrightness() <= 0.9) {
                                 player0Button.setTextFill(Color.WHITE);
                             }
                             player0.setFill(Color.web(Lobby.getUsers()[0][4]));
@@ -638,7 +638,7 @@ public class MainSceneController implements Initializable {
                                         player1Button.setText(Lobby.getUsers()[i][1]);
                                     }
                                     player1Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[i][4]), CornerRadii.EMPTY, Insets.EMPTY)));
-                                    if (Color.web(Lobby.getUsers()[i][4]).getBrightness() <= 0.8) {
+                                    if (Color.web(Lobby.getUsers()[i][4]).getBrightness() <= 0.9) {
                                         player1Button.setTextFill(Color.WHITE);
                                     }
                                     player1.setFill(Color.web(Lobby.getUsers()[1][4]));
@@ -667,7 +667,7 @@ public class MainSceneController implements Initializable {
                                         player2Button.setText(Lobby.getUsers()[i][1]);
                                     }
                                     player2Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[i][4]), CornerRadii.EMPTY, Insets.EMPTY)));
-                                    if (Color.web(Lobby.getUsers()[i][4]).getBrightness() <= 0.8) {
+                                    if (Color.web(Lobby.getUsers()[i][4]).getBrightness() <= 0.9) {
                                         player2Button.setTextFill(Color.WHITE);
                                     }
                                     player2.setFill(Color.web(Lobby.getUsers()[2][4]));
@@ -695,7 +695,7 @@ public class MainSceneController implements Initializable {
                                         player3Button.setText(Lobby.getUsers()[i][1]);
                                     }
                                     player3Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[i][4]), CornerRadii.EMPTY, Insets.EMPTY)));
-                                    if (Color.web(Lobby.getUsers()[i][4]).getBrightness() <= 0.8) {
+                                    if (Color.web(Lobby.getUsers()[i][4]).getBrightness() <= 0.9) {
                                         player3Button.setTextFill(Color.WHITE);
                                     }
                                     player3.setFill(Color.web(Lobby.getUsers()[3][4]));
@@ -723,7 +723,7 @@ public class MainSceneController implements Initializable {
                                         player4Button.setText(Lobby.getUsers()[i][1]);
                                     }
                                     player4Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[i][4]), CornerRadii.EMPTY, Insets.EMPTY)));
-                                    if (Color.web(Lobby.getUsers()[i][4]).getBrightness() <= 0.8) {
+                                    if (Color.web(Lobby.getUsers()[i][4]).getBrightness() <= 0.9) {
                                         player4Button.setTextFill(Color.WHITE);
                                     }
                                     player4.setFill(Color.web(Lobby.getUsers()[4][4]));
@@ -751,7 +751,7 @@ public class MainSceneController implements Initializable {
                                         player5Button.setText(Lobby.getUsers()[i][1]);
                                     }
                                     player5Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[i][4]), CornerRadii.EMPTY, Insets.EMPTY)));
-                                    if (Color.web(Lobby.getUsers()[i][4]).getBrightness() <= 0.8) {
+                                    if (Color.web(Lobby.getUsers()[i][4]).getBrightness() <= 0.9) {
                                         player5Button.setTextFill(Color.WHITE);
                                     }
                                     player5.setFill(Color.web(Lobby.getUsers()[5][4]));
@@ -1097,7 +1097,7 @@ public class MainSceneController implements Initializable {
 
         player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[id][4]), CornerRadii.EMPTY, Insets.EMPTY)));
         player.setText(Lobby.getUsers()[id][1]);
-        if (Color.web(Lobby.getUsers()[id][4]).getBrightness() <= 0.8) {
+        if (Color.web(Lobby.getUsers()[id][4]).getBrightness() <= 0.9) {
             player.setTextFill(Color.WHITE);
         }
         player.setPrefSize(150, 10);
@@ -1188,7 +1188,7 @@ public class MainSceneController implements Initializable {
         Task task = new Task() {
             @Override
             protected Object call() throws Exception {
-                geld0.setText("Geld: " + players[client.getPlayerOnClient().getId()].getMoney());
+                geld0.setText("Kontostand: " + players[client.getPlayerOnClient().getId()].getMoney());
                 return null;
             }
         };
@@ -1199,7 +1199,7 @@ public class MainSceneController implements Initializable {
         Task task = new Task() {
             @Override
             protected Object call() throws Exception {
-                geld1.setText("Geld: " + players[player1ButtonID].getMoney());
+                geld1.setText("Kontostand: " + players[player1ButtonID].getMoney());
                 return null;
             }
         };
@@ -1210,7 +1210,7 @@ public class MainSceneController implements Initializable {
         Task task = new Task() {
             @Override
             protected Object call() throws Exception {
-                geld2.setText("Geld: " + players[player2ButtonID].getMoney());
+                geld2.setText("Kontostand: " + players[player2ButtonID].getMoney());
                 player2Geld.add(geld2, 0, 0);
                 return null;
             }
@@ -1222,7 +1222,7 @@ public class MainSceneController implements Initializable {
         Task task = new Task() {
             @Override
             protected Object call() throws Exception {
-                geld3.setText("Geld: " + players[player3ButtonID].getMoney());
+                geld3.setText("Kontostand: " + players[player3ButtonID].getMoney());
                 return null;
             }
         };
@@ -1233,7 +1233,7 @@ public class MainSceneController implements Initializable {
         Task task = new Task() {
             @Override
             protected Object call() throws Exception {
-                geld4.setText("Geld: " + players[player4ButtonID].getMoney());
+                geld4.setText("Kontostand: " + players[player4ButtonID].getMoney());
                 return null;
             }
         };
@@ -1244,7 +1244,7 @@ public class MainSceneController implements Initializable {
         Task task = new Task() {
             @Override
             protected Object call() throws Exception {
-                geld5.setText("Geld: " + players[player5ButtonID].getMoney());
+                geld5.setText("Kontostand: " + players[player5ButtonID].getMoney());
                 return null;
             }
         };
