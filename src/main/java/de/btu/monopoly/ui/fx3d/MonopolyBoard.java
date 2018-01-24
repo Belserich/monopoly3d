@@ -85,14 +85,14 @@ public class MonopolyBoard extends Group
     private void initBoard()
     {
         boardModel.setMaterial(FxHelper.getMaterialFor(Assets.getImage("board")));
-        boardModel.setOnMousePressed(event -> setDragPoint(event));
+        boardModel.setOnMousePressed(this::setDragPoint);
         boardModel.setOnMouseDragged(event ->
         {
             double diffX = event.getScreenX() - dragPoint.getX();
             if (fluentRotation)
             {
-                boardModel.setRotationAxis(Rotate.Y_AXIS);
-                boardModel.setRotate(diffX / -2);
+                setRotationAxis(Rotate.Y_AXIS);
+                setRotate(getRotate() + diffX / -2);
                 setDragPoint(event);
             }
             else if (Math.abs(diffX) >= CHUNKY_ROTATION_THRESHOLD && !transitioning)

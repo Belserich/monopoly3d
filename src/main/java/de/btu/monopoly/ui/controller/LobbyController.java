@@ -2,6 +2,7 @@ package de.btu.monopoly.ui.controller;
 
 import de.btu.monopoly.menu.Lobby;
 import de.btu.monopoly.menu.LobbyService;
+import de.btu.monopoly.ui.SceneManager;
 import javafx.animation.FadeTransition;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
@@ -106,7 +107,7 @@ public class LobbyController implements Initializable {
 
         difficultyComboBox.setStyle("-fx-font: 22px \"System\";");
 
-        String image = " -fx-background-image: url(\"/images/Lobby_Background.jpg\") ;\n"
+        String image = " -fx-background-image: url('/images/Lobby_Background.jpg\') ;\n"
                 + "    -fx-background-position: center;\n"
                 + "    -fx-background-size: stretch;";
         grid.setStyle(image);

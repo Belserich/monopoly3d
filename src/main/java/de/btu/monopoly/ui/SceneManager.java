@@ -63,7 +63,7 @@ public class SceneManager extends Stage {
             Assets.load();
         }
         
-        Parent root = FXMLLoader.load(getClass().getResource("/fxml/Menu.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/fxml/menu_scene.fxml"));
         
         scene = new Scene(root);
         scene.setOnKeyPressed(e -> {
