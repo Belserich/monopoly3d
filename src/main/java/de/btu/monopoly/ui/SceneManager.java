@@ -804,16 +804,15 @@ public class SceneManager extends Stage {
         JFXTextField rivalsMoneyTextField = new JFXTextField("0");
         JFXTextField rivalsCardsTextField = new JFXTextField("0");
         //MenuButton(s)
-        MenuButton yourPropsMeButton = new MenuButton();
-        MenuButton rivalsPropsMeButton = new MenuButton();
+        MenuButton yourPropsMeButton = new MenuButton("Wähle Grundstück");
+        MenuButton rivalsPropsMeButton = new MenuButton("Wähle Grundstück");
         //Seperator(en)
         Separator separateLblFromTrade = new Separator();
         Separator separateYouFromRival = new Separator(Orientation.VERTICAL);
 
         //Einstellung der benoetigten Objekte
         //MenuBotton(s) fuellen
-        yourPropsMeButton
-                .getItems().addAll(playersProps);
+        yourPropsMeButton.getItems().addAll(playersProps);
         rivalsPropsMeButton.getItems().addAll(rivalsProps);
         //GridPane(s)
         tradeOfferGridPane.setAlignment(Pos.CENTER);
@@ -835,6 +834,7 @@ public class SceneManager extends Stage {
         tradeOfferVBox.setAlignment(Pos.CENTER);
         tradeOfferVBox.getChildren().addAll(generallOfferLabel, separateLblFromTrade, tradeOfferHBox);
         //MainHBox
+        tradeOfferHBox.setPadding(new Insets(5));
         tradeOfferHBox.getChildren().addAll(yourPropsOfferVBox, yourTradeOfferVBox, separateYouFromRival, rivalsPropsOfferVBox, rivalsTradeOfferVBox);
         //VBox(en)
         //Groessen und Abstaende
