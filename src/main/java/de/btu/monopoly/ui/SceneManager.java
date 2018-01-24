@@ -334,7 +334,7 @@ public class SceneManager extends Stage {
         // scroll.add(label, 0, 0);
         String cssLayout = "-fx-background-color: #b9f6ca;\n"
                 + "-fx-border-color: black;\n"
-                + "-fx-effect: dropshadow(gaussian, yellowgreen, 20, 0, 0, 0);"
+                + "-fx-effect: dropshadow(gaussian, yellowgreen, 20, 0, 0, 0);\n"
                 + "-fx-border-insets: 5;\n"
                 + "-fx-border-width: 1;\n"
                 + "-fx-border-style: double;\n";

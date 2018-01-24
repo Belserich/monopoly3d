@@ -1062,8 +1062,8 @@ public class MainSceneController implements Initializable {
         JFXButton player = new JFXButton();
         Label geld = new Label(" hat in Konto : " + playeronbutton.getMoney());
         Label jail = new Label(" ist in Gefängnis seit : " + playeronbutton.getDaysInJail());
-        Label idNummer = new Label("ID : "+id);
-        Label karten = new Label(""+playeronbutton.getCardStack());
+        Label idNummer = new Label("ID : " + id);
+        Label karten = new Label("" + playeronbutton.getCardStack());
 
         player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[id][4]), CornerRadii.EMPTY, Insets.EMPTY)));
         player.setText(Lobby.getUsers()[id][1]);
@@ -1072,7 +1072,7 @@ public class MainSceneController implements Initializable {
         }
         player.setPrefSize(150, 10);
 
-        box.getChildren().addAll(player, geld, jail,idNummer,karten, fields);
+        box.getChildren().addAll(player, geld, jail, idNummer, karten, fields);
         box.setAlignment(Pos.CENTER);
 
         if (PopupPane.getChildren().contains(middlePane)) {
@@ -1086,43 +1086,45 @@ public class MainSceneController implements Initializable {
      * @param feld
      */
     public void fieldPopup(Pane feld) {
-        Field[] currentField = Lobby.getPlayerClient().getGame().getBoard().getFields();
+        if (Lobby.getPlayerClient().getGame() != null) {
+            if (Lobby.getPlayerClient().getGame().getBoard() != null) {
+                Field[] currentField = Lobby.getPlayerClient().getGame().getBoard().getFields();
 
-        GridPane gp = new GridPane();
-        VBox box = new VBox();
-        gp.setAlignment(Pos.CENTER);
-        gp.getChildren().add(box);
+                GridPane gp = new GridPane();
+                VBox box = new VBox();
+                gp.setAlignment(Pos.CENTER);
+                gp.getChildren().add(box);
 
-        String text = "";
-        Label owner = new Label();
-        Label rent = new Label();
-        for (int i = 0; i < Felder.length; i++) {
-            if (Felder[i] == feld) {
-                owner.setText(("\tBesitzer : " + ((PropertyField) currentField[i]).getOwner()));
-                rent.setText("\n Aktuelle Miete : " + ((PropertyField) currentField[i]).getRent());
-                rent.setTextFill(Color.BROWN);
-                owner.setTextFill(Color.DARKBLUE);
-                if ((currentField[i] instanceof CardField) || (currentField[i] instanceof TaxField)) {
-                    text = "";
-                    resetPopupAbove();
-                }
-                else {
-                    text = "\n\t" + currentField[i];
+                String text = "";
+                Label owner = new Label();
+                Label rent = new Label();
+                for (int i = 0; i < Felder.length; i++) {
+                    if (Felder[i] == feld) {
+                        if (currentField[i] instanceof PropertyField) {
+                            owner.setText(("\tBesitzer : " + ((PropertyField) currentField[i]).getOwner()));
+                            rent.setText("\n Aktuelle Miete : " + ((PropertyField) currentField[i]).getRent());
+                            rent.setTextFill(Color.BROWN);
+                            owner.setTextFill(Color.DARKBLUE);
+
+                            text = "\n\t" + currentField[i];
+
+                            Label info = new Label(text);
+                            box.getChildren().addAll(owner, info, rent);
+                            // box.setBackground(new Background(new BackgroundFill(Color.web(feld.getStyle()), CornerRadii.EMPTY, Insets.EMPTY)));
+                            box.setStyle(feld.getStyle());
+                            box.setPrefWidth(200);
+                            box.setAlignment(Pos.CENTER);
+
+                            if (PopupPane.getChildren().contains(middlePane)) {
+                                setPopupAbove(gp);
+                            }
+                            break;
+                        }
+                        break;
+                    }
                 }
             }
         }
-
-        Label info = new Label(text);
-        box.getChildren().addAll(owner, info, rent);
-        // box.setBackground(new Background(new BackgroundFill(Color.web(feld.getStyle()), CornerRadii.EMPTY, Insets.EMPTY)));
-        box.setStyle(feld.getStyle());
-        box.setPrefWidth(200);
-        box.setAlignment(Pos.CENTER);
-
-        if (PopupPane.getChildren().contains(middlePane)) {
-            setPopupAbove(gp);
-        }
-
     }
 
     // -------------------------------------------------------------------------
