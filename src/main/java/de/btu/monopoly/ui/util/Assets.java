@@ -1,13 +1,24 @@
 package de.btu.monopoly.ui.util;
 
+import de.btu.monopoly.data.card.Card;
+import de.btu.monopoly.data.card.CardStack;
+import de.btu.monopoly.data.field.Field;
+import de.btu.monopoly.data.parser.CardDataParser;
+import de.btu.monopoly.data.parser.FieldDataParser;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.logging.Logger;
 
 public class Assets
 {
+    public static final Logger LOGGER = Logger.getLogger(Assets.class.getCanonicalName());
+    
     public static final String UNDEFINED = "UNDEFINED";
     public static final String R = "/images/new/";
     
@@ -49,6 +60,16 @@ public class Assets
     private static final HashMap<String, String> registeredStrings = new HashMap<>();
     private static final HashMap<String, Font> registeredFonts = new HashMap<>();
     
+    private static final String DATA_FIELD_PATH = "/data/field_data.xml";
+    
+    private static final String COMM_CARDS_PATH = "/data/card_data.xml";
+    private static final String EVENT_CARDS_PATH = "/data/card_data.xml";
+    
+    private static Field[] fields;
+    
+    private static Card[] commCards;
+    private static Card[] eventCards;
+    
     public static void load()
     {
         registeredImages.put("3d_rotation", loadImage(IMAGE_3D_PATH));
@@ -86,6 +107,17 @@ public class Assets
         registeredFonts.put("font_default", loadFont(FONT_PATH, 12));
         registeredFonts.put("font_big", loadFont(FONT_PATH, 15));
         registeredFonts.put("font_huge", loadFont(FONT_PATH, 18));
+    
+        try {
+            commCards = CardDataParser.parse(COMM_CARDS_PATH);
+            eventCards = CardDataParser.parse(EVENT_CARDS_PATH);
+            FieldDataParser.setCardLoadout0(new CardStack(commCards));
+            FieldDataParser.setCardLoadout1(new CardStack(eventCards));
+            fields = FieldDataParser.parse(DATA_FIELD_PATH);
+        }
+        catch (IOException | SAXException | ParserConfigurationException ex) {
+            LOGGER.warning(String.format("Exception while initializing field or card data.", ex));
+        }
     }
     
     public static boolean loaded() {
@@ -95,7 +127,7 @@ public class Assets
     private static Image loadImage(String path)
     {
         Image img = new Image(R + path);
-        img = FXHelper.replaceColorInImage(img, COLOR_TO_REPLACE, REPLACEMENT_COLOR);
+        img = FxHelper.replaceColorInImage(img, COLOR_TO_REPLACE, REPLACEMENT_COLOR);
         return img;
     }
     
@@ -120,5 +152,17 @@ public class Assets
     
     public static Font getFont(String key) {
         return registeredFonts.get(key);
+    }
+    
+    public static Field[] getFields() {
+        return fields;
+    }
+    
+    public static Card[] getCommunityCards() {
+        return commCards;
+    }
+    
+    public static Card[] getEventCards() {
+        return eventCards;
     }
 }
