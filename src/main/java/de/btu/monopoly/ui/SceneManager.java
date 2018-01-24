@@ -397,7 +397,8 @@ public class SceneManager extends Stage {
 
         Label label = new Label("Wähle ein Feld:");
         JFXComboBox fieldBox = new JFXComboBox();
-        Button button = new Button();
+        Button eingabeButton = new Button();
+        Button exitButton = new Button();
 
         String cssLayout = "-fx-background-color: #b2dfdb;\n"
                 + "-fx-border-color: black;\n"
@@ -406,11 +407,13 @@ public class SceneManager extends Stage {
                 + "-fx-border-style: double;\n";
 
         box.setStyle(cssLayout);
-        box.setSpacing(10);
+        box.setSpacing(7);
         box.setPrefSize(200, 250);
         box.setCenterShape(true);
-        button.setText("Eingabe");
-        button.setBackground(new Background(new BackgroundFill(Color.web("#e1f5fe"), CornerRadii.EMPTY, Insets.EMPTY)));
+        eingabeButton.setText("Eingabe");
+        eingabeButton.setBackground(new Background(new BackgroundFill(Color.web("#e1f5fe"), CornerRadii.EMPTY, Insets.EMPTY)));
+        exitButton.setText("Schließen");
+        exitButton.setBackground(new Background(new BackgroundFill(Color.web("#e1f5fe"), CornerRadii.EMPTY, Insets.EMPTY)));
         label.setFont(Font.font("Tahoma", 14));
 
         for (String fieldName : fields) {
@@ -419,18 +422,35 @@ public class SceneManager extends Stage {
 
         fieldBox.getSelectionModel().selectFirst();
 
-        box.getChildren().addAll(label, fieldBox, button);
+        box.getChildren().addAll(label, fieldBox, eingabeButton, exitButton);
         box.setAlignment(Pos.CENTER);
 
         GameController.setPopupBellow(gridPane);
 
-        while (!button.isPressed()) {
-            IOService.sleep(50);
+        if (fields.length == 0) {
+            Task task = new Task() {
+                @Override
+                protected Object call() throws Exception {
+                    fieldBox.setPromptText("Du besitzt keine Straßen!");
+                    return null;
+                }
+            };
+            Platform.runLater(task);
+            IOService.sleep(3000);
+            GameController.resetPopupBelow();
+            return 0;
         }
 
-        GameController.resetPopupBelow();
-
-        return fieldBox.getSelectionModel().getSelectedIndex() + 1;
+        while (!eingabeButton.isPressed() || !exitButton.isPressed()) {
+            if (eingabeButton.isPressed()) {
+                return fieldBox.getSelectionModel().getSelectedIndex() + 1;
+            }
+            if (exitButton.isPressed()) {
+                return 0;
+            }
+            IOService.sleep(50);
+        }
+        return 0;
     }
 
     public static void auctionPopup() {
