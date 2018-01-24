@@ -27,7 +27,7 @@ public class ParserUtils {
      * @throws IOException Datei ist nicht lesbar, nicht vorhanden oder beschädigt.
      */
     public static String[] trimInsignificant(String path) throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(GameBoardParser.class.getClassLoader().getResourceAsStream(path)));
+        BufferedReader reader = new BufferedReader(new InputStreamReader(FieldDataParser.class.getClassLoader().getResourceAsStream(path)));
         String[] retObj = reader.lines()
                 .map(s -> {
                     int i = s.indexOf(C);

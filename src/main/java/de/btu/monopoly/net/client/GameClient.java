@@ -63,7 +63,7 @@ public class GameClient {
             // lobby wird in GUI geöffnet
             GuiMessages.setConnectionError(false);
         } catch (IOException ex) {
-            LOGGER.log(Level.WARNING, "Client konnte nicht gestartet werden {0}", ex);
+            LOGGER.log(Level.WARNING, "Client konnte nicht gestartet werden.\n\t{0}", ex.toString());
             // GUI meldet Fehler
             GuiMessages.setConnectionError(true);
         }

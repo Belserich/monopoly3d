@@ -145,13 +145,13 @@ public class LobbyService extends Listener {
      * erstellt eine Gameinstanz und startet das Spiel
      */
     public static void startGame() throws InterruptedException {
-
+        lobby.getController().start();
+    }
+    
+    private static void initGame() {
         Game controller = new Game(lobby.getPlayerClient(), generatePlayerArray(), lobby.getRandomSeed());
         lobby.setController(controller);
         lobby.getPlayerClient().setGame(controller);
-
-        controller.init();
-        controller.start();
     }
 
     /**
@@ -268,9 +268,10 @@ public class LobbyService extends Listener {
         }
         else if (object instanceof GamestartResponse) {
 
+            initGame();
             // Scene bei anderen Spielern öffnen
             try {
-                SceneManager.openGameLayout();
+                SceneManager.openGameLayout(lobby);
                 IOService.sleep(2000);
 
             } catch (IOException ex) {

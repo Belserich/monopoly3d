@@ -756,7 +756,6 @@ public class MainSceneController implements Initializable {
 
             field.setOnMouseExited((event) -> {
                 resetPopupAbove();
-
             });
         }
     }

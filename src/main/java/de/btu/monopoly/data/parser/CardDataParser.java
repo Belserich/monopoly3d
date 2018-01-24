@@ -2,7 +2,6 @@ package de.btu.monopoly.data.parser;
 
 import de.btu.monopoly.data.card.Card;
 import de.btu.monopoly.data.card.CardAction;
-import de.btu.monopoly.data.card.CardStack;
 import de.btu.monopoly.data.card.JailCard;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -24,7 +23,7 @@ import java.util.stream.Stream;
 /**
  * @author Maximilian Bels (belsmaxi@b-tu.de)
  */
-public class CardStackParser {
+public class CardDataParser {
 
     /**
      * Liesst Kartendaten aus einer XML-Datei und wandelt diese in virtuelle Karten um, mit denen sie dann eine Instanz von
@@ -36,13 +35,13 @@ public class CardStackParser {
      * @throws IOException Die Datei konnte nicht gefunden werden.
      * @throws SAXException wenn das Dokument nicht gelesen werden konnte, also eine beschädigte Grobstruktur vorliegt
      */
-    public static CardStack parse(String path) throws ParserConfigurationException, IOException, SAXException {
+    public static Card[] parse(String path) throws ParserConfigurationException, IOException, SAXException {
         List<Card> cards;
 
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
 
-        File file = new File(CardStackParser.class.getResource(path).getFile());
+        File file = new File(CardDataParser.class.getResource(path).getFile());
         Document doc = builder.parse(file);
 
         NodeList nList = doc.getElementsByTagName("card");
@@ -53,7 +52,7 @@ public class CardStackParser {
                 cards.addAll(parseElement((Element) node));
             }
         }
-        return new CardStack(cards.toArray(new Card[cards.size()]));
+        return cards.toArray(new Card[cards.size()]);
     }
 
     /**
@@ -126,7 +125,7 @@ public class CardStackParser {
      * @param ex geworfene Exception
      */
     private static void logException(Exception ex) {
-        Logger.getLogger(CardStackParser.class.getPackage().getName())
+        Logger.getLogger(CardDataParser.class.getPackage().getName())
                 .warning("Exception while reading card data. Corrupted file!" + ex);
     }
 }

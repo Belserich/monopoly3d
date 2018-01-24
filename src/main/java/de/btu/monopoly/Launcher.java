@@ -53,7 +53,7 @@ public class Launcher extends Application {
             LOGGER.log(Level.WARNING, "unable to configure loggers{0}", ex);
         }
 
-//        Logger.getLogger(GameBoardParser.class.getCanonicalName()).setLevel(Level.OFF);
+//        Logger.getLogger(FieldDataParser.class.getCanonicalName()).setLevel(Level.OFF);
 //        Logger.getLogger(Game.class.getCanonicalName()).setLevel(Level.OFF);
     }
 }

@@ -4,18 +4,12 @@ import de.btu.monopoly.GlobalSettings;
 import de.btu.monopoly.core.service.*;
 import de.btu.monopoly.data.card.Card;
 import de.btu.monopoly.data.card.CardAction;
-import de.btu.monopoly.data.card.CardStack;
 import de.btu.monopoly.data.field.*;
-import de.btu.monopoly.data.parser.CardStackParser;
-import de.btu.monopoly.data.parser.GameBoardParser;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.ki.HardKi;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.ui.TextAreaHandler;
-import org.xml.sax.SAXException;
 
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Random;
 import java.util.logging.Level;
@@ -70,23 +64,16 @@ public class Game {
             TextAreaHandler logHandler = new TextAreaHandler();
             LOGGER.addHandler(logHandler);
         }
+        
+        init();
     }
 
     public void init() {
 
         LOGGER.info("Spiel wird initialisiert.");
 
-        try {
-            CardStack stack = CardStackParser.parse("/data/card_data.xml");
-            stack.shuffle(getRandom());
-            LOGGER.finest(stack.toString());
-            GameBoardParser.setCardLoadout0(stack);
-            GameBoardParser.setCardLoadout1(stack);
-            board = GameBoardParser.parse("/data/field_data.xml");
-            AuctionService.initAuction(players, client);
-        } catch (IOException | SAXException | ParserConfigurationException ex) {
-            LOGGER.warning(String.format("Fehler beim initialisieren des Boards / der Karten.", ex));
-        }
+        this.board = new GameBoard();
+        AuctionService.initAuction(players, client);
 
         for (Player player : players) {
             board.addPlayer(player);

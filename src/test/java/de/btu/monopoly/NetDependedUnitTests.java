@@ -69,7 +69,6 @@ public class NetDependedUnitTests {
         Game controller = new Game(lobby.getPlayerClient(), LobbyService.generatePlayerArray(), lobby.getRandomSeed());
         lobby.setController(controller);
         lobby.getPlayerClient().setGame(controller);
-        controller.init();
 
         game = LobbyService.getLobby().getController();
         board = game.getBoard();

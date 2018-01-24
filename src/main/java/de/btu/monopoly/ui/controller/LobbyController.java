@@ -2,7 +2,6 @@ package de.btu.monopoly.ui.controller;
 
 import de.btu.monopoly.menu.Lobby;
 import de.btu.monopoly.menu.LobbyService;
-import de.btu.monopoly.ui.SceneManager;
 import javafx.animation.FadeTransition;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
@@ -107,7 +106,7 @@ public class LobbyController implements Initializable {
 
         difficultyComboBox.setStyle("-fx-font: 22px \"System\";");
 
-        String image = " -fx-background-image: url('/images/Lobby_Background.jpg');\n"
+        String image = " -fx-background-image: url(\"/images/Lobby_Background.jpg\") ;\n"
                 + "    -fx-background-position: center;\n"
                 + "    -fx-background-size: stretch;";
         grid.setStyle(image);
@@ -693,7 +692,7 @@ public class LobbyController implements Initializable {
 
     }
 
-    public void loadGameLayout() throws IOException {
+    public void loadGameLayout(Lobby lobby) throws IOException {
         FadeTransition fadeGrid = new FadeTransition(Duration.millis(400), grid);
         fadeGrid.setFromValue(1);
         fadeGrid.setToValue(0);
@@ -701,7 +700,7 @@ public class LobbyController implements Initializable {
 
         try {
             // Wechselt die Scene auf Game
-            SceneManager.changeSceneToGame(new FXMLLoader(getClass().getResource("/fxml/main_scene_1.fxml")));
+            SceneManager.changeSceneToGame(lobby);
         } catch (IOException ex) {
             Logger.getLogger(LobbyController.class.getName()).log(Level.SEVERE, null, ex);
         }

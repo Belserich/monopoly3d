@@ -1,6 +1,8 @@
 package de.btu.monopoly.data.player;
 
 import de.btu.monopoly.data.card.CardStack;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 
 /**
  * @author Maximilian Bels (belsmaxi@b-tu.de)
@@ -16,7 +18,7 @@ public class Player {
      * Bank-Instanz
      */
     private final Bank bank;
-
+    
     /**
      * Karten in Spielerhaenden
      */
@@ -30,7 +32,7 @@ public class Player {
     /**
      * Position als ganzzahlige Feld-ID
      */
-    private int position;
+    private IntegerProperty position;
 
     /**
      * ob der Spieler im Gefaengnis ist
@@ -64,8 +66,9 @@ public class Player {
         this.bank = new Bank(startMoney);
         this.aiLevel = 0;
         this.name = name;
-        position = 0;
-
+        
+        position = new SimpleIntegerProperty();
+        
         stack = new CardStack();
 
         isInJail = false;
@@ -132,14 +135,14 @@ public class Player {
      * @param pos neue Position (ganzzahlige Feld-ID)
      */
     public void setPosition(int pos) {
-        this.position = pos;
+        position.set(pos);
     }
 
     /**
      * @return Position des Spielers als ganzzahlige Feld-ID
      */
     public int getPosition() {
-        return this.position;
+        return position.get();
     }
 
     /**
@@ -169,12 +172,6 @@ public class Player {
     public CardStack getCardStack() {
         return stack;
     }
-    
-    @Override
-    public String toString() {
-        return String.format("\t[Spieler] %n\tName: %s, ID: %d, %s %s %n\t%s %n\t%s",
-                name, id, isInJail ? "%n(" + daysInJail + " Tage im Gefängnis)" : "", isBankrupt ? "%n(Pleite)" : "", bank, stack);
-    }
 
     /**
      * ob der Spieler eine KI ist
@@ -193,4 +190,16 @@ public class Player {
     public void setAiLevel(int aiLevel) {
         this.aiLevel = aiLevel;
     }
+    
+    public IntegerProperty positionProperty() {
+        return position;
+    }
+    
+    @Override
+    public String toString() {
+        return String.format("[Spieler] Name: %s, ID: %d, %s %s %n\t%s %n\t%s",
+                name, id, isInJail ? "(" + daysInJail + " Tage im Gefängnis)" : "", isBankrupt ? "(Pleite)" : "", bank, stack);
+    }
+    
+    
 }

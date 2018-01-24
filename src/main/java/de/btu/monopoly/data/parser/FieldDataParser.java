@@ -1,37 +1,38 @@
 package de.btu.monopoly.data.parser;
 
-import de.btu.monopoly.data.card.CardStack;
 import de.btu.monopoly.core.GameBoard;
+import de.btu.monopoly.data.card.CardStack;
 import de.btu.monopoly.data.field.*;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  * @author Maximilian Bels (belsmaxi@b-tu.de)
  */
-public class GameBoardParser {
+public class FieldDataParser {
 
     /**
      * Die allgemeine Exception-Nachricht für diese Klasse
      */
     private static final String IO_EXCEPTION_MESSAGE = "Exception while reading game board data. Corrupted file data!";
 
-    private static final Logger LOGGER = Logger.getLogger(GameBoardParser.class.getCanonicalName());
+    private static final Logger LOGGER = Logger.getLogger(FieldDataParser.class.getCanonicalName());
 
     private static CardStack CARD_LOADOUT_0 = null;
     private static CardStack CARD_LOADOUT_1 = null;
 
-    public static GameBoard parse(String path) throws ParserConfigurationException, IOException, SAXException {
+    public static Field[] parse(String path) throws ParserConfigurationException, IOException, SAXException {
+        
         Field[] fields = new Field[GameBoard.FIELD_STRUCTURE.length];
-
         DocumentBuilder builder;
         Element elem;
         int id;
@@ -39,7 +40,7 @@ public class GameBoardParser {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         builder = factory.newDocumentBuilder();
 
-        Document doc = builder.parse(CardStackParser.class.getResourceAsStream(path.replaceAll("%20", " ")));
+        Document doc = builder.parse(CardDataParser.class.getResourceAsStream(path.replaceAll("%20", " ")));
         LOGGER.info("Dokument erfolgreich ausgelesen!");
 
         NodeList fieldList = doc.getElementsByTagName("field");
@@ -90,7 +91,7 @@ public class GameBoardParser {
         }
         LOGGER.info("Alle Feldinstanzen erfolgreich erstellt.");
 
-        return new GameBoard(fields);
+        return fields;
     }
 
     private static int parseId(Element elem) {

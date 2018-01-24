@@ -41,7 +41,6 @@ public class CoreUnitTest {
         client = new GameClient(59687, 5000);
         client.setPlayerOnClient(players[0]);
         game = new Game(client, players, 42);
-        game.init();
     }
 
     @Test
