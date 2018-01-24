@@ -238,7 +238,8 @@ public class Game {
 
                     if (nextCard.getActions().contains(CardAction.SET_POSITION)
                             || nextCard.getActions().contains(CardAction.MOVE_PLAYER)
-                            || nextCard.getActions().contains(CardAction.NEXT_SUPPLY)) {
+                            || nextCard.getActions().contains(CardAction.NEXT_SUPPLY)
+                            || nextCard.getActions().contains(CardAction.NEXT_STATION_RENT_AMP)) {
                         repeatPhase = true;
                     }
                     break;
