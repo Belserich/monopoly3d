@@ -559,7 +559,15 @@ public class SceneManager extends Stage {
     }
 
     public static void bidTextFieldFocus() {
-        bidTextField.requestFocus();
+        Task task = new Task() {
+            @Override
+            protected Object call() throws Exception {
+                bidTextField.requestFocus();
+                return null;
+            }
+        };
+        Platform.runLater(task);
+
     }
 
     public static void initStreets() {
