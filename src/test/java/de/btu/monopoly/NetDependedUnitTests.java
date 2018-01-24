@@ -17,8 +17,9 @@ import de.btu.monopoly.menu.Lobby;
 import de.btu.monopoly.menu.LobbyService;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.server.GameServer;
-import java.util.Arrays;
 import org.junit.Assert;
+
+import java.util.Arrays;
 
 /**
  *
@@ -68,7 +69,6 @@ public class NetDependedUnitTests {
         Game controller = new Game(lobby.getPlayerClient(), LobbyService.generatePlayerArray(), lobby.getRandomSeed());
         lobby.setController(controller);
         lobby.getPlayerClient().setGame(controller);
-        controller.init();
 
         game = LobbyService.getLobby().getController();
         board = game.getBoard();
