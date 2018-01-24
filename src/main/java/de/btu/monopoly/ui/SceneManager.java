@@ -11,7 +11,6 @@ import com.jfoenix.controls.JFXTextField;
 import de.btu.monopoly.core.GameBoard;
 import de.btu.monopoly.core.service.AuctionService;
 import de.btu.monopoly.core.service.IOService;
-import de.btu.monopoly.core.service.TradeService;
 import de.btu.monopoly.data.card.CardAction;
 import de.btu.monopoly.data.field.Field;
 import de.btu.monopoly.data.field.PropertyField;
@@ -25,6 +24,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -33,6 +34,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -43,12 +45,14 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
+import javafx.scene.control.Separator;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import javafx.util.Duration;
 
 /**
  *
@@ -60,6 +64,7 @@ public class SceneManager extends Stage {
     private static Scene scene;
     private static LobbyController LobbyController;
     private static MainSceneController GameController;
+    private static char currency = '€';
     //Auktionsspezifisch
     private static Label auctionLabel = new Label("0 €");
     private static Label hoechstgebotLabel = new Label("Höchstgebot:");
@@ -493,7 +498,7 @@ public class SceneManager extends Stage {
 
         auctionHBox.setStyle(cssLayout);
         auctionHBox.setSpacing(10);
-        auctionHBox.setPrefSize(700, 200);
+        auctionHBox.setPrefSize(800, 200);
         auctionHBox.setCenterShape(true);
         auctionVBox.getChildren().addAll(bidButton, exitButton);
         auctionVBox.setSpacing(10);
@@ -521,7 +526,7 @@ public class SceneManager extends Stage {
         Task task = new Task() {
             @Override
             protected Object call() throws Exception {
-                auctionLabel.setText(String.valueOf(AuctionService.getHighestBid()) + " €");
+                auctionLabel.setText(String.valueOf(AuctionService.getHighestBid()) + currency);
                 hoechstgebotLabel.setText("Höchstgebot von \n" + AuctionService.getPlayer(AuctionService.getHighestBidder()).getName() + ":");
                 return null;
             }
@@ -545,7 +550,7 @@ public class SceneManager extends Stage {
             }
             else {
                 endLabel.setText(Lobby.getPlayerClient().getGame().getPlayers()[AuctionService.getHighestBidder()].getName()
-                        + " hat die Auktion gewonnen und muss " + AuctionService.getHighestBid() + "€ für das Grundstück "
+                        + " hat die Auktion gewonnen und muss " + AuctionService.getHighestBid() + currency + " für das Grundstück "
                         + AuctionService.getPropertyString() + " zahlen!");
             }
             String cssLayout = "-fx-background-color: #dcedc8;\n"
@@ -564,7 +569,7 @@ public class SceneManager extends Stage {
             GameController.setPopupBellow(resetGridPane);
             IOService.sleep(3500);
             GameController.resetPopupBelow();
-            auctionLabel.setText("0 €");
+            auctionLabel.setText("0 " + currency);
         }
 
     }
@@ -615,12 +620,21 @@ public class SceneManager extends Stage {
                             tradePartner = Lobby.getPlayerClient().getGame().getPlayers()[i];
 
                             //selectTradeOfferPopup();
-                            TradeService.trade.setSupply(TradeService.createTradeOffer(Lobby.getPlayerClient().getPlayerOnClient(), board));
-                            TradeService.trade.setDemand(TradeService.createTradeOffer(tradePartner, board));
+                            //TradeService.trade.setSupply(TradeService.createTradeOffer(Lobby.getPlayerClient().getPlayerOnClient(), board));
+                            //TradeService.trade.setDemand(TradeService.createTradeOffer(tradePartner, board));
                             partnerIsChoosen = true;
                             break;
                         }
                     }
+
+                    Task task = new Task() {
+                        @Override
+                        protected Object call() throws Exception {
+                            showTradeInfoPopup();
+                            return null;
+                        }
+                    };
+                    Platform.runLater(task);
 
                 } catch (NullPointerException e) {
                     //Fehler
@@ -648,7 +662,7 @@ public class SceneManager extends Stage {
         //Einstellen VBox
         initTradeVBox.setStyle(cssLayout);
         initTradeVBox.setSpacing(10);
-        initTradeVBox.setPrefSize(700, 200);
+        initTradeVBox.setPrefSize(800, 200);
         initTradeVBox.setCenterShape(true);
         initTradeVBox.getChildren().addAll(initTradeLabel, choosePlayerBox, initTradeHBox);
         initTradeVBox.setAlignment(Pos.CENTER);
@@ -688,6 +702,48 @@ public class SceneManager extends Stage {
         partnerIsChoosen = false;
     }
 
+    private static void showTradeInfoPopup() {
+
+        GameController.resetPopupBelow();
+
+        //Initialisierung der benoetigten Objekte
+        //Gridpane(s)
+        GridPane tradeInfoGridPane = new GridPane();
+        //Label(s)
+        Label tradeInfoLabel = new Label("Es können mehrere Grundstücke\ngeboten und verlangt werden!");
+        tradeInfoLabel.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
+        //VBox(en)
+        VBox tradeInfoVBox = new VBox();
+
+        //Einstellung der Objekte
+        String cssLayout = "-fx-background-color: #dcedc8;\n"
+                + "-fx-border-color: black;\n"
+                + "-fx-border-insets: 5;\n"
+                + "-fx-border-width: 1;\n"
+                + "-fx-border-style: double;\n";
+
+        tradeInfoGridPane.setAlignment(Pos.CENTER);
+        tradeInfoGridPane.add(tradeInfoVBox, 0, 0);
+
+        tradeInfoVBox.setStyle(cssLayout);
+        tradeInfoVBox.setSpacing(10);
+        tradeInfoVBox.setPrefSize(800, 200);
+        tradeInfoVBox.setAlignment(Pos.CENTER);
+        tradeInfoVBox.getChildren().addAll(tradeInfoLabel);
+
+        if (GameController != null) {
+            GameController.setPopupBellow(tradeInfoGridPane);
+        }
+
+        //Weiterleitung an das naechste Popup
+        Timeline timer = new Timeline(new KeyFrame(
+                Duration.millis(2500),
+                timeOver -> selectTradeOfferPopup()));
+
+        timer.play();
+
+    }
+
     public static void selectTradeOfferPopup() {
 
         GameController.resetPopupBelow();
@@ -710,47 +766,34 @@ public class SceneManager extends Stage {
         Label generallOfferLabel = new Label("Wähle dein Angebot!");
         generallOfferLabel.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
 
-        Label yourSideLabel = new Label("Deine Seite!");
+        Label yourSideLabel = new Label("Deine Seite");
         yourSideLabel.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
 
-        Label yourInfoLabel = new Label("Mehrere Grundstücke möglich!");
-        yourInfoLabel.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
-
-        Label yourPropsLabel = new Label("Welche Grundstücke bietest du:");
+        Label yourPropsLabel = new Label("Biete Grundstücke:");
         yourPropsLabel.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
 
-        Label yourMoneyLabel = new Label("Du hast " + Lobby.getPlayerClient().getPlayerOnClient().getMoney() + "€");
-        yourMoneyLabel.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
-
-        Label yourOfferMoneyLabel = new Label("Wieviel Geld bietetst du:");
+        Label yourOfferMoneyLabel = new Label("Wieviel " + currency + " bietetst du:");
         yourOfferMoneyLabel.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
 
-        Label yourCardLabel = new Label("Du hast " + Lobby.getPlayerClient().getPlayerOnClient().getCardStack().countCardsOfAction(CardAction.JAIL) + " Gefängnisfreikarten");
+        Label yourCardLabel = new Label("Gefängnisfreikarten: " + Lobby.getPlayerClient().getPlayerOnClient().getCardStack().countCardsOfAction(CardAction.JAIL));
         yourCardLabel.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
 
-        Label yourOfferCardLabel = new Label("Wie viele Karten bietest du:");
+        Label yourOfferCardLabel = new Label("Biete Karten:");
         yourOfferCardLabel.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
 
-        Label rivalsSideLabel = new Label("Seite von " + tradePartner.getName());
+        Label rivalsSideLabel = new Label("Tauschpartners Seite");
         rivalsSideLabel.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
 
-        Label rivalsInfoLabel = new Label("Mehrere Grundstücke möglich!");
-        rivalsInfoLabel.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
-
-        Label rivalsPropsLabel = new Label("Welche Grundstücke willst du:");
+        Label rivalsPropsLabel = new Label("Verlange Grundstücke:");
         rivalsPropsLabel.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
 
-        Label rivalsMoneyLabel = new Label(tradePartner.getName() + " hat " + tradePartner.getMoney() + "€");
-        rivalsMoneyLabel.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
-
-        Label rivalsOfferMoneyLabel = new Label("Wieviel Geld willst du:");
+        Label rivalsOfferMoneyLabel = new Label("Verlange Geld:");
         rivalsOfferMoneyLabel.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
 
-        Label rivalsCardLabel = new Label(tradePartner.getName() + " hat " + tradePartner.getCardStack().countCardsOfAction(CardAction.JAIL)
-                + " Gefängnisfreikarten");
+        Label rivalsCardLabel = new Label("Gefängnisfreikarten: " + tradePartner.getCardStack().countCardsOfAction(CardAction.JAIL));
         rivalsCardLabel.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
 
-        Label rivalsOfferCardLabel = new Label("Wie viele Karten willst du:");
+        Label rivalsOfferCardLabel = new Label("Verlange Karten:");
         rivalsOfferCardLabel.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
 
         //Button(s)
@@ -763,10 +806,14 @@ public class SceneManager extends Stage {
         //MenuButton(s)
         MenuButton yourPropsMeButton = new MenuButton();
         MenuButton rivalsPropsMeButton = new MenuButton();
+        //Seperator(en)
+        Separator separateLblFromTrade = new Separator();
+        Separator separateYouFromRival = new Separator(Orientation.VERTICAL);
 
         //Einstellung der benoetigten Objekte
         //MenuBotton(s) fuellen
-        yourPropsMeButton.getItems().addAll(playersProps);
+        yourPropsMeButton
+                .getItems().addAll(playersProps);
         rivalsPropsMeButton.getItems().addAll(rivalsProps);
         //GridPane(s)
         tradeOfferGridPane.setAlignment(Pos.CENTER);
@@ -784,16 +831,26 @@ public class SceneManager extends Stage {
         //Main VBox
         tradeOfferVBox.setStyle(cssLayout);
         tradeOfferVBox.setSpacing(10);
-        tradeOfferVBox.setPrefSize(700, 200);
-        tradeOfferVBox.setCenterShape(true);
-        tradeOfferVBox.getChildren().addAll(generallOfferLabel, tradeOfferHBox);
-        //MainHBoy
-        tradeOfferHBox.getChildren().addAll(yourPropsOfferVBox, yourTradeOfferVBox, rivalsPropsOfferVBox, rivalsTradeOfferVBox);
+        tradeOfferVBox.setPrefSize(800, 200);
+        tradeOfferVBox.setAlignment(Pos.CENTER);
+        tradeOfferVBox.getChildren().addAll(generallOfferLabel, separateLblFromTrade, tradeOfferHBox);
+        //MainHBox
+        tradeOfferHBox.getChildren().addAll(yourPropsOfferVBox, yourTradeOfferVBox, separateYouFromRival, rivalsPropsOfferVBox, rivalsTradeOfferVBox);
         //VBox(en)
-        yourPropsOfferVBox.getChildren().addAll(yourSideLabel, yourInfoLabel, yourPropsLabel, yourPropsMeButton, offerTradeButton);
-        yourTradeOfferVBox.getChildren().addAll(yourMoneyLabel, yourOfferMoneyLabel, yourMoneyTextField, yourCardLabel, yourOfferCardLabel, yourCardsTextField);
-        rivalsPropsOfferVBox.getChildren().addAll(rivalsSideLabel, rivalsInfoLabel, rivalsPropsLabel, rivalsPropsMeButton);
-        rivalsTradeOfferVBox.getChildren().addAll(rivalsMoneyLabel, rivalsOfferMoneyLabel, rivalsMoneyTextField, rivalsCardLabel, rivalsOfferCardLabel, rivalsCardsTextField);
+        //Groessen und Abstaende
+        yourPropsOfferVBox.setPrefSize(199, 175);
+        yourPropsOfferVBox.setSpacing(18);
+        yourTradeOfferVBox.setPrefSize(199, 175);
+        yourTradeOfferVBox.setSpacing(8);
+        rivalsPropsOfferVBox.setPrefSize(199, 175);
+        rivalsPropsOfferVBox.setSpacing(18);
+        rivalsTradeOfferVBox.setPrefSize(199, 175);
+        rivalsTradeOfferVBox.setSpacing(8);
+        //Elemente hinzufuegen
+        yourPropsOfferVBox.getChildren().addAll(yourSideLabel, yourPropsLabel, yourPropsMeButton, offerTradeButton);
+        yourTradeOfferVBox.getChildren().addAll(yourOfferMoneyLabel, yourMoneyTextField, yourCardLabel, yourOfferCardLabel, yourCardsTextField);
+        rivalsPropsOfferVBox.getChildren().addAll(rivalsSideLabel, rivalsPropsLabel, rivalsPropsMeButton);
+        rivalsTradeOfferVBox.getChildren().addAll(rivalsOfferMoneyLabel, rivalsMoneyTextField, rivalsCardLabel, rivalsOfferCardLabel, rivalsCardsTextField);
 
         if (GameController != null) {
             GameController.setPopupBellow(tradeOfferGridPane);
