@@ -84,7 +84,7 @@ public class MonopolyBoard extends Group
     
     private void initBoard()
     {
-        boardModel.setMaterial(FxHelper.getMaterialFor(Assets.getImage("board")));
+        boardModel.setMaterial(FxHelper.getMaterialFor(Assets.getImage("game_board")));
         boardModel.setOnMousePressed(this::setDragPoint);
         boardModel.setOnMouseDragged(event ->
         {

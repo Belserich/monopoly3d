@@ -74,7 +74,7 @@ public class Assets
     {
         registeredImages.put("3d_rotation", loadImage(IMAGE_3D_PATH));
         
-        registeredImages.put("board", loadImage(BOARD_PATH));
+        registeredImages.put("game_board", loadImage(BOARD_PATH));
         
         registeredImages.put("corner_0", loadImage(CORNER_0_PATH));
         registeredImages.put("corner_1", loadImage(CORNER_1_PATH));
