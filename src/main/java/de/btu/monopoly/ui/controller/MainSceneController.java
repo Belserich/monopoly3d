@@ -603,7 +603,12 @@ public class MainSceneController implements Initializable {
                             fadeButton.setToValue(1);
                             fadeButton.playFromStart();
                             player0.setVisible(true);
-                            player0Button.setText(Lobby.getUsers()[i][1]);
+                            if (Lobby.getUsers()[i][1].contains("(")) {
+                                player0Button.setText(Lobby.getUsers()[i][1].substring(0, Lobby.getUsers()[i][1].indexOf('(') - 1));
+                            }
+                            else {
+                                player0Button.setText(Lobby.getUsers()[i][1]);
+                            }
                             player0Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[i][4]), CornerRadii.EMPTY, Insets.EMPTY)));
                             if (Color.web(Lobby.getUsers()[i][4]).getBrightness() <= 0.8) {
                                 player0Button.setTextFill(Color.WHITE);
@@ -626,7 +631,12 @@ public class MainSceneController implements Initializable {
                                     fadeButton.setToValue(1);
                                     fadeButton.playFromStart();
                                     player1.setVisible(true);
-                                    player1Button.setText(Lobby.getUsers()[i][1]);
+                                    if (Lobby.getUsers()[i][1].contains("(")) {
+                                        player1Button.setText(Lobby.getUsers()[i][1].substring(0, Lobby.getUsers()[i][1].indexOf('(') - 1));
+                                    }
+                                    else {
+                                        player1Button.setText(Lobby.getUsers()[i][1]);
+                                    }
                                     player1Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[i][4]), CornerRadii.EMPTY, Insets.EMPTY)));
                                     if (Color.web(Lobby.getUsers()[i][4]).getBrightness() <= 0.8) {
                                         player1Button.setTextFill(Color.WHITE);
@@ -650,7 +660,12 @@ public class MainSceneController implements Initializable {
                                     fadeButton.setToValue(1);
                                     fadeButton.playFromStart();
                                     player2.setVisible(true);
-                                    player2Button.setText(Lobby.getUsers()[i][1]);
+                                    if (Lobby.getUsers()[i][1].contains("(")) {
+                                        player2Button.setText(Lobby.getUsers()[i][1].substring(0, Lobby.getUsers()[i][1].indexOf('(') - 1));
+                                    }
+                                    else {
+                                        player2Button.setText(Lobby.getUsers()[i][1]);
+                                    }
                                     player2Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[i][4]), CornerRadii.EMPTY, Insets.EMPTY)));
                                     if (Color.web(Lobby.getUsers()[i][4]).getBrightness() <= 0.8) {
                                         player2Button.setTextFill(Color.WHITE);
@@ -673,7 +688,12 @@ public class MainSceneController implements Initializable {
                                     fadeButton.setToValue(1);
                                     fadeButton.playFromStart();
                                     player3.setVisible(true);
-                                    player3Button.setText(Lobby.getUsers()[i][1]);
+                                    if (Lobby.getUsers()[i][1].contains("(")) {
+                                        player3Button.setText(Lobby.getUsers()[i][1].substring(0, Lobby.getUsers()[i][1].indexOf('(') - 1));
+                                    }
+                                    else {
+                                        player3Button.setText(Lobby.getUsers()[i][1]);
+                                    }
                                     player3Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[i][4]), CornerRadii.EMPTY, Insets.EMPTY)));
                                     if (Color.web(Lobby.getUsers()[i][4]).getBrightness() <= 0.8) {
                                         player3Button.setTextFill(Color.WHITE);
@@ -696,7 +716,12 @@ public class MainSceneController implements Initializable {
                                     fadeButton.setToValue(1);
                                     fadeButton.playFromStart();
                                     player4.setVisible(true);
-                                    player4Button.setText(Lobby.getUsers()[i][1]);
+                                    if (Lobby.getUsers()[i][1].contains("(")) {
+                                        player4Button.setText(Lobby.getUsers()[i][1].substring(0, Lobby.getUsers()[i][1].indexOf('(') - 1));
+                                    }
+                                    else {
+                                        player4Button.setText(Lobby.getUsers()[i][1]);
+                                    }
                                     player4Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[i][4]), CornerRadii.EMPTY, Insets.EMPTY)));
                                     if (Color.web(Lobby.getUsers()[i][4]).getBrightness() <= 0.8) {
                                         player4Button.setTextFill(Color.WHITE);
@@ -719,7 +744,12 @@ public class MainSceneController implements Initializable {
                                     fadeButton.setToValue(1);
                                     fadeButton.playFromStart();
                                     player5.setVisible(true);
-                                    player5Button.setText(Lobby.getUsers()[i][1]);
+                                    if (Lobby.getUsers()[i][1].contains("(")) {
+                                        player5Button.setText(Lobby.getUsers()[i][1].substring(0, Lobby.getUsers()[i][1].indexOf('(') - 1));
+                                    }
+                                    else {
+                                        player5Button.setText(Lobby.getUsers()[i][1]);
+                                    }
                                     player5Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[i][4]), CornerRadii.EMPTY, Insets.EMPTY)));
                                     if (Color.web(Lobby.getUsers()[i][4]).getBrightness() <= 0.8) {
                                         player5Button.setTextFill(Color.WHITE);
@@ -1158,105 +1188,67 @@ public class MainSceneController implements Initializable {
         Task task = new Task() {
             @Override
             protected Object call() throws Exception {
-
                 geld0.setText("Geld: " + players[client.getPlayerOnClient().getId()].getMoney());
-                player0Geld.add(geld0, 0, 0);
                 return null;
             }
-
         };
         Platform.runLater(task);
-
     }
 
     private void geldUpdate1(Player[] players) {
         Task task = new Task() {
             @Override
             protected Object call() throws Exception {
-                for (int i = 0; i < players.length; i++) {
-                    if (player1Button.getText().equals(players[i].getName())) {
-                        geld1.setText("Geld: " + players[i].getMoney());
-                        player1Geld.add(geld1, 0, 0);
-                    }
-                }
+                geld1.setText("Geld: " + players[player1ButtonID].getMoney());
                 return null;
             }
-
         };
         Platform.runLater(task);
-
     }
 
     private void geldUpdate2(Player[] players) {
         Task task = new Task() {
             @Override
             protected Object call() throws Exception {
-                for (int i = 0; i < players.length; i++) {
-                    if (player2Button.getText().equals(players[i].getName())) {
-                        geld2.setText("Geld: " + players[i].getMoney());
-                        player2Geld.add(geld2, 0, 0);
-                    }
-                }
+                geld2.setText("Geld: " + players[player2ButtonID].getMoney());
+                player2Geld.add(geld2, 0, 0);
                 return null;
             }
-
         };
         Platform.runLater(task);
-
     }
 
     private void geldUpdate3(Player[] players) {
         Task task = new Task() {
             @Override
             protected Object call() throws Exception {
-                for (int i = 0; i < players.length; i++) {
-                    if (player3Button.getText().equals(players[i].getName())) {
-                        geld3.setText("Geld: " + players[i].getMoney());
-                        player3Geld.add(geld3, 0, 0);
-                    }
-                }
+                geld3.setText("Geld: " + players[player3ButtonID].getMoney());
                 return null;
             }
-
         };
         Platform.runLater(task);
-
     }
 
     private void geldUpdate4(Player[] players) {
         Task task = new Task() {
             @Override
             protected Object call() throws Exception {
-                for (int i = 0; i < players.length; i++) {
-                    if (player4Button.getText().equals(players[i].getName())) {
-                        geld4.setText("Geld: " + players[i].getMoney());
-                        player4Geld.add(geld4, 0, 0);
-                    }
-                }
+                geld4.setText("Geld: " + players[player4ButtonID].getMoney());
                 return null;
             }
-
         };
         Platform.runLater(task);
-
     }
 
     private void geldUpdate5(Player[] players) {
         Task task = new Task() {
             @Override
             protected Object call() throws Exception {
-                for (int i = 0; i < players.length; i++) {
-                    if (player5Button.getText().equals(players[i].getName())) {
-                        geld5.setText("Geld: " + players[i].getMoney());
-                        player5Geld.add(geld5, 0, 0);
-                    }
-                }
+                geld5.setText("Geld: " + players[player5ButtonID].getMoney());
                 return null;
             }
-
         };
         Platform.runLater(task);
-
     }
 
     /**

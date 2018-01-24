@@ -636,10 +636,12 @@ public class LobbyController implements Initializable {
                 else {
                     // Fehlermeldung in ComboBox
                     kiNameTextField.setPromptText("Bitte einen Namen eingeben!");
+                    kiNameTextField.setText("");
                 }
             }
             else {
                 kiNameTextField.setPromptText("Maximale KI Anzahl!");
+                kiNameTextField.setText("");
             }
 
         }

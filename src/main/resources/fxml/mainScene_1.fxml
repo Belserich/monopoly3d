@@ -889,7 +889,11 @@
         </GridPane>
         <GridPane fx:id="grid2" GridPane.columnIndex="2">
             <children>
-                <JFXButton fx:id="player0Button" buttonType="RAISED" opacity="0.0" prefHeight="80.0" prefWidth="150.0" text="frei" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+                <JFXButton fx:id="player0Button" buttonType="RAISED" opacity="0.0" prefHeight="80.0" prefWidth="150.0" text="frei" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                    <font>
+                              <Font size="18.0" />
+                           </font>    
+                </JFXButton>
                 <GridPane GridPane.columnIndex="1" GridPane.rowIndex="3">
                     <children>
                         <JFXTextArea fx:id="textArea" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" />
@@ -966,15 +970,31 @@
         </GridPane>
         <GridPane fx:id="grid">
             <children>
-                <JFXButton fx:id="player1Button" buttonType="RAISED" opacity="0.0" prefHeight="80.0" prefWidth="150.0" text="frei" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+                <JFXButton fx:id="player1Button" buttonType="RAISED" opacity="0.0" prefHeight="80.0" prefWidth="150.0" text="frei" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                            <font>
+                              <Font size="18.0" />
+                           </font>    
+                </JFXButton>           
                 <JFXButton fx:id="player2Button" buttonType="RAISED" opacity="0.0" prefHeight="80.0" prefWidth="150.0" text="frei" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
-                    <GridPane.margin>
-                  
-                    </GridPane.margin>
+                    <font>
+                              <Font size="18.0" />
+                           </font>    
                 </JFXButton>
-                <JFXButton fx:id="player3Button" buttonType="RAISED" opacity="0.0" prefHeight="80.0" prefWidth="150.0" text="frei" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER" />
-                <JFXButton fx:id="player4Button" buttonType="RAISED" opacity="0.0" prefHeight="80.0" prefWidth="150.0" text="frei" GridPane.halignment="CENTER" GridPane.rowIndex="6" GridPane.valignment="CENTER" />
-                <JFXButton fx:id="player5Button" buttonType="RAISED" opacity="0.0" prefHeight="80.0" prefWidth="150.0" text="frei" GridPane.halignment="CENTER" GridPane.rowIndex="8" GridPane.valignment="CENTER" />
+                <JFXButton fx:id="player3Button" buttonType="RAISED" opacity="0.0" prefHeight="80.0" prefWidth="150.0" text="frei" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER">
+                    <font>
+                              <Font size="18.0" />
+                           </font>    
+                </JFXButton>
+                <JFXButton fx:id="player4Button" buttonType="RAISED" opacity="0.0" prefHeight="80.0" prefWidth="150.0" text="frei" GridPane.halignment="CENTER" GridPane.rowIndex="6" GridPane.valignment="CENTER">
+                    <font>
+                              <Font size="18.0" />
+                           </font>    
+                </JFXButton>
+                <JFXButton fx:id="player5Button" buttonType="RAISED" opacity="0.0" prefHeight="80.0" prefWidth="150.0" text="frei" GridPane.halignment="CENTER" GridPane.rowIndex="8" GridPane.valignment="CENTER">
+                    <font>
+                              <Font size="18.0" />
+                           </font>    
+                </JFXButton>
                 <GridPane fx:id="player1Geld" GridPane.rowIndex="1">
                     <children>
                         <Label fx:id="geld1" alignment="CENTER" layoutX="10.0" layoutY="21.0" prefHeight="33.0" prefWidth="156.0" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
