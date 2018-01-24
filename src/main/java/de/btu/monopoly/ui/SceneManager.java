@@ -80,7 +80,7 @@ public class SceneManager extends Stage {
 
                 Optional<ButtonType> result = alert.showAndWait();
                 if (result.get() == ButtonType.OK) {
-                    System.exit(0);
+                    System.exit(0);//NOSONAR
                 }
                 else {
                     event.consume();
