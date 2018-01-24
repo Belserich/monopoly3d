@@ -6,21 +6,19 @@
 package de.btu.monopoly.core.service;
 
 import de.btu.monopoly.GlobalSettings;
+import de.btu.monopoly.core.Game;
 import de.btu.monopoly.core.GameBoard;
 import de.btu.monopoly.core.mechanics.Auction;
 import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.ki.EasyKi;
 import de.btu.monopoly.ki.HardKi;
-import de.btu.monopoly.ki.MediumKi;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.data.BroadcastPlayerChoiceRequest;
 import de.btu.monopoly.ui.SceneManager;
 import de.btu.monopoly.ui.TextAreaHandler;
-
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Random;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -37,6 +35,7 @@ public class IOService {
     private static int JAIL = 0;
     private static int ACTION = 1;
     private static int BUY = 2;
+    private static int FIELD = 3;
 
     public static int jailChoice(Player player) {
         int choice = -1;
@@ -46,17 +45,14 @@ public class IOService {
                     choice = getClientChoice(player, 3);
                 }
                 else {
-                    choice = getClientChoiceFromGUI(player, JAIL);
+                    choice = getClientChoiceFromGUI(player, JAIL, null);
                 }
                 break;
             case 1:
                 choice = EasyKi.jailOption(player);
                 break;
             case 2:
-                choice = MediumKi.jailOption(player);
-                break;
-            case 3:
-                choice = HardKi.jailOption(player, client);
+                choice = HardKi.jailOption(player);
                 break;
             default:
                 LOGGER.warning("Illegale KI-Stufe in JailChoice registriert");
@@ -64,7 +60,7 @@ public class IOService {
         return choice;
     }
 
-    public static int buyPropertyChoice(Player player, PropertyField prop, Random random) {
+    public static int buyPropertyChoice(Player player, PropertyField prop) {
         int choice = -1;
         switch (player.getAiLevel()) {
             case 0:
@@ -73,17 +69,14 @@ public class IOService {
                     choice = getClientChoice(player, 2);
                 }
                 else {
-                    choice = getClientChoiceFromGUI(player, BUY);
+                    choice = getClientChoiceFromGUI(player, BUY, null);
                 }
 
                 break;
             case 1:
-                choice = EasyKi.buyPropOption(player, prop, random);
+                choice = EasyKi.buyPropOption(player, prop);
                 break;
             case 2:
-                choice = MediumKi.buyPropOption(player, prop);
-                break;
-            case 3:
                 choice = HardKi.buyPropOption(player, prop);
                 break;
             default:
@@ -92,26 +85,22 @@ public class IOService {
         return choice;
     }
 
-    // wird noch zu void, wenn GUI fertig
     public static int actionSequence(Player player, GameBoard board) {
-        int choice = 1; //kommt weg
+        int choice = 1;
         switch (player.getAiLevel()) {
             case 0:
                 if (GlobalSettings.RUN_IN_CONSOLE) {
                     choice = getClientChoice(player, 6);
                 }
                 else {
-                    choice = getClientChoiceFromGUI(player, ACTION);
+                    choice = getClientChoiceFromGUI(player, ACTION, null);
                 }
                 break;
             case 1:
-                choice = EasyKi.processActionSequence(player, board);
+                choice = EasyKi.processActionSequence();
                 break;
             case 2:
-                MediumKi.processActionSequence(player, board);
-                break;
-            case 3:
-                HardKi.processActionSequence(player, board);
+                choice = HardKi.processActionSequence(player, board);
                 break;
             default:
                 LOGGER.warning("Illegale KI-Stufe in JailChoice registriert");
@@ -133,13 +122,10 @@ public class IOService {
             case 0:
                 break;
             case 1:
-                EasyKi.processBetSequence(rndKi);
+                EasyKi.processBetSequence(rndKi, EasyKi.getMAXIMUM_BID());
                 break;
             case 2:
-                MediumKi.processBetSequence();
-                break;
-            case 3:
-                HardKi.processBetSequence();
+                HardKi.processBetSequence(rndKi);
                 break;
             default:
                 LOGGER.warning("Illegale KI-Stufe in BetSequence registriert");
@@ -168,7 +154,7 @@ public class IOService {
         }
     }
 
-    public static int getClientChoiceFromGUI(Player player, int type) {
+    public static int getClientChoiceFromGUI(Player player, int type, String[] fields) {
         boolean isChoiceFromThisClient = player == client.getPlayerOnClient();
         if (!GlobalSettings.RUN_AS_TEST && !GlobalSettings.RUN_IN_CONSOLE) {
             TextAreaHandler logHandler = new TextAreaHandler();
@@ -184,6 +170,9 @@ public class IOService {
             }
             if (type == BUY) {
                 choice = SceneManager.buyPropertyPopup();
+            }
+            if (type == FIELD) {
+                choice = SceneManager.askForFieldPopup(player, fields);
             }
 
             BroadcastPlayerChoiceRequest packet = new BroadcastPlayerChoiceRequest();
@@ -216,7 +205,7 @@ public class IOService {
             Thread.currentThread().interrupt();
         }
     }
-    
+
     /**
      * Nimmt Spielereingaben entgegen.
      *
@@ -233,38 +222,43 @@ public class IOService {
             } catch (NumberFormatException ex) {
                 LOGGER.log(Level.WARNING, "Fehler: falsche Eingabe!");
             }
-            
+
             if (output < 1 || output > max) {
                 LOGGER.log(Level.INFO, "Deine Eingabe liegt nicht im Wertebereich! Bitte erneut versuchen.");
             }
-        }
-        while (output < 1 || output > max);
+        } while (output < 1 || output > max);
         return output;
     }
-    
+
     /**
-     * Methode zum Auswaehen einer Strasse die Bearbeitet werden soll in der actionPhase()
+     * Methode zum Auswaehen einer Strasse die Bearbeitet werden soll in der
+     * actionPhase()
      *
      * @param player Spieler der eine Eingabe machen soll
      * @param fieldNames Namen der zur Wahl stehenden Felder
      * @return ein int Wert zu auswaehen einer Strasse
      */
     public static int askForField(Player player, String[] fieldNames) {
+
+        String mesg = player.getName() + "! Wähle ein Feld:\n";
+        for (int i = 0; i < fieldNames.length; i++) {
+            mesg += String.format("[%d] - %s%n", i + 1, fieldNames[i]);
+        }
+        LOGGER.info(mesg);
         if (GlobalSettings.RUN_IN_CONSOLE) {
-            String mesg = player.getName() + "! Wähle ein Feld:\n";
-            for (int i = 0; i < fieldNames.length; i++) {
-                mesg += String.format("[%d] - %s%n", i + 1, fieldNames[i]);
-            }
-            LOGGER.info(mesg);
             return IOService.getClientChoice(player, 39);
         }
         else {
-            return SceneManager.askForFieldPopup(player, fieldNames);
+            return IOService.getClientChoiceFromGUI(player, FIELD, fieldNames);
         }
     }
-    
+
     public static String askForString() {
         Scanner scanner = new Scanner(System.in);
         return scanner.nextLine();
+    }
+
+    public static Game getGame() {
+        return client.getGame();
     }
 }

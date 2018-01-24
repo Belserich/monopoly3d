@@ -31,7 +31,7 @@ public class ClientListener extends Listener {
 
         if (!(object instanceof FrameworkMessage)) {
     
-            NetworkService.logServerReceiveMessage(object);
+            
             synchronized (receivedObjects) {
                 receivedObjects.add(object);
             }

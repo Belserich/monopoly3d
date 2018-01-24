@@ -45,7 +45,8 @@ public class SupplyField extends PropertyField {
 
     @Override
     public String toString() {
-        return String.format("[Versorgungswerk] Name: %s, Preis: %s, Multiplikator1: %s, Multiplikator2: %s, Hypothekswert: %s, Hypotheksrückwert: %s",
+        return String.format("[Versorgungswerk] %nName: %s, %nPreis: %s, "
+                + "%nMultiplikator1: %s, %nMultiplikator2: %s, %nHypothekswert: %s, %nHypotheksrückwert: %s",
                 getName(), getPrice(), mult1, mult2, getMortgageValue(), getMortgageBack());
     }
 }

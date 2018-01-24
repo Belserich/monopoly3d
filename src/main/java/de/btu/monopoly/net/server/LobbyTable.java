@@ -10,10 +10,10 @@ import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 import de.btu.monopoly.core.service.NetworkService;
 import de.btu.monopoly.net.data.lobby.*;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.logging.Logger;
+import javafx.scene.paint.Color;
 
 /**
  *
@@ -68,7 +68,8 @@ public class LobbyTable extends Listener {
         tempusers[slot][1] = name;
         tempusers[slot][2] = connectionString;
         tempusers[slot][3] = Integer.toString(kiLevel);
-        tempusers[slot][4] = "0xffffffff";
+        tempusers[slot][4] = (new Color(Math.random(), Math.random(), Math.random(), 1)).toString();
+
         users = tempusers;
 
         if (kiLevel == 0) {
@@ -166,14 +167,14 @@ public class LobbyTable extends Listener {
         JoinResponse joinres = new JoinResponse();
         joinres.setId(id);
         joinres.setSeed(randomSeed);
-        NetworkService.logServerSendMessage(joinres);
+        
         connection.sendTCP(joinres);
     }
 
     public void refreshLobbyResponse() {
         RefreshLobbyResponse refres = new RefreshLobbyResponse();
         refres.setUsers(users);
-        NetworkService.logServerSendMessage(refres);
+        
         server.sendToAllTCP(refres);
     }
 
@@ -181,7 +182,7 @@ public class LobbyTable extends Listener {
         shuffle();
         refreshLobbyResponse();
         GamestartResponse gares = new GamestartResponse();
-        NetworkService.logServerSendMessage(gares);
+        
         server.sendToAllTCP(gares);
     }
 
@@ -190,40 +191,44 @@ public class LobbyTable extends Listener {
     public void received(Connection connection, Object object) {
 
         if (object instanceof JoinRequest) {
-            NetworkService.logServerReceiveMessage(object);
+            
             if (!gameStarted) {
                 JoinRequest joinreq = (JoinRequest) object;
                 registerUser(joinreq.getName(), connection, 0);
             }
             else {
-                NetworkService.logServerSendMessage(new JoinImpossibleResponse());
+                
                 connection.sendTCP(new JoinImpossibleResponse());
             }
         }
+        else if (object instanceof DeleteUserRequest) {
+            DeleteUserRequest del = (DeleteUserRequest) object;
+            deleteUser(connection, del.getId());
+        }
         else if (object instanceof AddKiRequest) {
-            NetworkService.logServerReceiveMessage(object);
+            
             AddKiRequest akr = (AddKiRequest) object;
             registerUser(akr.getName(), connection, akr.getKiLevel());
         }
         else if (object instanceof ChangeUsernameRequest) {
-            NetworkService.logServerReceiveMessage(object);
+            
             ChangeUsernameRequest chanreq = (ChangeUsernameRequest) object;
             changeUserName(chanreq.getUserId(), chanreq.getUserName());
         }
         else if (object instanceof ChangeUsercolorRequest) {
-            NetworkService.logServerReceiveMessage(object);
+            
             ChangeUsercolorRequest chanreq = (ChangeUsercolorRequest) object;
             changeUserColor(chanreq.getUserId(), chanreq.getUserColor());
         }
         else if (object instanceof GamestartRequest) {
-            NetworkService.logServerReceiveMessage(object);
+            
             gameStarted = true;
             shuffle();
             refreshLobbyResponse();
             gamestartResponse();
         }
         else if (object instanceof BroadcastRandomSeedRequest) {
-            NetworkService.logServerReceiveMessage(object);
+            
             BroadcastRandomSeedRequest req = (BroadcastRandomSeedRequest) object;
             randomSeed = req.getSeed();
         }

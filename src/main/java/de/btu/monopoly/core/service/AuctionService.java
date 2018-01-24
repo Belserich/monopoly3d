@@ -13,7 +13,6 @@ import de.btu.monopoly.net.data.ExitAuctionRequest;
 import de.btu.monopoly.net.data.JoinAuctionRequest;
 import de.btu.monopoly.ui.SceneManager;
 import de.btu.monopoly.ui.TextAreaHandler;
-
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,9 +21,9 @@ import java.util.logging.Logger;
  * @author patrick
  */
 public class AuctionService extends Listener {
-    
+
     private static final Logger LOGGER = Logger.getLogger(AuctionService.class.getCanonicalName());
-    
+
     private static Auction auc;
 
     /**
@@ -54,11 +53,11 @@ public class AuctionService extends Listener {
 
         auc.setProperty(prop);
         JoinAuctionRequest jaReq = new JoinAuctionRequest();
-        NetworkService.logClientSendMessage(jaReq, auc.getPlayerName());
+        
         auc.getClient().sendTCP(jaReq);
-        SceneManager.AuctionPopup();
-        IOService.sleepDeep(1500);
         if (!GlobalSettings.RUN_AS_TEST) { // nicht fuer Test
+            SceneManager.auctionPopup();
+            SceneManager.bidTextFieldFocus();
             while (auctionRun) {
                 IOService.sleepDeep(500);
                 if (GlobalSettings.RUN_IN_CONSOLE) { // nur fuer @Console
@@ -78,14 +77,13 @@ public class AuctionService extends Listener {
                 }
                 else { //Nur fuer @GUI
                     /*
-                    Falls nur noch ein Bieter uebrig ist, hat dieser dank dem Boolean auctionRun noch
-                    die Moeglichkeit weiterhin zu bieten, so lange der (weiter unten implementierte) Countdown
-                    noch laeuft.
+                     * Falls nur noch ein Bieter uebrig ist, hat dieser dank dem Boolean auctionRun noch die Moeglichkeit
+                     * weiterhin zu bieten, so lange der (weiter unten implementierte) Countdown noch laeuft.
                      */
                     if (!auctionStillActive()) {
                         /*
-                        Falls das Gebot 0 betraegt und nur noch 1 Bieter uebrig ist, bekommt dieser
-                        die Chance innerhalb des (weiter unten implementierten) Countdowns zu bieten.
+                         * Falls das Gebot 0 betraegt und nur noch 1 Bieter uebrig ist, bekommt dieser die Chance innerhalb des
+                         * (weiter unten implementierten) Countdowns zu bieten.
                          */
                         if (AuctionService.getHighestBid() == 0) {
                             noBidder = true;
@@ -163,7 +161,7 @@ public class AuctionService extends Listener {
             BidRequest bidReq = new BidRequest();
             bidReq.setBid(bid);
             bidReq.setPlayerID(playerID);
-            NetworkService.logClientSendMessage(bidReq, auc.getPlayerName());
+            
             auc.getClient().sendTCP(bidReq);
         }
 
@@ -179,7 +177,7 @@ public class AuctionService extends Listener {
 
         ExitAuctionRequest exReq = new ExitAuctionRequest();
         exReq.setPlayerID(playerID);
-        NetworkService.logClientSendMessage(exReq, auc.getPlayerName());
+        
         auc.getClient().sendTCP(exReq);
 
     }
@@ -226,7 +224,7 @@ public class AuctionService extends Listener {
     public void received(Connection connection, Object object) {
 
         if (object instanceof BroadcastAuctionResponse) {
-            NetworkService.logClientReceiveMessage(object, auc.getPlayerName());
+            
             auc.setAucPlayers(((BroadcastAuctionResponse) object).getAucPlayers());
             auc.setHighestBid(((BroadcastAuctionResponse) object).getHighestBid());
             auc.setHighestBidder(((BroadcastAuctionResponse) object).getHighestBidder());

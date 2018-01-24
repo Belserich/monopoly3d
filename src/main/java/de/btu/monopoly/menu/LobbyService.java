@@ -10,20 +10,18 @@ import com.esotericsoftware.kryonet.Listener;
 import de.btu.monopoly.GlobalSettings;
 import de.btu.monopoly.core.Game;
 import de.btu.monopoly.core.service.IOService;
-import de.btu.monopoly.core.service.NetworkService;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.data.lobby.*;
 import de.btu.monopoly.net.server.AuctionTable;
 import de.btu.monopoly.ui.SceneManager;
-import javafx.scene.paint.Color;
-
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.scene.paint.Color;
 
 /**
  *
@@ -85,7 +83,7 @@ public class LobbyService extends Listener {
      * @param kiLevel des Computerspielers [1,3]
      */
     public static void addKI(String name, int kiLevel) {
-        if (kiLevel < 1 || kiLevel > 3) {
+        if (kiLevel < 1 || kiLevel > 2) {
             LOGGER.warning("kein gültiges KI Level eingegeben!");
         }
         else {
@@ -93,7 +91,6 @@ public class LobbyService extends Listener {
             req.setKiLevel(kiLevel);
             req.setName(name);
             lobby.getPlayerClient().sendTCP(req);
-            NetworkService.logClientSendMessage(req, lobby.getPlayerName());
         }
 
     }
@@ -157,8 +154,7 @@ public class LobbyService extends Listener {
     }
 
     /**
-     * erzeugt aus dem users[][] ein Player[], welches fuer das Spiel benoetigt
-     * wird
+     * erzeugt aus dem users[][] ein Player[], welches fuer das Spiel benoetigt wird
      *
      * @return Player[] fuer den Parameter der Game Instanz
      */
@@ -192,7 +188,6 @@ public class LobbyService extends Listener {
         BroadcastRandomSeedRequest req = new BroadcastRandomSeedRequest();
         req.setSeed(seed);
         lobby.getPlayerClient().sendTCP(req);
-        NetworkService.logClientSendMessage(req, lobby.getPlayerName());
     }
 
     public static Lobby getLobby() {
@@ -203,7 +198,6 @@ public class LobbyService extends Listener {
     public static void joinRequest() {
         JoinRequest req = new JoinRequest();
         req.setName(lobby.getPlayerName());
-        NetworkService.logClientSendMessage(req, lobby.getPlayerName());
         lobby.getPlayerClient().sendTCP(req);
 
     }
@@ -212,7 +206,6 @@ public class LobbyService extends Listener {
         ChangeUsernameRequest req = new ChangeUsernameRequest();
         req.setUserName(name);
         req.setUserId(id);
-        NetworkService.logClientSendMessage(req, lobby.getPlayerName());
         lobby.getPlayerClient().sendTCP(req);
     }
 
@@ -220,20 +213,17 @@ public class LobbyService extends Listener {
         ChangeUsercolorRequest req = new ChangeUsercolorRequest();
         req.setUserColor(colorString);
         req.setUserId(id);
-        NetworkService.logClientSendMessage(req, lobby.getPlayerName());
         lobby.getPlayerClient().sendTCP(req);
     }
 
     private static void deleteUserRequest(int id) {
         DeleteUserRequest req = new DeleteUserRequest();
         req.setId(id);
-        NetworkService.logClientSendMessage(req, lobby.getPlayerName());
         lobby.getPlayerClient().sendTCP(req);
     }
 
     public static void gamestartRequest() {
         GamestartRequest gaReq = new GamestartRequest();
-        NetworkService.logClientSendMessage(gaReq, lobby.getPlayerName());
         lobby.getPlayerClient().sendTCP(gaReq);
     }
 
@@ -242,32 +232,30 @@ public class LobbyService extends Listener {
     public void received(Connection connection, Object object) {
 
         if (object instanceof JoinImpossibleResponse) {
-            NetworkService.logClientReceiveMessage(object, lobby.getPlayerName());
             LOGGER.info("Spiel wurde bereits gestartet");
             Thread.interrupted();
         }
         else if (object instanceof JoinResponse) {
-            NetworkService.logClientReceiveMessage(object, lobby.getPlayerName());
             JoinResponse joinres = (JoinResponse) object;
             lobby.setPlayerId(joinres.getId());
             lobby.setRandomSeed(joinres.getSeed());
         }
         else if (object instanceof RefreshLobbyResponse) {
-            NetworkService.logClientReceiveMessage(object, lobby.getPlayerName());
             RefreshLobbyResponse refres = (RefreshLobbyResponse) object;
             lobby.setUsers(refres.getUsers());
 
-            try {
-                // lobby updaten
-                SceneManager.updateLobby();
-                // Kann später entfernt werden wenn Farben implementiert sind
-                SceneManager.updateLobbyColors();
-            } catch (InterruptedException ex) {
-                LOGGER.log(Level.WARNING, "lobby konnte nicht geupdated werden{0}", ex);
-                Thread.currentThread().interrupt();
+            if (!GlobalSettings.RUN_AS_TEST && !GlobalSettings.RUN_IN_CONSOLE) {
+                try {
+                    // Lobby updaten
+                    SceneManager.updateLobby();
+                    // Kann später entfernt werden wenn Farben implementiert sind
+                    SceneManager.updateLobbyColors();
+                } catch (InterruptedException ex) {
+                    LOGGER.log(Level.WARNING, "Lobby konnte nicht geupdated werden{0}", ex);
+                    Thread.currentThread().interrupt();
+                }
             }
-
-            System.out.println("Spieler in lobby: (Meine ID: " + lobby.getPlayerId() + ")");
+            System.out.println("Spieler in Lobby: (Meine ID: " + lobby.getPlayerId() + ")");
             for (int i = 0; i < lobby.getUsers().length; i++) {
                 System.out.print("[" + i + "] ");
                 System.out.println(lobby.getUsers()[i][1]);
@@ -278,7 +266,6 @@ public class LobbyService extends Listener {
 
         }
         else if (object instanceof GamestartResponse) {
-            NetworkService.logClientReceiveMessage(object, lobby.getPlayerName());
 
             // Scene bei anderen Spielern öffnen
             try {

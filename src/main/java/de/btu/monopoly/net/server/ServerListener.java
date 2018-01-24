@@ -33,15 +33,15 @@ public class ServerListener extends Listener {
         if (!(object instanceof FrameworkMessage)) {
 
             if (object instanceof BroadcastPlayerChoiceRequest) {
-                NetworkService.logServerReceiveMessage(object);
+                
                 server.sendToAllExceptTCP(connection.getID(), object);
             }
             else if (object instanceof PlayerTradeRequest) {
-                NetworkService.logServerReceiveMessage(object);
+                
                 server.sendToAllExceptTCP(connection.getID(), object);
             }
             else if (object instanceof PlayerTradeResponse) {
-                NetworkService.logServerReceiveMessage(object);
+                
                 server.sendToAllExceptTCP(connection.getID(), object);
             }
         }

@@ -10,11 +10,12 @@ import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
 import de.btu.monopoly.core.service.AuctionService;
 import de.btu.monopoly.core.service.IOService;
-import de.btu.monopoly.data.field.Field;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.menu.Lobby;
 import de.btu.monopoly.ui.controller.LobbyController;
 import de.btu.monopoly.ui.controller.MainSceneController;
+import java.io.IOException;
+import java.util.Optional;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
@@ -29,6 +30,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -36,31 +38,36 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
-import java.io.IOException;
-import java.util.Optional;
-
 /**
  *
  * @author augat
  */
 public class SceneManager extends Stage {
 
-    private Stage stage;
+    private static Stage stage;
     private static Scene scene;
+    private static Parent lobbyRoot;
     private static LobbyController LobbyController;
     private static MainSceneController GameController;
     private static Label auctionLabel = new Label("0 €");
-    private static GridPane auctionGP = new GridPane();
     private static Label hoechstgebotLabel = new Label("Höchstgebot:");
+    private static JFXTextField bidTextField = new JFXTextField();
 
     public SceneManager() throws IOException {
         stage = this;
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/menu_scene.fxml"));
 
         scene = new Scene(root);
+        scene.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.F11) {
+                fullscreen();
+            }
+        });
 
         stage.setFullScreen(true);
         stage.setScene(scene);
+        stage.setMinHeight(720);
+        stage.setMinWidth(1280);
         stage.show();
 
         stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
@@ -101,7 +108,13 @@ public class SceneManager extends Stage {
         LobbyController = loader.getController();
 
         scene.setRoot(root);
+        lobbyRoot = root;
 
+    }
+
+    public static void changeSceneBackToLobby() {
+        scene.setRoot(lobbyRoot);
+        LobbyController.animation();
     }
 
     public static void changeSceneToGame(FXMLLoader loader) throws IOException {
@@ -205,11 +218,11 @@ public class SceneManager extends Stage {
         while (!buyButton.isPressed() || !dontBuyButton.isPressed()) {
             IOService.sleep(50);
             if (buyButton.isPressed()) {
-                GameController.resetPopupBellow();
+                GameController.resetPopupBelow();
                 return 1;
             }
             if (dontBuyButton.isPressed()) {
-                GameController.resetPopupBellow();
+                GameController.resetPopupBelow();
                 return 2;
             }
         }
@@ -259,15 +272,15 @@ public class SceneManager extends Stage {
         while (!rollButton.isPressed() || !payButton.isPressed() || !cardButton.isPressed()) {
             IOService.sleep(50);
             if (rollButton.isPressed()) {
-                GameController.resetPopupBellow();
+                GameController.resetPopupBelow();
                 return 1;
             }
             if (payButton.isPressed()) {
-                GameController.resetPopupBellow();
+                GameController.resetPopupBelow();
                 return 2;
             }
             if (cardButton.isPressed()) {
-                GameController.resetPopupBellow();
+                GameController.resetPopupBelow();
                 return 3;
             }
         }
@@ -346,27 +359,27 @@ public class SceneManager extends Stage {
         while (!nothingButton.isPressed() || !buyHouseButton.isPressed() || !removeHouseButton.isPressed() || !addMortgageButton.isPressed() || !removeMortgageButton.isPressed() || !tradeButton.isPressed()) {
             IOService.sleep(50);
             if (nothingButton.isPressed()) {
-                GameController.resetPopupBellow();
+                GameController.resetPopupBelow();
                 return 1;
             }
             if (buyHouseButton.isPressed()) {
-                GameController.resetPopupBellow();
+                GameController.resetPopupBelow();
                 return 2;
             }
             if (removeHouseButton.isPressed()) {
-                GameController.resetPopupBellow();
+                GameController.resetPopupBelow();
                 return 3;
             }
             if (addMortgageButton.isPressed()) {
-                GameController.resetPopupBellow();
+                GameController.resetPopupBelow();
                 return 4;
             }
             if (removeMortgageButton.isPressed()) {
-                GameController.resetPopupBellow();
+                GameController.resetPopupBelow();
                 return 5;
             }
             if (tradeButton.isPressed()) {
-                GameController.resetPopupBellow();
+                GameController.resetPopupBelow();
                 return 6;
             }
         }
@@ -415,92 +428,78 @@ public class SceneManager extends Stage {
             IOService.sleep(50);
         }
 
-        GameController.resetPopupBellow();
+        GameController.resetPopupBelow();
 
-        int id = 0;
-        for (Field field : Lobby.getPlayerClient().getGame().getBoard().getFieldManager().getFields()) {
-
-            id++;
-            if (field.getName().equals(fields[fieldBox.getSelectionModel().getSelectedIndex()])) {
-                return id;
-
-            }
-        }
-
-        return -1;
+        return fieldBox.getSelectionModel().getSelectedIndex() + 1;
     }
 
-    public static void AuctionPopup() {
+    public static void auctionPopup() {
 
         //initialisierung der benoetigten Objekte
-        //ScrollPane scroll = new ScrollPane();
-        HBox box = new HBox();
-        VBox vbox = new VBox();
-        auctionGP.setAlignment(Pos.CENTER);
-        // scroll.setCenterShape(true);
+        HBox auctionHBox = new HBox();
+        VBox auctionVBox = new VBox();
+        GridPane auctionGP = new GridPane();
+        Label gebotsLabel = new Label("Dein Gebot für \n" + AuctionService.getPropertyString() + ":");
 
-        // scroll.setContent(box);
+        JFXButton bidButton = new JFXButton("Bieten");
+        JFXButton exitButton = new JFXButton("Aussteigen");
+
+        auctionGP.setAlignment(Pos.CENTER);
         hoechstgebotLabel.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
-        Label label2 = new Label("Dein Gebot für \n" + AuctionService.getPropertyString() + ":");
-        JFXTextField tf = new JFXTextField();
-        JFXButton bidBut = new JFXButton("Bieten");
-        JFXButton exitBut = new JFXButton("Aussteigen");
 
         //Eventhandler(n)
         EventHandler bid = new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 try {
-                    AuctionService.setBid(Lobby.getPlayerClient().getPlayerOnClient().getId(), Integer.parseInt(tf.getText()));
+                    AuctionService.setBid(Lobby.getPlayerClient().getPlayerOnClient().getId(), Integer.parseInt(bidTextField.getText()));
+                    bidTextField.setText("");
                 } catch (NumberFormatException e) {
-                    tf.setText("");
-                    tf.setPromptText("Bitte nur Zahlen eingeben!");
+                    bidTextField.setText("");
+                    bidTextField.setPromptText("Nur Zahlen eingeben!");
                 }
             }
         };
 
         //Einstellung der benoetigten Objekte
         auctionGP.setAlignment(Pos.CENTER);
-        auctionGP.add(box, 0, 0);
+        auctionGP.add(auctionHBox, 0, 0);
         hoechstgebotLabel.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
-        label2.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
-        tf.setAlignment(Pos.CENTER);
+        gebotsLabel.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
+        bidTextField.setAlignment(Pos.CENTER);
 
-        bidBut.setBackground(new Background(new BackgroundFill(Color.web("#e1f5fe"), CornerRadii.EMPTY, Insets.EMPTY)));
-        exitBut.setBackground(new Background(new BackgroundFill(Color.web("#e1f5fe"), CornerRadii.EMPTY, Insets.EMPTY)));
+        bidButton.setBackground(new Background(new BackgroundFill(Color.web("#e1f5fe"), CornerRadii.EMPTY, Insets.EMPTY)));
+        exitButton.setBackground(new Background(new BackgroundFill(Color.web("#e1f5fe"), CornerRadii.EMPTY, Insets.EMPTY)));
 
-        tf.setPromptText(" ");
+        bidTextField.setPromptText(" ");
 
-        //Damit der Cursor direkt im Textfield liegt TODO @ Patrick
-//        tf.requestFocus();
-//        tf.positionCaret(0);
         String cssLayout = "-fx-background-color: #dcedc8;\n"
                 + "-fx-border-color: black;\n"
                 + "-fx-border-insets: 5;\n"
                 + "-fx-border-width: 1;\n"
                 + "-fx-border-style: double;\n";
 
-        box.setStyle(cssLayout);
-        box.setSpacing(10);
-        box.setPrefSize(700, 200);
-        box.setCenterShape(true);
-        vbox.getChildren().addAll(bidBut, exitBut);
-        vbox.setSpacing(10);
-        vbox.setAlignment(Pos.CENTER);
-        box.getChildren().addAll(hoechstgebotLabel, auctionLabel, label2, tf, vbox);
-        box.setAlignment(Pos.CENTER);
+        auctionHBox.setStyle(cssLayout);
+        auctionHBox.setSpacing(10);
+        auctionHBox.setPrefSize(700, 200);
+        auctionHBox.setCenterShape(true);
+        auctionVBox.getChildren().addAll(bidButton, exitButton);
+        auctionVBox.setSpacing(10);
+        auctionVBox.setAlignment(Pos.CENTER);
+        auctionHBox.getChildren().addAll(hoechstgebotLabel, auctionLabel, gebotsLabel, bidTextField, auctionVBox);
+        auctionHBox.setAlignment(Pos.CENTER);
         if (GameController != null) {
             GameController.setPopupBellow(auctionGP);
         }
 
         //Verknuepfung mit EventHandler(n)
-        tf.setOnAction(bid);
-        bidBut.setOnAction(bid);
-        exitBut.setOnAction(new EventHandler<ActionEvent>() {
+        bidTextField.setOnAction(bid);
+        bidButton.setOnAction(bid);
+        exitButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 AuctionService.playerExit(Lobby.getPlayerClient().getPlayerOnClient().getId());
-                GameController.resetPopupBellow();
+                GameController.resetPopupBelow();
             }
         });
     }
@@ -510,31 +509,31 @@ public class SceneManager extends Stage {
         Task task = new Task() {
             @Override
             protected Object call() throws Exception {
-                auctionLabel.setText(String.valueOf(AuctionService.getHighestBid()));
+                auctionLabel.setText(String.valueOf(AuctionService.getHighestBid()) + " €");
                 hoechstgebotLabel.setText("Höchstgebot von \n" + AuctionService.getPlayer(AuctionService.getHighestBidder()).getName() + ":");
+                //bidTextField.requestFocus();
                 return null;
             }
         };
         Platform.runLater(task);
 
         IOService.sleep(500);
-
         if (!stillActive) {
 
-            GameController.resetPopupBellow();
+            GameController.resetPopupBelow();
 
-            GridPane gp = new GridPane();
-            VBox box = new VBox();
-            Label lbl = new Label();
+            GridPane resetGridPane = new GridPane();
+            VBox resetBox = new VBox();
+            Label endLabel = new Label();
 
-            gp.setAlignment(Pos.CENTER);
-            gp.add(box, 0, 0);
+            resetGridPane.setAlignment(Pos.CENTER);
+            resetGridPane.add(resetBox, 0, 0);
 
             if (noBidder) {
-                lbl.setText("Das Grundstück " + AuctionService.getPropertyString() + " wurde nicht verkauft!");
+                endLabel.setText("Das Grundstück " + AuctionService.getPropertyString() + " wurde nicht verkauft!");
             }
             else {
-                lbl.setText(Lobby.getPlayerClient().getGame().getPlayers()[AuctionService.getHighestBidder()].getName()
+                endLabel.setText(Lobby.getPlayerClient().getGame().getPlayers()[AuctionService.getHighestBidder()].getName()
                         + " hat die Auktion gewonnen und muss " + AuctionService.getHighestBid() + "€ für das Grundstück "
                         + AuctionService.getPropertyString() + " zahlen!");
             }
@@ -544,22 +543,31 @@ public class SceneManager extends Stage {
                     + "-fx-border-width: 1;\n"
                     + "-fx-border-style: double;\n";
 
-            lbl.setFont(Font.font("Tahoma", FontWeight.BOLD, 10));
-            box.setStyle(cssLayout);
-            box.setSpacing(10);
-            box.setPrefSize(550, 150);
-            box.setCenterShape(true);
-            box.getChildren().addAll(lbl);
-            box.setAlignment(Pos.CENTER);
-            GameController.setPopupBellow(gp);
+            endLabel.setFont(Font.font("Tahoma", FontWeight.BOLD, 10));
+            resetBox.setStyle(cssLayout);
+            resetBox.setSpacing(10);
+            resetBox.setPrefSize(550, 150);
+            resetBox.setCenterShape(true);
+            resetBox.getChildren().addAll(endLabel);
+            resetBox.setAlignment(Pos.CENTER);
+            GameController.setPopupBellow(resetGridPane);
             IOService.sleep(3500);
-            GameController.resetPopupBellow();
+            GameController.resetPopupBelow();
+            auctionLabel.setText("0 €");
         }
 
     }
 
+    public static void bidTextFieldFocus() {
+        bidTextField.requestFocus();
+    }
+
     public static void initStreets() {
         GameController.initStreets();
+    }
+
+    public static void fullscreen() {
+        stage.setFullScreen(true);
     }
 
 }

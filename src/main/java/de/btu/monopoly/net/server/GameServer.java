@@ -6,6 +6,9 @@
 package de.btu.monopoly.net.server;
 
 import com.esotericsoftware.kryo.Kryo;
+import com.esotericsoftware.kryonet.Connection;
+import com.esotericsoftware.kryonet.FrameworkMessage;
+import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 import de.btu.monopoly.core.Game;
 import de.btu.monopoly.core.service.NetworkService;
@@ -32,7 +35,19 @@ public class GameServer {
     public GameServer(int tcp) {
         this.tcpPort = tcp;
 
-        server = new Server();
+        server = new Server() {
+            @Override
+            public void sendToAllTCP(Object object) {
+                super.sendToAllTCP(object);
+                NetworkService.logServerSendMessage(object);
+            }
+
+            @Override
+            public void sendToAllExceptTCP(int connectionID, Object object) {
+                super.sendToAllExceptTCP(connectionID, object);
+                NetworkService.logServerSendMessage(object);
+            }
+        };
         kryo = server.getKryo();
         NetworkService.registerKryoClasses(kryo);
         Runtime.getRuntime().addShutdownHook(new Thread(() -> stopServer()));
@@ -49,10 +64,10 @@ public class GameServer {
             server.addListener(serverL);
             server.addListener(lobbyTable);
             server.addListener(auctionTable);
+            server.addListener(new TrafficListener());
         } catch (IOException ex) {
             LOGGER.log(Level.WARNING, "Server konnte nicht gebunden werden {0}", ex);
         }
-
     }
 
     public void stopServer() {
@@ -77,4 +92,13 @@ public class GameServer {
         return serverL;
     }
 
+    private class TrafficListener extends Listener {
+
+        @Override
+        public void received(Connection connection, Object object) {
+            if (!(object instanceof FrameworkMessage)) {
+                NetworkService.logServerReceiveMessage(object);
+            }
+        }
+    }
 }

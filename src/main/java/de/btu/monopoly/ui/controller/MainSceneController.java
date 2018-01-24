@@ -12,6 +12,10 @@ import de.btu.monopoly.data.field.*;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.menu.Lobby;
 import de.btu.monopoly.net.client.GameClient;
+import java.net.URL;
+import java.util.List;
+import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 import javafx.animation.FadeTransition;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
@@ -31,11 +35,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.util.Duration;
 
-import java.net.URL;
-import java.util.List;
-import java.util.ResourceBundle;
-import java.util.stream.Collectors;
-
 /**
  *
  * @author Eleonora Kostova
@@ -45,8 +44,6 @@ public class MainSceneController implements Initializable {
     GameClient client;
     StackPane middlePane;
 
-    // Label hypothek = new Label("Hypothek");
-    HBox hbox;
     //Geld Labels
     @FXML
     private Label geld0;
@@ -532,15 +529,15 @@ public class MainSceneController implements Initializable {
         RentanzeigeFelder[8] = haus8;
         RentanzeigeFelder[9] = haus9;
         RentanzeigeFelder[11] = haus11;
-        // haus11.setStyle(style);
+        //haus11.setStyle(style);
         RentanzeigeFelder[12] = haus12;
         // haus12.setStyle(style);
         RentanzeigeFelder[13] = haus13;
-        // haus13.setStyle(style);
+        //haus13.setStyle(style);
         RentanzeigeFelder[14] = haus14;
         // haus14.setStyle(style);
         RentanzeigeFelder[15] = haus15;
-        // haus15.setStyle(style);
+        //haus15.setStyle(style);
         RentanzeigeFelder[16] = haus16;
         // haus16.setStyle(style);
         RentanzeigeFelder[18] = haus18;
@@ -556,17 +553,17 @@ public class MainSceneController implements Initializable {
         RentanzeigeFelder[28] = haus28;
         RentanzeigeFelder[29] = haus29;
         RentanzeigeFelder[31] = haus31;
-        // haus31.setStyle(style);
+        //haus31.setStyle(style);
         RentanzeigeFelder[32] = haus32;
-        // haus32.setStyle(style);
+        //haus32.setStyle(style);
         RentanzeigeFelder[34] = haus34;
-        // haus34.setStyle(style);
+        //haus34.setStyle(style);
         RentanzeigeFelder[35] = haus35;
-        //haus35.setStyle(style);
+        // haus35.setStyle(style);
         RentanzeigeFelder[37] = haus37;
         // haus37.setStyle(style);
         RentanzeigeFelder[39] = haus39;
-        //  haus39.setStyle(style);
+        //haus39.setStyle(style);
 
         //Bilder hinzufuegen
         /*Background*/
@@ -578,7 +575,7 @@ public class MainSceneController implements Initializable {
         middlePane = new StackPane();
         Image image2 = new Image("/images/Monopoly_Logo.png");
         middlePane.setBackground(new Background(new BackgroundImage(image2, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT)));
-        PopupPane.add(middlePane, 0, 1);
+        PopupPane.add(middlePane, 0, 0);
 
         // User aus lobby holen und Farben setzen
         client = Lobby.getPlayerClient();
@@ -613,8 +610,11 @@ public class MainSceneController implements Initializable {
                             }
                             player0.setFill(Color.web(Lobby.getUsers()[0][4]));
                             player0ButtonID = i;
-                            player0Button.setOnAction((event) -> {
+                            player0Button.setOnMouseEntered((event) -> {
                                 playerButtonPopup(player0ButtonID);
+                            });
+                            player0Button.setOnMouseExited((event) -> {
+                                resetPopupAbove();
                             });
                         }
                         else {
@@ -634,8 +634,11 @@ public class MainSceneController implements Initializable {
                                     player1.setFill(Color.web(Lobby.getUsers()[1][4]));
 
                                     player1ButtonID = i;
-                                    player1Button.setOnAction((event) -> {
+                                    player1Button.setOnMouseEntered((event) -> {
                                         playerButtonPopup(player1ButtonID);
+                                    });
+                                    player1Button.setOnMouseExited((event) -> {
+                                        resetPopupAbove();
                                     });
                                     continue;
                                 }
@@ -654,8 +657,11 @@ public class MainSceneController implements Initializable {
                                     }
                                     player2.setFill(Color.web(Lobby.getUsers()[2][4]));
                                     player2ButtonID = i;
-                                    player2Button.setOnAction((event) -> {
+                                    player2Button.setOnMouseEntered((event) -> {
                                         playerButtonPopup(player2ButtonID);
+                                    });
+                                    player2Button.setOnMouseExited((event) -> {
+                                        resetPopupAbove();
                                     });
                                     continue;
                                 }
@@ -674,8 +680,11 @@ public class MainSceneController implements Initializable {
                                     }
                                     player3.setFill(Color.web(Lobby.getUsers()[3][4]));
                                     player3ButtonID = i;
-                                    player3Button.setOnAction((event) -> {
+                                    player3Button.setOnMouseEntered((event) -> {
                                         playerButtonPopup(player3ButtonID);
+                                    });
+                                    player3Button.setOnMouseExited((event) -> {
+                                        resetPopupAbove();
                                     });
                                     continue;
                                 }
@@ -694,8 +703,11 @@ public class MainSceneController implements Initializable {
                                     }
                                     player4.setFill(Color.web(Lobby.getUsers()[4][4]));
                                     player4ButtonID = i;
-                                    player4Button.setOnAction((event) -> {
+                                    player4Button.setOnMouseEntered((event) -> {
                                         playerButtonPopup(player4ButtonID);
+                                    });
+                                    player4Button.setOnMouseExited((event) -> {
+                                        resetPopupAbove();
                                     });
                                     continue;
                                 }
@@ -714,8 +726,11 @@ public class MainSceneController implements Initializable {
                                     }
                                     player5.setFill(Color.web(Lobby.getUsers()[5][4]));
                                     player5ButtonID = i;
-                                    player5Button.setOnAction((event) -> {
+                                    player5Button.setOnMouseEntered((event) -> {
                                         playerButtonPopup(player5ButtonID);
+                                    });
+                                    player5Button.setOnMouseExited((event) -> {
+                                        resetPopupAbove();
                                     });
                                 }
                             }
@@ -730,61 +745,21 @@ public class MainSceneController implements Initializable {
 
         // Initialisierung für FeldPopups (Miete, etc.)
         for (Pane field : Felder) {
-            field.setOnMouseClicked((event) -> {
+            field.setOnMouseEntered((event) -> {
                 fieldPopup(field);
+            });
+
+            field.setOnMouseMoved((event) -> {
+                fieldPopup(field);
+            });
+
+            field.setOnMouseExited((event) -> {
+                resetPopupAbove();
 
             });
         }
-
     }
 
-    /**
-     * der Hypothekzustand jedes PropertyField wurde dargestellt
-     */
-//    public void hypothekState() {
-//
-//        Task task = new Task() {
-//            @Override
-//            protected Object call() throws Exception {
-//                if (Lobby.getPlayerClient().getGame().getBoard() != null) {
-//                    Field[] currentField = Lobby.getPlayerClient().getGame().getBoard().getFields();
-//                    Label hypothek = new Label("Hypothek");
-//
-//                    hypothek.setStyle("-fx-background-color:brown;"
-//                            + "-fx-rotate: -45");
-//
-//                    for (int i = 0; i < Felder.length; i++) {
-//
-//                        if (currentField[i] instanceof PropertyField) {
-//                            if (((PropertyField) currentField[i]).isMortgageTaken()) {
-//                                hypothek.setAlignment(Pos.CENTER);
-//                                hypothek.layoutXProperty().bind(Felder[i].widthProperty().subtract(hypothek.getLayoutX()).divide(2));
-//                                hypothek.layoutYProperty().bind(Felder[i].heightProperty().subtract(hypothek.getLayoutY()).divide(2));
-//                                Felder[i].getChildren().add(hypothek);
-//                            }
-//                            else {
-//                                for (int j = 0; j < Felder[i].getChildren().size(); j++) {
-//                                    if (Felder[i].getChildren().get(j) instanceof Label) {
-//                                        Felder[i].getChildren().remove(j);
-//                                    }
-//                                    else {
-//
-//                                    }
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
-//
-//                return null;
-//            }
-//        };
-//        Platform.runLater(task);
-//    }
-    /**
-     * Erstellt auf dem entsprechenden Feld ein/mehrere Hauser TODO moegliche
-     * Bugfixes
-     */
     public void propertyState() {
         if (Lobby.getPlayerClient().getGame().getBoard() != null) {
             Field[] currentField = Lobby.getPlayerClient().getGame().getBoard().getFields();
@@ -796,14 +771,28 @@ public class MainSceneController implements Initializable {
                     HBox hauses;
 
                     for (int i = 0; i < Felder.length; i++) {
+
                         if (currentField[i] instanceof SupplyField || currentField[i] instanceof StationField) {
                             if (((PropertyField) currentField[i]).isMortgageTaken()) {
+
                                 Label hypothek = new Label("Hypothek");
-                                hypothek.setStyle("-fx-background-color:brown;");
-                                hypothek.relocate(0, 0);
-                                // hypothek.setAlignment(Pos.CENTER);
-                                //hypothek.layoutXProperty().bind(RentanzeigeFelder[i].widthProperty().subtract(hypothek.getLayoutX()).divide(2));
-                                //hypothek.layoutYProperty().bind(RentanzeigeFelder[i].heightProperty().subtract(hypothek.getLayoutY()).divide(2));
+
+                                if ((i > 9 && i < 21)) {
+                                    hypothek.setStyle("-fx-rotate:90;"
+                                            + "-fx-background-color:brown;");
+                                    hypothek.setLayoutY(25);
+                                    hypothek.setLayoutX(-10);
+                                }
+                                if (i > 29 && i < 40) {
+                                    hypothek.setStyle("-fx-rotate:-90;"
+                                            + "-fx-background-color:brown;");
+                                    hypothek.setLayoutY(25);
+                                    hypothek.setLayoutX(-10);
+                                }
+                                else {
+                                    hypothek.relocate(5, 5);
+                                    hypothek.setStyle("-fx-background-color:brown;");
+                                }
 
                                 RentanzeigeFelder[i].getChildren().add(hypothek);
                             }
@@ -820,47 +809,125 @@ public class MainSceneController implements Initializable {
                                 RentanzeigeFelder[i].getChildren().clear();
                                 if (((PropertyField) currentField[i]).isMortgageTaken()) {
                                     Label hypothek = new Label("Hypothek");
-                                    hypothek.setStyle("-fx-background-color:brown;");
-                                    hypothek.relocate(0, 0);
-                                    // hypothek.setAlignment(Pos.CENTER);
-                                    //hypothek.layoutXProperty().bind(RentanzeigeFelder[i].widthProperty().subtract(hypothek.getLayoutX()).divide(2));
-                                    // hypothek.layoutYProperty().bind(RentanzeigeFelder[i].heightProperty().subtract(hypothek.getLayoutY()).divide(2));
+                                    if ((i > 9 && i < 21)) {
+                                        hypothek.setStyle("-fx-rotate:90;"
+                                                + "-fx-background-color:brown;");
+                                        hypothek.setLayoutY(25);
+                                        hypothek.setLayoutX(-10);
+
+                                    }
+                                    if (i > 29 && i < 40) {
+                                        hypothek.setStyle("-fx-rotate:-90;"
+                                                + "-fx-background-color:brown;");
+                                        hypothek.setLayoutY(25);
+                                        hypothek.setLayoutX(-10);
+                                    }
+                                    else {
+                                        hypothek.relocate(5, 5);
+                                        hypothek.setStyle("-fx-background-color:brown;");
+                                    }
 
                                     RentanzeigeFelder[i].getChildren().add(hypothek);
                                 }
                             }
+                            //TODO Refactoring und createHaus.. Optimierung
                             if (hausAnzahl == 1) {
                                 RentanzeigeFelder[i].getChildren().clear();
                                 hauses = createHaus1(10, 10);
-                                hauses.relocate(0, 0);
+                                if ((i > 9 && i < 21)) {
+                                    hauses.setStyle("-fx-rotate:90;");
+                                    hauses.setLayoutY(25);
+                                    hauses.setLayoutX(-10);
+                                }
+                                if (i > 29 && i < 40) {
+                                    hauses.setStyle("-fx-rotate:-90;");
+                                    hauses.setLayoutY(25);
+                                    hauses.setLayoutX(-10);
+                                }
+                                else {
+                                    hauses.relocate(5, 5);
+                                }
                                 RentanzeigeFelder[i].getChildren().add(hauses);
+
                             }
                             if (hausAnzahl == 2) {
                                 RentanzeigeFelder[i].getChildren().clear();
                                 hauses = createHaus2(10, 10);
-                                hauses.relocate(0, 0);
+                                if ((i > 9 && i < 21)) {
+                                    hauses.setStyle("-fx-rotate:90;");
+                                    hauses.setLayoutY(25);
+                                    hauses.setLayoutX(-10);
+                                }
+                                if (i > 29 && i < 40) {
+                                    hauses.setStyle("-fx-rotate:-90;");
+                                    hauses.setLayoutY(25);
+                                    hauses.setLayoutX(-10);
+                                }
+                                else {
+                                    hauses.relocate(5, 5);
+                                }
                                 RentanzeigeFelder[i].getChildren().add(hauses);
+
                             }
                             if (hausAnzahl == 3) {
                                 RentanzeigeFelder[i].getChildren().clear();
                                 hauses = createHaus3(10, 10);
-                                hauses.relocate(0, 0);
+                                if ((i > 9 && i < 21)) {
+                                    hauses.setStyle("-fx-rotate:90;");
+                                    hauses.setLayoutY(25);
+                                    hauses.setLayoutX(-10);
+                                }
+                                if (i > 29 && i < 40) {
+                                    hauses.setStyle("-fx-rotate:-90;");
+                                    hauses.setLayoutY(25);
+                                    hauses.setLayoutX(-10);
+                                }
+                                else {
+                                    hauses.relocate(5, 5);
+                                }
                                 RentanzeigeFelder[i].getChildren().add(hauses);
+
                             }
                             if (hausAnzahl == 4) {
                                 RentanzeigeFelder[i].getChildren().clear();
                                 hauses = createHaus4(10, 10);
-                                hauses.relocate(0, 0);
+                                if ((i > 9 && i < 21)) {
+                                    hauses.setStyle("-fx-rotate:90;");
+                                    hauses.setLayoutY(25);
+                                    hauses.setLayoutX(-10);
+                                }
+                                if (i > 29 && i < 40) {
+                                    hauses.setStyle("-fx-rotate:-90;");
+                                    hauses.setLayoutY(25);
+                                    hauses.setLayoutX(-10);
+                                }
+                                else {
+                                    hauses.relocate(5, 5);
+                                }
                                 RentanzeigeFelder[i].getChildren().add(hauses);
+
                             }
                             if (hausAnzahl == 5) {
                                 RentanzeigeFelder[i].getChildren().clear();
                                 hauses = createHotel(12, 30);
-                                hauses.relocate(0, 0);
+                                if ((i > 9 && i < 21)) {
+                                    hauses.setStyle("-fx-rotate:90;");
+                                    hauses.setLayoutY(25);
+                                    hauses.setLayoutX(-10);
+                                }
+                                if (i > 29 && i < 40) {
+                                    hauses.setStyle("-fx-rotate:-90;");
+                                    hauses.setLayoutY(25);
+                                    hauses.setLayoutX(-10);
+                                }
+                                else {
+                                    hauses.relocate(5, 5);
+                                }
                                 RentanzeigeFelder[i].getChildren().add(hauses);
-                            }
 
+                            }
                         }
+
                     }
 
                     return null;
@@ -881,18 +948,18 @@ public class MainSceneController implements Initializable {
      * @return
      */
     public HBox createHaus1(int width, int heigth) {
-        hbox = new HBox();
+        HBox box = new HBox();
 
         HBox haus = new HBox();
         Rectangle half1 = new Rectangle(width / 2, heigth, Color.web("#82ada9"));
         Rectangle half2 = new Rectangle(width / 2, heigth, Color.web("#b2dfdb"));
         haus.getChildren().addAll(half1, half2);
         haus.setStyle("-fx-effect: dropshadow(gaussian, yellowgreen, 3, 0, 0, 0);");
-        hbox.getChildren().add(haus);
+        box.getChildren().add(haus);
 
-        hbox.setSpacing(5);
+        box.setSpacing(5);
 
-        return hbox;
+        return box;
 
     }
 
@@ -961,31 +1028,6 @@ public class MainSceneController implements Initializable {
 
     }
 
-    /**
-     * Erstellt die Figur von Haus
-     *
-     * @param width
-     * @param heigth
-     * @param anzahl der Hauser
-     * @return
-     */
-    public HBox createHaus(int width, int heigth, int anzahl) {
-        hbox = new HBox();
-
-        HBox haus = new HBox();
-        for (int j = 0; j < anzahl; j++) {
-            Rectangle half1 = new Rectangle(width / 2, heigth, Color.web("#82ada9"));
-            Rectangle half2 = new Rectangle(width / 2, heigth, Color.web("#b2dfdb"));
-            haus.getChildren().addAll(half1, half2);
-            haus.setStyle("-fx-effect: dropshadow(gaussian, yellowgreen, 3, 0, 0, 0);");
-            hbox.getChildren().addAll(haus);
-
-            hbox.setSpacing(5);
-        }
-        return hbox;
-
-    }
-
     // -------------------------------------------------------------------------
     // Interne Popups in der GUI (permanent angezeigte Buttons)
     /**
@@ -1017,13 +1059,11 @@ public class MainSceneController implements Initializable {
         fields.setFont(Font.font("Tahoma", FontPosture.ITALIC, 10));
         fields.setTextFill(Color.MIDNIGHTBLUE);
 
-        Label geld = new Label(" hat in Konto: " + playeronbutton.getMoney());
-
         JFXButton player = new JFXButton();
-
-        JFXButton exit = new JFXButton("Exit");
-
+        Label geld = new Label(" hat in Konto : " + playeronbutton.getMoney());
         Label jail = new Label(" ist in Gefängnis seit : " + playeronbutton.getDaysInJail());
+        Label idNummer = new Label("ID : "+id);
+        Label karten = new Label(""+playeronbutton.getCardStack());
 
         player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[id][4]), CornerRadii.EMPTY, Insets.EMPTY)));
         player.setText(Lobby.getUsers()[id][1]);
@@ -1032,20 +1072,16 @@ public class MainSceneController implements Initializable {
         }
         player.setPrefSize(150, 10);
 
-        box.getChildren().addAll(player, geld, jail, fields, exit);
+        box.getChildren().addAll(player, geld, jail,idNummer,karten, fields);
         box.setAlignment(Pos.CENTER);
 
         if (PopupPane.getChildren().contains(middlePane)) {
             setPopupAbove(player0Pane);
         }
-
-        exit.setOnAction(e -> {
-            resetPopupAbove();
-        });
     }
 
     /**
-     * Öffnen des Feldpopups zu angeklicktem Feld
+     * Öffnen des Feldpopups
      *
      * @param feld
      */
@@ -1053,35 +1089,39 @@ public class MainSceneController implements Initializable {
         Field[] currentField = Lobby.getPlayerClient().getGame().getBoard().getFields();
 
         GridPane gp = new GridPane();
-        ScrollPane scroll = new ScrollPane();
         VBox box = new VBox();
         gp.setAlignment(Pos.CENTER);
-        scroll.setCenterShape(true);
-        gp.add(scroll, 0, 0);
-        scroll.setContent(box);
+        gp.getChildren().add(box);
 
         String text = "";
+        Label owner = new Label();
+        Label rent = new Label();
         for (int i = 0; i < Felder.length; i++) {
             if (Felder[i] == feld) {
-
-                text = "" + currentField[i];
+                owner.setText(("\tBesitzer : " + ((PropertyField) currentField[i]).getOwner()));
+                rent.setText("\n Aktuelle Miete : " + ((PropertyField) currentField[i]).getRent());
+                rent.setTextFill(Color.BROWN);
+                owner.setTextFill(Color.DARKBLUE);
+                if ((currentField[i] instanceof CardField) || (currentField[i] instanceof TaxField)) {
+                    text = "";
+                    resetPopupAbove();
+                }
+                else {
+                    text = "\n\t" + currentField[i];
+                }
             }
         }
-        Label info = new Label(text);
-        JFXButton exit = new JFXButton("Exit");
 
-        box.getChildren().addAll(info, exit);
-        box.setBackground(new Background(new BackgroundFill(Color.web("#e0f2f1"), CornerRadii.EMPTY, Insets.EMPTY)));
+        Label info = new Label(text);
+        box.getChildren().addAll(owner, info, rent);
+        // box.setBackground(new Background(new BackgroundFill(Color.web(feld.getStyle()), CornerRadii.EMPTY, Insets.EMPTY)));
+        box.setStyle(feld.getStyle());
         box.setPrefWidth(200);
         box.setAlignment(Pos.CENTER);
 
         if (PopupPane.getChildren().contains(middlePane)) {
             setPopupAbove(gp);
         }
-
-        exit.setOnAction(e -> {
-            resetPopupAbove();
-        });
 
     }
 
@@ -1417,7 +1457,7 @@ public class MainSceneController implements Initializable {
         Platform.runLater(task);
     }
 
-    public void resetPopupBellow() {
+    public void resetPopupBelow() {
         Task task = new Task() {
             @Override
             protected Object call() throws Exception {

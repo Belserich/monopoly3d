@@ -3,6 +3,13 @@ package de.btu.monopoly.ui.controller;
 import de.btu.monopoly.menu.Lobby;
 import de.btu.monopoly.menu.LobbyService;
 import de.btu.monopoly.ui.SceneManager;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.URL;
+import java.net.UnknownHostException;
+import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.animation.FadeTransition;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
@@ -17,14 +24,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
-
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.URL;
-import java.net.UnknownHostException;
-import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -64,6 +63,9 @@ public class LobbyController implements Initializable {
 
     @FXML
     private Button leaveLobbyButton;
+
+    @FXML
+    private Button optionButton;
 
     @FXML
     private GridPane grid;
@@ -116,17 +118,10 @@ public class LobbyController implements Initializable {
         }
 
         // Festlegen der Optionen in der Combobox
-        difficultyComboBox.getItems().addAll("Einfach", "Mittel", "Schwer");
+        difficultyComboBox.getItems().addAll("Anfänger", "Experte");
 
         // Updatet die Spieler in der lobby
         updateNames();
-
-        // playButton kann nur der Host drücken
-        if (Lobby.getUsers() != null) {
-            if (Lobby.getUsers().length != 1) {
-                playButton.setDisable(true);
-            }
-        }
 
         // Funktion des eigenen Colorpickers aktivieren und ID im Controller festlegen
         if (Lobby.getUsers().length == 1) {
@@ -175,12 +170,15 @@ public class LobbyController implements Initializable {
         playButton.setOpacity(0);
         leaveLobbyButton.setOpacity(0);
         grid.setOpacity(0);
+        optionButton.setOpacity(0);
 
         // Deaktivieren der KI Steuerung
         if (id != 0) {
+            playButton.setDisable(true);
             kiButton.setDisable(true);
             kiNameTextField.setDisable(true);
             difficultyComboBox.setDisable(true);
+            optionButton.setDisable(true);
         }
 
         Task task = new Task() {
@@ -307,6 +305,12 @@ public class LobbyController implements Initializable {
                         fadeInButton18.setFromValue(0);
                         fadeInButton18.setToValue(1);
                         fadeInButton18.playFromStart();
+
+                        FadeTransition fadeInButton19
+                                = new FadeTransition(Duration.millis(800), optionButton);
+                        fadeInButton19.setFromValue(0);
+                        fadeInButton19.setToValue(1);
+                        fadeInButton19.playFromStart();
                     }
                     else {
                         FadeTransition fadeInButton15
@@ -332,6 +336,12 @@ public class LobbyController implements Initializable {
                         fadeInButton18.setFromValue(0);
                         fadeInButton18.setToValue(0.5);
                         fadeInButton18.playFromStart();
+
+                        FadeTransition fadeInButton19
+                                = new FadeTransition(Duration.millis(800), optionButton);
+                        fadeInButton19.setFromValue(0);
+                        fadeInButton19.setToValue(0.5);
+                        fadeInButton19.playFromStart();
                     }
 
                     FadeTransition fadeInButton19
@@ -346,6 +356,7 @@ public class LobbyController implements Initializable {
         };
         Platform.runLater(task);
 
+        updateColors();
     }
 
     /**
@@ -603,16 +614,12 @@ public class LobbyController implements Initializable {
                     int difficulty;
 
                     switch ((String) difficultyComboBox.getSelectionModel().getSelectedItem()) {
-                        case "Einfach": {
+                        case "Anfänger": {
                             difficulty = 1;
                             break;
                         }
-                        case "Mittel": {
-                            difficulty = 1;
-                            break;
-                        }
-                        case "Schwer": {
-                            difficulty = 1;
+                        case "Experte": {
+                            difficulty = 2;
                             break;
                         }
                         default: {
@@ -700,4 +707,25 @@ public class LobbyController implements Initializable {
 
     }
 
+    @FXML
+    private void optionButtonAction(ActionEvent event) throws IOException {
+        FadeTransition fadeGrid = new FadeTransition(Duration.millis(400), grid);
+        fadeGrid.setFromValue(1);
+        fadeGrid.setToValue(0);
+        fadeGrid.playFromStart();
+        fadeGrid.setOnFinished((event1) -> {
+            try {
+                SceneManager.changeScene(new FXMLLoader(getClass().getResource("/fxml/settings.fxml")));
+            } catch (IOException ex) {
+                Logger.getLogger(LobbyController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
+    }
+
+    public void animation() {
+        FadeTransition fadeGrid = new FadeTransition(Duration.millis(800), grid);
+        fadeGrid.setFromValue(0);
+        fadeGrid.setToValue(1);
+        fadeGrid.playFromStart();
+    }
 }
