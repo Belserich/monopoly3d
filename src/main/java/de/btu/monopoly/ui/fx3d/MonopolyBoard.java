@@ -1,15 +1,13 @@
 package de.btu.monopoly.ui.fx3d;
 
 import de.btu.monopoly.core.GameBoard;
+import de.btu.monopoly.data.field.FieldManager;
+import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.ui.util.Assets;
 import de.btu.monopoly.ui.util.Cuboid;
 import de.btu.monopoly.ui.util.FxHelper;
-import de.btu.monopoly.ui.util.TextUtils;
-import javafx.animation.Animation;
 import javafx.animation.RotateTransition;
-import javafx.animation.SequentialTransition;
-import javafx.animation.TranslateTransition;
 import javafx.collections.ObservableList;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
@@ -17,28 +15,32 @@ import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Shape3D;
+import javafx.scene.transform.Affine;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Transform;
 import javafx.scene.transform.Translate;
 import javafx.util.Duration;
 
 import java.awt.geom.Point2D;
+import java.util.LinkedList;
 import java.util.List;
 
-import static de.btu.monopoly.ui.fx3d.FieldType.CORNER_0;
 import static de.btu.monopoly.ui.fx3d.Fx3dField.FIELD_DEPTH;
 import static de.btu.monopoly.ui.fx3d.Fx3dField.FIELD_WIDTH;
 
 public class MonopolyBoard extends Group
 {
-    public static final int FIELD_COUNT = 40;
+    public static final int FIELD_COUNT = FieldType.GAMEBOARD_FIELD_STRUCTURE.length;
     
     private static final double BOARD_LENGTH = 2 * FIELD_DEPTH + 9 * FIELD_WIDTH;
     private static final Cuboid BOARD_MODEL = new Cuboid(BOARD_LENGTH, 10, BOARD_LENGTH);
     
-    private static final Rotate CORNER_ROTATE = new Rotate(90, Rotate.Y_AXIS);
-    private static final Translate CORNER_TRANSLATE = new Translate(-Fx3dField.FIELD_DEPTH / 2f, 0, 0);
-    private static final Translate FIELD_TRANSLATE = new Translate(-Fx3dField.FIELD_WIDTH / 2f, 0, 0);
+    private static final double FIELDS_OFF_X = BOARD_LENGTH / 2 + Fx3dField.FIELD_WIDTH / 2;
+    private static final double FIELDS_OFF_Y = -4;
+    private static final double FIELDS_OFF_Z = -BOARD_LENGTH / 2 + Fx3dField.FIELD_DEPTH / 2;
+    
+    private static final double CORNER_DIST = -(Fx3dCorner.FIELD_WIDTH / 2 + Fx3dField.FIELD_WIDTH / 2);
+    private static final double FIELD_DIST = -Fx3dField.FIELD_WIDTH;
     
     private int CHUNKY_ROTATION_THRESHOLD = 200;
     
@@ -55,8 +57,7 @@ public class MonopolyBoard extends Group
     private boolean fluentRotation;
     private boolean transitioning;
     
-    public MonopolyBoard(GameBoard board)
-    {
+    public MonopolyBoard(GameBoard board) {
         super();
         this.board = board;
         
@@ -72,8 +73,8 @@ public class MonopolyBoard extends Group
         init();
     }
     
-    private void init()
-    {
+    private void init() {
+        
         initBoard();
         initFields();
         initPlayers();
@@ -82,8 +83,8 @@ public class MonopolyBoard extends Group
         getChildren().add(light);
     }
     
-    private void initBoard()
-    {
+    private void initBoard() {
+        
         boardModel.setMaterial(FxHelper.getMaterialFor(Assets.getImage("game_board")));
         boardModel.setOnMousePressed(this::setDragPoint);
         boardModel.setOnMouseDragged(event ->
@@ -91,8 +92,7 @@ public class MonopolyBoard extends Group
             double diffX = event.getScreenX() - dragPoint.getX();
             if (fluentRotation)
             {
-                setRotationAxis(Rotate.Y_AXIS);
-                setRotate(getRotate() + diffX / -2);
+                getTransforms().add(new Rotate(diffX / - 2, Rotate.Y_AXIS));
                 setDragPoint(event);
             }
             else if (Math.abs(diffX) >= CHUNKY_ROTATION_THRESHOLD && !transitioning)
@@ -103,8 +103,7 @@ public class MonopolyBoard extends Group
         });
     }
     
-    public void rotateChunky(boolean clockwise)
-    {
+    public void rotateChunky(boolean clockwise) {
         transitioning = true;
         RotateTransition rt = new RotateTransition(Duration.millis(200), this);
         rt.setOnFinished(ev -> transitioning = false);
@@ -138,91 +137,55 @@ public class MonopolyBoard extends Group
         Shape3D positionField = fieldModels[player.getPosition()];
         fxPlayer.getTransforms().add(positionField.getLocalToSceneTransform());
         
-        fxPlayer.getPosition().addListener((val, oldV, newV) -> {
-    
-            SequentialTransition st = new SequentialTransition(fxPlayer);
-            ObservableList<Animation> anims = st.getChildren();
-            
-            int nextV;
-            Transform currTransform, nextTransform;
-            while (!oldV.equals(newV)) {
-                
-                nextV = (oldV.intValue() + 1) % FIELD_COUNT;
-                currTransform = fieldModels[oldV.intValue()].getLocalToSceneTransform();
-                nextTransform = fieldModels[nextV].getLocalToSceneTransform();
-                
-                TranslateTransition tt = new TranslateTransition(Duration.millis(200), fxPlayer);
-                tt.setByX(nextTransform.getTx() - currTransform.getTx());
-                tt.setByY(nextTransform.getTy() - currTransform.getTy());
-                tt.setByZ(nextTransform.getTz() - currTransform.getTz());
-                
-                anims.add(tt);
-                oldV = nextV;
-            }
-            
-            st.play();
+        fxPlayer.getPosition().addListener((val, old, nev) -> {
+            List<Transform> waypoints = new LinkedList<>();
+            int newV = nev.intValue();
+            for (int v = old.intValue() + 1; v != newV; v = (v + 1) % FIELD_COUNT)
+                waypoints.add(fieldModels[v].getLocalToParentTransform());
+            fxPlayer.move(waypoints.toArray(new Transform[waypoints.size()]));
         });
         
         return fxPlayer;
     }
     
-    private void initFields()
-    {
-        ObservableList<Node> children = fieldGroup.getChildren();
-        FieldType[] boardStruct = FieldType.GAMEBOARD_FIELD_STRUCTURE;
-    
-        FieldType type;
-        Shape3D fieldShape;
-        Group group;
-    
-        Transform finalTransform;
-        Transform transform = new Translate(0, 0, 0);
-        for (int id = 0; id < boardStruct.length; id++)
-        {
-            group = new Group();
-            type = boardStruct[id];
-            if (type.isCorner())
-            {
-                if (type != CORNER_0)
-                {
-                    transform = transform.createConcatenation(CORNER_TRANSLATE);
-                    transform = transform.createConcatenation(CORNER_ROTATE);
-                }
-                
-                fieldShape = new Fx3dCorner(board.getFieldManager().getField(id),
-                        Assets.getImage(type.toString().toLowerCase()));
-                finalTransform = transform.clone();
-                transform = transform.createConcatenation(CORNER_TRANSLATE);
-            }
-            else
-            {
-//                if (type.isStreet())
-//                {
-//                    Fx3dHouse stack = new Fx3dHouse();
-//                    stack.setHouseCount((int) (Math.random() * 6));
-//                    group.getChildren().add(stack);
-//                }
-                
-                transform = transform.createConcatenation(FIELD_TRANSLATE);
-                fieldShape = new Fx3dField(board.getFieldManager().getField(id),
-                        Assets.getImage(type.toString().toLowerCase()));
-                finalTransform = transform.clone();
-                transform = transform.createConcatenation(FIELD_TRANSLATE);
-            }
-            
-            fieldModels[id] = fieldShape;
-            
-            group.getChildren().addAll(fieldShape, TextUtils.createFieldTexts(id));
-            group.getTransforms().add(finalTransform);
-            children.add(group);
-        }
+    private void initFields() {
         
-        this.fieldGroup.getTransforms().add(
-                new Translate(BOARD_LENGTH / 2 - FIELD_DEPTH / 2, -4, -(BOARD_LENGTH / 2 - FIELD_DEPTH / 2)));
+        ObservableList<Node> children = fieldGroup.getChildren();
+        FieldType[] struct = FieldType.GAMEBOARD_FIELD_STRUCTURE;
+        FieldManager fieldMan = board.getFieldManager();
+        
+        FieldType lastType;
+        FieldType currType = struct[0];
+        
+        Affine affine = new Affine(new Translate(FIELDS_OFF_X, FIELDS_OFF_Y, FIELDS_OFF_Z));
+        for (int id = 0; id < struct.length; id++) {
+            
+            Shape3D fieldShape;
+            lastType = currType;
+            currType = struct[id];
+            
+            if (currType.isCorner()) {
+    
+                affine.appendTranslation(CORNER_DIST, 0);
+                if (currType != FieldType.CORNER_0) affine.appendRotation(90, 0, 0, 0, Rotate.Y_AXIS);
+                
+                fieldShape = new Fx3dCorner(fieldMan.getField(id), Assets.getImage(currType));
+            }
+            else {
+                affine.appendTranslation(lastType.isCorner() ? CORNER_DIST : FIELD_DIST, 0);
+                
+                if (currType.isStreet() || currType.isStation() || currType.isSupply())
+                    fieldShape = new Fx3dPropertyField((PropertyField) fieldMan.getField(id), currType);
+                else fieldShape = new Fx3dField(fieldMan.getField(id), Assets.getImage(currType));
+            }
+            
+            fieldShape.getTransforms().add(0, affine.clone());
+            fieldModels[id] = fieldShape;
+            children.add(fieldShape);
+        }
     }
     
-    private void setDragPoint(MouseEvent event)
-    {
+    private void setDragPoint(MouseEvent event) {
         dragPoint = new Point2D.Double(event.getScreenX(), event.getScreenY());
     }
     

@@ -3,11 +3,14 @@ package de.btu.monopoly.ui.fx3d;
 import de.btu.monopoly.core.GameBoard;
 import de.btu.monopoly.ui.util.Assets;
 import javafx.collections.ObservableList;
+import javafx.geometry.Insets;
 import javafx.scene.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
@@ -19,7 +22,7 @@ public class MonopolySceneData
     
     private final Scene scene;
     
-    private final Group parent;
+    private final BorderPane uiPane;
     private final Group uiGroup;
     private final Group popupGroup;
     
@@ -34,12 +37,20 @@ public class MonopolySceneData
         this.board3d = new MonopolyBoard(board);
     
         gameSub = new SubScene(board3d, 0, 0, true, SceneAntialiasing.BALANCED);
+        gameSub.setCache(true);
+        gameSub.setCacheHint(CacheHint.SPEED);
         
         popupGroup = new Group();
         uiGroup = new Group(popupGroup);
-        parent = new Group(gameSub, uiGroup);
         
-        scene = new Scene(parent, DEFAULT_SCENE_WIDTH, DEFAULT_SCENE_HEIGHT);
+        uiPane = new BorderPane();
+        uiPane.setPadding(new Insets(5, 5, 5, 5));
+        uiPane.setPickOnBounds(false);
+        
+        StackPane stackPane = new StackPane();
+        stackPane.getChildren().addAll(gameSub, uiPane, uiGroup);
+        
+        scene = new Scene(stackPane, DEFAULT_SCENE_WIDTH, DEFAULT_SCENE_HEIGHT);
         
         initScene();
     }
@@ -74,17 +85,33 @@ public class MonopolySceneData
         gameSub.widthProperty().bind(scene.widthProperty());
         gameSub.heightProperty().bind(scene.heightProperty());
         
-        initButtons();
+        initUi();
         initCams();
         
         gameSub.setCamera(orthoCam);
     }
     
-    private void initButtons()
+    private void initUi()
     {
-        ToggleButton button = new ToggleButton(null, new ImageView(Assets.getImage("3d_rotation")));
-        button.setOnMousePressed(event ->
-        {
+        TextField chatField = new TextField();
+        
+        HBox chatInteractionBox = new HBox(chatField, new Button("Senden"));
+        HBox.setHgrow(chatField, Priority.ALWAYS);
+    
+        TextArea chatArea = new TextArea();
+        
+        VBox wholeChatBox = new VBox(chatArea, chatInteractionBox);
+        VBox.setVgrow(chatArea, Priority.ALWAYS);
+        
+        wholeChatBox.setVisible(false);
+        wholeChatBox.setPrefWidth(400);
+        
+        uiPane.setRight(wholeChatBox);
+        
+        BorderPane topButtonPane = new BorderPane();
+        
+        ToggleButton viewButton = new ToggleButton(null, new ImageView(Assets.getImage("3d_icon")));
+        viewButton.setOnMousePressed(event -> {
             perspectiveView = !perspectiveView;
             gameSub.setCamera(perspectiveView ? perspectiveCam : orthoCam);
             board3d.setFluentRotation(perspectiveView);
@@ -92,11 +119,17 @@ public class MonopolySceneData
             if (!perspectiveView && board3d.getRotate() % 90 != 0)
                 board3d.rotateChunky(false);
         });
-        button.setPrefSize(50, 50);
-        button.setTranslateX(5);
-        button.setTranslateY(5);
+        viewButton.setPrefSize(50, 50);
+    
+        ToggleButton chatButton = new ToggleButton("Chat");
+        chatButton.setOnMouseReleased(event -> wholeChatBox.setVisible(chatButton.isSelected()));
+        chatButton.setPrefSize(50, 50);
         
-        uiGroup.getChildren().add(new HBox(button));
+        topButtonPane.setPadding(new Insets(0, 0, 5, 0));
+        topButtonPane.setLeft(viewButton);
+        topButtonPane.setRight(chatButton);
+        
+        uiPane.setTop(topButtonPane);
     }
     
     private void initCams()

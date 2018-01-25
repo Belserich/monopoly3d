@@ -94,7 +94,7 @@ public class FxHelper
         return new Group(xBox, yBox, zBox);
     }
     
-    public static Image replaceColorInImage(Image image, Color oldColor, Color newColor)
+    public static WritableImage replaceColorInImage(WritableImage image, Color oldColor, Color newColor)
     {
         int width = (int) image.getWidth();
         int height = (int) image.getHeight();

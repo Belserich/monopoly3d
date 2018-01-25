@@ -15,12 +15,11 @@ public class Fx3dCorner extends Cuboid
     private final Field field;
     private final Image texture;
     
-    public Fx3dCorner(Field field, Image texture)
-    {
+    public Fx3dCorner(Field field, Image texture) {
         super(FIELD_WIDTH, FIELD_HEIGHT, FIELD_DEPTH);
         this.field = field;
         this.texture = texture;
-    
+        
         setMaterial(texture != null ? FxHelper.getMaterialFor(texture) : FxHelper.getMaterialFor(Color.WHITE));
     }
 }
