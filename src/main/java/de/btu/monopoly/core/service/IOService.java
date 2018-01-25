@@ -17,8 +17,10 @@ import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.data.BroadcastPlayerChoiceRequest;
 import de.btu.monopoly.ui.SceneManager;
 import de.btu.monopoly.ui.TextAreaHandler;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -109,23 +111,40 @@ public class IOService {
     }
 
     public static void betSequence(Auction auc) {
-        Player[] kiPlayers = new Player[auc.getPlayers().length];
-        System.arraycopy(auc.getPlayers(), 0, kiPlayers, 0, kiPlayers.length);
-        Collections.shuffle(Arrays.asList(kiPlayers));
-        Player rndKi = kiPlayers[0];
-
-        for (Player ki : kiPlayers) {
-            rndKi = (ki.getAiLevel() > 0) ? ki : rndKi;
+        // Liste aus KI-Spielern erzeugen und shufflen
+        List<Player> aiPlayers = new ArrayList<>();
+        Arrays.stream(auc.getPlayers()) // alle Mitspieler
+                .filter(p -> p.getAiLevel() > 0) // die eine KI sind
+                .filter(p -> p.getId() != auc.getHighestBidder()) // und nicht das höchste Gebot haben
+                .filter(p -> AuctionService.isStillActive(p)) // und noch an der Auktion teinehmen
+                .forEach(p -> aiPlayers.add(p));
+        if (aiPlayers.isEmpty()) {                                  // falls keine KIs mitspielen -> return
+            return;
         }
-        LOGGER.log(Level.FINE, "{0} (KI) nimmt an Auktion teil.", rndKi.getName());
-        switch (rndKi.getAiLevel()) {
+        Collections.shuffle(aiPlayers);                             // Liste shuffeln
+        Player rndAi = aiPlayers.get(0);                            // erster aus der Liste ist dran
+
+//        if (AuctionService.getActiveBidderCount() == 1) {           // falls die KI alleine ist
+//            AuctionService.playerExit(rndAi.getId());
+//        }
+//        Player[] kiPlayers = new Player[auc.getPlayers().length];
+//        System.arraycopy(auc.getPlayers(), 0, kiPlayers, 0, kiPlayers.length);
+//        Collections.shuffle(Arrays.asList(kiPlayers));
+//
+//        Player rndAi = kiPlayers[0];
+//
+//        for (Player ki : kiPlayers) {
+//            rndKi = (ki.getAiLevel() > 0) ? ki : rndKi;
+//        }
+        LOGGER.log(Level.FINE, "{0} (KI) nimmt an Auktion teil.", rndAi.getName());
+        switch (rndAi.getAiLevel()) {
             case 0:
                 break;
             case 1:
-                EasyKi.processBetSequence(rndKi, EasyKi.getMAXIMUM_BID());
+                EasyKi.processBetSequence(rndAi, EasyKi.getMAXIMUM_BID());
                 break;
             case 2:
-                HardKi.processBetSequence(rndKi);
+                HardKi.processBetSequence(rndAi);
                 break;
             default:
                 LOGGER.warning("Illegale KI-Stufe in BetSequence registriert");
@@ -231,8 +250,7 @@ public class IOService {
     }
 
     /**
-     * Methode zum Auswaehen einer Strasse die Bearbeitet werden soll in der
-     * actionPhase()
+     * Methode zum Auswaehen einer Strasse die Bearbeitet werden soll in der actionPhase()
      *
      * @param player Spieler der eine Eingabe machen soll
      * @param fieldNames Namen der zur Wahl stehenden Felder

@@ -53,7 +53,7 @@ public class AuctionService extends Listener {
 
         auc.setProperty(prop);
         JoinAuctionRequest jaReq = new JoinAuctionRequest();
-        
+
         auc.getClient().sendTCP(jaReq);
         if (!GlobalSettings.RUN_AS_TEST) { // nicht fuer Test
             SceneManager.auctionPopup();
@@ -161,7 +161,7 @@ public class AuctionService extends Listener {
             BidRequest bidReq = new BidRequest();
             bidReq.setBid(bid);
             bidReq.setPlayerID(playerID);
-            
+
             auc.getClient().sendTCP(bidReq);
         }
 
@@ -177,7 +177,7 @@ public class AuctionService extends Listener {
 
         ExitAuctionRequest exReq = new ExitAuctionRequest();
         exReq.setPlayerID(playerID);
-        
+
         auc.getClient().sendTCP(exReq);
 
     }
@@ -206,29 +206,26 @@ public class AuctionService extends Listener {
      * @return stillActive
      */
     public static boolean auctionStillActive() {
+        return (getActiveBidderCount() > 1);
+    }
 
-        int activCount = 0;
-        boolean stillActive = false;
+    public static int getActiveBidderCount() {
+        int activeCount = 0;
         for (int[] aucPlayer : auc.getAucPlayers()) {
-            activCount += aucPlayer[2];
+            activeCount += aucPlayer[2];
         }
-
-        if (activCount > 1) {
-            stillActive = true;
-        }
-
-        return stillActive;
+        return activeCount;
     }
 
     @Override
     public void received(Connection connection, Object object) {
 
         if (object instanceof BroadcastAuctionResponse) {
-            
+
             auc.setAucPlayers(((BroadcastAuctionResponse) object).getAucPlayers());
             auc.setHighestBid(((BroadcastAuctionResponse) object).getHighestBid());
             auc.setHighestBidder(((BroadcastAuctionResponse) object).getHighestBidder());
-            IOService.sleepDeep(100);
+            IOService.sleepDeep(1000);
 
             //@GUI kommt weg:
             LOGGER.log(Level.FINER, "<AUKTION>: \n  Stra\u00dfe: {0}\n  Auktion\u00e4re:", auc.getProperty());
@@ -276,5 +273,14 @@ public class AuctionService extends Listener {
     public static String getPropertyString() {
 
         return auc.getProperty().getName();
+    }
+
+    public static boolean isStillActive(Player player) {
+        for (int[] aucPlayer : auc.getAucPlayers()) {
+            if (aucPlayer[0] == player.getId()) {
+                return (aucPlayer[2] == 1);
+            }
+        }
+        return false;
     }
 }
