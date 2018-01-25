@@ -59,7 +59,7 @@
                         <Font size="40.0" />
                      </font>
                   </Label>
-                  <JFXButton fx:id="allgemeinButton" buttonType="RAISED" contentDisplay="RIGHT" prefHeight="50.0" prefWidth="200.0" ripplerFill="RED" style="-fx-background-color: #212121;" text="Allgemein" textFill="WHITE" GridPane.halignment="CENTER" GridPane.rowIndex="1">
+                  <JFXButton fx:id="allgemeinButton" buttonType="RAISED" contentDisplay="RIGHT" onAction="#allgemeinButtonAction" prefHeight="50.0" prefWidth="200.0" ripplerFill="RED" style="-fx-background-color: #212121;" text="Allgemein" textFill="WHITE" GridPane.halignment="CENTER" GridPane.rowIndex="1">
                      <font>
                         <Font size="23.0" />
                      </font>
@@ -109,7 +109,7 @@
          </children>
       </StackPane>
       <StackPane prefHeight="150.0" prefWidth="200.0" style="-fx-background-color: #212121;" GridPane.columnIndex="1" GridPane.rowSpan="12" />
-      <StackPane fx:id="testPane" prefHeight="1081.0" prefWidth="1466.0" GridPane.rowSpan="12" />
+      <StackPane fx:id="dialogPane" prefHeight="1081.0" prefWidth="1466.0" GridPane.rowSpan="12" />
 
 
    </children>

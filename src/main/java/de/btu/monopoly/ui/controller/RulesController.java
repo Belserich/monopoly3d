@@ -1,6 +1,7 @@
 package de.btu.monopoly.ui.controller;
 
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXDialog;
 import de.btu.monopoly.ui.SceneManager;
 import java.io.IOException;
 import java.net.URL;
@@ -68,6 +69,9 @@ public class RulesController implements Initializable {
 
     @FXML
     private JFXButton auktionenButton;
+
+    @FXML
+    private StackPane dialogPane;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -153,6 +157,11 @@ public class RulesController implements Initializable {
     @FXML
     private void backButtonAction(ActionEvent event) throws IOException {
         changeScene(new FXMLLoader(getClass().getResource("/fxml/Menu.fxml")));
+    }
+
+    @FXML
+    private void allgemeinButtonAction(ActionEvent event) throws IOException {
+        JFXDialog dialog = new JFXDialog(dialogPane, null, JFXDialog.DialogTransition.TOP);
     }
 
     private void changeScene(FXMLLoader loader) {
