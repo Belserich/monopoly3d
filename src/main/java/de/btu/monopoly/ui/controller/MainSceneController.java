@@ -520,7 +520,6 @@ public class MainSceneController implements Initializable {
         BesitzanzeigeFelder[39] = besitz39;
 
         RentanzeigeFelder = new Pane[40];
-        String style = "-fx-rotate:90";
 
         RentanzeigeFelder[1] = haus1;
         RentanzeigeFelder[3] = haus3;
@@ -529,21 +528,13 @@ public class MainSceneController implements Initializable {
         RentanzeigeFelder[8] = haus8;
         RentanzeigeFelder[9] = haus9;
         RentanzeigeFelder[11] = haus11;
-        //haus11.setStyle(style);
         RentanzeigeFelder[12] = haus12;
-        // haus12.setStyle(style);
         RentanzeigeFelder[13] = haus13;
-        //haus13.setStyle(style);
         RentanzeigeFelder[14] = haus14;
-        // haus14.setStyle(style);
         RentanzeigeFelder[15] = haus15;
-        //haus15.setStyle(style);
         RentanzeigeFelder[16] = haus16;
-        // haus16.setStyle(style);
         RentanzeigeFelder[18] = haus18;
-        // haus18.setStyle(style);
         RentanzeigeFelder[19] = haus19;
-        // haus19.setStyle(style);
         RentanzeigeFelder[21] = haus21;
         RentanzeigeFelder[23] = haus23;
         RentanzeigeFelder[24] = haus24;
@@ -553,17 +544,11 @@ public class MainSceneController implements Initializable {
         RentanzeigeFelder[28] = haus28;
         RentanzeigeFelder[29] = haus29;
         RentanzeigeFelder[31] = haus31;
-        //haus31.setStyle(style);
         RentanzeigeFelder[32] = haus32;
-        //haus32.setStyle(style);
         RentanzeigeFelder[34] = haus34;
-        //haus34.setStyle(style);
         RentanzeigeFelder[35] = haus35;
-        // haus35.setStyle(style);
         RentanzeigeFelder[37] = haus37;
-        // haus37.setStyle(style);
         RentanzeigeFelder[39] = haus39;
-        //haus39.setStyle(style);
 
         //Bilder hinzufuegen
         /*Background*/
@@ -797,7 +782,7 @@ public class MainSceneController implements Initializable {
             Task task = new Task() {
                 @Override
                 protected Object call() throws Exception {
-                    int hausAnzahl = 0;
+                    int hausAnzahl;
                     HBox hauses;
 
                     for (int i = 0; i < Felder.length; i++) {
@@ -1100,7 +1085,7 @@ public class MainSceneController implements Initializable {
         if (Color.web(Lobby.getUsers()[id][4]).getBrightness() <= 0.9) {
             player.setTextFill(Color.WHITE);
         }
-        player.setPrefSize(150, 10);
+        player.setPrefSize(200, 10);
 
         box.getChildren().addAll(player, idNummer, geld, jail, karten, fields);
         box.setAlignment(Pos.CENTER);
@@ -1125,7 +1110,7 @@ public class MainSceneController implements Initializable {
                 gp.setAlignment(Pos.CENTER);
                 gp.getChildren().add(box);
 
-                String text = "";
+                String text;
                 Label owner = new Label();
                 Label rent = new Label();
                 for (int i = 0; i < Felder.length; i++) {
