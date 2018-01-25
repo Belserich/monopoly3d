@@ -12,6 +12,10 @@ import de.btu.monopoly.data.field.*;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.menu.Lobby;
 import de.btu.monopoly.net.client.GameClient;
+import java.net.URL;
+import java.util.List;
+import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 import javafx.animation.FadeTransition;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
@@ -30,11 +34,6 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.util.Duration;
-
-import java.net.URL;
-import java.util.List;
-import java.util.ResourceBundle;
-import java.util.stream.Collectors;
 
 /**
  *
@@ -771,6 +770,7 @@ public class MainSceneController implements Initializable {
 
             field.setOnMouseExited((event) -> {
                 resetPopupAbove();
+
             });
         }
     }
@@ -959,6 +959,7 @@ public class MainSceneController implements Initializable {
      *
      * @param width
      * @param heigth
+     * @param anzahl der Hauser
      * @return
      */
     public HBox createHaus1(int width, int heigth) {
@@ -1109,18 +1110,32 @@ public class MainSceneController implements Initializable {
                 gp.setAlignment(Pos.CENTER);
                 gp.getChildren().add(box);
 
-                String text;
+                String text = new String();
                 Label owner = new Label();
                 Label rent = new Label();
                 for (int i = 0; i < Felder.length; i++) {
                     if (Felder[i] == feld) {
                         if (currentField[i] instanceof PropertyField) {
-                            owner.setText(("\tBesitzer : " + ((PropertyField) currentField[i]).getOwner()));
+                            if (((PropertyField) currentField[i]).getOwner() != null) {
+                                owner.setText(("Besitzer : " + ((PropertyField) currentField[i]).getOwner().getName()));
+                            }
+
                             rent.setText("\n Aktuelle Miete : " + ((PropertyField) currentField[i]).getRent());
                             rent.setTextFill(Color.BROWN);
                             owner.setTextFill(Color.DARKBLUE);
 
-                            text = "\n\t" + currentField[i];
+                            if (currentField[i] instanceof StreetField) {
+                                text = "\n\t" + ((StreetField) currentField[i]).fieldsInformation();
+
+                            }
+                            if (currentField[i] instanceof StationField) {
+                                text = "\n\t" + ((StationField) currentField[i]).stationInformation();
+
+                            }
+                            if (currentField[i] instanceof SupplyField) {
+                                text = "\n\t" + ((SupplyField) currentField[i]).supplyInformation();
+
+                            }
 
                             Label info = new Label(text);
                             box.getChildren().addAll(owner, info, rent);
