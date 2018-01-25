@@ -125,7 +125,7 @@ public class HardKi {
         }//ist die KI arm kauft sie nicht
         else {
             //Es sei denn sie hat bereits Straßen des selben Zuges
-            if (areThereAlreadyNeighboursOwned(prop, player)) {
+            if (someNeighboursOwned(prop, player)) {
                 //Dann nur wenn sie genug Geld hat
                 buy = (player.getMoney() > prop.getPrice());
             }
@@ -230,7 +230,7 @@ public class HardKi {
      * @return Gibt an, ob die KI mit dem Handel einverstanden ist
      */
     public static boolean calculateTradingChoice(Trade trade, Player ki) {
-        return TradeAi.calculateChoice(trade, ki);
+        return TradeAi.calculateChoice(trade, ki, FIELDMANAGER);
     }
 
     //________________________HILFSMETHODEN________________________________________________________
@@ -257,9 +257,21 @@ public class HardKi {
      * @param player Ki
      * @return Gibt an, ob bereits Strassen des selben Strassenzuges, wie dem der uebergebenen Strasse im Besitz sind
      */
-    static boolean areThereAlreadyNeighboursOwned(PropertyField prop, Player player) {
+    static boolean someNeighboursOwned(PropertyField prop, Player player) {
         List<PropertyField> neighborList = FIELDMANAGER.getNeighborList(prop);
         return neighborList.stream().anyMatch((neigh) -> (neigh.getOwner() == player));
+    }
+
+    /**
+     * analog zu someNeighboursOwned()
+     *
+     * @param ki
+     * @param prop
+     * @return ob alle Nachbarn im Besitz sind
+     */
+    static boolean allNeighboursOwned(PropertyField prop, Player ki) {
+        List<PropertyField> neighborList = FIELDMANAGER.getNeighborList(prop);
+        return neighborList.stream().allMatch((neigh) -> (neigh.getOwner() == ki));
     }
 
     /**

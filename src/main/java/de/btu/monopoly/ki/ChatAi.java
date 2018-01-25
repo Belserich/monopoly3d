@@ -14,7 +14,7 @@ import java.util.Random;
  */
 public class ChatAi {
 
-    public static void sendChatMessage(String message, boolean isLocal) {
+    static void sendChatMessage(String message, boolean isLocal) {
         //TODO
     }
 
@@ -116,7 +116,7 @@ public class ChatAi {
         sendChatMessage(mess, true);
     }
 
-    private static void propertyMessage(int balance) {
+    static void propertyMessage(int balance) {
         // TODO
     }
 

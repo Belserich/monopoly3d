@@ -7,6 +7,8 @@ package de.btu.monopoly.ki;
 
 import de.btu.monopoly.core.mechanics.Trade;
 import de.btu.monopoly.core.mechanics.TradeOffer;
+import de.btu.monopoly.data.field.FieldManager;
+import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.player.Player;
 
 /**
@@ -17,12 +19,20 @@ public class TradeAi {
 
     private static int[] para;
 
-    private static final double POOR_MONEY_MULTIPLICATOR = 1.3;
-    private static final double RICH_MONEY_MULTIPLICATOR = 0.85;
+    // Value = Wertveraenderung in %
+    private static final int VALUE_OF_MONEY_POOR = 130;
+    private static final int VALUE_OF_MONEY_RICH = 85;
     private static final int CARD_SELLING_AMOUNT = 200;
     private static final int MINIMUM_ACCEPT_AMOUNT = -50;
+    private static final int VALUE_OF_CHEAP_PROP = 70;
+    private static final int VALUE_OF_LUCRATIVE_PROP = 150;
+    private static final int VALUE_OF_EXPANSIVE_PROP = 110;
+    private static final int VALUE_IF_SOME_NEIGHBOURS_OWNED = 110;
+    private static final int VALUE_IF_ALL_NEIGHBOURS_OWNED = 130;
+    private static final int VALUE_IF_DEMANDING_COMPLETING_PROP = 200; //falls eine komplettierende Straße verkauft wird
+    private static final int VALUE_IF_KI_IS_SUPERRICH = 110;
 
-    protected static boolean calculateChoice(Trade trade, Player ki) {
+    protected static boolean calculateChoice(Trade trade, Player ki, FieldManager fima) {
         // Was die Ki bekommt:
         TradeOffer supply = trade.getSupply();
         int sMoney = supply.getMoney();
@@ -55,11 +65,11 @@ public class TradeAi {
 
         // Einkommende Strassen werden auf balance gerechnet
         for (int propId : sProps) {
-            balance += calcProperty(ki, propId, false);
+            balance += calcProperty(ki, propId, fima, false);
         }
         // Ausgehende Strassen werden auf balance gerechnet
         for (int propId : dProps) {
-            balance += calcProperty(ki, propId, true);
+            balance += calcProperty(ki, propId, fima, true);
         }
 
         ChatAi.tradeResultMessage(balance, MINIMUM_ACCEPT_AMOUNT);
@@ -70,16 +80,16 @@ public class TradeAi {
         int balance = 0;
 
         if (ki.getMoney() < para[6]) {                      //arm
-            balance += sMoney * POOR_MONEY_MULTIPLICATOR;
-            balance -= dMoney * POOR_MONEY_MULTIPLICATOR;
+            balance += sMoney * VALUE_OF_MONEY_POOR / 100;
+            balance -= dMoney * VALUE_OF_MONEY_POOR / 100;
         }
         else if (ki.getMoney() < para[4]) {                //normal
             balance += sMoney;
             balance -= dMoney;
         }
         else {                                            //reich
-            balance += sMoney * RICH_MONEY_MULTIPLICATOR;
-            balance -= dMoney * RICH_MONEY_MULTIPLICATOR;
+            balance += sMoney * VALUE_OF_MONEY_RICH / 100;
+            balance -= dMoney * VALUE_OF_MONEY_RICH / 100;
         }
 
         return balance;
@@ -100,13 +110,39 @@ public class TradeAi {
         return balance;
     }
 
-    private static int calcProperty(Player ki, int propId, boolean demanding) {
+    private static int calcProperty(Player ki, int propId, FieldManager fima, boolean demanding) {
+        int multiplicator = 1;
+
         // Strasse rausbekommen
+        PropertyField prop = (PropertyField) fima.getField(propId);
 
         // lukrative Lage beruecksichtigen
+        if (propId < para[2]) {              // billig
+            multiplicator *= (VALUE_OF_CHEAP_PROP / 100);
+        }
+        else if (propId < para[3]) {       // lukrativ
+            multiplicator *= (VALUE_OF_LUCRATIVE_PROP / 100);
+        }
+        else {                            // teuer
+            multiplicator *= (VALUE_OF_EXPANSIVE_PROP / 100);
+        }
+
         // sind bereits Nachbarn im Besitz
+        if (HardKi.someNeighboursOwned(prop, ki)) {
+            multiplicator *= (VALUE_IF_SOME_NEIGHBOURS_OWNED / 100);
+        }
+
         // komplettiert sie einen Strassenzug (demanding)
-        // Wieviel Geld besitzt die KI selbst (reich++)
-        return 0; //TODO
+        if (HardKi.allNeighboursOwned(prop, ki)) {
+            multiplicator *= demanding
+                    ? (VALUE_IF_DEMANDING_COMPLETING_PROP / 100)
+                    : (VALUE_IF_ALL_NEIGHBOURS_OWNED / 100);
+        }
+
+        // Ist die KI superreich
+        multiplicator *= (ki.getMoney() > para[4]) ? (VALUE_IF_KI_IS_SUPERRICH / 100) : 1;
+
+        // Multiplikator anwenden
+        return prop.getTradingValue() * multiplicator;
     }
 }
