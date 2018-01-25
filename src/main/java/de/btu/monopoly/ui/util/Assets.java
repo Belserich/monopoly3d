@@ -5,7 +5,9 @@ import de.btu.monopoly.data.card.CardStack;
 import de.btu.monopoly.data.field.Field;
 import de.btu.monopoly.data.parser.CardDataParser;
 import de.btu.monopoly.data.parser.FieldDataParser;
+import de.btu.monopoly.ui.fx3d.FieldType;
 import javafx.scene.image.Image;
+import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import org.xml.sax.SAXException;
@@ -27,7 +29,7 @@ public class Assets
     
     private static final String IMAGE_3D_PATH = "3d_rotation.png";
     
-    private static final String BOARD_PATH = "board.png";
+    private static final String BOARD_PATH = "game_board.png";
     
     private static final String CORNER_0_PATH = "corner_0.png";
     private static final String CORNER_1_PATH = "corner_1.png";
@@ -56,7 +58,7 @@ public class Assets
     
     private static final String FONT_PATH = "kabel.ttf";
     
-    private static final HashMap<String, Image> registeredImages = new HashMap<>();
+    private static final HashMap<String, WritableImage> registeredImages = new HashMap<>();
     private static final HashMap<String, String> registeredStrings = new HashMap<>();
     private static final HashMap<String, Font> registeredFonts = new HashMap<>();
     
@@ -72,7 +74,7 @@ public class Assets
     
     public static void load()
     {
-        registeredImages.put("3d_rotation", loadImage(IMAGE_3D_PATH));
+        registeredImages.put("3d_icon", loadImage(IMAGE_3D_PATH));
         
         registeredImages.put("game_board", loadImage(BOARD_PATH));
         
@@ -124,9 +126,10 @@ public class Assets
         return !registeredImages.isEmpty() || !registeredStrings.isEmpty();
     }
     
-    private static Image loadImage(String path)
+    private static WritableImage loadImage(String path)
     {
-        Image img = new Image(R + path);
+        Image image = new Image(R + path);
+        WritableImage img = new WritableImage(image.getPixelReader(), (int) image.getWidth(), (int) image.getHeight());
         img = FxHelper.replaceColorInImage(img, COLOR_TO_REPLACE, REPLACEMENT_COLOR);
         return img;
     }
@@ -137,7 +140,7 @@ public class Assets
     
     public void registerString(String key, String val)
     {
-        registeredStrings.put(key, val);
+        registeredStrings.put(key, val.toLowerCase());
     }
     
     public static Image getImage(String name)
@@ -145,9 +148,11 @@ public class Assets
         return registeredImages.get(name);
     }
     
+    public static WritableImage getImage(FieldType type) { return registeredImages.get(type.toString().toLowerCase()); }
+    
     public static String getString(String key)
     {
-        return registeredStrings.getOrDefault(key, UNDEFINED);
+        return registeredStrings.getOrDefault(key.toLowerCase(), UNDEFINED);
     }
     
     public static Font getFont(String key) {
