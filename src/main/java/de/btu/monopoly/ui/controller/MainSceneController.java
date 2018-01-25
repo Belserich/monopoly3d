@@ -1090,10 +1090,10 @@ public class MainSceneController implements Initializable {
         fields.setTextFill(Color.MIDNIGHTBLUE);
 
         JFXButton player = new JFXButton();
-        Label geld = new Label(" hat in Konto : " + playeronbutton.getMoney());
-        Label jail = new Label(" ist in Gefängnis seit : " + playeronbutton.getDaysInJail());
-        Label idNummer = new Label("ID : " + id);
-        Label karten = new Label("" + playeronbutton.getCardStack());
+        Label geld = new Label("Kontostand : " + playeronbutton.getMoney());
+        Label jail = new Label("Tage im Gefängnis : " + playeronbutton.getDaysInJail());
+        Label idNummer = new Label("Spieler-ID : " + id);
+        Label karten = new Label("Anzahl Gefängnisfreikarten : " + playeronbutton.getCardStack().size());
 
         player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[id][4]), CornerRadii.EMPTY, Insets.EMPTY)));
         player.setText(Lobby.getUsers()[id][1]);
@@ -1102,7 +1102,7 @@ public class MainSceneController implements Initializable {
         }
         player.setPrefSize(150, 10);
 
-        box.getChildren().addAll(player, geld, jail, idNummer, karten, fields);
+        box.getChildren().addAll(player, idNummer, geld, jail, karten, fields);
         box.setAlignment(Pos.CENTER);
 
         if (PopupPane.getChildren().contains(middlePane)) {

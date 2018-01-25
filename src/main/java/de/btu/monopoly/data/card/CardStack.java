@@ -39,16 +39,25 @@ public class CardStack {
      * Mischt den Kartenstapel.
      */
     public void shuffle(Random random) {
-        
+
         Card temp;
         int index;
         for (int i = cards.size() - 1; i > 0; i--) {
-            
+
             index = random.nextInt(i + 1);
             temp = cards.get(index);
             cards.set(index, cards.get(i));
             cards.set(i, temp);
         }
+    }
+
+    /**
+     * Gibt die Länge des Stapels zurück
+     *
+     * @return
+     */
+    public int size() {
+        return cards.size();
     }
 
     /**
@@ -61,7 +70,8 @@ public class CardStack {
     }
 
     /**
-     * Gibt die naechste Karte des angegebenen Typs zuruec, entfernt sie und fügt sie wieder ans Ende des Stapels.
+     * Gibt die naechste Karte des angegebenen Typs zuruec, entfernt sie und
+     * fügt sie wieder ans Ende des Stapels.
      *
      * @param action Aktionstyp
      * @return nächste Karte vom angegebenen Typ
@@ -124,7 +134,7 @@ public class CardStack {
         }
         return counter;
     }
-    
+
     public Card cardAt(int index) {
         return cards.get(index);
     }
@@ -139,12 +149,14 @@ public class CardStack {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder("[Kartenstapel]");
-        
+
         if (cards.isEmpty()) {
             builder.append(" -");
         }
-        else builder.append("\n");
-        
+        else {
+            builder.append("\n");
+        }
+
         cards.forEach(c -> {
             builder.append("\t");
             builder.append(c);
