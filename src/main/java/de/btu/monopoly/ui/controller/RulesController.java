@@ -2,6 +2,7 @@ package de.btu.monopoly.ui.controller;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXDialog;
+import com.jfoenix.controls.JFXDialogLayout;
 import de.btu.monopoly.ui.SceneManager;
 import java.io.IOException;
 import java.net.URL;
@@ -10,19 +11,27 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.animation.FadeTransition;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.BackgroundPosition;
 import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 /**
@@ -161,7 +170,36 @@ public class RulesController implements Initializable {
 
     @FXML
     private void allgemeinButtonAction(ActionEvent event) throws IOException {
-        JFXDialog dialog = new JFXDialog(dialogPane, null, JFXDialog.DialogTransition.TOP);
+
+        Text text = new Text("Beim Start des Spiels werden zwei Würfel bereit gelegt.\n"
+                + "Jeder Spieler würfelt einmal mit beiden Würfeln.\n"
+                + "Die Reihenfolge wird daraufhinüber die geworfene Augenzahl festgelegt, wobei der erste Spieler der ist, der die höchste Augenzahl geworfen hat\nund der letzte Spieler der ist, der die niedrigste Augenzahl geworfen hat.\n"
+                + "Alle Spieler erhalten ein Startkapital von 1500€.\n"
+                + "Jedem Spieler wird außerdem eine Farbe zugewiesen.\n"
+                + "Es beginnen so lange Spielrunden, bis ein endgültiger Gewinner feststeht.\n"
+                + "In einer Spielrunde durchläuft jeder aktive Spieler in der festgelegten Reihenfolge eine Rundenphase, bis ein endgültiger Gewinner feststeht.\n"
+                + "Der Spieler, der momentan an der Reihe ist wird fortan momentaner Spieler genannt.\n"
+                + "Ein Mitspieler aus der Sicht des momentanen Spielers wird als Gegner bezeichnet.");
+        text.setFont(Font.font("System", FontPosture.REGULAR, 14));
+        text.setFill(Color.WHITE);
+
+        JFXDialogLayout content = new JFXDialogLayout();
+        content.setHeading(new Text("Allgemein"));
+        content.setBody(text);
+        content.setStyle("-fx-background-color: #212121");
+
+        JFXDialog dialog = new JFXDialog(dialogPane, content, JFXDialog.DialogTransition.CENTER);
+        JFXButton button = new JFXButton("Schliessen");
+        button.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
+        button.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                dialog.close();
+            }
+
+        });
+        content.setActions(button);
+        dialog.show();
     }
 
     private void changeScene(FXMLLoader loader) {
