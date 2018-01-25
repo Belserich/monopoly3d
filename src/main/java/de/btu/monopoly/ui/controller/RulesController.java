@@ -165,31 +165,158 @@ public class RulesController implements Initializable {
     // Button back
     @FXML
     private void backButtonAction(ActionEvent event) throws IOException {
+        if (dialogPane.getChildren().size() > 0) {
+            if (dialogPane.getChildren().get(0) instanceof JFXDialog) {
+                ((JFXDialog) dialogPane.getChildren().get(0)).close();
+            }
+        }
         changeScene(new FXMLLoader(getClass().getResource("/fxml/Menu.fxml")));
     }
 
     @FXML
-    private void allgemeinButtonAction(ActionEvent event) throws IOException {
-
+    private void vorDemSpielButtonAction(ActionEvent event) throws IOException {
+        Text headline = new Text("Vor dem Spiel");
         Text text = new Text("Beim Start des Spiels werden zwei Würfel bereit gelegt.\n"
                 + "Jeder Spieler würfelt einmal mit beiden Würfeln.\n"
-                + "Die Reihenfolge wird daraufhinüber die geworfene Augenzahl festgelegt, wobei der erste Spieler der ist, der die höchste Augenzahl geworfen hat\nund der letzte Spieler der ist, der die niedrigste Augenzahl geworfen hat.\n"
+                + "Die Reihenfolge wird daraufhin über die geworfene Augenzahl festgelegt, wobei der erste Spieler der ist, der die höchste Augenzahl geworfen hat\n"
+                + "und der letzte Spieler der ist, der die niedrigste Augenzahl geworfen hat.\n"
                 + "Alle Spieler erhalten ein Startkapital von 1500€.\n"
                 + "Jedem Spieler wird außerdem eine Farbe zugewiesen.\n"
                 + "Es beginnen so lange Spielrunden, bis ein endgültiger Gewinner feststeht.\n"
                 + "In einer Spielrunde durchläuft jeder aktive Spieler in der festgelegten Reihenfolge eine Rundenphase, bis ein endgültiger Gewinner feststeht.\n"
                 + "Der Spieler, der momentan an der Reihe ist wird fortan momentaner Spieler genannt.\n"
                 + "Ein Mitspieler aus der Sicht des momentanen Spielers wird als Gegner bezeichnet.");
+
+        showDialog(headline, text);
+    }
+
+    @FXML
+    private void allgemeinButtonAction(ActionEvent event) throws IOException {
+        Text headline = new Text("Allgemein");
+        Text text = new Text("Ziel des Spiels ist es, als einziger verbleibender Spieler, Kapital zu besitzen.\n"
+                + "Fällt das Eigenkapital von einem Spieler unter null, so scheidet dieser aus dem Spiel aus.\n\n"
+                + "Allgemeine Festlegungen:\n"
+                + "      Das Währungzeichen ist € (Euro).\n"
+                + "      Die Spielfiguren bewegen sich immer im Uhrzeigersinn, um das Spielbrett.\n"
+                + "      Es wird mit zwei Würfeln gewürfelt.\n\n"
+                + "Die Rundenphase eines Spielers besteht aus folgenden Teilphasen:\n"
+                + "      Gefängnisphase\n"
+                + "      Wurfphase\n"
+                + "      Feldphase\n"
+                + "      Aktionsphase");
+
+        showDialog(headline, text);
+    }
+
+    @FXML
+    private void gefaengnisphaseButtonAction(ActionEvent event) throws IOException {
+        Text headline = new Text("Gefängnisphase");
+        Text text = new Text("In der Gefängnisphase hat der Spieler drei Optionen von denen er eine wählen muss. \n\n"
+                + "Er kann 50€ bezahlen, eine  \"Gefängnis  Frei\"-Karte  spielen  oder  würfeln.\n"
+                + "Wählt er eine der beiden ersten Optionen und sind diese erlaubt, so ist er frei und kommt in die nächste Teilphase.\n"
+                + "Wählt der Spieler, zu würfeln und würfelt er einen Pasch, so kommt er ebenfalls frei und in die nächste Teilphase\n"
+                + "Wenn er keinen Pasch würfelt und es ist seine dritte Runde im Gefängnis, werden ihm 50€ abgezogen, er kommt ebenfalls frei und in die nächste Teilphase.\n"
+                + "Falls keiner dieser Fälle eintritt, beginnt für den momentanen Spieler direkt die Aktionsphase.");
+
+        showDialog(headline, text);
+    }
+
+    @FXML
+    private void wurfphaseButtonAction(ActionEvent event) throws IOException {
+        Text headline = new Text("Wurfphase");
+        Text text = new Text("In der Wurfphase werden zwei Würfel geworfen, ihre Summe ergibt die Anzahl der Felder, um die sich der momentane Spieler im Uhrzeigersinn bewegt.\n"
+                + "Kommt der Spieler Über das \"LOS\"-Feld während seines Zuges, so bekommt er 200€ von der Bank.\n"
+                + "Hat der momentane Spieler in seiner Wurfphase ein Pasch (zweimal dieselbe Zahl) geworfen, wechselt dieser nach seiner nächsten Aktionsphase sofort wieder in die Wurfphase\n"
+                + "Esseidenn, es ist sein dritter Pasch in Folge, dann wird seine Spielfigur in das Gefängnis gesetzt und sein Zug ist mit sofortiger Wirkung beendet.");
+
+        showDialog(headline, text);
+    }
+
+    @FXML
+    private void feldphaseButtonAction(ActionEvent event) throws IOException {
+        Text headline = new Text("Feldphase");
+        Text text = new Text("In der Gefangnisphase hat der Spieler drei Optionen von denen er eine wählen muss. \n\n"
+                + "Er kann 50€ bezahlen,eine  \"Gefangnis  Frei\"-Karte  spielen  oder  wurfeln.\n"
+                + "Wählt er eine der beiden ersten Optionen und sind diese erlaubt, so ist er frei und kommt in die nachste Teilphase.\n"
+                + "Wählt der Spieler, zu würfeln und würfelt er einen Pasch, so kommt er ebenfalls frei und in die nachste Teilphase\n"
+                + "Wenn er keinen Pasch würfelt und es ist seine dritte Runde im Gefangnis, werden ihm 50€ abgezogen, er kommt ebenfalls frei und in die nachste Teilphase.\n"
+                + "Falls keiner dieser Fälle eintritt, beginnt fur den momentanen Spieler direkt die Aktionsphase.");
+
+        showDialog(headline, text);
+    }
+
+    @FXML
+    private void aktionsphaseButtonAction(ActionEvent event) throws IOException {
+        Text headline = new Text("Gefängnisphase");
+        Text text = new Text("In der Gefangnisphase hat der Spieler drei Optionen von denen er eine wählen muss. \n\n"
+                + "Er kann 50€ bezahlen,eine  \"Gefangnis  Frei\"-Karte  spielen  oder  wurfeln.\n"
+                + "Wählt er eine der beiden ersten Optionen und sind diese erlaubt, so ist er frei und kommt in die nachste Teilphase.\n"
+                + "Wählt der Spieler, zu würfeln und würfelt er einen Pasch, so kommt er ebenfalls frei und in die nachste Teilphase\n"
+                + "Wenn er keinen Pasch würfelt und es ist seine dritte Runde im Gefangnis, werden ihm 50€ abgezogen, er kommt ebenfalls frei und in die nachste Teilphase.\n"
+                + "Falls keiner dieser Fälle eintritt, beginnt fur den momentanen Spieler direkt die Aktionsphase.");
+
+        showDialog(headline, text);
+    }
+
+    @FXML
+    private void haeuserButtonAction(ActionEvent event) throws IOException {
+        Text headline = new Text("Gefängnisphase");
+        Text text = new Text("In der Gefangnisphase hat der Spieler drei Optionen von denen er eine wählen muss. \n\n"
+                + "Er kann 50€ bezahlen,eine  \"Gefangnis  Frei\"-Karte  spielen  oder  wurfeln.\n"
+                + "Wählt er eine der beiden ersten Optionen und sind diese erlaubt, so ist er frei und kommt in die nachste Teilphase.\n"
+                + "Wählt der Spieler, zu würfeln und würfelt er einen Pasch, so kommt er ebenfalls frei und in die nachste Teilphase\n"
+                + "Wenn er keinen Pasch würfelt und es ist seine dritte Runde im Gefangnis, werden ihm 50€ abgezogen, er kommt ebenfalls frei und in die nachste Teilphase.\n"
+                + "Falls keiner dieser Fälle eintritt, beginnt fur den momentanen Spieler direkt die Aktionsphase.");
+
+        showDialog(headline, text);
+    }
+
+    @FXML
+    private void hypothekButtonAction(ActionEvent event) throws IOException {
+        Text headline = new Text("Gefängnisphase");
+        Text text = new Text("In der Gefangnisphase hat der Spieler drei Optionen von denen er eine wählen muss. \n\n"
+                + "Er kann 50€ bezahlen,eine  \"Gefangnis  Frei\"-Karte  spielen  oder  wurfeln.\n"
+                + "Wählt er eine der beiden ersten Optionen und sind diese erlaubt, so ist er frei und kommt in die nachste Teilphase.\n"
+                + "Wählt der Spieler, zu würfeln und würfelt er einen Pasch, so kommt er ebenfalls frei und in die nachste Teilphase\n"
+                + "Wenn er keinen Pasch würfelt und es ist seine dritte Runde im Gefangnis, werden ihm 50€ abgezogen, er kommt ebenfalls frei und in die nachste Teilphase.\n"
+                + "Falls keiner dieser Fälle eintritt, beginnt fur den momentanen Spieler direkt die Aktionsphase.");
+
+        showDialog(headline, text);
+    }
+
+    @FXML
+    private void auktionenButtonAction(ActionEvent event) throws IOException {
+        Text headline = new Text("Gefängnisphase");
+        Text text = new Text("In der Gefangnisphase hat der Spieler drei Optionen von denen er eine wählen muss. \n\n"
+                + "Er kann 50€ bezahlen,eine  \"Gefangnis  Frei\"-Karte  spielen  oder  wurfeln.\n"
+                + "Wählt er eine der beiden ersten Optionen und sind diese erlaubt, so ist er frei und kommt in die nachste Teilphase.\n"
+                + "Wählt der Spieler, zu würfeln und würfelt er einen Pasch, so kommt er ebenfalls frei und in die nachste Teilphase\n"
+                + "Wenn er keinen Pasch würfelt und es ist seine dritte Runde im Gefangnis, werden ihm 50€ abgezogen, er kommt ebenfalls frei und in die nachste Teilphase.\n"
+                + "Falls keiner dieser Fälle eintritt, beginnt fur den momentanen Spieler direkt die Aktionsphase.");
+
+        showDialog(headline, text);
+    }
+
+    private void showDialog(Text headline, Text text) {
+
+        if (dialogPane.getChildren().size() > 0) {
+            if (dialogPane.getChildren().get(0) instanceof JFXDialog) {
+                ((JFXDialog) dialogPane.getChildren().get(0)).close();
+            }
+        }
+
+        headline.setFont(Font.font("System", FontPosture.REGULAR, 16));
+        headline.setFill(Color.WHITE);
         text.setFont(Font.font("System", FontPosture.REGULAR, 14));
         text.setFill(Color.WHITE);
 
         JFXDialogLayout content = new JFXDialogLayout();
-        content.setHeading(new Text("Allgemein"));
+        content.setHeading(headline);
         content.setBody(text);
         content.setStyle("-fx-background-color: #212121");
 
         JFXDialog dialog = new JFXDialog(dialogPane, content, JFXDialog.DialogTransition.CENTER);
-        JFXButton button = new JFXButton("Schliessen");
+        JFXButton button = new JFXButton("Schließen");
         button.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
         button.setOnAction(new EventHandler<ActionEvent>() {
             @Override

@@ -64,42 +64,42 @@
                         <Font size="23.0" />
                      </font>
                   </JFXButton>
-                  <JFXButton fx:id="vorDemSpielButton" buttonType="RAISED" contentDisplay="RIGHT" prefHeight="50.0" prefWidth="200.0" ripplerFill="RED" style="-fx-background-color: #212121;" text="Vor dem Spiel" textFill="WHITE" GridPane.halignment="CENTER" GridPane.rowIndex="2">
+                  <JFXButton fx:id="vorDemSpielButton" buttonType="RAISED" contentDisplay="RIGHT" onAction="#vorDemSpielButtonAction" prefHeight="50.0" prefWidth="200.0" ripplerFill="RED" style="-fx-background-color: #212121;" text="Vor dem Spiel" textFill="WHITE" GridPane.halignment="CENTER" GridPane.rowIndex="2">
                      <font>
                         <Font size="23.0" />
                      </font>
                   </JFXButton>
-                  <JFXButton fx:id="gefaengnisphaseButton" buttonType="RAISED" contentDisplay="RIGHT" prefHeight="50.0" prefWidth="200.0" ripplerFill="RED" style="-fx-background-color: #212121;" text="Gefängnisphase" textFill="WHITE" GridPane.halignment="CENTER" GridPane.rowIndex="3">
+                  <JFXButton fx:id="gefaengnisphaseButton" buttonType="RAISED" contentDisplay="RIGHT" onAction="#gefaengnisphaseButtonAction" prefHeight="50.0" prefWidth="200.0" ripplerFill="RED" style="-fx-background-color: #212121;" text="Gefängnisphase" textFill="WHITE" GridPane.halignment="CENTER" GridPane.rowIndex="3">
                      <font>
                         <Font size="23.0" />
                      </font>
                   </JFXButton>
-                  <JFXButton fx:id="feldphaseButton" buttonType="RAISED" contentDisplay="RIGHT" prefHeight="50.0" prefWidth="200.0" ripplerFill="RED" style="-fx-background-color: #212121;" text="Feldphase" textFill="WHITE" GridPane.halignment="CENTER" GridPane.rowIndex="5">
+                  <JFXButton fx:id="feldphaseButton" buttonType="RAISED" contentDisplay="RIGHT" onAction="#feldphaseButtonAction" prefHeight="50.0" prefWidth="200.0" ripplerFill="RED" style="-fx-background-color: #212121;" text="Feldphase" textFill="WHITE" GridPane.halignment="CENTER" GridPane.rowIndex="5">
                      <font>
                         <Font size="23.0" />
                      </font>
                   </JFXButton>
-                  <JFXButton fx:id="wurfphaseButton" buttonType="RAISED" contentDisplay="RIGHT" prefHeight="50.0" prefWidth="200.0" ripplerFill="RED" style="-fx-background-color: #212121;" text="Wurfphase" textFill="WHITE" GridPane.halignment="CENTER" GridPane.rowIndex="4">
+                  <JFXButton fx:id="wurfphaseButton" buttonType="RAISED" contentDisplay="RIGHT" onAction="#wurfphaseButtonAction" prefHeight="50.0" prefWidth="200.0" ripplerFill="RED" style="-fx-background-color: #212121;" text="Wurfphase" textFill="WHITE" GridPane.halignment="CENTER" GridPane.rowIndex="4">
                      <font>
                         <Font size="23.0" />
                      </font>
                   </JFXButton>
-                  <JFXButton fx:id="aktionsphaseButton" buttonType="RAISED" contentDisplay="RIGHT" prefHeight="50.0" prefWidth="200.0" ripplerFill="RED" style="-fx-background-color: #212121;" text="Aktionsphase" textFill="WHITE" GridPane.halignment="CENTER" GridPane.rowIndex="6">
+                  <JFXButton fx:id="aktionsphaseButton" buttonType="RAISED" contentDisplay="RIGHT" onAction="#aktionsphaseButtonAction" prefHeight="50.0" prefWidth="200.0" ripplerFill="RED" style="-fx-background-color: #212121;" text="Aktionsphase" textFill="WHITE" GridPane.halignment="CENTER" GridPane.rowIndex="6">
                      <font>
                         <Font size="23.0" />
                      </font>
                   </JFXButton>
-                  <JFXButton fx:id="haeuserButton" buttonType="RAISED" contentDisplay="RIGHT" prefHeight="50.0" prefWidth="200.0" ripplerFill="RED" style="-fx-background-color: #212121;" text="Häuser" textFill="WHITE" GridPane.halignment="CENTER" GridPane.rowIndex="7">
+                  <JFXButton fx:id="haeuserButton" buttonType="RAISED" contentDisplay="RIGHT" onAction="#haeuserButtonAction" prefHeight="50.0" prefWidth="200.0" ripplerFill="RED" style="-fx-background-color: #212121;" text="Häuser" textFill="WHITE" GridPane.halignment="CENTER" GridPane.rowIndex="7">
                      <font>
                         <Font size="23.0" />
                      </font>
                   </JFXButton>
-                  <JFXButton fx:id="hypothekButton" buttonType="RAISED" contentDisplay="RIGHT" prefHeight="50.0" prefWidth="200.0" ripplerFill="RED" style="-fx-background-color: #212121;" text="Hypothek" textFill="WHITE" GridPane.halignment="CENTER" GridPane.rowIndex="8">
+                  <JFXButton fx:id="hypothekButton" buttonType="RAISED" contentDisplay="RIGHT" onAction="#hypothekButtonAction" prefHeight="50.0" prefWidth="200.0" ripplerFill="RED" style="-fx-background-color: #212121;" text="Hypothek" textFill="WHITE" GridPane.halignment="CENTER" GridPane.rowIndex="8">
                      <font>
                         <Font size="23.0" />
                      </font>
                   </JFXButton>
-                  <JFXButton fx:id="auktionenButton" buttonType="RAISED" contentDisplay="RIGHT" prefHeight="50.0" prefWidth="200.0" ripplerFill="RED" style="-fx-background-color: #212121;" text="Auktionen" textFill="WHITE" GridPane.halignment="CENTER" GridPane.rowIndex="9">
+                  <JFXButton fx:id="auktionenButton" buttonType="RAISED" contentDisplay="RIGHT" onAction="#auktionenButtonAction" prefHeight="50.0" prefWidth="200.0" ripplerFill="RED" style="-fx-background-color: #212121;" text="Auktionen" textFill="WHITE" GridPane.halignment="CENTER" GridPane.rowIndex="9">
                      <font>
                         <Font size="23.0" />
                      </font>
