@@ -1,11 +1,7 @@
 package de.btu.monopoly.ui.controller;
 
 import com.jfoenix.controls.JFXTextField;
-import de.btu.monopoly.menu.LobbyService;
 import de.btu.monopoly.ui.SceneManager;
-import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
 import javafx.animation.FadeTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -18,8 +14,6 @@ import javafx.util.Duration;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -61,8 +55,7 @@ public class SettingsController implements Initializable {
     @FXML
     private void backButtonAction(ActionEvent event) throws IOException {
 
-        LobbyService.setRandomSeed(Long.parseLong(seedField.getText()));
-
+//        LobbyService.setRandomSeed(Long.parseLong(seedField.getText()));
         FadeTransition fadeGrid = new FadeTransition(Duration.millis(400), grid);
         fadeGrid.setFromValue(1);
         fadeGrid.setToValue(0);
