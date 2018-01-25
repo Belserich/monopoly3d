@@ -1,6 +1,7 @@
 package de.btu.monopoly.ui;
 
 import de.btu.monopoly.GlobalSettings;
+
 import java.util.logging.LogRecord;
 import java.util.logging.StreamHandler;
 
@@ -25,7 +26,6 @@ public class TextAreaHandler extends StreamHandler {
             SceneManager.geldPlayerUpdate();
             SceneManager.propertyUpdate();
             SceneManager.propertyStateUpdate();
-            SceneManager.initStreets();
             SceneManager.appendText(getFormatter().format(record));
         }
 

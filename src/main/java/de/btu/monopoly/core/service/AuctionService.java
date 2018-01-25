@@ -13,6 +13,7 @@ import de.btu.monopoly.net.data.ExitAuctionRequest;
 import de.btu.monopoly.net.data.JoinAuctionRequest;
 import de.btu.monopoly.ui.SceneManager;
 import de.btu.monopoly.ui.TextAreaHandler;
+
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;

@@ -13,9 +13,8 @@ import de.btu.monopoly.core.service.IOService;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.menu.Lobby;
 import de.btu.monopoly.ui.controller.LobbyController;
-import de.btu.monopoly.ui.controller.MainSceneController;
-import java.io.IOException;
-import java.util.Optional;
+import de.btu.monopoly.ui.fx3d.MonopolySceneData;
+import de.btu.monopoly.ui.util.Assets;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
@@ -36,7 +35,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
+
+import java.io.IOException;
+import java.util.Optional;
 
 /**
  *
@@ -46,54 +47,52 @@ public class SceneManager extends Stage {
 
     private static Stage stage;
     private static Scene scene;
+    private static MonopolySceneData sceneData;
+    
     private static Parent lobbyRoot;
     private static LobbyController LobbyController;
-    private static MainSceneController GameController;
     private static Label auctionLabel = new Label("0 €");
     private static Label hoechstgebotLabel = new Label("Höchstgebot:");
     private static JFXTextField bidTextField = new JFXTextField();
 
     public SceneManager() throws IOException {
         stage = this;
-        Parent root = FXMLLoader.load(getClass().getResource("/fxml/Menu.fxml"));
-
+        
+        if (!Assets.loaded()) {
+            Assets.load();
+        }
+        
+        Parent root = FXMLLoader.load(getClass().getResource("/fxml/menu_scene.fxml"));
+        
         scene = new Scene(root);
         scene.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.F11) {
                 fullscreen();
             }
         });
-
-        stage.setFullScreen(true);
+        
         stage.setScene(scene);
-        stage.setMinHeight(720);
-        stage.setMinWidth(1280);
         stage.show();
 
-        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-            @Override
-            public void handle(WindowEvent event) {
-                Alert alert = new Alert(AlertType.CONFIRMATION);
-                alert.setTitle("Monopoly-Information");
-                alert.setHeaderText("Du beendest gerade Monopoly!");
-                alert.setContentText("Bist du sicher?");
-
-                Optional<ButtonType> result = alert.showAndWait();
-                if (result.get() == ButtonType.OK) {
-                    System.exit(0);//NOSONAR
-                }
-                else {
-                    event.consume();
-                }
-
+        stage.setOnCloseRequest(event -> {
+            Alert alert = new Alert(AlertType.CONFIRMATION);
+            alert.setTitle("Monopoly-Information");
+            alert.setHeaderText("Du beendest gerade Monopoly!");
+            alert.setContentText("Bist du sicher?");
+    
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.get() == ButtonType.OK) {
+                Platform.exit();
             }
+            else {
+                event.consume();
+            }
+    
         });
     }
 
     public static void appendText(String message) {
-        if (GameController != null) {
-            GameController.appendText(message);
-        }
+        // TODO appendText
     }
 
     public static void changeScene(FXMLLoader loader) throws IOException {
@@ -117,13 +116,14 @@ public class SceneManager extends Stage {
         LobbyController.animation();
     }
 
-    public static void changeSceneToGame(FXMLLoader loader) throws IOException {
-
-        Parent root = loader.load();
-        GameController = loader.getController();
-
-        scene.setRoot(root);
-
+    public static void changeSceneToGame(Lobby lobby) throws IOException {
+        
+        sceneData = new MonopolySceneData(lobby.getController().getBoard());
+        Scene gameScene = sceneData.getScene();
+        
+        Platform.runLater(() -> {
+            stage.setScene(gameScene);
+        });
     }
 
     public static void updateLobby() throws InterruptedException {
@@ -140,45 +140,44 @@ public class SceneManager extends Stage {
 
     }
 
-    public static void openGameLayout() throws IOException {
+    public static void openGameLayout(Lobby lobby) throws IOException {
         if (LobbyController != null) {
-            LobbyController.loadGameLayout();
+            LobbyController.loadGameLayout(lobby);
         }
     }
 
     public static void playerUpdate() {
-        if (GameController != null) {
-            GameController.playerInitialise();
-        }
+        // TODO playerInitialise
     }
 
     public static void geldPlayerUpdate() {
-        if (GameController != null) {
-            GameController.geldUpdate();
-        }
+        // TODO geldupdate()
     }
 
     public static void movePlayerUpdate() {
-        if (GameController != null) {
-            GameController.playerUpdate();
-        }
+        // TODO playerUpdate
     }
 
     public static void propertyUpdate() {
-        if (GameController != null) {
-            GameController.propertyUpdate();
-        }
+        // TODO propertyUpdate()
     }
 
     public static void propertyStateUpdate() {
-        if (GameController != null) {
-            GameController.propertyState();
-        }
+        // TODO propertyState()
     }
-
-    // -----------------------------------------------------------------------
-    // Popups
-    // -----------------------------------------------------------------------
+    
+    public static void addPopup(Pane popupPane) {
+        Platform.runLater(() -> sceneData.addPopupPane(popupPane));
+    }
+    
+    public static void removePopup(Pane popupPane) {
+        Platform.runLater(() -> sceneData.removePopupPane(popupPane));
+    }
+    
+    public static void clearPopups() {
+        Platform.runLater(() -> sceneData.clearPopups());
+    }
+    
     public static int buyPropertyPopup() {
 
         GridPane gridpane = new GridPane();
@@ -188,7 +187,7 @@ public class SceneManager extends Stage {
         // scroll.setCenterShape(true);
         gridpane.add(box, 0, 0);
         // box.setContent(box);
-
+        
         Label label = new Label("Möchtest du die " + Lobby.getPlayerClient().getGame().getBoard().getFields()[Lobby.getPlayerClient().getPlayerOnClient().getPosition()].getName() + " kaufen?");
 
         JFXButton buyButton = new JFXButton();
@@ -212,17 +211,17 @@ public class SceneManager extends Stage {
         label.setFont(Font.font("Tahoma", 14));
         box.getChildren().addAll(label, buyButton, dontBuyButton);
         box.setAlignment(Pos.CENTER);
-
-        GameController.setPopupBellow(gridpane);
+        
+        addPopup(gridpane);
 
         while (!buyButton.isPressed() || !dontBuyButton.isPressed()) {
             IOService.sleep(50);
             if (buyButton.isPressed()) {
-                GameController.resetPopupBelow();
+                removePopup(gridpane);
                 return 1;
             }
             if (dontBuyButton.isPressed()) {
-                GameController.resetPopupBelow();
+                removePopup(gridpane);
                 return 2;
             }
         }
@@ -267,20 +266,20 @@ public class SceneManager extends Stage {
         box.getChildren().addAll(label, rollButton, payButton, cardButton);
         box.setAlignment(Pos.CENTER);
 
-        GameController.setPopupBellow(gridpane);
+        addPopup(gridpane);
 
         while (!rollButton.isPressed() || !payButton.isPressed() || !cardButton.isPressed()) {
             IOService.sleep(50);
             if (rollButton.isPressed()) {
-                GameController.resetPopupBelow();
+                removePopup(gridpane);
                 return 1;
             }
             if (payButton.isPressed()) {
-                GameController.resetPopupBelow();
+                removePopup(gridpane);
                 return 2;
             }
             if (cardButton.isPressed()) {
-                GameController.resetPopupBelow();
+                removePopup(gridpane);
                 return 3;
             }
         }
@@ -354,32 +353,32 @@ public class SceneManager extends Stage {
         box.setAlignment(Pos.CENTER);
         vbox.setAlignment(Pos.CENTER);
 
-        GameController.setPopupBellow(gridpane);
+        addPopup(gridpane);
 
         while (!nothingButton.isPressed() || !buyHouseButton.isPressed() || !removeHouseButton.isPressed() || !addMortgageButton.isPressed() || !removeMortgageButton.isPressed() || !tradeButton.isPressed()) {
             IOService.sleep(50);
             if (nothingButton.isPressed()) {
-                GameController.resetPopupBelow();
+                removePopup(gridpane);
                 return 1;
             }
             if (buyHouseButton.isPressed()) {
-                GameController.resetPopupBelow();
+                removePopup(gridpane);
                 return 2;
             }
             if (removeHouseButton.isPressed()) {
-                GameController.resetPopupBelow();
+                removePopup(gridpane);
                 return 3;
             }
             if (addMortgageButton.isPressed()) {
-                GameController.resetPopupBelow();
+                removePopup(gridpane);
                 return 4;
             }
             if (removeMortgageButton.isPressed()) {
-                GameController.resetPopupBelow();
+                removePopup(gridpane);
                 return 5;
             }
             if (tradeButton.isPressed()) {
-                GameController.resetPopupBelow();
+                removePopup(gridpane);
                 return 6;
             }
         }
@@ -425,7 +424,7 @@ public class SceneManager extends Stage {
         box.getChildren().addAll(label, fieldBox, eingabeButton, exitButton);
         box.setAlignment(Pos.CENTER);
 
-        GameController.setPopupBellow(gridPane);
+        addPopup(gridPane);
 
         if (fields.length == 0) {
             Task task = new Task() {
@@ -437,7 +436,7 @@ public class SceneManager extends Stage {
             };
             Platform.runLater(task);
             IOService.sleep(3000);
-            GameController.resetPopupBelow();
+            removePopup(gridPane);
             return 0;
         }
 
@@ -450,6 +449,9 @@ public class SceneManager extends Stage {
             }
             IOService.sleep(50);
         }
+        
+        removePopup(gridPane);
+        
         return 0;
     }
 
@@ -508,9 +510,8 @@ public class SceneManager extends Stage {
         auctionVBox.setAlignment(Pos.CENTER);
         auctionHBox.getChildren().addAll(hoechstgebotLabel, auctionLabel, gebotsLabel, bidTextField, auctionVBox);
         auctionHBox.setAlignment(Pos.CENTER);
-        if (GameController != null) {
-            GameController.setPopupBellow(auctionGP);
-        }
+        
+        addPopup(auctionGP);
 
         //Verknuepfung mit EventHandler(n)
         bidTextField.setOnAction(bid);
@@ -519,7 +520,7 @@ public class SceneManager extends Stage {
             @Override
             public void handle(ActionEvent event) {
                 AuctionService.playerExit(Lobby.getPlayerClient().getPlayerOnClient().getId());
-                GameController.resetPopupBelow();
+                clearPopups();
             }
         });
     }
@@ -540,7 +541,7 @@ public class SceneManager extends Stage {
         IOService.sleep(500);
         if (!stillActive) {
 
-            GameController.resetPopupBelow();
+            clearPopups();
 
             GridPane resetGridPane = new GridPane();
             VBox resetBox = new VBox();
@@ -570,9 +571,9 @@ public class SceneManager extends Stage {
             resetBox.setCenterShape(true);
             resetBox.getChildren().addAll(endLabel);
             resetBox.setAlignment(Pos.CENTER);
-            GameController.setPopupBellow(resetGridPane);
+            addPopup(resetGridPane);
             IOService.sleep(3500);
-            GameController.resetPopupBelow();
+            clearPopups();
             auctionLabel.setText("0 €");
         }
 
@@ -588,10 +589,6 @@ public class SceneManager extends Stage {
         };
         Platform.runLater(task);
 
-    }
-
-    public static void initStreets() {
-        GameController.initStreets();
     }
 
     public static void fullscreen() {

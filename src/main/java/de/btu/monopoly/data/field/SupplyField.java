@@ -1,6 +1,5 @@
 package de.btu.monopoly.data.field;
 
-import de.btu.monopoly.core.service.FieldService;
 import de.btu.monopoly.data.player.Player;
 
 /**

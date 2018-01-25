@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.effect.*?>
-<?import javafx.scene.paint.*?>
 <?import com.jfoenix.controls.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
@@ -13,7 +9,6 @@
 <?import javafx.scene.paint.Stop?>
 <?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
-
 <GridPane fx:id="mainGrid" gridLinesVisible="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="720.0" minWidth="1280.0" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.btu.monopoly.ui.controller.MainSceneController">
     <columnConstraints>
         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
@@ -874,7 +869,7 @@
                         </GridPane>
                     </children>
                 </GridPane>
-            <Pane fx:id="goField" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black;" stylesheets="@../styles/Styles.css" GridPane.columnIndex="2" GridPane.rowIndex="2">
+            <Pane fx:id="goField" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black;" stylesheets="@../styles/styles.css" GridPane.columnIndex="2" GridPane.rowIndex="2">
                <children>
                   <Circle fx:id="player0" fill="WHITE" layoutX="36.0" layoutY="41.0" radius="11.0" stroke="BLACK" strokeType="INSIDE" visible="false" />
                   <Circle fx:id="player1" fill="WHITE" layoutX="61.0" layoutY="50.0" radius="11.0" stroke="BLACK" strokeType="INSIDE" visible="false" />
@@ -889,11 +884,7 @@
         </GridPane>
         <GridPane fx:id="grid2" GridPane.columnIndex="2">
             <children>
-                <JFXButton fx:id="player0Button" buttonType="RAISED" opacity="0.0" prefHeight="80.0" prefWidth="150.0" text="frei" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
-                    <font>
-                              <Font size="18.0" />
-                           </font>    
-                </JFXButton>
+                <JFXButton fx:id="player0Button" buttonType="RAISED" opacity="0.0" prefHeight="80.0" prefWidth="150.0" text="frei" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
                 <GridPane GridPane.columnIndex="1" GridPane.rowIndex="3">
                     <children>
                         <JFXTextArea fx:id="textArea" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" />
@@ -945,11 +936,7 @@
                 </GridPane>
                 <GridPane fx:id="player0Geld" GridPane.columnIndex="1" GridPane.rowIndex="1">
                     <children>
-                        <Label fx:id="geld0" alignment="CENTER" prefHeight="33.0" prefWidth="156.0" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
-                            <font>
-                              <Font size="18.0" />
-                           </font>    
-                        </Label>
+                        <Label fx:id="geld0" alignment="CENTER" prefHeight="33.0" prefWidth="156.0" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
                     </children>
                     <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -974,38 +961,18 @@
         </GridPane>
         <GridPane fx:id="grid">
             <children>
-                <JFXButton fx:id="player1Button" buttonType="RAISED" opacity="0.0" prefHeight="80.0" prefWidth="150.0" text="frei" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
-                            <font>
-                              <Font size="18.0" />
-                           </font>    
-                </JFXButton>           
+                <JFXButton fx:id="player1Button" buttonType="RAISED" opacity="0.0" prefHeight="80.0" prefWidth="150.0" text="frei" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
                 <JFXButton fx:id="player2Button" buttonType="RAISED" opacity="0.0" prefHeight="80.0" prefWidth="150.0" text="frei" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
-                    <font>
-                              <Font size="18.0" />
-                           </font>    
+                    <GridPane.margin>
+                  
+                    </GridPane.margin>
                 </JFXButton>
-                <JFXButton fx:id="player3Button" buttonType="RAISED" opacity="0.0" prefHeight="80.0" prefWidth="150.0" text="frei" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER">
-                    <font>
-                              <Font size="18.0" />
-                           </font>    
-                </JFXButton>
-                <JFXButton fx:id="player4Button" buttonType="RAISED" opacity="0.0" prefHeight="80.0" prefWidth="150.0" text="frei" GridPane.halignment="CENTER" GridPane.rowIndex="6" GridPane.valignment="CENTER">
-                    <font>
-                              <Font size="18.0" />
-                           </font>    
-                </JFXButton>
-                <JFXButton fx:id="player5Button" buttonType="RAISED" opacity="0.0" prefHeight="80.0" prefWidth="150.0" text="frei" GridPane.halignment="CENTER" GridPane.rowIndex="8" GridPane.valignment="CENTER">
-                    <font>
-                              <Font size="18.0" />
-                           </font>    
-                </JFXButton>
+                <JFXButton fx:id="player3Button" buttonType="RAISED" opacity="0.0" prefHeight="80.0" prefWidth="150.0" text="frei" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER" />
+                <JFXButton fx:id="player4Button" buttonType="RAISED" opacity="0.0" prefHeight="80.0" prefWidth="150.0" text="frei" GridPane.halignment="CENTER" GridPane.rowIndex="6" GridPane.valignment="CENTER" />
+                <JFXButton fx:id="player5Button" buttonType="RAISED" opacity="0.0" prefHeight="80.0" prefWidth="150.0" text="frei" GridPane.halignment="CENTER" GridPane.rowIndex="8" GridPane.valignment="CENTER" />
                 <GridPane fx:id="player1Geld" GridPane.rowIndex="1">
                     <children>
-                        <Label fx:id="geld1" alignment="CENTER" layoutX="10.0" layoutY="21.0" prefHeight="33.0" prefWidth="156.0" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
-                            <font>
-                              <Font size="18.0" />
-                           </font>    
-                        </Label>
+                        <Label fx:id="geld1" alignment="CENTER" layoutX="10.0" layoutY="21.0" prefHeight="33.0" prefWidth="156.0" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
                     </children>
                     <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -1016,11 +983,7 @@
                 </GridPane>
                 <GridPane fx:id="player2Geld" layoutX="10.0" layoutY="172.0" GridPane.rowIndex="3">
                     <children>
-                        <Label fx:id="geld2" alignment="CENTER" prefHeight="33.0" prefWidth="156.0" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
-                            <font>
-                              <Font size="18.0" />
-                           </font>    
-                        </Label>
+                        <Label fx:id="geld2" alignment="CENTER" prefHeight="33.0" prefWidth="156.0" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
                     </children>
                     <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -1031,11 +994,7 @@
                 </GridPane>
                 <GridPane fx:id="player3Geld" layoutX="10.0" layoutY="388.0" GridPane.rowIndex="5">
                     <children>
-                        <Label fx:id="geld3" alignment="CENTER" prefHeight="33.0" prefWidth="156.0" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
-                   <font>
-                              <Font size="18.0" />
-                           </font>    
-                        </Label>
+                        <Label fx:id="geld3" alignment="CENTER" prefHeight="33.0" prefWidth="156.0" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
                     </children>
                     <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -1046,11 +1005,7 @@
                 </GridPane>
                 <GridPane fx:id="player4Geld" layoutX="10.0" layoutY="604.0" GridPane.rowIndex="7">
                     <children>
-                        <Label fx:id="geld4" alignment="CENTER" prefHeight="33.0" prefWidth="156.0" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
-                            <font>
-                              <Font size="18.0" />
-                           </font>    
-                        </Label>
+                        <Label fx:id="geld4" alignment="CENTER" prefHeight="33.0" prefWidth="156.0" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
                     </children>
                     <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -1061,11 +1016,7 @@
                 </GridPane>
                 <GridPane fx:id="player5Geld" layoutX="10.0" layoutY="820.0" GridPane.rowIndex="9">
                     <children>
-                        <Label fx:id="geld5" alignment="CENTER" prefHeight="33.0" prefWidth="156.0" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
-                            <font>
-                              <Font size="18.0" />
-                           </font>    
-                        </Label>
+                        <Label fx:id="geld5" alignment="CENTER" prefHeight="33.0" prefWidth="156.0" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
                     </children>
                     <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />

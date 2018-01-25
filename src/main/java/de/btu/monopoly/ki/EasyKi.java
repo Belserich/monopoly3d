@@ -12,6 +12,7 @@ import de.btu.monopoly.data.card.CardAction;
 import de.btu.monopoly.data.card.CardStack;
 import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.player.Player;
+
 import java.util.Random;
 import java.util.logging.Logger;
 

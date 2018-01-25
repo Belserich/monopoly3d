@@ -8,7 +8,6 @@ package de.btu.monopoly.net.client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.FrameworkMessage;
 import com.esotericsoftware.kryonet.Listener;
-import de.btu.monopoly.core.service.NetworkService;
 
 import java.util.Iterator;
 import java.util.LinkedList;
