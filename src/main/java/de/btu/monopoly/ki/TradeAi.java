@@ -22,7 +22,7 @@ public class TradeAi {
     // Value = Wertveraenderung in %
     private static final int VALUE_OF_MONEY_POOR = 130;
     private static final int VALUE_OF_MONEY_RICH = 85;
-    private static final int CARD_SELLING_AMOUNT = 200;
+    private static final int CARD_SELLING_AMOUNT = 50;
     private static final int MINIMUM_ACCEPT_AMOUNT = -50;
     private static final int VALUE_OF_CHEAP_PROP = 70;
     private static final int VALUE_OF_LUCRATIVE_PROP = 150;
@@ -46,7 +46,6 @@ public class TradeAi {
         int[] dCards = demand.getCardIds();
 
         // Anderes:
-        int supId = supply.getPlayerId();   // von wem kommt das Angebot
         int balance = 0;                    // balance die entscheidet, ob das Angebot angenommen wird
         para = HardKi.getParameters();
 
