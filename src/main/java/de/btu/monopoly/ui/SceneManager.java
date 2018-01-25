@@ -35,7 +35,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -75,23 +74,20 @@ public class SceneManager extends Stage {
         stage.setScene(scene);
         stage.show();
 
-        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-            @Override
-            public void handle(WindowEvent event) {
-                Alert alert = new Alert(AlertType.CONFIRMATION);
-                alert.setTitle("Monopoly-Information");
-                alert.setHeaderText("Du beendest gerade Monopoly!");
-                alert.setContentText("Bist du sicher?");
-
-                Optional<ButtonType> result = alert.showAndWait();
-                if (result.get() == ButtonType.OK) {
-                    System.exit(0);
-                }
-                else {
-                    event.consume();
-                }
-
+        stage.setOnCloseRequest(event -> {
+            Alert alert = new Alert(AlertType.CONFIRMATION);
+            alert.setTitle("Monopoly-Information");
+            alert.setHeaderText("Du beendest gerade Monopoly!");
+            alert.setContentText("Bist du sicher?");
+    
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.get() == ButtonType.OK) {
+                Platform.exit();
             }
+            else {
+                event.consume();
+            }
+    
         });
     }
 
@@ -337,7 +333,7 @@ public class SceneManager extends Stage {
         // scroll.add(label, 0, 0);
         String cssLayout = "-fx-background-color: #b9f6ca;\n"
                 + "-fx-border-color: black;\n"
-                + "-fx-effect: dropshadow(gaussian, yellowgreen, 20, 0, 0, 0);"
+                + "-fx-effect: dropshadow(gaussian, yellowgreen, 20, 0, 0, 0);\n"
                 + "-fx-border-insets: 5;\n"
                 + "-fx-border-width: 1;\n"
                 + "-fx-border-style: double;\n";
@@ -400,7 +396,8 @@ public class SceneManager extends Stage {
 
         Label label = new Label("Wähle ein Feld:");
         JFXComboBox fieldBox = new JFXComboBox();
-        Button button = new Button();
+        Button eingabeButton = new Button();
+        Button exitButton = new Button();
 
         String cssLayout = "-fx-background-color: #b2dfdb;\n"
                 + "-fx-border-color: black;\n"
@@ -409,11 +406,13 @@ public class SceneManager extends Stage {
                 + "-fx-border-style: double;\n";
 
         box.setStyle(cssLayout);
-        box.setSpacing(10);
+        box.setSpacing(7);
         box.setPrefSize(200, 250);
         box.setCenterShape(true);
-        button.setText("Eingabe");
-        button.setBackground(new Background(new BackgroundFill(Color.web("#e1f5fe"), CornerRadii.EMPTY, Insets.EMPTY)));
+        eingabeButton.setText("Eingabe");
+        eingabeButton.setBackground(new Background(new BackgroundFill(Color.web("#e1f5fe"), CornerRadii.EMPTY, Insets.EMPTY)));
+        exitButton.setText("Schließen");
+        exitButton.setBackground(new Background(new BackgroundFill(Color.web("#e1f5fe"), CornerRadii.EMPTY, Insets.EMPTY)));
         label.setFont(Font.font("Tahoma", 14));
 
         for (String fieldName : fields) {
@@ -422,18 +421,38 @@ public class SceneManager extends Stage {
 
         fieldBox.getSelectionModel().selectFirst();
 
-        box.getChildren().addAll(label, fieldBox, button);
+        box.getChildren().addAll(label, fieldBox, eingabeButton, exitButton);
         box.setAlignment(Pos.CENTER);
 
         addPopup(gridPane);
 
-        while (!button.isPressed()) {
-            IOService.sleep(50);
+        if (fields.length == 0) {
+            Task task = new Task() {
+                @Override
+                protected Object call() throws Exception {
+                    fieldBox.setPromptText("Du besitzt keine Straßen!");
+                    return null;
+                }
+            };
+            Platform.runLater(task);
+            IOService.sleep(3000);
+            removePopup(gridPane);
+            return 0;
         }
 
+        while (!eingabeButton.isPressed() || !exitButton.isPressed()) {
+            if (eingabeButton.isPressed()) {
+                return fieldBox.getSelectionModel().getSelectedIndex() + 1;
+            }
+            if (exitButton.isPressed()) {
+                return 0;
+            }
+            IOService.sleep(50);
+        }
+        
         removePopup(gridPane);
-
-        return fieldBox.getSelectionModel().getSelectedIndex() + 1;
+        
+        return 0;
     }
 
     public static void auctionPopup() {
@@ -561,7 +580,15 @@ public class SceneManager extends Stage {
     }
 
     public static void bidTextFieldFocus() {
-        bidTextField.requestFocus();
+        Task task = new Task() {
+            @Override
+            protected Object call() throws Exception {
+                bidTextField.requestFocus();
+                return null;
+            }
+        };
+        Platform.runLater(task);
+
     }
 
     public static void fullscreen() {

@@ -521,7 +521,6 @@ public class MainSceneController implements Initializable {
         BesitzanzeigeFelder[39] = besitz39;
 
         RentanzeigeFelder = new Pane[40];
-        String style = "-fx-rotate:90";
 
         RentanzeigeFelder[1] = haus1;
         RentanzeigeFelder[3] = haus3;
@@ -530,21 +529,13 @@ public class MainSceneController implements Initializable {
         RentanzeigeFelder[8] = haus8;
         RentanzeigeFelder[9] = haus9;
         RentanzeigeFelder[11] = haus11;
-        //haus11.setStyle(style);
         RentanzeigeFelder[12] = haus12;
-        // haus12.setStyle(style);
         RentanzeigeFelder[13] = haus13;
-        //haus13.setStyle(style);
         RentanzeigeFelder[14] = haus14;
-        // haus14.setStyle(style);
         RentanzeigeFelder[15] = haus15;
-        //haus15.setStyle(style);
         RentanzeigeFelder[16] = haus16;
-        // haus16.setStyle(style);
         RentanzeigeFelder[18] = haus18;
-        // haus18.setStyle(style);
         RentanzeigeFelder[19] = haus19;
-        // haus19.setStyle(style);
         RentanzeigeFelder[21] = haus21;
         RentanzeigeFelder[23] = haus23;
         RentanzeigeFelder[24] = haus24;
@@ -554,17 +545,11 @@ public class MainSceneController implements Initializable {
         RentanzeigeFelder[28] = haus28;
         RentanzeigeFelder[29] = haus29;
         RentanzeigeFelder[31] = haus31;
-        //haus31.setStyle(style);
         RentanzeigeFelder[32] = haus32;
-        //haus32.setStyle(style);
         RentanzeigeFelder[34] = haus34;
-        //haus34.setStyle(style);
         RentanzeigeFelder[35] = haus35;
-        // haus35.setStyle(style);
         RentanzeigeFelder[37] = haus37;
-        // haus37.setStyle(style);
         RentanzeigeFelder[39] = haus39;
-        //haus39.setStyle(style);
 
         //Bilder hinzufuegen
         /*Background*/
@@ -604,9 +589,14 @@ public class MainSceneController implements Initializable {
                             fadeButton.setToValue(1);
                             fadeButton.playFromStart();
                             player0.setVisible(true);
-                            player0Button.setText(Lobby.getUsers()[i][1]);
+                            if (Lobby.getUsers()[i][1].contains("(")) {
+                                player0Button.setText(Lobby.getUsers()[i][1].substring(0, Lobby.getUsers()[i][1].indexOf('(') - 1));
+                            }
+                            else {
+                                player0Button.setText(Lobby.getUsers()[i][1]);
+                            }
                             player0Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[i][4]), CornerRadii.EMPTY, Insets.EMPTY)));
-                            if (Color.web(Lobby.getUsers()[i][4]).getBrightness() <= 0.8) {
+                            if (Color.web(Lobby.getUsers()[i][4]).getBrightness() <= 0.9) {
                                 player0Button.setTextFill(Color.WHITE);
                             }
                             player0.setFill(Color.web(Lobby.getUsers()[0][4]));
@@ -627,9 +617,14 @@ public class MainSceneController implements Initializable {
                                     fadeButton.setToValue(1);
                                     fadeButton.playFromStart();
                                     player1.setVisible(true);
-                                    player1Button.setText(Lobby.getUsers()[i][1]);
+                                    if (Lobby.getUsers()[i][1].contains("(")) {
+                                        player1Button.setText(Lobby.getUsers()[i][1].substring(0, Lobby.getUsers()[i][1].indexOf('(') - 1));
+                                    }
+                                    else {
+                                        player1Button.setText(Lobby.getUsers()[i][1]);
+                                    }
                                     player1Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[i][4]), CornerRadii.EMPTY, Insets.EMPTY)));
-                                    if (Color.web(Lobby.getUsers()[i][4]).getBrightness() <= 0.8) {
+                                    if (Color.web(Lobby.getUsers()[i][4]).getBrightness() <= 0.9) {
                                         player1Button.setTextFill(Color.WHITE);
                                     }
                                     player1.setFill(Color.web(Lobby.getUsers()[1][4]));
@@ -651,9 +646,14 @@ public class MainSceneController implements Initializable {
                                     fadeButton.setToValue(1);
                                     fadeButton.playFromStart();
                                     player2.setVisible(true);
-                                    player2Button.setText(Lobby.getUsers()[i][1]);
+                                    if (Lobby.getUsers()[i][1].contains("(")) {
+                                        player2Button.setText(Lobby.getUsers()[i][1].substring(0, Lobby.getUsers()[i][1].indexOf('(') - 1));
+                                    }
+                                    else {
+                                        player2Button.setText(Lobby.getUsers()[i][1]);
+                                    }
                                     player2Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[i][4]), CornerRadii.EMPTY, Insets.EMPTY)));
-                                    if (Color.web(Lobby.getUsers()[i][4]).getBrightness() <= 0.8) {
+                                    if (Color.web(Lobby.getUsers()[i][4]).getBrightness() <= 0.9) {
                                         player2Button.setTextFill(Color.WHITE);
                                     }
                                     player2.setFill(Color.web(Lobby.getUsers()[2][4]));
@@ -674,9 +674,14 @@ public class MainSceneController implements Initializable {
                                     fadeButton.setToValue(1);
                                     fadeButton.playFromStart();
                                     player3.setVisible(true);
-                                    player3Button.setText(Lobby.getUsers()[i][1]);
+                                    if (Lobby.getUsers()[i][1].contains("(")) {
+                                        player3Button.setText(Lobby.getUsers()[i][1].substring(0, Lobby.getUsers()[i][1].indexOf('(') - 1));
+                                    }
+                                    else {
+                                        player3Button.setText(Lobby.getUsers()[i][1]);
+                                    }
                                     player3Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[i][4]), CornerRadii.EMPTY, Insets.EMPTY)));
-                                    if (Color.web(Lobby.getUsers()[i][4]).getBrightness() <= 0.8) {
+                                    if (Color.web(Lobby.getUsers()[i][4]).getBrightness() <= 0.9) {
                                         player3Button.setTextFill(Color.WHITE);
                                     }
                                     player3.setFill(Color.web(Lobby.getUsers()[3][4]));
@@ -697,9 +702,14 @@ public class MainSceneController implements Initializable {
                                     fadeButton.setToValue(1);
                                     fadeButton.playFromStart();
                                     player4.setVisible(true);
-                                    player4Button.setText(Lobby.getUsers()[i][1]);
+                                    if (Lobby.getUsers()[i][1].contains("(")) {
+                                        player4Button.setText(Lobby.getUsers()[i][1].substring(0, Lobby.getUsers()[i][1].indexOf('(') - 1));
+                                    }
+                                    else {
+                                        player4Button.setText(Lobby.getUsers()[i][1]);
+                                    }
                                     player4Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[i][4]), CornerRadii.EMPTY, Insets.EMPTY)));
-                                    if (Color.web(Lobby.getUsers()[i][4]).getBrightness() <= 0.8) {
+                                    if (Color.web(Lobby.getUsers()[i][4]).getBrightness() <= 0.9) {
                                         player4Button.setTextFill(Color.WHITE);
                                     }
                                     player4.setFill(Color.web(Lobby.getUsers()[4][4]));
@@ -720,9 +730,14 @@ public class MainSceneController implements Initializable {
                                     fadeButton.setToValue(1);
                                     fadeButton.playFromStart();
                                     player5.setVisible(true);
-                                    player5Button.setText(Lobby.getUsers()[i][1]);
+                                    if (Lobby.getUsers()[i][1].contains("(")) {
+                                        player5Button.setText(Lobby.getUsers()[i][1].substring(0, Lobby.getUsers()[i][1].indexOf('(') - 1));
+                                    }
+                                    else {
+                                        player5Button.setText(Lobby.getUsers()[i][1]);
+                                    }
                                     player5Button.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[i][4]), CornerRadii.EMPTY, Insets.EMPTY)));
-                                    if (Color.web(Lobby.getUsers()[i][4]).getBrightness() <= 0.8) {
+                                    if (Color.web(Lobby.getUsers()[i][4]).getBrightness() <= 0.9) {
                                         player5Button.setTextFill(Color.WHITE);
                                     }
                                     player5.setFill(Color.web(Lobby.getUsers()[5][4]));
@@ -767,7 +782,7 @@ public class MainSceneController implements Initializable {
             Task task = new Task() {
                 @Override
                 protected Object call() throws Exception {
-                    int hausAnzahl = 0;
+                    int hausAnzahl;
                     HBox hauses;
 
                     for (int i = 0; i < Felder.length; i++) {
@@ -1059,19 +1074,19 @@ public class MainSceneController implements Initializable {
         fields.setTextFill(Color.MIDNIGHTBLUE);
 
         JFXButton player = new JFXButton();
-        Label geld = new Label(" hat in Konto : " + playeronbutton.getMoney());
-        Label jail = new Label(" ist in Gefängnis seit : " + playeronbutton.getDaysInJail());
-        Label idNummer = new Label("ID : "+id);
-        Label karten = new Label(""+playeronbutton.getCardStack());
+        Label geld = new Label("Kontostand : " + playeronbutton.getMoney());
+        Label jail = new Label("Tage im Gefängnis : " + playeronbutton.getDaysInJail());
+        Label idNummer = new Label("Spieler-ID : " + id);
+        Label karten = new Label("Anzahl Gefängnisfreikarten : " + playeronbutton.getCardStack().size());
 
         player.setBackground(new Background(new BackgroundFill(Color.web(Lobby.getUsers()[id][4]), CornerRadii.EMPTY, Insets.EMPTY)));
         player.setText(Lobby.getUsers()[id][1]);
-        if (Color.web(Lobby.getUsers()[id][4]).getBrightness() <= 0.8) {
+        if (Color.web(Lobby.getUsers()[id][4]).getBrightness() <= 0.9) {
             player.setTextFill(Color.WHITE);
         }
-        player.setPrefSize(150, 10);
+        player.setPrefSize(200, 10);
 
-        box.getChildren().addAll(player, geld, jail,idNummer,karten, fields);
+        box.getChildren().addAll(player, idNummer, geld, jail, karten, fields);
         box.setAlignment(Pos.CENTER);
 
         if (PopupPane.getChildren().contains(middlePane)) {
@@ -1085,43 +1100,59 @@ public class MainSceneController implements Initializable {
      * @param feld
      */
     public void fieldPopup(Pane feld) {
-        Field[] currentField = Lobby.getPlayerClient().getGame().getBoard().getFields();
+        if (Lobby.getPlayerClient().getGame() != null) {
+            if (Lobby.getPlayerClient().getGame().getBoard() != null) {
+                Field[] currentField = Lobby.getPlayerClient().getGame().getBoard().getFields();
 
-        GridPane gp = new GridPane();
-        VBox box = new VBox();
-        gp.setAlignment(Pos.CENTER);
-        gp.getChildren().add(box);
+                GridPane gp = new GridPane();
+                VBox box = new VBox();
+                gp.setAlignment(Pos.CENTER);
+                gp.getChildren().add(box);
 
-        String text = "";
-        Label owner = new Label();
-        Label rent = new Label();
-        for (int i = 0; i < Felder.length; i++) {
-            if (Felder[i] == feld) {
-                owner.setText(("\tBesitzer : " + ((PropertyField) currentField[i]).getOwner()));
-                rent.setText("\n Aktuelle Miete : " + ((PropertyField) currentField[i]).getRent());
-                rent.setTextFill(Color.BROWN);
-                owner.setTextFill(Color.DARKBLUE);
-                if ((currentField[i] instanceof CardField) || (currentField[i] instanceof TaxField)) {
-                    text = "";
-                    resetPopupAbove();
-                }
-                else {
-                    text = "\n\t" + currentField[i];
+                String text = new String();
+                Label owner = new Label();
+                Label rent = new Label();
+                for (int i = 0; i < Felder.length; i++) {
+                    if (Felder[i] == feld) {
+                        if (currentField[i] instanceof PropertyField) {
+                            if (((PropertyField) currentField[i]).getOwner() != null) {
+                                owner.setText(("Besitzer : " + ((PropertyField) currentField[i]).getOwner().getName()));
+                            }
+
+                            rent.setText("\n Aktuelle Miete : " + ((PropertyField) currentField[i]).getRent());
+                            rent.setTextFill(Color.BROWN);
+                            owner.setTextFill(Color.DARKBLUE);
+
+                            if (currentField[i] instanceof StreetField) {
+                                text = "\n\t" + ((StreetField) currentField[i]).fieldsInformation();
+
+                            }
+                            if (currentField[i] instanceof StationField) {
+                                text = "\n\t" + ((StationField) currentField[i]).stationInformation();
+
+                            }
+                            if (currentField[i] instanceof SupplyField) {
+                                text = "\n\t" + ((SupplyField) currentField[i]).supplyInformation();
+
+                            }
+
+                            Label info = new Label(text);
+                            box.getChildren().addAll(owner, info, rent);
+                            // box.setBackground(new Background(new BackgroundFill(Color.web(feld.getStyle()), CornerRadii.EMPTY, Insets.EMPTY)));
+                            box.setStyle(feld.getStyle());
+                            box.setPrefWidth(200);
+                            box.setAlignment(Pos.CENTER);
+
+                            if (PopupPane.getChildren().contains(middlePane)) {
+                                setPopupAbove(gp);
+                            }
+                            break;
+                        }
+                        break;
+                    }
                 }
             }
         }
-
-        Label info = new Label(text);
-        box.getChildren().addAll(owner, info, rent);
-        // box.setBackground(new Background(new BackgroundFill(Color.web(feld.getStyle()), CornerRadii.EMPTY, Insets.EMPTY)));
-        box.setStyle(feld.getStyle());
-        box.setPrefWidth(200);
-        box.setAlignment(Pos.CENTER);
-
-        if (PopupPane.getChildren().contains(middlePane)) {
-            setPopupAbove(gp);
-        }
-
     }
 
     // -------------------------------------------------------------------------
@@ -1155,105 +1186,67 @@ public class MainSceneController implements Initializable {
         Task task = new Task() {
             @Override
             protected Object call() throws Exception {
-
-                geld0.setText("Geld: " + players[client.getPlayerOnClient().getId()].getMoney());
-                player0Geld.add(geld0, 0, 0);
+                geld0.setText("Kontostand: " + players[client.getPlayerOnClient().getId()].getMoney());
                 return null;
             }
-
         };
         Platform.runLater(task);
-
     }
 
     private void geldUpdate1(Player[] players) {
         Task task = new Task() {
             @Override
             protected Object call() throws Exception {
-                for (int i = 0; i < players.length; i++) {
-                    if (player1Button.getText().equals(players[i].getName())) {
-                        geld1.setText("Geld: " + players[i].getMoney());
-                        player1Geld.add(geld1, 0, 0);
-                    }
-                }
+                geld1.setText("Kontostand: " + players[player1ButtonID].getMoney());
                 return null;
             }
-
         };
         Platform.runLater(task);
-
     }
 
     private void geldUpdate2(Player[] players) {
         Task task = new Task() {
             @Override
             protected Object call() throws Exception {
-                for (int i = 0; i < players.length; i++) {
-                    if (player2Button.getText().equals(players[i].getName())) {
-                        geld2.setText("Geld: " + players[i].getMoney());
-                        player2Geld.add(geld2, 0, 0);
-                    }
-                }
+                geld2.setText("Kontostand: " + players[player2ButtonID].getMoney());
+                player2Geld.add(geld2, 0, 0);
                 return null;
             }
-
         };
         Platform.runLater(task);
-
     }
 
     private void geldUpdate3(Player[] players) {
         Task task = new Task() {
             @Override
             protected Object call() throws Exception {
-                for (int i = 0; i < players.length; i++) {
-                    if (player3Button.getText().equals(players[i].getName())) {
-                        geld3.setText("Geld: " + players[i].getMoney());
-                        player3Geld.add(geld3, 0, 0);
-                    }
-                }
+                geld3.setText("Kontostand: " + players[player3ButtonID].getMoney());
                 return null;
             }
-
         };
         Platform.runLater(task);
-
     }
 
     private void geldUpdate4(Player[] players) {
         Task task = new Task() {
             @Override
             protected Object call() throws Exception {
-                for (int i = 0; i < players.length; i++) {
-                    if (player4Button.getText().equals(players[i].getName())) {
-                        geld4.setText("Geld: " + players[i].getMoney());
-                        player4Geld.add(geld4, 0, 0);
-                    }
-                }
+                geld4.setText("Kontostand: " + players[player4ButtonID].getMoney());
                 return null;
             }
-
         };
         Platform.runLater(task);
-
     }
 
     private void geldUpdate5(Player[] players) {
         Task task = new Task() {
             @Override
             protected Object call() throws Exception {
-                for (int i = 0; i < players.length; i++) {
-                    if (player5Button.getText().equals(players[i].getName())) {
-                        geld5.setText("Geld: " + players[i].getMoney());
-                        player5Geld.add(geld5, 0, 0);
-                    }
-                }
+                geld5.setText("Kontostand: " + players[player5ButtonID].getMoney());
                 return null;
             }
-
         };
         Platform.runLater(task);
-
     }
 
     /**
