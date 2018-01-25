@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.*?>
 <?import com.jfoenix.controls.*?>
 <?import java.lang.*?>
 <?import javafx.scene.text.*?>
@@ -53,16 +54,16 @@
                      <font>
                         <Font size="23.0" />
                      </font></JFXButton>
-                  <JFXCheckBox fx:id="test1" text="Testitest" GridPane.halignment="CENTER" GridPane.rowIndex="1">
+                  <Label text="Änderung des Seeds für den Würfel:" GridPane.halignment="CENTER" GridPane.rowIndex="1">
                      <font>
-                        <Font size="26.0" />
+                        <Font size="23.0" />
                      </font>
-                  </JFXCheckBox>
-                  <JFXCheckBox fx:id="test2" text="Testitest2" GridPane.halignment="CENTER" GridPane.rowIndex="3">
+                  </Label>
+                  <JFXTextField fx:id="seedField" alignment="CENTER" promptText="Seed" GridPane.rowIndex="2">
                      <font>
-                        <Font size="26.0" />
+                        <Font size="23.0" />
                      </font>
-                  </JFXCheckBox>
+                  </JFXTextField>
                </children>
             </GridPane>
          </children>
