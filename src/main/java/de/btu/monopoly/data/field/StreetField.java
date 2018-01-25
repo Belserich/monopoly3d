@@ -1,7 +1,5 @@
 package de.btu.monopoly.data.field;
 
-import de.btu.monopoly.core.service.FieldService;
-
 /**
  * @author Maximilian Bels (belsmaxi@b-tu.de)
  */
@@ -64,12 +62,14 @@ public class StreetField extends PropertyField {
      * @return Miete der Strasse
      */
     public int getRent() {
-        System.out.println(houseCount);
+        //System.out.println(houseCount);
         if (!isMortgageTaken() && getOwner() != null) {
             if (fieldManager.isComplete(this) && houseCount == 0) {
-                   return rents[0] * 2;
+                return rents[0] * 2;
             }
-            else return rents[houseCount];
+            else {
+                return rents[houseCount];
+            }
         }
         return 0;
     }

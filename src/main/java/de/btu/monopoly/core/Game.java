@@ -226,7 +226,8 @@ public class Game {
 
                     if (nextCard.getActions().contains(CardAction.SET_POSITION)
                             || nextCard.getActions().contains(CardAction.MOVE_PLAYER)
-                            || nextCard.getActions().contains(CardAction.NEXT_SUPPLY)) {
+                            || nextCard.getActions().contains(CardAction.NEXT_SUPPLY)
+                            || nextCard.getActions().contains(CardAction.NEXT_STATION_RENT_AMP)) {
                         repeatPhase = true;
                     }
                     break;
@@ -317,12 +318,10 @@ public class Game {
                 if (player.getAiLevel() < 2) {
                     int chosenFieldChoice = IOService.askForField(player, fieldNames) - 1;
                     if (chosenFieldChoice < 0) {
-                        chosenFieldId = 5;
+                        LOGGER.info("Straßenauswahl wurde abgebrochen!");
+                        continue;
                     }
-                    else {
-
-                        chosenFieldId = ownedFieldIds[chosenFieldChoice];
-                    }
+                    chosenFieldId = ownedFieldIds[chosenFieldChoice];
                 }
                 else {
                     // Das hier verwendete Feld wurde vorher in HardKi.processActionSequence() festgelegt.
@@ -334,14 +333,8 @@ public class Game {
                 switch (choice) {
                     case 2: // Haus kaufen
                         if (!(currField instanceof StreetField)) {
-                            if (chosenFieldId != 5) {
-                                LOGGER.info("Gewähltes Feld ist keine Straße!");
-                                break;
-                            }
-                            else {
-                                LOGGER.info("Kein Feld ausgewählt!");
-                                break;
-                            }
+                            LOGGER.info("Gewähltes Feld ist keine Straße!");
+                            break;
                         }
                         StreetField streetField = (StreetField) property;
                         board.getFieldManager().buyHouse(streetField);
@@ -357,18 +350,10 @@ public class Game {
                         break;
 
                     case 4: // Hypothek aufnehmen
-                        if (chosenFieldId == 5) {
-                            LOGGER.info("Kein Feld ausgewählt!");
-                            break;
-                        }
                         board.getFieldManager().takeMortgage(property);
                         break;
 
                     case 5: // Hypothek zurückzahlen
-                        if (chosenFieldId == 5) {
-                            LOGGER.info("Kein Feld ausgewählt!");
-                            break;
-                        }
                         board.getFieldManager().payMortgage(property);
                         break;
                 }
