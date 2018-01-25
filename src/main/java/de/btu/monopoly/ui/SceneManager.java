@@ -82,7 +82,7 @@ public class SceneManager extends Stage {
     
             Optional<ButtonType> result = alert.showAndWait();
             if (result.get() == ButtonType.OK) {
-                Platform.exit();
+                System.exit(0);
             }
             else {
                 event.consume();
