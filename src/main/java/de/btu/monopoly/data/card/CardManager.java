@@ -6,6 +6,7 @@ import de.btu.monopoly.core.service.FieldService;
 import de.btu.monopoly.core.service.IOService;
 import de.btu.monopoly.core.service.PlayerService;
 import de.btu.monopoly.data.Tradeable;
+import static de.btu.monopoly.data.card.CardAction.MOVE_PLAYER;
 import de.btu.monopoly.data.field.FieldManager;
 import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.player.Player;

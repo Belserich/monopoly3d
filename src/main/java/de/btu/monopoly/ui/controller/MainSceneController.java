@@ -1109,32 +1109,18 @@ public class MainSceneController implements Initializable {
                 gp.setAlignment(Pos.CENTER);
                 gp.getChildren().add(box);
 
-                String text = new String();
+                String text;
                 Label owner = new Label();
                 Label rent = new Label();
                 for (int i = 0; i < Felder.length; i++) {
                     if (Felder[i] == feld) {
                         if (currentField[i] instanceof PropertyField) {
-                            if (((PropertyField) currentField[i]).getOwner() != null) {
-                                owner.setText(("Besitzer : " + ((PropertyField) currentField[i]).getOwner().getName()));
-                            }
-
+                            owner.setText(("\tBesitzer : " + ((PropertyField) currentField[i]).getOwner()));
                             rent.setText("\n Aktuelle Miete : " + ((PropertyField) currentField[i]).getRent());
                             rent.setTextFill(Color.BROWN);
                             owner.setTextFill(Color.DARKBLUE);
 
-                            if (currentField[i] instanceof StreetField) {
-                                text = "\n\t" + ((StreetField) currentField[i]).fieldsInformation();
-
-                            }
-                            if (currentField[i] instanceof StationField) {
-                                text = "\n\t" + ((StationField) currentField[i]).stationInformation();
-
-                            }
-                            if (currentField[i] instanceof SupplyField) {
-                                text = "\n\t" + ((SupplyField) currentField[i]).supplyInformation();
-
-                            }
+                            text = "\n\t" + currentField[i];
 
                             Label info = new Label(text);
                             box.getChildren().addAll(owner, info, rent);
