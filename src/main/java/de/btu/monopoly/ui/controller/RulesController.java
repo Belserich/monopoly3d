@@ -211,12 +211,12 @@ public class RulesController implements Initializable {
     @FXML
     private void gefaengnisphaseButtonAction(ActionEvent event) throws IOException {
         Text headline = new Text("Gefängnisphase");
-        Text text = new Text("In der Gefängnisphase hat der Spieler drei Optionen von denen er eine wählen muss. \n\n"
-                + "Er kann 50€ bezahlen, eine  \"Gefängnis  Frei\"-Karte  spielen  oder  würfeln.\n"
-                + "Wählt er eine der beiden ersten Optionen und sind diese erlaubt, so ist er frei und kommt in die nächste Teilphase.\n"
-                + "Wählt der Spieler, zu würfeln und würfelt er einen Pasch, so kommt er ebenfalls frei und in die nächste Teilphase\n"
-                + "Wenn er keinen Pasch würfelt und es ist seine dritte Runde im Gefängnis, werden ihm 50€ abgezogen, er kommt ebenfalls frei und in die nächste Teilphase.\n"
-                + "Falls keiner dieser Fälle eintritt, beginnt für den momentanen Spieler direkt die Aktionsphase.");
+        Text text = new Text("In der Gefängnisphase hat der Spieler drei Optionen von denen er eine wählen muss: Er kann 50€ bezahlen,\n"
+                + "eine ”Gefängnis Frei”-Karte spielen oder würfeln. Wählt er eine der beiden ersten Optionen und sind diese\n"
+                + "erlaubt, so ist er frei und kommt in die nächste Teilphase. Wählt der Spieler, zu würfeln und würfelt er ein\n"
+                + "Pasch, so kommt er ebenfalls frei und in die nächste Teilphase, würfelt er kein Pasch und es ist seine dritte\n"
+                + "Runde im Gefängnis, werden ihm 50€ abgezogen und er kommt ebenfalls frei und in die nächste Teilphase. Falls\n"
+                + "keiner dieser Fälle eintritt beginnt für den momentanen Spieler direkt die Aktionsphase.");
 
         showDialog(headline, text);
     }
@@ -235,64 +235,74 @@ public class RulesController implements Initializable {
     @FXML
     private void feldphaseButtonAction(ActionEvent event) throws IOException {
         Text headline = new Text("Feldphase");
-        Text text = new Text("In der Gefangnisphase hat der Spieler drei Optionen von denen er eine wählen muss. \n\n"
-                + "Er kann 50€ bezahlen,eine  \"Gefangnis  Frei\"-Karte  spielen  oder  wurfeln.\n"
-                + "Wählt er eine der beiden ersten Optionen und sind diese erlaubt, so ist er frei und kommt in die nachste Teilphase.\n"
-                + "Wählt der Spieler, zu würfeln und würfelt er einen Pasch, so kommt er ebenfalls frei und in die nachste Teilphase\n"
-                + "Wenn er keinen Pasch würfelt und es ist seine dritte Runde im Gefangnis, werden ihm 50€ abgezogen, er kommt ebenfalls frei und in die nachste Teilphase.\n"
-                + "Falls keiner dieser Fälle eintritt, beginnt fur den momentanen Spieler direkt die Aktionsphase.");
+        Text text = new Text("In der Feldphase wird die jeweilige Aktion des Feldes auf dem sich der momentane Spieler befindet ausgeführt.\n\n"
+                + "Die verschiedenen Feldereignisse sind:\n"
+                + "     1. Das Feld gehört niemandem und ist käuflich: Der momentane Spieler kann sich für einen Kauf zum\n"
+                + "         angegebenen Preis entscheiden, lehnt er den Kauf ab wird es versteigert.\n"
+                + "     2. Das Feld ist Straße und gehört dem Gegner. Der Gegner hat keine Hypothek auf die Straße aufgenommen:\n"
+                + "         Der momentane Spieler zahlt dem Gegner Miete (der Straße / dem Bahnhof / dem Werk zu entnehmen).\n"
+                + "     3. Das Feld ist Straße und gehört dem Gegner. Der Gegner hat eine Hypothek auf die Straße aufgenommen:\n"
+                + "         Nichts passiert.\n"
+                + "     4. Das Feld gehört dem momentanen Spieler: Nichts passiert.\n"
+                + "     5. Das Feld ist Ereignis- oder Gemeinschaftsfeld: Es wird eine Karte vom entsprechendem Stapel gezogen\n"
+                + "         und die jeweilige Aktion durchgeführt.\n"
+                + "     6. Das Feld ist Einkommens- oder Zusatzsteuerfeld: Der festgelegte Betrag wird an die Bank gezahlt.\n"
+                + "     7. Das Feld ist ”Gehen Sie in das Gefängnis”-Feld: Der Spieler geht ins Gefängnis, bekommt keine 200€ und\n"
+                + "         sein Zug ist beendet.\n"
+                + "     8. Das Feld ist ”Frei Parken”-Feld: Nichts passiert.\n"
+                + "     9. Das Feld ist ”Gefängnis”-Feld: Nichts passiert.");
 
         showDialog(headline, text);
     }
 
     @FXML
     private void aktionsphaseButtonAction(ActionEvent event) throws IOException {
-        Text headline = new Text("Gefängnisphase");
-        Text text = new Text("In der Gefangnisphase hat der Spieler drei Optionen von denen er eine wählen muss. \n\n"
-                + "Er kann 50€ bezahlen,eine  \"Gefangnis  Frei\"-Karte  spielen  oder  wurfeln.\n"
-                + "Wählt er eine der beiden ersten Optionen und sind diese erlaubt, so ist er frei und kommt in die nachste Teilphase.\n"
-                + "Wählt der Spieler, zu würfeln und würfelt er einen Pasch, so kommt er ebenfalls frei und in die nachste Teilphase\n"
-                + "Wenn er keinen Pasch würfelt und es ist seine dritte Runde im Gefangnis, werden ihm 50€ abgezogen, er kommt ebenfalls frei und in die nachste Teilphase.\n"
-                + "Falls keiner dieser Fälle eintritt, beginnt fur den momentanen Spieler direkt die Aktionsphase.");
+        Text headline = new Text("Aktionsphase");
+        Text text = new Text("In der Aktionsphase darf der momentane Spieler beliebig viele Hypotheken aufnehmen, beliebig viele Hypotheken\n"
+                + "abzahlen, beliebig viele Häuser kaufen, beliebig viele Häuser verkaufen (beides unter Einhaltung der\n"
+                + "Kriterien für den Hauskauf) und beliebig viele Handelsanfragen an andere Spieler versenden, jedoch an\n"
+                + "jeden Spieler nur einmal pro Rundenphase.");
 
         showDialog(headline, text);
     }
 
     @FXML
     private void haeuserButtonAction(ActionEvent event) throws IOException {
-        Text headline = new Text("Gefängnisphase");
-        Text text = new Text("In der Gefangnisphase hat der Spieler drei Optionen von denen er eine wählen muss. \n\n"
-                + "Er kann 50€ bezahlen,eine  \"Gefangnis  Frei\"-Karte  spielen  oder  wurfeln.\n"
-                + "Wählt er eine der beiden ersten Optionen und sind diese erlaubt, so ist er frei und kommt in die nachste Teilphase.\n"
-                + "Wählt der Spieler, zu würfeln und würfelt er einen Pasch, so kommt er ebenfalls frei und in die nachste Teilphase\n"
-                + "Wenn er keinen Pasch würfelt und es ist seine dritte Runde im Gefangnis, werden ihm 50€ abgezogen, er kommt ebenfalls frei und in die nachste Teilphase.\n"
-                + "Falls keiner dieser Fälle eintritt, beginnt fur den momentanen Spieler direkt die Aktionsphase.");
+        Text headline = new Text("Häuser");
+        Text text = new Text("Die Kriterien für den Hauskauf lauten:\n\n"
+                + "     1. Das Bauen von Häusern auf einer Straße ist erst dann möglich, wenn der gesamte zugehörige Straßenzug\n"
+                + "         im Besitz des momentanen Spielers ist.\n"
+                + "     2. Ein Straßenzug wird gleichmäßig bebaut.\n"
+                + "     3. Alle Straßen des Straßenzuges müssen hypotheksfrei sein.\n"
+                + "     4. Es dürfen nicht mehr als fünf Häuser pro Straße gebaut werden. Das fünfte Haus ersetzt sämtliche Häuser\n"
+                + "        der Straße durch ein Hotel.\n"
+                + "     5. Häuser können zum halben Preis wieder an die Bank verkauft werden. Dies ist auch nur gleichmäßig\n"
+                + "        möglich.");
 
         showDialog(headline, text);
     }
 
     @FXML
     private void hypothekButtonAction(ActionEvent event) throws IOException {
-        Text headline = new Text("Gefängnisphase");
-        Text text = new Text("In der Gefangnisphase hat der Spieler drei Optionen von denen er eine wählen muss. \n\n"
-                + "Er kann 50€ bezahlen,eine  \"Gefangnis  Frei\"-Karte  spielen  oder  wurfeln.\n"
-                + "Wählt er eine der beiden ersten Optionen und sind diese erlaubt, so ist er frei und kommt in die nachste Teilphase.\n"
-                + "Wählt der Spieler, zu würfeln und würfelt er einen Pasch, so kommt er ebenfalls frei und in die nachste Teilphase\n"
-                + "Wenn er keinen Pasch würfelt und es ist seine dritte Runde im Gefangnis, werden ihm 50€ abgezogen, er kommt ebenfalls frei und in die nachste Teilphase.\n"
-                + "Falls keiner dieser Fälle eintritt, beginnt fur den momentanen Spieler direkt die Aktionsphase.");
+        Text headline = new Text("Hypothek");
+        Text text = new Text("Nimmt der momentane Spieler eine Hypothek für eine Straße auf, so bekommt dieser die Hälfte des Kaufpreises\n"
+                + "der Straße als Hypothekswert von der Bank gutgeschrieben. Die Straße wird mit dem Hypothekswert und zehn\n"
+                + "Prozent Zinsen belastet. Voraussetzung für die Aufnahme einer Hypothek ist, dass alle Straßen desselben\n"
+                + "Straßenzugs im Besitz des momentanen Spielers häuser- und hotelfrei sind.");
 
         showDialog(headline, text);
     }
 
     @FXML
     private void auktionenButtonAction(ActionEvent event) throws IOException {
-        Text headline = new Text("Gefängnisphase");
-        Text text = new Text("In der Gefangnisphase hat der Spieler drei Optionen von denen er eine wählen muss. \n\n"
-                + "Er kann 50€ bezahlen,eine  \"Gefangnis  Frei\"-Karte  spielen  oder  wurfeln.\n"
-                + "Wählt er eine der beiden ersten Optionen und sind diese erlaubt, so ist er frei und kommt in die nachste Teilphase.\n"
-                + "Wählt der Spieler, zu würfeln und würfelt er einen Pasch, so kommt er ebenfalls frei und in die nachste Teilphase\n"
-                + "Wenn er keinen Pasch würfelt und es ist seine dritte Runde im Gefangnis, werden ihm 50€ abgezogen, er kommt ebenfalls frei und in die nachste Teilphase.\n"
-                + "Falls keiner dieser Fälle eintritt, beginnt fur den momentanen Spieler direkt die Aktionsphase.");
+        Text headline = new Text("Auktionen");
+        Text text = new Text("Versteigerungen und Auktionen beginnen bei einem Mindestwert von 1€. Zu Beginn nehmen alle Spieler\n"
+                + "an der Auktion teil. Die Auktion ist beendet, wenn alle Spieler ausgestiegen sind, oder nur noch ein bietender\n"
+                + "Spieler übrig ist, das zu versteigernde Objekt geht dann an den letzten Bieter zum gebotenen Preis. Wird auf ein\n"
+                + "Objekt nicht geboten geht es an die Bank. Spieler können nicht mehr Geld bieten als sie besitzen. Jede Runde\n"
+                + "der Auktion beginnt damit, dass sämtliche Spieler die noch an der Auktion teilnehmen entweder ein höheres\n"
+                + "Angebot machen, als zuletzt gegeben wurde oder aussteigen. Steigt ein Spieler aus nimmt er fortan nicht mehr\n"
+                + "an der Auktion teil. Das jeweils höchste Gebot einer Runde ist das zu überbietende Gebot der folgenden Runde.");
 
         showDialog(headline, text);
     }
