@@ -1,5 +1,6 @@
 package de.btu.monopoly.ui.controller;
 
+import com.jfoenix.controls.JFXButton;
 import de.btu.monopoly.ui.SceneManager;
 import java.io.IOException;
 import java.net.URL;
@@ -41,6 +42,33 @@ public class RulesController implements Initializable {
     @FXML
     private Label labelRegeln;
 
+    @FXML
+    private JFXButton allgemeinButton;
+
+    @FXML
+    private JFXButton vorDemSpielButton;
+
+    @FXML
+    private JFXButton gefaengnisphaseButton;
+
+    @FXML
+    private JFXButton wurfphaseButton;
+
+    @FXML
+    private JFXButton feldphaseButton;
+
+    @FXML
+    private JFXButton aktionsphaseButton;
+
+    @FXML
+    private JFXButton haeuserButton;
+
+    @FXML
+    private JFXButton hypothekButton;
+
+    @FXML
+    private JFXButton auktionenButton;
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
@@ -53,6 +81,15 @@ public class RulesController implements Initializable {
         // Animation
         backButton.setOpacity(0);
         labelRegeln.setOpacity(0);
+        allgemeinButton.setOpacity(0);
+        vorDemSpielButton.setOpacity(0);
+        gefaengnisphaseButton.setOpacity(0);
+        wurfphaseButton.setOpacity(0);
+        feldphaseButton.setOpacity(0);
+        aktionsphaseButton.setOpacity(0);
+        haeuserButton.setOpacity(0);
+        hypothekButton.setOpacity(0);
+        auktionenButton.setOpacity(0);
 
         FadeTransition fadeInButton3
                 = new FadeTransition(Duration.millis(500), backButton);
@@ -64,22 +101,111 @@ public class RulesController implements Initializable {
         fadeInButton2.setFromValue(0);
         fadeInButton2.setToValue(1);
         fadeInButton2.playFromStart();
+
+        FadeTransition fadeInButton4 = new FadeTransition(Duration.millis(500), allgemeinButton);
+        fadeInButton4.setFromValue(0);
+        fadeInButton4.setToValue(1);
+        fadeInButton4.playFromStart();
+
+        FadeTransition fadeInButton5 = new FadeTransition(Duration.millis(500), vorDemSpielButton);
+        fadeInButton5.setFromValue(0);
+        fadeInButton5.setToValue(1);
+        fadeInButton5.playFromStart();
+
+        FadeTransition fadeInButton6 = new FadeTransition(Duration.millis(500), gefaengnisphaseButton);
+        fadeInButton6.setFromValue(0);
+        fadeInButton6.setToValue(1);
+        fadeInButton6.playFromStart();
+
+        FadeTransition fadeInButton7 = new FadeTransition(Duration.millis(500), wurfphaseButton);
+        fadeInButton7.setFromValue(0);
+        fadeInButton7.setToValue(1);
+        fadeInButton7.playFromStart();
+
+        FadeTransition fadeInButton8 = new FadeTransition(Duration.millis(500), feldphaseButton);
+        fadeInButton8.setFromValue(0);
+        fadeInButton8.setToValue(1);
+        fadeInButton8.playFromStart();
+
+        FadeTransition fadeInButton9 = new FadeTransition(Duration.millis(500), aktionsphaseButton);
+        fadeInButton9.setFromValue(0);
+        fadeInButton9.setToValue(1);
+        fadeInButton9.playFromStart();
+
+        FadeTransition fadeInButton10 = new FadeTransition(Duration.millis(500), haeuserButton);
+        fadeInButton10.setFromValue(0);
+        fadeInButton10.setToValue(1);
+        fadeInButton10.playFromStart();
+
+        FadeTransition fadeInButton11 = new FadeTransition(Duration.millis(500), hypothekButton);
+        fadeInButton11.setFromValue(0);
+        fadeInButton11.setToValue(1);
+        fadeInButton11.playFromStart();
+
+        FadeTransition fadeInButton12 = new FadeTransition(Duration.millis(500), auktionenButton);
+        fadeInButton12.setFromValue(0);
+        fadeInButton12.setToValue(1);
+        fadeInButton12.playFromStart();
+
     }
 
     // Button back
     @FXML
     private void backButtonAction(ActionEvent event) throws IOException {
-
         changeScene(new FXMLLoader(getClass().getResource("/fxml/Menu.fxml")));
-
     }
 
     private void changeScene(FXMLLoader loader) {
-        FadeTransition fadeInButton4
+        FadeTransition fadeInButton2
                 = new FadeTransition(Duration.millis(500), labelRegeln);
+        fadeInButton2.setFromValue(1);
+        fadeInButton2.setToValue(0);
+        fadeInButton2.playFromStart();
+
+        FadeTransition fadeInButton4 = new FadeTransition(Duration.millis(500), allgemeinButton);
         fadeInButton4.setFromValue(1);
         fadeInButton4.setToValue(0);
         fadeInButton4.playFromStart();
+
+        FadeTransition fadeInButton5 = new FadeTransition(Duration.millis(500), vorDemSpielButton);
+        fadeInButton5.setFromValue(1);
+        fadeInButton5.setToValue(0);
+        fadeInButton5.playFromStart();
+
+        FadeTransition fadeInButton6 = new FadeTransition(Duration.millis(500), gefaengnisphaseButton);
+        fadeInButton6.setFromValue(1);
+        fadeInButton6.setToValue(0);
+        fadeInButton6.playFromStart();
+
+        FadeTransition fadeInButton7 = new FadeTransition(Duration.millis(500), wurfphaseButton);
+        fadeInButton7.setFromValue(1);
+        fadeInButton7.setToValue(0);
+        fadeInButton7.playFromStart();
+
+        FadeTransition fadeInButton8 = new FadeTransition(Duration.millis(500), feldphaseButton);
+        fadeInButton8.setFromValue(1);
+        fadeInButton8.setToValue(0);
+        fadeInButton8.playFromStart();
+
+        FadeTransition fadeInButton9 = new FadeTransition(Duration.millis(500), aktionsphaseButton);
+        fadeInButton9.setFromValue(1);
+        fadeInButton9.setToValue(0);
+        fadeInButton9.playFromStart();
+
+        FadeTransition fadeInButton10 = new FadeTransition(Duration.millis(500), haeuserButton);
+        fadeInButton10.setFromValue(1);
+        fadeInButton10.setToValue(0);
+        fadeInButton10.playFromStart();
+
+        FadeTransition fadeInButton11 = new FadeTransition(Duration.millis(500), hypothekButton);
+        fadeInButton11.setFromValue(1);
+        fadeInButton11.setToValue(0);
+        fadeInButton11.playFromStart();
+
+        FadeTransition fadeInButton12 = new FadeTransition(Duration.millis(500), auktionenButton);
+        fadeInButton12.setFromValue(1);
+        fadeInButton12.setToValue(0);
+        fadeInButton12.playFromStart();
 
         FadeTransition fadeInButton1
                 = new FadeTransition(Duration.millis(500), backButton);
