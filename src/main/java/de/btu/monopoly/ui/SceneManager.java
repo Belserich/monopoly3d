@@ -167,7 +167,7 @@ public class SceneManager extends Stage {
     }
     
     public static void addPopup(Pane popupPane) {
-        Platform.runLater(() -> sceneData.addPopupPane(popupPane));
+        Platform.runLater(() -> sceneData.queuePopupPane(popupPane));
     }
     
     public static void removePopup(Pane popupPane) {

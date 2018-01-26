@@ -6,12 +6,17 @@ import javafx.animation.Animation;
 import javafx.animation.ParallelTransition;
 import javafx.animation.SequentialTransition;
 import javafx.animation.TranslateTransition;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.ObservableList;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Cylinder;
 import javafx.scene.transform.Transform;
 import javafx.util.Duration;
+
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @author Maximilian Bels (belsmaxi@b-tu.de)
@@ -23,6 +28,9 @@ public class Fx3dPlayer extends Cylinder {
     private static final double FIELD_MOVE_DURATION = 400;
     private static final double JUMP_HEIGHT = 100;
     
+    private final List<Animation> animationQueue;
+    private final BooleanProperty animationsRunning;
+    
     private Player player;
     private Color color;
     
@@ -31,7 +39,10 @@ public class Fx3dPlayer extends Cylinder {
         super(PLAYER_MODEL.getRadius(), PLAYER_MODEL.getHeight());
         this.player = player;
         this.color = color;
-    
+        
+        animationQueue = new LinkedList<>();
+        animationsRunning = new SimpleBooleanProperty(false);
+        
         setMaterial(FxHelper.getMaterialFor(color));
     }
     
@@ -63,10 +74,25 @@ public class Fx3dPlayer extends Cylinder {
         tt.setCycleCount(2 * waypoints.length);
         
         ParallelTransition transition = new ParallelTransition(st, tt);
-        transition.play();
+        transition.setOnFinished(event -> updateAnimationsRunning());
+        animationQueue.add(transition);
+        
+        if (!animationsRunning.get()) {
+            animationsRunning.set(true);
+            transition.play();
+        }
     }
     
-    public IntegerProperty getPosition() {
+    private void updateAnimationsRunning() {
+        animationQueue.remove(0);
+        animationsRunning.set(animationQueue.size() != 0);
+        if (animationsRunning.get())
+            animationQueue.get(0).play();
+    }
+    
+    public IntegerProperty positionProperty() {
         return player.positionProperty();
     }
+    
+    public BooleanProperty animationsRunningProperty() { return animationsRunning; }
 }

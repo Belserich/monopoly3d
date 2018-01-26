@@ -8,11 +8,14 @@ import de.btu.monopoly.ui.util.Assets;
 import de.btu.monopoly.ui.util.Cuboid;
 import de.btu.monopoly.ui.util.FxHelper;
 import javafx.animation.RotateTransition;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.ObservableList;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Affine;
@@ -53,6 +56,9 @@ public class MonopolyBoard extends Group
     private final Group houseGroup;
     private final Group playerGroup;
     
+    private final IntegerProperty runningAnimationCount;
+    private final BooleanProperty readyForPopup;
+    
     private Point2D.Double dragPoint;
     private boolean fluentRotation;
     private boolean transitioning;
@@ -70,6 +76,10 @@ public class MonopolyBoard extends Group
         
         getChildren().addAll(boardModel, fieldGroup, houseGroup, playerGroup);
         
+        runningAnimationCount = new SimpleIntegerProperty(0);
+        readyForPopup = new SimpleBooleanProperty(true);
+        readyForPopup.bind(runningAnimationCount.isEqualTo(0));
+        
         init();
     }
     
@@ -86,21 +96,6 @@ public class MonopolyBoard extends Group
     private void initBoard() {
         
         boardModel.setMaterial(FxHelper.getMaterialFor(Assets.getImage("game_board")));
-        boardModel.setOnMousePressed(this::setDragPoint);
-        boardModel.setOnMouseDragged(event ->
-        {
-            double diffX = event.getScreenX() - dragPoint.getX();
-            if (fluentRotation)
-            {
-                getTransforms().add(new Rotate(diffX / - 2, Rotate.Y_AXIS));
-                setDragPoint(event);
-            }
-            else if (Math.abs(diffX) >= CHUNKY_ROTATION_THRESHOLD && !transitioning)
-            {
-                rotateChunky(diffX > 0);
-                setDragPoint(event);
-            }
-        });
     }
     
     public void rotateChunky(boolean clockwise) {
@@ -126,24 +121,27 @@ public class MonopolyBoard extends Group
         ObservableList<Node> children = playerGroup.getChildren();
         
         for (int i = 0; i < activePlayers.size(); i++) {
-            children.add(createFxPlayer(activePlayers.get(i)));
+            children.add(initFxPlayer(activePlayers.get(i)));
         }
     }
     
-    private Fx3dPlayer createFxPlayer(Player player) {
+    private Fx3dPlayer initFxPlayer(Player player) {
     
         Fx3dPlayer fxPlayer = new Fx3dPlayer(player, new Color(Math.random(), Math.random(), Math.random(), 1));
         
         Shape3D positionField = fieldModels[player.getPosition()];
         fxPlayer.getTransforms().add(positionField.getLocalToSceneTransform());
         
-        fxPlayer.getPosition().addListener((val, old, nev) -> {
+        fxPlayer.positionProperty().addListener((val, old, nev) -> {
             List<Transform> waypoints = new LinkedList<>();
-            int newV = nev.intValue();
+            int newV = nev.intValue() + 1;
             for (int v = old.intValue() + 1; v != newV; v = (v + 1) % FIELD_COUNT)
                 waypoints.add(fieldModels[v].getLocalToParentTransform());
             fxPlayer.move(waypoints.toArray(new Transform[waypoints.size()]));
         });
+        
+        fxPlayer.animationsRunningProperty().addListener((prop, oldV, newV) ->
+                runningAnimationCount.set(runningAnimationCount.get() + (newV ? 1 : -1)));
         
         return fxPlayer;
     }
@@ -185,12 +183,10 @@ public class MonopolyBoard extends Group
         }
     }
     
-    private void setDragPoint(MouseEvent event) {
-        dragPoint = new Point2D.Double(event.getScreenX(), event.getScreenY());
-    }
-    
     public void setFluentRotation(boolean val)
     {
         this.fluentRotation = val;
     }
+    
+    public BooleanProperty readyForPopupProperty() { return readyForPopup; }
 }
