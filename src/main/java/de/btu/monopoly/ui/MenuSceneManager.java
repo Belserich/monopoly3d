@@ -13,7 +13,6 @@ import de.btu.monopoly.core.service.IOService;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.menu.Lobby;
 import de.btu.monopoly.ui.controller.LobbyController;
-import de.btu.monopoly.ui.fx3d.MonopolySceneData;
 import de.btu.monopoly.ui.util.Assets;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
@@ -43,11 +42,11 @@ import java.util.Optional;
  *
  * @author augat
  */
-public class SceneManager extends Stage {
+public class MenuSceneManager extends Stage {
 
     private static Stage stage;
     private static Scene scene;
-    private static MonopolySceneData sceneData;
+    private static GameSceneManager sceneData;
     
     private static Parent lobbyRoot;
     private static LobbyController LobbyController;
@@ -55,7 +54,7 @@ public class SceneManager extends Stage {
     private static Label hoechstgebotLabel = new Label("Höchstgebot:");
     private static JFXTextField bidTextField = new JFXTextField();
 
-    public SceneManager() throws IOException {
+    public MenuSceneManager() throws IOException {
         stage = this;
         
         if (!Assets.loaded()) {
@@ -118,7 +117,7 @@ public class SceneManager extends Stage {
 
     public static void changeSceneToGame(Lobby lobby) throws IOException {
         
-        sceneData = new MonopolySceneData(lobby.getController().getBoard());
+        sceneData = new GameSceneManager(lobby.getController().getBoard());
         Scene gameScene = sceneData.getScene();
         
         Platform.runLater(() -> {

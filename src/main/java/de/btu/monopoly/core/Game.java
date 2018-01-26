@@ -8,7 +8,6 @@ import de.btu.monopoly.data.field.*;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.ki.HardKi;
 import de.btu.monopoly.net.client.GameClient;
-import de.btu.monopoly.ui.TextAreaHandler;
 
 import java.util.Arrays;
 import java.util.Random;
@@ -60,10 +59,6 @@ public class Game {
         random = new Random(seed);
 
         IOService.setClient(client);
-        if (!GlobalSettings.RUN_AS_TEST && !GlobalSettings.RUN_IN_CONSOLE) {
-            TextAreaHandler logHandler = new TextAreaHandler();
-            LOGGER.addHandler(logHandler);
-        }
         
         init();
     }

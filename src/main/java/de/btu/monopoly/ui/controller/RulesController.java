@@ -3,7 +3,7 @@ package de.btu.monopoly.ui.controller;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXDialog;
 import com.jfoenix.controls.JFXDialogLayout;
-import de.btu.monopoly.ui.SceneManager;
+import de.btu.monopoly.ui.MenuSceneManager;
 import javafx.animation.FadeTransition;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -14,15 +14,7 @@ import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.BackgroundImage;
-import javafx.scene.layout.BackgroundPosition;
-import javafx.scene.layout.BackgroundRepeat;
-import javafx.scene.layout.BackgroundSize;
-import javafx.scene.layout.CornerRadii;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
@@ -399,7 +391,7 @@ public class RulesController implements Initializable {
         fadeInButton1.playFromStart();
         fadeInButton1.setOnFinished((event) -> {
             try {
-                SceneManager.changeScene(loader);
+                MenuSceneManager.changeScene(loader);
             } catch (IOException ex) {
                 Logger.getLogger(MenuController.class.getName()).log(Level.SEVERE, null, ex);
             }

@@ -3,7 +3,7 @@ package de.btu.monopoly.ui.controller;
 import de.btu.monopoly.core.service.IOService;
 import de.btu.monopoly.menu.LobbyService;
 import de.btu.monopoly.net.client.GameClient;
-import de.btu.monopoly.ui.SceneManager;
+import de.btu.monopoly.ui.MenuSceneManager;
 import javafx.animation.FadeTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -161,7 +161,7 @@ public class StartGameController implements Initializable {
                 fadeGrid.playFromStart();
                 fadeGrid.setOnFinished((ActionEvent event1) -> {
                     try {
-                        SceneManager.changeSceneToLobby(loader);
+                        MenuSceneManager.changeSceneToLobby(loader);
                     } catch (IOException ex) {
                         Logger.getLogger(StartGameController.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -169,7 +169,7 @@ public class StartGameController implements Initializable {
             }
             else {
                 try {
-                    SceneManager.changeScene(loader);
+                    MenuSceneManager.changeScene(loader);
                 } catch (IOException ex) {
                     Logger.getLogger(MenuController.class.getName()).log(Level.SEVERE, null, ex);
                 }

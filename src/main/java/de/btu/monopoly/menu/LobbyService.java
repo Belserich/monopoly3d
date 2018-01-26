@@ -14,7 +14,7 @@ import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.data.lobby.*;
 import de.btu.monopoly.net.server.AuctionTable;
-import de.btu.monopoly.ui.SceneManager;
+import de.btu.monopoly.ui.MenuSceneManager;
 import javafx.scene.paint.Color;
 
 import java.io.IOException;
@@ -254,9 +254,9 @@ public class LobbyService extends Listener {
             if (!GlobalSettings.RUN_AS_TEST && !GlobalSettings.RUN_IN_CONSOLE) {
                 try {
                     // Lobby updaten
-                    SceneManager.updateLobby();
+                    MenuSceneManager.updateLobby();
                     // Kann später entfernt werden wenn Farben implementiert sind
-                    SceneManager.updateLobbyColors();
+                    MenuSceneManager.updateLobbyColors();
                 } catch (InterruptedException ex) {
                     LOGGER.log(Level.WARNING, "Lobby konnte nicht geupdated werden{0}", ex);
                     Thread.currentThread().interrupt();
@@ -276,7 +276,7 @@ public class LobbyService extends Listener {
             initGame();
             // Scene bei anderen Spielern öffnen
             try {
-                SceneManager.openGameLayout(lobby);
+                MenuSceneManager.openGameLayout(lobby);
                 IOService.sleep(2000);
 
             } catch (IOException ex) {

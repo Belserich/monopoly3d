@@ -1,7 +1,7 @@
 package de.btu.monopoly.ui.controller;
 
 import com.jfoenix.controls.JFXTextField;
-import de.btu.monopoly.ui.SceneManager;
+import de.btu.monopoly.ui.MenuSceneManager;
 import javafx.animation.FadeTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -61,7 +61,7 @@ public class SettingsController implements Initializable {
         fadeGrid.setToValue(0);
         fadeGrid.playFromStart();
         fadeGrid.setOnFinished((event1) -> {
-            SceneManager.changeSceneBackToLobby();
+            MenuSceneManager.changeSceneBackToLobby();
         });
     }
 }

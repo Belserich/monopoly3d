@@ -15,8 +15,7 @@ import de.btu.monopoly.ki.EasyKi;
 import de.btu.monopoly.ki.HardKi;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.data.BroadcastPlayerChoiceRequest;
-import de.btu.monopoly.ui.SceneManager;
-import de.btu.monopoly.ui.TextAreaHandler;
+import de.btu.monopoly.ui.MenuSceneManager;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -157,23 +156,19 @@ public class IOService {
 
     public static int getClientChoiceFromGUI(Player player, int type, String[] fields) {
         boolean isChoiceFromThisClient = player == client.getPlayerOnClient();
-        if (!GlobalSettings.RUN_AS_TEST && !GlobalSettings.RUN_IN_CONSOLE) {
-            TextAreaHandler logHandler = new TextAreaHandler();
-            LOGGER.addHandler(logHandler);
-        }
         if (isChoiceFromThisClient) {
             int choice = -1;
             if (type == JAIL) {
-                choice = SceneManager.jailChoicePopup();
+                choice = MenuSceneManager.jailChoicePopup();
             }
             if (type == ACTION) {
-                choice = SceneManager.actionSequencePopup();
+                choice = MenuSceneManager.actionSequencePopup();
             }
             if (type == BUY) {
-                choice = SceneManager.buyPropertyPopup();
+                choice = MenuSceneManager.buyPropertyPopup();
             }
             if (type == FIELD) {
-                choice = SceneManager.askForFieldPopup(player, fields);
+                choice = MenuSceneManager.askForFieldPopup(player, fields);
             }
 
             BroadcastPlayerChoiceRequest packet = new BroadcastPlayerChoiceRequest();

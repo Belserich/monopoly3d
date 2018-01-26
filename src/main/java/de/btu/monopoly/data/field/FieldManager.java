@@ -1,11 +1,9 @@
 package de.btu.monopoly.data.field;
 
-import de.btu.monopoly.GlobalSettings;
 import de.btu.monopoly.core.GameBoard;
 import de.btu.monopoly.core.service.FieldService;
 import de.btu.monopoly.core.service.PlayerService;
 import de.btu.monopoly.data.player.Player;
-import de.btu.monopoly.ui.TextAreaHandler;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -38,10 +36,6 @@ public class FieldManager {
         this.fields = fields;
 
         Arrays.asList(fields).forEach(f -> f.fieldManager = this);
-        if (!GlobalSettings.RUN_AS_TEST && !GlobalSettings.RUN_IN_CONSOLE) {
-            TextAreaHandler logHandler = new TextAreaHandler();
-            LOGGER.addHandler(logHandler);
-        }
     }
 
     /**

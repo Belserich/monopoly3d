@@ -1,6 +1,8 @@
-package de.btu.monopoly.ui.fx3d;
+package de.btu.monopoly.ui;
 
 import de.btu.monopoly.core.GameBoard;
+import de.btu.monopoly.ui.fx3d.CameraManager;
+import de.btu.monopoly.ui.fx3d.MonopolyBoard;
 import de.btu.monopoly.ui.util.Assets;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
@@ -18,7 +20,7 @@ import java.util.List;
 
 import static de.btu.monopoly.ui.fx3d.CameraManager.WatchMode;
 
-public class MonopolySceneData
+public class GameSceneManager
 {
     private static final double DEFAULT_SCENE_WIDTH = 1280;
     private static final double DEFAULT_SCENE_HEIGHT = 720;
@@ -35,7 +37,7 @@ public class MonopolySceneData
     
     private CameraManager camMan;
     
-    public MonopolySceneData(GameBoard board) {
+    public GameSceneManager(GameBoard board) {
         
         this.board3d = new MonopolyBoard(board);
         

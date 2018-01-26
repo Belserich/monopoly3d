@@ -1,16 +1,13 @@
 package de.btu.monopoly.data.card;
 
-import de.btu.monopoly.GlobalSettings;
 import de.btu.monopoly.core.GameBoard;
 import de.btu.monopoly.core.service.FieldService;
 import de.btu.monopoly.core.service.IOService;
 import de.btu.monopoly.core.service.PlayerService;
 import de.btu.monopoly.data.Tradeable;
-import static de.btu.monopoly.data.card.CardAction.MOVE_PLAYER;
 import de.btu.monopoly.data.field.FieldManager;
 import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.player.Player;
-import de.btu.monopoly.ui.TextAreaHandler;
 
 import java.util.logging.Logger;
 import java.util.stream.IntStream;
@@ -26,10 +23,6 @@ public class CardManager {
 
     public CardManager(GameBoard board) {
         this.board = board;
-        if (!GlobalSettings.RUN_AS_TEST && !GlobalSettings.RUN_IN_CONSOLE) {
-            TextAreaHandler textHandler = new TextAreaHandler();
-            LOGGER.addHandler(textHandler);
-        }
     }
 
     public void manageCardActions(Player player, Card card) {
