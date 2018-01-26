@@ -1,7 +1,6 @@
 package de.btu.monopoly.ui;
 
 import de.btu.monopoly.core.GameBoard;
-import de.btu.monopoly.ui.fx3d.CameraManager;
 import de.btu.monopoly.ui.fx3d.MonopolyBoard;
 import de.btu.monopoly.ui.util.Assets;
 import javafx.application.Platform;
@@ -18,7 +17,7 @@ import javafx.scene.paint.Color;
 import java.util.LinkedList;
 import java.util.List;
 
-import static de.btu.monopoly.ui.fx3d.CameraManager.WatchMode;
+import static de.btu.monopoly.ui.CameraManager.WatchMode;
 
 public class GameSceneManager
 {

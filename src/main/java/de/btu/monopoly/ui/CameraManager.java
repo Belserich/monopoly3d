@@ -1,4 +1,4 @@
-package de.btu.monopoly.ui.fx3d;
+package de.btu.monopoly.ui;
 
 import javafx.animation.RotateTransition;
 import javafx.beans.property.ObjectProperty;
@@ -96,8 +96,9 @@ public class CameraManager {
                 cam.setRotate(cam.getRotate() + deltaX / 2);
                 setDragPoint(event);
             }
-            else if (deltaX >= ORTHO_CAM_ROTATE_THRESHOLD && !transitioning) {
+            else if (Math.abs(deltaX) >= ORTHO_CAM_ROTATE_THRESHOLD && !transitioning) {
                 transitioning = true;
+                setDragPoint(event);
                 RotateTransition trans = new RotateTransition(Duration.millis(ORTHO_CAM_ROTATE_MILLIS), cam);
                 trans.setAxis(Rotate.Y_AXIS);
                 trans.setByAngle(Math.signum(deltaX) * ORTHO_CAM_ROTATE_ANGLE);
