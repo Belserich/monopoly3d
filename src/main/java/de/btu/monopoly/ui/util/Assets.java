@@ -72,44 +72,8 @@ public class Assets
     private static Card[] commCards;
     private static Card[] eventCards;
     
-    public static void load()
-    {
-        registeredImages.put("3d_icon", loadImage(IMAGE_3D_PATH));
+    public static void loadGeneral() {
         
-        registeredImages.put("game_board", loadImage(BOARD_PATH));
-        
-        registeredImages.put("corner_0", loadImage(CORNER_0_PATH));
-        registeredImages.put("corner_1", loadImage(CORNER_1_PATH));
-        registeredImages.put("corner_2", loadImage(CORNER_2_PATH));
-        registeredImages.put("corner_3", loadImage(CORNER_3_PATH));
-        
-        registeredImages.put("street_0", loadImage(STREET_0_PATH));
-        registeredImages.put("street_1", loadImage(STREET_1_PATH));
-        registeredImages.put("street_2", loadImage(STREET_2_PATH));
-        registeredImages.put("street_3", loadImage(STREET_3_PATH));
-        registeredImages.put("street_4", loadImage(STREET_4_PATH));
-        registeredImages.put("street_5", loadImage(STREET_5_PATH));
-        registeredImages.put("street_6", loadImage(STREET_6_PATH));
-        registeredImages.put("street_7", loadImage(STREET_7_PATH));
-        
-        registeredImages.put("card_0", loadImage(CARD_0_PATH));
-        registeredImages.put("card_1", loadImage(CARD_1_PATH));
-        
-        registeredImages.put("station", loadImage(STATION_PATH));
-        
-        registeredImages.put("supply_0", loadImage(SUPPLY_0_PATH));
-        registeredImages.put("supply_1", loadImage(SUPPLY_1_PATH));
-        
-        registeredImages.put("tax_0", loadImage(TAX_0_PATH));
-        registeredImages.put("tax_1", loadImage(TAX_1_PATH));
-        
-        registeredStrings.put("field_1_name", "WARSCHAUER STRASSE");
-        registeredStrings.put("field_3_name", "GEMEINSCHAFTSKARTE");
-        
-        registeredFonts.put("font_default", loadFont(FONT_PATH, 12));
-        registeredFonts.put("font_big", loadFont(FONT_PATH, 15));
-        registeredFonts.put("font_huge", loadFont(FONT_PATH, 18));
-    
         try {
             commCards = CardDataParser.parse(COMM_CARDS_PATH);
             eventCards = CardDataParser.parse(EVENT_CARDS_PATH);
@@ -120,6 +84,52 @@ public class Assets
         catch (IOException | SAXException | ParserConfigurationException ex) {
             LOGGER.warning(String.format("Exception while initializing field or card data.", ex));
         }
+    }
+    
+    public static void loadFxContent() {
+        
+        registeredImages.put("3d_icon", loadImage(IMAGE_3D_PATH));
+    
+        registeredImages.put("game_board", loadImage(BOARD_PATH));
+    
+        registeredImages.put("corner_0", loadImage(CORNER_0_PATH));
+        registeredImages.put("corner_1", loadImage(CORNER_1_PATH));
+        registeredImages.put("corner_2", loadImage(CORNER_2_PATH));
+        registeredImages.put("corner_3", loadImage(CORNER_3_PATH));
+    
+        registeredImages.put("street_0", loadImage(STREET_0_PATH));
+        registeredImages.put("street_1", loadImage(STREET_1_PATH));
+        registeredImages.put("street_2", loadImage(STREET_2_PATH));
+        registeredImages.put("street_3", loadImage(STREET_3_PATH));
+        registeredImages.put("street_4", loadImage(STREET_4_PATH));
+        registeredImages.put("street_5", loadImage(STREET_5_PATH));
+        registeredImages.put("street_6", loadImage(STREET_6_PATH));
+        registeredImages.put("street_7", loadImage(STREET_7_PATH));
+    
+        registeredImages.put("card_0", loadImage(CARD_0_PATH));
+        registeredImages.put("card_1", loadImage(CARD_1_PATH));
+    
+        registeredImages.put("station", loadImage(STATION_PATH));
+    
+        registeredImages.put("supply_0", loadImage(SUPPLY_0_PATH));
+        registeredImages.put("supply_1", loadImage(SUPPLY_1_PATH));
+    
+        registeredImages.put("tax_0", loadImage(TAX_0_PATH));
+        registeredImages.put("tax_1", loadImage(TAX_1_PATH));
+    
+        registeredStrings.put("field_1_name", "WARSCHAUER STRASSE");
+        registeredStrings.put("field_3_name", "GEMEINSCHAFTSKARTE");
+    
+        registeredFonts.put("font_default", loadFont(FONT_PATH, 12));
+        registeredFonts.put("font_big", loadFont(FONT_PATH, 15));
+        registeredFonts.put("font_huge", loadFont(FONT_PATH, 18));
+        
+    }
+    
+    public static void load()
+    {
+        loadGeneral();
+        loadFxContent();
     }
     
     public static boolean loaded() {
