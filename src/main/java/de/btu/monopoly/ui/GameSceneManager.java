@@ -49,7 +49,6 @@ public class GameSceneManager
         popupQueue = new LinkedList<>();
         board3d.readyForPopupProperty().addListener((prop, oldB, newB) -> {
             Platform.runLater(() ->{
-                System.out.println("POP" + popupQueue.size());
                 popupGroup.getChildren().addAll(popupQueue);
                 popupQueue.clear();
             });

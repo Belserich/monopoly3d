@@ -44,29 +44,28 @@ import java.util.Optional;
  */
 public class MenuSceneManager extends Stage {
 
-    private static Stage stage;
-    private static Scene scene;
-    private static GameSceneManager sceneData;
+    private Stage stage;
+    private Scene scene;
+    private GameSceneManager sceneData;
     
-    private static Parent lobbyRoot;
-    private static LobbyController LobbyController;
-    private static Label auctionLabel = new Label("0 €");
-    private static Label hoechstgebotLabel = new Label("Höchstgebot:");
-    private static JFXTextField bidTextField = new JFXTextField();
+    private Parent lobbyRoot;
+    private LobbyController LobbyController;
+    private Label auctionLabel = new Label("0 €");
+    private Label hoechstgebotLabel = new Label("Höchstgebot:");
+    private JFXTextField bidTextField = new JFXTextField();
 
     public MenuSceneManager() throws IOException {
         stage = this;
         
-        if (!Assets.loaded()) {
-            Assets.load();
-        }
+        if (!Assets.loadedFxContent())
+            Assets.loadFxContent();
         
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/menu_scene.fxml"));
         
         scene = new Scene(root);
         scene.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.F11) {
-                fullscreen();
+                stage.setFullScreen(true);
             }
         });
         
@@ -94,13 +93,13 @@ public class MenuSceneManager extends Stage {
         // TODO appendText
     }
 
-    public static void changeScene(FXMLLoader loader) throws IOException {
+    public void changeScene(FXMLLoader loader) throws IOException {
 
         Parent root = loader.load();
         scene.setRoot(root);
     }
 
-    public static void changeSceneToLobby(FXMLLoader loader) throws IOException {
+    public void changeSceneToLobby(FXMLLoader loader) throws IOException {
 
         Parent root = loader.load();
         LobbyController = loader.getController();
@@ -110,12 +109,12 @@ public class MenuSceneManager extends Stage {
 
     }
 
-    public static void changeSceneBackToLobby() {
+    public void changeSceneBackToLobby() {
         scene.setRoot(lobbyRoot);
         LobbyController.animation();
     }
 
-    public static void changeSceneToGame(Lobby lobby) throws IOException {
+    public void changeSceneToGame(Lobby lobby) throws IOException {
         
         sceneData = new GameSceneManager(lobby.getController().getBoard());
         Scene gameScene = sceneData.getScene();
@@ -125,59 +124,59 @@ public class MenuSceneManager extends Stage {
         });
     }
 
-    public static void updateLobby() throws InterruptedException {
+    public void updateLobby() throws InterruptedException {
         if (LobbyController != null) {
             LobbyController.updateNames();
         }
 
     }
 
-    public static void updateLobbyColors() throws InterruptedException {
+    public void updateLobbyColors() throws InterruptedException {
         if (LobbyController != null) {
             LobbyController.updateColors();
         }
 
     }
 
-    public static void openGameLayout(Lobby lobby) throws IOException {
+    public void openGameLayout(Lobby lobby) throws IOException {
         if (LobbyController != null) {
             LobbyController.loadGameLayout(lobby);
         }
     }
 
-    public static void playerUpdate() {
+    public void playerUpdate() {
         // TODO playerInitialise
     }
 
-    public static void geldPlayerUpdate() {
+    public void geldPlayerUpdate() {
         // TODO geldupdate()
     }
 
-    public static void movePlayerUpdate() {
+    public void movePlayerUpdate() {
         // TODO playerUpdate
     }
 
-    public static void propertyUpdate() {
+    public void propertyUpdate() {
         // TODO propertyUpdate()
     }
 
-    public static void propertyStateUpdate() {
+    public void propertyStateUpdate() {
         // TODO propertyState()
     }
     
-    public static void addPopup(Pane popupPane) {
+    public void addPopup(Pane popupPane) {
         Platform.runLater(() -> sceneData.queuePopupPane(popupPane));
     }
     
-    public static void removePopup(Pane popupPane) {
+    public void removePopup(Pane popupPane) {
         Platform.runLater(() -> sceneData.removePopupPane(popupPane));
     }
     
-    public static void clearPopups() {
+    public void clearPopups() {
         Platform.runLater(() -> sceneData.clearPopups());
     }
     
-    public static int buyPropertyPopup() {
+    public int buyPropertyPopup() {
 
         GridPane gridpane = new GridPane();
         // ScrollPane scroll = new ScrollPane();
@@ -201,8 +200,7 @@ public class MenuSceneManager extends Stage {
         String cssLayout = "-fx-background-color: #fbe9e7;\n"
                 + "-fx-border-color: black;\n"
                 + "-fx-border-insets: 5;\n"
-                + "-fx-border-width: 1;\n"
-                + "-fx-border-style: double;\n";
+                + "-fx-border-width: 1";
 
         box.setStyle(cssLayout);
         box.setSpacing(10);
@@ -228,7 +226,7 @@ public class MenuSceneManager extends Stage {
         return -1;
     }
 
-    public static int jailChoicePopup() {
+    public int jailChoicePopup() {
 
         GridPane gridpane = new GridPane();
         // ScrollPane scroll = new ScrollPane();
@@ -256,8 +254,7 @@ public class MenuSceneManager extends Stage {
         String cssLayout = "-fx-background-color: #ffccbc;\n"
                 + "-fx-border-color: black;\n"
                 + "-fx-border-insets: 5;\n"
-                + "-fx-border-width: 1;\n"
-                + "-fx-border-style: double;\n";
+                + "-fx-border-width: 1";
 
         box.setStyle(cssLayout);
         box.setSpacing(10);
@@ -286,7 +283,7 @@ public class MenuSceneManager extends Stage {
         return -1;
     }
 
-    public static int actionSequencePopup() {
+    public int actionSequencePopup() {
 
         GridPane gridpane = new GridPane();
         //ScrollPane scroll = new ScrollPane();
@@ -329,15 +326,14 @@ public class MenuSceneManager extends Stage {
 
         label.setFont(Font.font("Tahoma", 14));
 
-        // scroll.add(label, 0, 0);
-        String cssLayout = "-fx-background-color: #b9f6ca;\n"
-                + "-fx-border-color: black;\n"
-                + "-fx-effect: dropshadow(gaussian, yellowgreen, 20, 0, 0, 0);\n"
-                + "-fx-border-insets: 5;\n"
-                + "-fx-border-width: 1;\n"
-                + "-fx-border-style: double;\n";
-
-        vbox.setStyle(cssLayout);
+        vbox.setStyle(
+                "-fx-background-color: #b9f6ca; "
+                + "-fx-border-color: black; "
+                + "-fx-effect: dropshadow(gaussian, yellowgreen, 20, 0, 0, 0); "
+                + "-fx-border-insets: 5; "
+                + "-fx-border-width: 1"
+        );
+        
         box.setSpacing(10);
         box.setPrefSize(500, 200);
         vbox1.getChildren().addAll(nothingButton, buyHouseButton, removeHouseButton);
@@ -385,7 +381,7 @@ public class MenuSceneManager extends Stage {
         return -1;
     }
 
-    public static int askForFieldPopup(Player player, String[] fields) {
+    public int askForFieldPopup(Player player, String[] fields) {
 
         GridPane gridPane = new GridPane();
         VBox box = new VBox();
@@ -401,8 +397,7 @@ public class MenuSceneManager extends Stage {
         String cssLayout = "-fx-background-color: #b2dfdb;\n"
                 + "-fx-border-color: black;\n"
                 + "-fx-border-insets: 5;\n"
-                + "-fx-border-width: 1;\n"
-                + "-fx-border-style: double;\n";
+                + "-fx-border-width: 1";
 
         box.setStyle(cssLayout);
         box.setSpacing(7);
@@ -454,7 +449,7 @@ public class MenuSceneManager extends Stage {
         return 0;
     }
 
-    public static void auctionPopup() {
+    public void auctionPopup() {
 
         //initialisierung der benoetigten Objekte
         HBox auctionHBox = new HBox();
@@ -497,8 +492,7 @@ public class MenuSceneManager extends Stage {
         String cssLayout = "-fx-background-color: #dcedc8;\n"
                 + "-fx-border-color: black;\n"
                 + "-fx-border-insets: 5;\n"
-                + "-fx-border-width: 1;\n"
-                + "-fx-border-style: double;\n";
+                + "-fx-border-width: 1";
 
         auctionHBox.setStyle(cssLayout);
         auctionHBox.setSpacing(10);
@@ -524,7 +518,7 @@ public class MenuSceneManager extends Stage {
         });
     }
 
-    public static void updateAuctionPopup(boolean stillActive, boolean noBidder) {
+    public void updateAuctionPopup(boolean stillActive, boolean noBidder) {
 
         Task task = new Task() {
             @Override
@@ -560,8 +554,7 @@ public class MenuSceneManager extends Stage {
             String cssLayout = "-fx-background-color: #dcedc8;\n"
                     + "-fx-border-color: black;\n"
                     + "-fx-border-insets: 5;\n"
-                    + "-fx-border-width: 1;\n"
-                    + "-fx-border-style: double;\n";
+                    + "-fx-border-width: 1";
 
             endLabel.setFont(Font.font("Tahoma", FontWeight.BOLD, 10));
             resetBox.setStyle(cssLayout);
@@ -578,7 +571,7 @@ public class MenuSceneManager extends Stage {
 
     }
 
-    public static void bidTextFieldFocus() {
+    public void bidTextFieldFocus() {
         Task task = new Task() {
             @Override
             protected Object call() throws Exception {
@@ -589,9 +582,4 @@ public class MenuSceneManager extends Stage {
         Platform.runLater(task);
 
     }
-
-    public static void fullscreen() {
-        stage.setFullScreen(true);
-    }
-
 }

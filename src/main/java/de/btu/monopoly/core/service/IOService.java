@@ -5,6 +5,7 @@
  */
 package de.btu.monopoly.core.service;
 
+import de.btu.monopoly.Global;
 import de.btu.monopoly.GlobalSettings;
 import de.btu.monopoly.core.Game;
 import de.btu.monopoly.core.GameBoard;
@@ -15,7 +16,6 @@ import de.btu.monopoly.ki.EasyKi;
 import de.btu.monopoly.ki.HardKi;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.data.BroadcastPlayerChoiceRequest;
-import de.btu.monopoly.ui.MenuSceneManager;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -159,16 +159,16 @@ public class IOService {
         if (isChoiceFromThisClient) {
             int choice = -1;
             if (type == JAIL) {
-                choice = MenuSceneManager.jailChoicePopup();
+                choice = Global.ref().getMenuSceneManager().jailChoicePopup();
             }
             if (type == ACTION) {
-                choice = MenuSceneManager.actionSequencePopup();
+                choice = Global.ref().getMenuSceneManager().actionSequencePopup();
             }
             if (type == BUY) {
-                choice = MenuSceneManager.buyPropertyPopup();
+                choice = Global.ref().getMenuSceneManager().buyPropertyPopup();
             }
             if (type == FIELD) {
-                choice = MenuSceneManager.askForFieldPopup(player, fields);
+                choice = Global.ref().getMenuSceneManager().askForFieldPopup(player, fields);
             }
 
             BroadcastPlayerChoiceRequest packet = new BroadcastPlayerChoiceRequest();

@@ -86,7 +86,7 @@ public class TradeService {
         
             LOGGER.info(String.format("Spieler %s hat dir eine Handelsanfrage gemacht:%n%n%s%n\t[1] - annehmen%n\t[2] - ablehnen",
                     board.getPlayer(trade.getSupply().getPlayerId()).getName(), trade.toString(board)));
-            int choice = IOService.getClientChoice(receipt, 2);
+            int choice = IOService.getUserInput(2);
         
             response = new PlayerTradeResponse();
             response.setRequest(request);

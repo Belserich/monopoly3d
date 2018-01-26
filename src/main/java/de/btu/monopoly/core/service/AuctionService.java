@@ -2,6 +2,7 @@ package de.btu.monopoly.core.service;
 
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
+import de.btu.monopoly.Global;
 import de.btu.monopoly.GlobalSettings;
 import de.btu.monopoly.core.mechanics.Auction;
 import de.btu.monopoly.data.field.PropertyField;
@@ -11,7 +12,6 @@ import de.btu.monopoly.net.data.BidRequest;
 import de.btu.monopoly.net.data.BroadcastAuctionResponse;
 import de.btu.monopoly.net.data.ExitAuctionRequest;
 import de.btu.monopoly.net.data.JoinAuctionRequest;
-import de.btu.monopoly.ui.MenuSceneManager;
 
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -54,8 +54,8 @@ public class AuctionService extends Listener {
         
         auc.getClient().sendTCP(jaReq);
         if (!GlobalSettings.RUN_AS_TEST) { // nicht fuer Test
-            MenuSceneManager.auctionPopup();
-            MenuSceneManager.bidTextFieldFocus();
+            Global.ref().getMenuSceneManager().auctionPopup();
+            Global.ref().getMenuSceneManager().bidTextFieldFocus();
             while (auctionRun) {
                 IOService.sleepDeep(500);
                 if (GlobalSettings.RUN_IN_CONSOLE) { // nur fuer @Console
@@ -100,12 +100,12 @@ public class AuctionService extends Listener {
                             if (noBidder) {
                                 LOGGER.fine("Das Grundstück " + AuctionService.getPropertyString() + " wurde nicht verkauft!");
                                 auctionRun = false;
-                                MenuSceneManager.updateAuctionPopup(auctionStillActive(), noBidder);
+                                Global.ref().getMenuSceneManager().updateAuctionPopup(auctionStillActive(), noBidder);
                             }
                             //Falls sich ein Bieter gefunden hat
                             else {
                                 auctionRun = false;
-                                MenuSceneManager.updateAuctionPopup(auctionStillActive(), noBidder);
+                                Global.ref().getMenuSceneManager().updateAuctionPopup(auctionStillActive(), noBidder);
                                 sellProperty();
                             }
                         }
@@ -117,12 +117,12 @@ public class AuctionService extends Listener {
                                 IOService.sleep(1000);
                             }
                             auctionRun = false;
-                            MenuSceneManager.updateAuctionPopup(auctionStillActive(), noBidder);
+                            Global.ref().getMenuSceneManager().updateAuctionPopup(auctionStillActive(), noBidder);
                             sellProperty();
                         }
                     }
                     else {
-                        MenuSceneManager.updateAuctionPopup(auctionStillActive(), noBidder);
+                        Global.ref().getMenuSceneManager().updateAuctionPopup(auctionStillActive(), noBidder);
                     }
 
                 }
