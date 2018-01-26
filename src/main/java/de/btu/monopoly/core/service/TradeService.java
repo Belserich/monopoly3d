@@ -114,7 +114,12 @@ public class TradeService {
 
         PlayerTradeRequest request = new PlayerTradeRequest();
         request.setTrade(createTrade(supplier, board));
-        request.setDenied(IOService.getUserInput(2) == 2);
+        if (GlobalSettings.RUN_IN_CONSOLE) {
+            request.setDenied(IOService.getUserInput(2) == 2);
+        }
+        else {
+            request.setDenied(true);
+        }
         return request;
     }
 
@@ -204,6 +209,23 @@ public class TradeService {
     }
 
     /**
+     * Erstellt eine TradeOffer-Instanz, die sich alle gebotenen Objekte aus der GUI holt
+     *
+     * @param player Spieler
+     * @return Angebots-Instanz
+     */
+    public static TradeOffer createTradeOfferGui(Player player) {
+
+        TradeOffer offer = new TradeOffer();
+
+        offer.setPropertyIds(SceneManager.propertiesForTrade(player));
+        offer.setCardIds(SceneManager.cardsForTrade(player));
+        offer.setMoney(SceneManager.moneyForTrade(player));
+
+        return offer;
+    }
+
+    /**
      * Hilfsmethode
      *
      * @param ownedIds Die IDs der handelbaren Objekte in Spielerbesitz
@@ -239,20 +261,14 @@ public class TradeService {
         StringBuilder builder;
         int id;
 
-        if (GlobalSettings.RUN_IN_CONSOLE) {
-
-            builder = new StringBuilder(String.format("Welches Gebaeude bietet Spieler %s%s?%n",
-                    player.getName(), runOnce ? " noch" : ""));
-            for (id = 0; id < ownedPropIds.size(); id++) {
-                builder.append(String.format("[%d] - %s%n", id + 1, fm.getField(ownedPropIds.get(id)).getName()));
-            }
-
-            builder.append(String.format("[%d] - Keins%n", id + 1));
-            LOGGER.info(builder.toString());
+        builder = new StringBuilder(String.format("Welches Gebaeude bietet Spieler %s%s?%n",
+                player.getName(), runOnce ? " noch" : ""));
+        for (id = 0; id < ownedPropIds.size(); id++) {
+            builder.append(String.format("[%d] - %s%n", id + 1, fm.getField(ownedPropIds.get(id)).getName()));
         }
-        else {
-            SceneManager.selectTradeOfferPopup();
-        }
+
+        builder.append(String.format("[%d] - Keins%n", id + 1));
+        LOGGER.info(builder.toString());
     }
 
     /**
