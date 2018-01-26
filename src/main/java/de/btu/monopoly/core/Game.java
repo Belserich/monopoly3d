@@ -43,6 +43,11 @@ public class Game {
      * Die Zufallsinstanz für sämtliche zufällige Spielereignisse
      */
     private final Random random;
+    
+    /**
+     * momentaner Spieler
+     */
+    private Player currPlayer;
 
     /**
      * Die fachliche Komponente des Spiels als Einheit, bestehend aus einem
@@ -53,17 +58,17 @@ public class Game {
      * @param seed RandomSeed
      */
     public Game(GameClient client, Player[] players, long seed) {
-
+        
         this.client = client;
         this.players = players;
         random = new Random(seed);
-
+        
         IOService.setClient(client);
         
         init();
     }
 
-    public void init() {
+    private void init() {
 
         LOGGER.info("Spiel wird initialisiert.");
 
@@ -83,6 +88,7 @@ public class Game {
 
         while (board.updateActivePlayers().getActivePlayers().size() > 1) {
             for (Player activePlayer : board.getActivePlayers()) {
+                currPlayer = activePlayer;
                 turn(activePlayer);
                 if (!activePlayer.getBank().isLiquid()) {
                     PlayerService.bankrupt(activePlayer, board);
@@ -389,5 +395,12 @@ public class Game {
      */
     public Random getRandom() {
         return random;
+    }
+    
+    /**
+     * @return momentaner Spieler
+     */
+    public Player getCurrentPlayer() {
+        return currPlayer;
     }
 }
