@@ -15,11 +15,9 @@ import de.btu.monopoly.core.service.AuctionService;
 import de.btu.monopoly.core.service.NetworkService;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.menu.LobbyService;
-import de.btu.monopoly.ui.controller.GuiMessages;
 
 import java.io.IOException;
 import java.util.Optional;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -51,8 +49,10 @@ public class GameClient {
     }
 
     public void connect(String serverIP) {
-        LOGGER.finer("Client verbindet");
+        
+        LOGGER.finer("Die Client versucht, eine Verbindung aufzubauen.");
         try {
+            
             client.start();
             client.connect(timeout, serverIP, tcpPort);
             listener = new ClientListener();
@@ -60,14 +60,13 @@ public class GameClient {
             client.addListener(new LobbyService());
             client.addListener(new AuctionService());
             client.addListener(new TrafficListener());
-            // lobby wird in GUI geöffnet
-            GuiMessages.setConnectionError(false);
+            
         } catch (IOException ex) {
-            LOGGER.log(Level.WARNING, "Client konnte nicht gestartet werden.\n\t{0}", ex.toString());
-            // GUI meldet Fehler
-            GuiMessages.setConnectionError(true);
+            
+            String errorMsg = String.format("Connection error! ip: %s port: %d", serverIP, tcpPort);
+            LOGGER.warning(errorMsg);
+            throw new RuntimeException(errorMsg);
         }
-
     }
 
     public void disconnect() {
