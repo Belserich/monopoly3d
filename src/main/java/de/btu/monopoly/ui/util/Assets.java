@@ -132,7 +132,7 @@ public class Assets
         loadFxContent();
     }
     
-    public static boolean loaded() {
+    public static boolean loadedFxContent() {
         return !registeredImages.isEmpty() || !registeredStrings.isEmpty();
     }
     

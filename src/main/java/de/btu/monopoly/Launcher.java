@@ -7,11 +7,11 @@ package de.btu.monopoly;
 
 import de.btu.monopoly.menu.MainMenu;
 import de.btu.monopoly.ui.MenuSceneManager;
+import de.btu.monopoly.ui.util.Assets;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
@@ -21,39 +21,34 @@ import java.util.logging.Logger;
 public class Launcher extends Application {
 
     public static final Logger LOGGER = Logger.getLogger(Launcher.class.getCanonicalName());
-
+    
+    public static void main(String[] args) throws Exception {
+        configureLoggers();
+        loadResources();
+        initGame();
+    }
+    
+    private static void configureLoggers() throws IOException {
+        LogManager.getLogManager().readConfiguration(Launcher.class.getResourceAsStream("/data/config/logging.properties"));
+        //        Logger.getLogger(FieldDataParser.class.getCanonicalName()).setLevel(Level.OFF);
+        //        Logger.getLogger(Game.class.getCanonicalName()).setLevel(Level.OFF);
+    }
+    
+    private static void loadResources() {
+        Assets.loadGeneral();
+    }
+    
+    private static void initGame() {
+        if (GlobalSettings.RUN_IN_CONSOLE) {
+            MainMenu mainMenu = new MainMenu();
+            mainMenu.start();
+        }
+        else launch();
+    }
+    
     @Override
     public void start(Stage stage) throws Exception {
-        new MenuSceneManager();
-    }
-
-    /**
-     * The main() method is ignored in correctly deployed JavaFX application. main() serves only as fallback in case the
-     * application can not be launched through deployment artifacts, e.g., in IDEs with limited FX support. NetBeans ignores
-     * main().
-     *
-     * @param args the command line arguments
-     * @throws java.lang.Exception
-     */
-    public static void main(String[] args) throws Exception {
-        configLoggers();
-        if (GlobalSettings.RUN_IN_CONSOLE) initGame();
-        else launch(args);
-    }
-
-    public static void initGame() {
-        MainMenu mainMenu = new MainMenu();
-        mainMenu.start();
-    }
-
-    private static void configLoggers() {
-        try {
-            LogManager.getLogManager().readConfiguration(Launcher.class.getResourceAsStream("/data/config/logging.properties"));
-        } catch (IOException ex) {
-            LOGGER.log(Level.WARNING, "unable to configure loggers{0}", ex);
-        }
-
-//        Logger.getLogger(FieldDataParser.class.getCanonicalName()).setLevel(Level.OFF);
-//        Logger.getLogger(Game.class.getCanonicalName()).setLevel(Level.OFF);
+        MenuSceneManager menuMan = new MenuSceneManager();
+        Global.ref().setMenuSceneManager(menuMan);
     }
 }
