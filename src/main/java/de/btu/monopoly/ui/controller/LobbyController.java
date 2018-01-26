@@ -1,8 +1,8 @@
 package de.btu.monopoly.ui.controller;
 
+import de.btu.monopoly.Global;
 import de.btu.monopoly.menu.Lobby;
 import de.btu.monopoly.menu.LobbyService;
-import de.btu.monopoly.ui.MenuSceneManager;
 import javafx.animation.FadeTransition;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
@@ -681,7 +681,7 @@ public class LobbyController implements Initializable {
 
         try {
             // Wechselt die Scene auf Game
-            MenuSceneManager.changeSceneToGame(lobby);
+            Global.ref().getMenuSceneManager().changeSceneToGame(lobby);
         } catch (IOException ex) {
             Logger.getLogger(LobbyController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -696,7 +696,7 @@ public class LobbyController implements Initializable {
         fadeGrid.playFromStart();
         fadeGrid.setOnFinished((event1) -> {
             try {
-                MenuSceneManager.changeScene(new FXMLLoader(getClass().getResource("/fxml/settings_scene.fxml")));
+                Global.ref().getMenuSceneManager().changeScene(new FXMLLoader(getClass().getResource("/fxml/settings_scene.fxml")));
             } catch (IOException ex) {
                 Logger.getLogger(LobbyController.class.getName()).log(Level.SEVERE, null, ex);
             }

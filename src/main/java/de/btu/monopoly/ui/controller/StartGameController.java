@@ -1,9 +1,8 @@
 package de.btu.monopoly.ui.controller;
 
+import de.btu.monopoly.Global;
 import de.btu.monopoly.core.service.IOService;
 import de.btu.monopoly.menu.LobbyService;
-import de.btu.monopoly.net.client.GameClient;
-import de.btu.monopoly.ui.MenuSceneManager;
 import javafx.animation.FadeTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -25,12 +24,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
  * @author augat
  */
 public class StartGameController implements Initializable {
-
-    private static GameClient client;
 
     @FXML
     private Button backButton;
@@ -90,10 +86,6 @@ public class StartGameController implements Initializable {
         fadeInButton4.playFromStart();
     }
 
-    public static void setClient(GameClient client) {
-        StartGameController.client = client;
-    }
-
     //-----------------------------------------------------------------------------------------
     // start_game_scene.fxml
     //-----------------------------------------------------------------------------------------
@@ -119,7 +111,7 @@ public class StartGameController implements Initializable {
     private void joinLobby() {
 
         // JoinLobby und Namen übernehmen
-        LobbyService.joinLobby(client, true);
+        LobbyService.joinLobby(Global.ref().getClient(), true);
         IOService.sleep(200);
         LobbyService.changeName(nicknameHostTextView.getText());
 
@@ -161,7 +153,7 @@ public class StartGameController implements Initializable {
                 fadeGrid.playFromStart();
                 fadeGrid.setOnFinished((ActionEvent event1) -> {
                     try {
-                        MenuSceneManager.changeSceneToLobby(loader);
+                        Global.ref().getMenuSceneManager().changeSceneToLobby(loader);
                     } catch (IOException ex) {
                         Logger.getLogger(StartGameController.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -169,7 +161,7 @@ public class StartGameController implements Initializable {
             }
             else {
                 try {
-                    MenuSceneManager.changeScene(loader);
+                    Global.ref().getMenuSceneManager().changeScene(loader);
                 } catch (IOException ex) {
                     Logger.getLogger(MenuController.class.getName()).log(Level.SEVERE, null, ex);
                 }

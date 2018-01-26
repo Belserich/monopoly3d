@@ -1,9 +1,9 @@
 package de.btu.monopoly.ui.controller;
 
+import de.btu.monopoly.Global;
 import de.btu.monopoly.core.service.IOService;
 import de.btu.monopoly.menu.LobbyService;
 import de.btu.monopoly.menu.MainMenu;
-import de.btu.monopoly.ui.MenuSceneManager;
 import javafx.animation.FadeTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -141,15 +141,8 @@ public class JoinGameController implements Initializable {
         // Namen wechseln
         IOService.sleep(200);
         LobbyService.changeName(nameTextField.getText());
-
-        if (GuiMessages.getConnectionError() == false) {
-            // Wechselt die Scene auf lobby
-            changeScene(new FXMLLoader(getClass().getResource("/fxml/lobby_scene.fxml")), true);
-        }
-        else {
-            errorLabel.setText("Keine Verbindung möglich.");
-        }
-
+    
+        changeScene(new FXMLLoader(getClass().getResource("/fxml/lobby_scene.fxml")), true);
     }
 
     private void changeScene(FXMLLoader loader, boolean changeToLobby) {
@@ -196,8 +189,7 @@ public class JoinGameController implements Initializable {
                 fadeGrid.playFromStart();
                 fadeGrid.setOnFinished((ActionEvent event1) -> {
                     try {
-
-                        MenuSceneManager.changeSceneToLobby(loader);
+                        Global.ref().getMenuSceneManager().changeSceneToLobby(loader);
                     } catch (IOException ex) {
                         Logger.getLogger(StartGameController.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -205,7 +197,7 @@ public class JoinGameController implements Initializable {
             }
             else {
                 try {
-                    MenuSceneManager.changeScene(loader);
+                    Global.ref().getMenuSceneManager().changeScene(loader);
                 } catch (IOException ex) {
                     Logger.getLogger(MenuController.class.getName()).log(Level.SEVERE, null, ex);
                 }

@@ -3,7 +3,7 @@ package de.btu.monopoly.ui.controller;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXDialog;
 import com.jfoenix.controls.JFXDialogLayout;
-import de.btu.monopoly.ui.MenuSceneManager;
+import de.btu.monopoly.Global;
 import javafx.animation.FadeTransition;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -391,7 +391,7 @@ public class RulesController implements Initializable {
         fadeInButton1.playFromStart();
         fadeInButton1.setOnFinished((event) -> {
             try {
-                MenuSceneManager.changeScene(loader);
+                Global.ref().getMenuSceneManager().changeScene(loader);
             } catch (IOException ex) {
                 Logger.getLogger(MenuController.class.getName()).log(Level.SEVERE, null, ex);
             }

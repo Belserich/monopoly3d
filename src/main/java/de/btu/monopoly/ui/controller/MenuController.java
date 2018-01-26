@@ -1,7 +1,7 @@
 package de.btu.monopoly.ui.controller;
 
+import de.btu.monopoly.Global;
 import de.btu.monopoly.menu.MainMenu;
-import de.btu.monopoly.ui.MenuSceneManager;
 import javafx.animation.FadeTransition;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -127,7 +127,7 @@ public class MenuController implements Initializable {
         System.exit(0); //NOSONAR
 
     }
-
+    
     private void changeScene(FXMLLoader loader) {
         FadeTransition fadeInButton1
                 = new FadeTransition(Duration.millis(500), joinGameButton);
@@ -154,7 +154,7 @@ public class MenuController implements Initializable {
         fadeInButton4.playFromStart();
         fadeInButton4.setOnFinished((event) -> {
             try {
-                MenuSceneManager.changeScene(loader);
+                Global.ref().getMenuSceneManager().changeScene(loader);
             } catch (IOException ex) {
                 Logger.getLogger(MenuController.class.getName()).log(Level.SEVERE, null, ex);
             }
