@@ -7,6 +7,7 @@ package de.btu.monopoly.ki;
 
 import de.btu.monopoly.core.service.IOService;
 import java.util.Random;
+import java.util.logging.Logger;
 
 /**
  *
@@ -14,11 +15,14 @@ import java.util.Random;
  */
 public class ChatAi {
 
-    static void sendChatMessage(String message, boolean isLocal) {
+    private static final Logger LOGGER = Logger.getLogger(HardKi.class.getCanonicalName());
+
+    public static void sendChatMessage(String chatter, String message, boolean isLocal) {
         //TODO
+        LOGGER.info(chatter + ": " + message);
     }
 
-    static void tradeResultMessage(int balance, int MINIMUM_ACCEPT_AMOUNT) {
+    static void tradeResultMessage(String ki, int balance, int MINIMUM_ACCEPT_AMOUNT) {
         Random ran = new Random();
         String mess = "";
 
@@ -113,7 +117,7 @@ public class ChatAi {
                     mess += "Also wenn ich das nicht annehmen würde, wäre ich kein Geschäftsmann!";
             }
         }
-        sendChatMessage(mess, true);
+        sendChatMessage(ki, mess, true);
     }
 
     static void propertyMessage(int balance) {

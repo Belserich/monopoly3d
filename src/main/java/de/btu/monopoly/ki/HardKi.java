@@ -376,7 +376,7 @@ public class HardKi {
      * @param string Inhalt der Chatnachricht
      * @param isLocal ob die Nachricht lokal gesendet wird
      */
-    static void chat(String string, boolean isLocal) {
-        ChatAi.sendChatMessage(string, isLocal);
+    static void chat(String chatter, String message, boolean isLocal) {
+        ChatAi.sendChatMessage(chatter, message, isLocal);
     }
 }

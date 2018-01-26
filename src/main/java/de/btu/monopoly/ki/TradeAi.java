@@ -48,11 +48,12 @@ public class TradeAi {
         // Anderes:
         int balance = 0;                    // balance die entscheidet, ob das Angebot angenommen wird
         para = HardKi.getParameters();
+        String name = ki.getName();
 
         // prüfen ob die Ki danach geuegend Geld hat
         int rawBalance = sMoney - dMoney;
         if (rawBalance < 0 && (ki.getMoney() + rawBalance) < para[6]) {
-            HardKi.chat("Also das kann ich mir nicht leisten", true);
+            HardKi.chat(name, "Also das kann ich mir nicht leisten", true);
             return false;
         }
 
@@ -71,7 +72,7 @@ public class TradeAi {
             balance += calcProperty(ki, propId, fima, true);
         }
 
-        ChatAi.tradeResultMessage(balance, MINIMUM_ACCEPT_AMOUNT);
+        ChatAi.tradeResultMessage(name, balance, MINIMUM_ACCEPT_AMOUNT);
         return (balance > 0);
     }
 
@@ -99,7 +100,7 @@ public class TradeAi {
 
         // KI nimmt keine GFKarten an
         if (sCards.length > 0) {
-            HardKi.chat("Also für Gefängnis-Frei-Karten bezahle ich nichts", true);
+            HardKi.chat(ki.getName(), "Also für Gefängnis-Frei-Karten bezahle ich nichts", true);
         }
 
         // KI verkauft zum Spielbeginn keine GFKarten, sonst fur festgelegten Wert

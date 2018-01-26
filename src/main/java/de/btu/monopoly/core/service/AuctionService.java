@@ -6,6 +6,7 @@ import de.btu.monopoly.GlobalSettings;
 import de.btu.monopoly.core.mechanics.Auction;
 import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.player.Player;
+import de.btu.monopoly.ki.ChatAi;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.data.BidRequest;
 import de.btu.monopoly.net.data.BroadcastAuctionResponse;
@@ -46,8 +47,6 @@ public class AuctionService extends Listener {
      */
     public static void startAuction(PropertyField prop) {
 
-        int oneMore = 0;
-
         boolean auctionRun = true;
         boolean noBidder = false;
 
@@ -55,84 +54,105 @@ public class AuctionService extends Listener {
         JoinAuctionRequest jaReq = new JoinAuctionRequest();
 
         auc.getClient().sendTCP(jaReq);
-        if (!GlobalSettings.RUN_AS_TEST) { // nicht fuer Test
-            SceneManager.auctionPopup();
-            SceneManager.bidTextFieldFocus();
-            while (auctionRun) {
-                IOService.sleepDeep(500);
-                if (GlobalSettings.RUN_IN_CONSOLE) { // nur fuer @Console
-                    LOGGER.finest("Wähle [1] für bieten [2] für aussteigen");
-                    Scanner scanner = new Scanner(System.in);
-                    switch (scanner.nextInt()) {
-                        case 1:
-                            LOGGER.finest("Wähle dein Gebot");
-                            setBid(getAuc().getClient().getPlayerOnClient().getId(), scanner.nextInt());
-                            break;
-                        case 2:
-                            playerExit(getAuc().getClient().getPlayerOnClient().getId());
-                            break;
-                        default:
-                            break;
-                    }
-                }
-                else { //Nur fuer @GUI
-                    /*
-                     * Falls nur noch ein Bieter uebrig ist, hat dieser dank dem Boolean auctionRun noch die Moeglichkeit
-                     * weiterhin zu bieten, so lange der (weiter unten implementierte) Countdown noch laeuft.
-                     */
-                    if (!auctionStillActive()) {
-                        /*
-                         * Falls das Gebot 0 betraegt und nur noch 1 Bieter uebrig ist, bekommt dieser die Chance innerhalb des
-                         * (weiter unten implementierten) Countdowns zu bieten.
-                         */
-                        if (AuctionService.getHighestBid() == 0) {
-                            noBidder = true;
-                            for (int i = 5; i != 0; i--) {
-                                LOGGER.fine("Es wurde noch nichts geboten, es bleiben noch " + i + " Sekunden!");
-                                IOService.sleep(1000);
-                                if (AuctionService.getHighestBid() != 0) {
-                                    noBidder = false;
-                                    LOGGER.fine("Es wurde " + AuctionService.getHighestBid() + "€ von "
-                                            + AuctionService.getPlayer(AuctionService.getHighestBidder()).getName() + " geboten!");
-                                    IOService.sleep(1000);
-                                    break;
-                                }
-                            }
-                            //Falls sich kein Bieter gefunden hat (Objekt wird NICHT verkauft)
-                            if (noBidder) {
-                                LOGGER.fine("Das Grundstück " + AuctionService.getPropertyString() + " wurde nicht verkauft!");
-                                auctionRun = false;
-                                SceneManager.updateAuctionPopup(auctionStillActive(), noBidder);
-                            }
-                            //Falls sich ein Bieter gefunden hat
-                            else {
-                                auctionRun = false;
-                                SceneManager.updateAuctionPopup(auctionStillActive(), noBidder);
-                                sellProperty();
-                            }
-                        }
-                        else {
-                            //Letzter Bieter bekommt nochmal die Moeglichkeit nachzubieten
-                            for (int i = 5; i != 0; i--) {
-                                LOGGER.fine("Auktion endet in " + i + " Sekunden. Höchstegebot: "
-                                        + auc.getHighestBid() + "€ von " + AuctionService.getPlayer(AuctionService.getHighestBidder()).getName());
-                                IOService.sleep(1000);
-                            }
-                            auctionRun = false;
-                            SceneManager.updateAuctionPopup(auctionStillActive(), noBidder);
-                            sellProperty();
-                        }
-                    }
-                    else {
-                        SceneManager.updateAuctionPopup(auctionStillActive(), noBidder);
-                    }
-
+        if (GlobalSettings.RUN_AS_TEST) { // nicht fuer Test
+            return;
+        }
+        SceneManager.auctionPopup();
+        SceneManager.bidTextFieldFocus();
+        while (auctionRun) {
+            IOService.sleepDeep(500);
+            if (GlobalSettings.RUN_IN_CONSOLE) { // nur fuer @Console
+                LOGGER.finest("Wähle [1] für bieten [2] für aussteigen");
+                Scanner scanner = new Scanner(System.in);
+                switch (scanner.nextInt()) {
+                    case 1:
+                        LOGGER.finest("Wähle dein Gebot");
+                        setBid(getAuc().getClient().getPlayerOnClient().getId(), scanner.nextInt());
+                        break;
+                    case 2:
+                        playerExit(getAuc().getClient().getPlayerOnClient().getId());
+                        break;
+                    default:
+                        break;
                 }
             }
-            if (GlobalSettings.RUN_IN_CONSOLE) {
-                sellProperty();
+            // falls weniger als 2 Bieter beteiligt sind -> Auktion soll terminieren
+            if (getActiveBidderCount() < 2) {
+                // Timer
+                timer();
+                terminateAuction();
+                auctionRun = false;
+            }
+            // wenn die Auktion noch lauft
+            else {
+                if (!GlobalSettings.RUN_IN_CONSOLE) {
+                    SceneManager.updateAuctionPopup(auctionStillActive(), false);
+                }
+            }
+
+        }
+        if (GlobalSettings.RUN_IN_CONSOLE) {
+            sellProperty();
+        }
+
+    }
+
+    private static void timer() {
+        String message = "Die Auktion endet. ";
+        if (AuctionService.getHighestBid() == 0) {
+            message += "Wir haben keinen Bieter. ";
+        }
+        else {
+            message += "Wir haben" + auc.getHighestBid() + "€ von "
+                    + AuctionService.getPlayer(AuctionService.getHighestBidder()).getName() + ". ";
+        }
+        ChatAi.sendChatMessage("Auktionsleiter", message, false);
+        message = "";
+        for (int i = 1; i < 5; i++) {
+            IOService.sleepDeep(1600);
+
+            if (AuctionService.getHighestBid() == 0) {
+                message += "Zum ";
+            }
+            else {
+                message += auc.getHighestBid() + "€ zum ";
+            }
+            switch (i) {
+                case 1:
+                    message += "ersten.";
+                    break;
+                case 2:
+                    message += "zweiten.";
+                    break;
+                case 3:
+                    message += "dritten.";
+                    break;
+                case 4:
+                    message = "Vorbei!";
+            }
+            ChatAi.sendChatMessage("Auktionsleiter", message, false);
+            message = "";
+        }
+    }
+
+    private static void terminateAuction() {
+        if (AuctionService.getHighestBid() > 0) {   // falls ein Bieter gefunden
+            // verkaufe
+            ChatAi.sendChatMessage("Auktionsleiter", "Das Grundstück geht für " + auc.getHighestBid()
+                    + "€ an " + AuctionService.getPlayer(AuctionService.getHighestBidder()).getName(), false);
+            if (!GlobalSettings.RUN_IN_CONSOLE) {
+                SceneManager.updateAuctionPopup(auctionStillActive(), false);
+            }
+            sellProperty();
+        }
+        else {                                    // falls kein Bieter gefunden
+            // verkaufe nicht
+            ChatAi.sendChatMessage("Auktionsleiter", "Das Grundstück wird nicht verkauft", false);
+            if (!GlobalSettings.RUN_IN_CONSOLE) {
+                SceneManager.updateAuctionPopup(auctionStillActive(), true);
             }
         }
+
     }
 
     private static void sellProperty() {
@@ -225,7 +245,7 @@ public class AuctionService extends Listener {
             auc.setAucPlayers(((BroadcastAuctionResponse) object).getAucPlayers());
             auc.setHighestBid(((BroadcastAuctionResponse) object).getHighestBid());
             auc.setHighestBidder(((BroadcastAuctionResponse) object).getHighestBidder());
-            IOService.sleepDeep(1000);
+            IOService.sleepDeep(100);
 
             //@GUI kommt weg:
             LOGGER.log(Level.FINER, "<AUKTION>: \n  Stra\u00dfe: {0}\n  Auktion\u00e4re:", auc.getProperty());
