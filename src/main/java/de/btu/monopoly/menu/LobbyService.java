@@ -7,6 +7,7 @@ package de.btu.monopoly.menu;
 
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
+import de.btu.monopoly.Global;
 import de.btu.monopoly.GlobalSettings;
 import de.btu.monopoly.core.Game;
 import de.btu.monopoly.core.service.IOService;
@@ -14,7 +15,6 @@ import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.data.lobby.*;
 import de.btu.monopoly.net.server.AuctionTable;
-import de.btu.monopoly.ui.MenuSceneManager;
 import javafx.scene.paint.Color;
 
 import java.io.IOException;
@@ -151,6 +151,8 @@ public class LobbyService extends Listener {
         Game controller = new Game(lobby.getPlayerClient(), generatePlayerArray(), lobby.getRandomSeed());
         lobby.setController(controller);
         lobby.getPlayerClient().setGame(controller);
+        
+        Global.ref().setGame(controller);
     }
 
     /**
@@ -254,9 +256,9 @@ public class LobbyService extends Listener {
             if (!GlobalSettings.RUN_AS_TEST && !GlobalSettings.RUN_IN_CONSOLE) {
                 try {
                     // Lobby updaten
-                    MenuSceneManager.updateLobby();
+                    Global.ref().getMenuSceneManager().updateLobby();
                     // Kann später entfernt werden wenn Farben implementiert sind
-                    MenuSceneManager.updateLobbyColors();
+                    Global.ref().getMenuSceneManager().updateLobbyColors();
                 } catch (InterruptedException ex) {
                     LOGGER.log(Level.WARNING, "Lobby konnte nicht geupdated werden{0}", ex);
                     Thread.currentThread().interrupt();
@@ -276,7 +278,7 @@ public class LobbyService extends Listener {
             initGame();
             // Scene bei anderen Spielern öffnen
             try {
-                MenuSceneManager.openGameLayout(lobby);
+                Global.ref().getMenuSceneManager().openGameLayout(lobby);
                 IOService.sleep(2000);
 
             } catch (IOException ex) {

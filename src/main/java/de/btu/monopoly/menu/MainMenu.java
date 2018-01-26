@@ -5,11 +5,11 @@
  */
 package de.btu.monopoly.menu;
 
+import de.btu.monopoly.Global;
 import de.btu.monopoly.GlobalSettings;
 import de.btu.monopoly.core.service.IOService;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.server.GameServer;
-import de.btu.monopoly.ui.controller.StartGameController;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -19,12 +19,12 @@ import java.util.logging.Logger;
  * @author Christian Prinz
  */
 public class MainMenu {
-
+    
+    private static final Logger LOGGER = Logger.getLogger(MainMenu.class.getCanonicalName());
+    
     protected static final int CREATE_GAME = 1;
     protected static final int JOIN_GAME = 2;
-    private final int PORT = 55555;
-
-    public static final Logger LOGGER = Logger.getLogger(MainMenu.class.getCanonicalName());
+    private final int PORT = 55556;
 
     public void start() { //@GUI wird nicht verwendet
         LOGGER.setLevel(Level.FINER);
@@ -46,18 +46,19 @@ public class MainMenu {
         String localHost = System.getProperty("myapp.ip");
         client.connect(localHost);
         LOGGER.info("Die ServerIP ist " + server.getServerIP());
-
+        
+        Global.ref().setClient(client);
+        
         if (GlobalSettings.RUN_IN_CONSOLE) {
             LobbyService.joinLobby(client, true);
-        }
-        else {
-            StartGameController.setClient(client);
         }
     }
 
     public void joinGame(String ip) {
         // Client starten und verbinden
         GameClient client = new GameClient(PORT, 5000);
+        Global.ref().setClient(client);
+        
         if (GlobalSettings.RUN_IN_CONSOLE) {
             LOGGER.fine("Geben sie die IP-Adresse des Servers ein");
             client.connect(IOService.askForString());
