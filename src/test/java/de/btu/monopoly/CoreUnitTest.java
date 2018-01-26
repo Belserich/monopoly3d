@@ -12,6 +12,7 @@ import de.btu.monopoly.data.card.CardManager;
 import de.btu.monopoly.data.field.*;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.net.client.GameClient;
+import de.btu.monopoly.ui.util.Assets;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -32,7 +33,8 @@ public class CoreUnitTest {
 
     public CoreUnitTest() {
         GlobalSettings.RUN_AS_TEST = true;
-
+        Assets.loadGeneral();
+        
         players = new Player[4];
         for (int i = 0; i < 4; i++) {
             Player player = new Player("Mathias " + (i + 1), i, 1500);
@@ -146,15 +148,10 @@ public class CoreUnitTest {
 
         Player p = players[0];
         CardField field = ((CardField) board.getFieldManager().getField(2));
-
-        for (int i = 0; i < 2; i++) {
-
-            Card first = field.nextCard();
-            Card card = first;
-            do {
-                board.getCardManager().manageCardActions(p, card);
-                card = field.nextCard();
-            } while (card != first);
+        
+        for (int i = 0; i < 20; i++) {
+            Card card = field.nextCard();
+            board.getCardManager().manageCardActions(p, card);
         }
     }
 
