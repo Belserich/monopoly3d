@@ -3,6 +3,13 @@ package de.btu.monopoly.ui.controller;
 import de.btu.monopoly.menu.Lobby;
 import de.btu.monopoly.menu.LobbyService;
 import de.btu.monopoly.ui.SceneManager;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.URL;
+import java.net.UnknownHostException;
+import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.animation.FadeTransition;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
@@ -17,14 +24,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
-
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.URL;
-import java.net.UnknownHostException;
-import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -150,6 +149,46 @@ public class LobbyController implements Initializable {
             id = 5;
         }
 
+        kiButton.setOnKeyPressed((event) -> {
+            if (event.getCode().equals(KeyCode.ENTER)) {
+                kiButtonAction(new ActionEvent());
+            }
+        });
+
+        playButton.setOnKeyPressed((event) -> {
+            if (event.getCode().equals(KeyCode.ENTER)) {
+                try {
+                    playButtonAction(new ActionEvent());
+                } catch (IOException ex) {
+                    Logger.getLogger(LobbyController.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(LobbyController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+
+        optionButton.setOnKeyPressed((event) -> {
+            if (event.getCode().equals(KeyCode.ENTER)) {
+                try {
+                    optionButtonAction(new ActionEvent());
+                } catch (IOException ex) {
+                    Logger.getLogger(LobbyController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+
+        leaveLobbyButton.setOnKeyPressed((event) -> {
+            if (event.getCode().equals(KeyCode.ENTER)) {
+                try {
+                    leaveLobbyButtonAction(new ActionEvent());
+                } catch (IOException ex) {
+                    Logger.getLogger(LobbyController.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(LobbyController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+
         // Animation
         lobbyLabelIp.setOpacity(0);
         lobbyLabel.setOpacity(0);
@@ -194,7 +233,8 @@ public class LobbyController implements Initializable {
 
                     if (id != 0) {
                         double value = 0.5;
-                    } else {
+                    }
+                    else {
                         double value = 1;
                     }
 
@@ -311,7 +351,8 @@ public class LobbyController implements Initializable {
                         fadeInButton19.setFromValue(0);
                         fadeInButton19.setToValue(1);
                         fadeInButton19.playFromStart();
-                    } else {
+                    }
+                    else {
                         FadeTransition fadeInButton15
                                 = new FadeTransition(Duration.millis(800), difficultyComboBox);
                         fadeInButton15.setFromValue(0);
@@ -370,7 +411,8 @@ public class LobbyController implements Initializable {
                 if (Lobby.getUsers() != null) {
                     if (Lobby.getUsers().length >= 1) {
                         name1Label.setText(Lobby.getUsers()[0][1]);
-                    } else {
+                    }
+                    else {
                         name1Label.setText("frei");
                     }
                     if (Lobby.getUsers().length >= 2) {
@@ -379,10 +421,12 @@ public class LobbyController implements Initializable {
                             if (id == 0) {
                                 deleteKi1.setVisible(true);
                             }
-                        } else {
+                        }
+                        else {
                             deleteKi1.setVisible(false);
                         }
-                    } else {
+                    }
+                    else {
                         name2Label.setText("frei");
                         deleteKi1.setVisible(false);
                     }
@@ -392,10 +436,12 @@ public class LobbyController implements Initializable {
                             if (id == 0) {
                                 deleteKi2.setVisible(true);
                             }
-                        } else {
+                        }
+                        else {
                             deleteKi2.setVisible(false);
                         }
-                    } else {
+                    }
+                    else {
                         name3Label.setText("frei");
                         deleteKi2.setVisible(false);
                     }
@@ -405,10 +451,12 @@ public class LobbyController implements Initializable {
                             if (id == 0) {
                                 deleteKi3.setVisible(true);
                             }
-                        } else {
+                        }
+                        else {
                             deleteKi3.setVisible(false);
                         }
-                    } else {
+                    }
+                    else {
                         name4Label.setText("frei");
                         deleteKi3.setVisible(false);
                     }
@@ -418,10 +466,12 @@ public class LobbyController implements Initializable {
                             if (id == 0) {
                                 deleteKi4.setVisible(true);
                             }
-                        } else {
+                        }
+                        else {
                             deleteKi4.setVisible(false);
                         }
-                    } else {
+                    }
+                    else {
                         name5Label.setText("frei");
                         deleteKi4.setVisible(false);
                     }
@@ -431,10 +481,12 @@ public class LobbyController implements Initializable {
                             if (id == 0) {
                                 deleteKi5.setVisible(true);
                             }
-                        } else {
+                        }
+                        else {
                             deleteKi5.setVisible(false);
                         }
-                    } else {
+                    }
+                    else {
                         deleteKi5.setVisible(false);
                         name6Label.setText("frei");
                     }
@@ -459,42 +511,48 @@ public class LobbyController implements Initializable {
                     if (name1Label.getText() != "frei") {
                         playerColor1.setValue(Color.web(Lobby.getUsers()[0][4]));
 
-                    } else {
+                    }
+                    else {
                         playerColor1.setValue(Color.web("FFFFFF"));
                         playerColor1.setDisable(true);
                     }
                     if (name2Label.getText() != "frei") {
                         playerColor2.setValue(Color.web(Lobby.getUsers()[1][4]));
 
-                    } else {
+                    }
+                    else {
                         playerColor2.setValue(Color.web("FFFFFF"));
                         playerColor2.setDisable(true);
                     }
                     if (name3Label.getText() != "frei") {
                         playerColor3.setValue(Color.web(Lobby.getUsers()[2][4]));
 
-                    } else {
+                    }
+                    else {
                         playerColor3.setValue(Color.web("FFFFFF"));
                         playerColor3.setDisable(true);
                     }
                     if (name4Label.getText() != "frei") {
                         playerColor4.setValue(Color.web(Lobby.getUsers()[3][4]));
 
-                    } else {
+                    }
+                    else {
                         playerColor4.setValue(Color.web("FFFFFF"));
                         playerColor4.setDisable(true);
                     }
                     if (name5Label.getText() != "frei") {
                         playerColor5.setValue(Color.web(Lobby.getUsers()[4][4]));
 
-                    } else {
+                    }
+                    else {
                         playerColor5.setValue(Color.web("FFFFFF"));
                         playerColor5.setDisable(true);
                     }
                     if (name6Label.getText() != "frei") {
                         playerColor6.setValue(Color.web(Lobby.getUsers()[5][4]));
 
-                    } else {
+                    }
+                    else {
                         playerColor6.setValue(Color.web("FFFFFF"));
                         playerColor6.setDisable(true);
                     }
@@ -614,17 +672,20 @@ public class LobbyController implements Initializable {
                             + (String) difficultyComboBox.getSelectionModel().getSelectedItem()
                             + ")", difficulty);
                     kiNameTextField.setText("");
-                } else {
+                }
+                else {
                     // Fehlermeldung in ComboBox
                     kiNameTextField.setPromptText("Bitte einen Namen eingeben!");
                     kiNameTextField.setText("");
                 }
-            } else {
+            }
+            else {
                 kiNameTextField.setPromptText("Maximale KI Anzahl!");
                 kiNameTextField.setText("");
             }
 
-        } else {
+        }
+        else {
             // Fehlermeldung in ComboBox
             difficultyComboBox.setPromptText("Bitte auswählen!");
         }

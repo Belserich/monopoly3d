@@ -4,6 +4,11 @@ import de.btu.monopoly.core.service.IOService;
 import de.btu.monopoly.menu.LobbyService;
 import de.btu.monopoly.menu.MainMenu;
 import de.btu.monopoly.ui.SceneManager;
+import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.animation.FadeTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -17,12 +22,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.util.Duration;
-
-import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -65,6 +64,22 @@ public class JoinGameController implements Initializable {
                 + "    -fx-background-size: stretch;";
         grid.setStyle(image);
         stackPane.setBackground(new Background(new BackgroundImage(new Image(getClass().getResourceAsStream("/images/Lobby_Background.jpg")), BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT)));
+
+        backButton.setOnKeyPressed((event) -> {
+            if (event.getCode().equals(KeyCode.ENTER)) {
+                try {
+                    backButtonAction(new ActionEvent());
+                } catch (IOException ex) {
+                    Logger.getLogger(JoinGameController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+
+        searchButton.setOnKeyPressed((event) -> {
+            if (event.getCode().equals(KeyCode.ENTER)) {
+                searchButtonAction(new ActionEvent());
+            }
+        });
 
         // Animation
         nameTextField.setOpacity(0);

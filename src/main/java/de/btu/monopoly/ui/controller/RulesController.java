@@ -4,6 +4,11 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXDialog;
 import com.jfoenix.controls.JFXDialogLayout;
 import de.btu.monopoly.ui.SceneManager;
+import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.animation.FadeTransition;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -14,6 +19,7 @@ import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BackgroundImage;
@@ -28,12 +34,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
-
-import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -91,6 +91,106 @@ public class RulesController implements Initializable {
                 + "    -fx-background-size: stretch;";
         grid.setStyle(image);
         stackPane.setBackground(new Background(new BackgroundImage(new Image(getClass().getResourceAsStream("/images/Lobby_Background.jpg")), BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT)));
+
+        backButton.setOnKeyPressed((event) -> {
+            if (event.getCode().equals(KeyCode.ENTER)) {
+                try {
+                    backButtonAction(new ActionEvent());
+                } catch (IOException ex) {
+                    Logger.getLogger(RulesController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+
+        allgemeinButton.setOnKeyPressed((event) -> {
+            if (event.getCode().equals(KeyCode.ENTER)) {
+                try {
+                    allgemeinButtonAction(new ActionEvent());
+                } catch (IOException ex) {
+                    Logger.getLogger(RulesController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+
+        vorDemSpielButton.setOnKeyPressed((event) -> {
+            if (event.getCode().equals(KeyCode.ENTER)) {
+                try {
+                    vorDemSpielButtonAction(new ActionEvent());
+                } catch (IOException ex) {
+                    Logger.getLogger(RulesController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+
+        gefaengnisphaseButton.setOnKeyPressed((event) -> {
+            if (event.getCode().equals(KeyCode.ENTER)) {
+                try {
+                    gefaengnisphaseButtonAction(new ActionEvent());
+                } catch (IOException ex) {
+                    Logger.getLogger(RulesController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+
+        wurfphaseButton.setOnKeyPressed((event) -> {
+            if (event.getCode().equals(KeyCode.ENTER)) {
+                try {
+                    wurfphaseButtonAction(new ActionEvent());
+                } catch (IOException ex) {
+                    Logger.getLogger(RulesController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+
+        feldphaseButton.setOnKeyPressed((event) -> {
+            if (event.getCode().equals(KeyCode.ENTER)) {
+                try {
+                    feldphaseButtonAction(new ActionEvent());
+                } catch (IOException ex) {
+                    Logger.getLogger(RulesController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+
+        aktionsphaseButton.setOnKeyPressed((event) -> {
+            if (event.getCode().equals(KeyCode.ENTER)) {
+                try {
+                    aktionsphaseButtonAction(new ActionEvent());
+                } catch (IOException ex) {
+                    Logger.getLogger(RulesController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+
+        haeuserButton.setOnKeyPressed((event) -> {
+            if (event.getCode().equals(KeyCode.ENTER)) {
+                try {
+                    haeuserButtonAction(new ActionEvent());
+                } catch (IOException ex) {
+                    Logger.getLogger(RulesController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+
+        hypothekButton.setOnKeyPressed((event) -> {
+            if (event.getCode().equals(KeyCode.ENTER)) {
+                try {
+                    hypothekButtonAction(new ActionEvent());
+                } catch (IOException ex) {
+                    Logger.getLogger(RulesController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+
+        auktionenButton.setOnKeyPressed((event) -> {
+            if (event.getCode().equals(KeyCode.ENTER)) {
+                try {
+                    auktionenButtonAction(new ActionEvent());
+                } catch (IOException ex) {
+                    Logger.getLogger(RulesController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
 
         // Animation
         backButton.setOpacity(0);
@@ -225,10 +325,12 @@ public class RulesController implements Initializable {
     @FXML
     private void wurfphaseButtonAction(ActionEvent event) throws IOException {
         Text headline = new Text("Wurfphase");
-        Text text = new Text("In der Wurfphase werden zwei Würfel geworfen, ihre Summe ergibt die Anzahl der Felder, um die sich der momentane Spieler im Uhrzeigersinn bewegt.\n"
-                + "Kommt der Spieler Über das \"LOS\"-Feld während seines Zuges, so bekommt er 200€ von der Bank.\n"
-                + "Hat der momentane Spieler in seiner Wurfphase ein Pasch (zweimal dieselbe Zahl) geworfen, wechselt dieser nach seiner nächsten Aktionsphase sofort wieder in die Wurfphase\n"
-                + "Esseidenn, es ist sein dritter Pasch in Folge, dann wird seine Spielfigur in das Gefängnis gesetzt und sein Zug ist mit sofortiger Wirkung beendet.");
+        Text text = new Text("In der Wurfphase werden zwei Würfel geworfen, ihre Summe ergibt die Anzahl der Felder, um die sich der\n"
+                + "momentane Spieler im Uhrzeigersinn bewegt. Kommt der Spieler über das \"LOS\"-Feld während seines Zuges, so\n"
+                + "bekommt er 200€ von der Bank. Hat der momentane Spieler in seiner Wurfphase ein Pasch (zweimal dieselbe\n"
+                + "Zahl) geworfen, wechselt dieser nach seiner nächsten Aktionsphase sofort wieder in die Wurfphase, außer es ist\n"
+                + "sein dritter Pasch in Folge, dann wird seine Spielfigur ins Gefängnis gesetzt und sein Zug ist mit sofortiger\n"
+                + "Wirkung beendet.");
 
         showDialog(headline, text);
     }
