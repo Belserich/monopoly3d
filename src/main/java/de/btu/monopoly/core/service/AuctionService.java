@@ -54,8 +54,8 @@ public class AuctionService extends Listener {
         
         auc.getClient().sendTCP(jaReq);
         if (!GlobalSettings.RUN_AS_TEST) { // nicht fuer Test
-            Global.ref().getMenuSceneManager().auctionPopup();
-            Global.ref().getMenuSceneManager().bidTextFieldFocus();
+            Global.ref().getGameSceneManager().auctionPopup();
+            Global.ref().getGameSceneManager().bidTextFieldFocus();
             while (auctionRun) {
                 IOService.sleepDeep(500);
                 if (GlobalSettings.RUN_IN_CONSOLE) { // nur fuer @Console
@@ -100,12 +100,12 @@ public class AuctionService extends Listener {
                             if (noBidder) {
                                 LOGGER.fine("Das Grundstück " + AuctionService.getPropertyString() + " wurde nicht verkauft!");
                                 auctionRun = false;
-                                Global.ref().getMenuSceneManager().updateAuctionPopup(auctionStillActive(), noBidder);
+                                Global.ref().getGameSceneManager().updateAuctionPopup(auctionStillActive(), noBidder);
                             }
                             //Falls sich ein Bieter gefunden hat
                             else {
                                 auctionRun = false;
-                                Global.ref().getMenuSceneManager().updateAuctionPopup(auctionStillActive(), noBidder);
+                                Global.ref().getGameSceneManager().updateAuctionPopup(auctionStillActive(), noBidder);
                                 sellProperty();
                             }
                         }
@@ -117,12 +117,12 @@ public class AuctionService extends Listener {
                                 IOService.sleep(1000);
                             }
                             auctionRun = false;
-                            Global.ref().getMenuSceneManager().updateAuctionPopup(auctionStillActive(), noBidder);
+                            Global.ref().getGameSceneManager().updateAuctionPopup(auctionStillActive(), noBidder);
                             sellProperty();
                         }
                     }
                     else {
-                        Global.ref().getMenuSceneManager().updateAuctionPopup(auctionStillActive(), noBidder);
+                        Global.ref().getGameSceneManager().updateAuctionPopup(auctionStillActive(), noBidder);
                     }
 
                 }

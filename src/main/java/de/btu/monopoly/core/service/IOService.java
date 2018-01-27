@@ -159,16 +159,16 @@ public class IOService {
         if (isChoiceFromThisClient) {
             int choice = -1;
             if (type == JAIL) {
-                choice = Global.ref().getMenuSceneManager().jailChoicePopup();
+                choice = Global.ref().getGameSceneManager().jailChoicePopup();
             }
             if (type == ACTION) {
-                choice = Global.ref().getMenuSceneManager().actionSequencePopup();
+                choice = Global.ref().getGameSceneManager().actionSequencePopup();
             }
             if (type == BUY) {
-                choice = Global.ref().getMenuSceneManager().buyPropertyPopup();
+                choice = Global.ref().getGameSceneManager().buyPropertyPopup();
             }
             if (type == FIELD) {
-                choice = Global.ref().getMenuSceneManager().askForFieldPopup(player, fields);
+                choice = Global.ref().getGameSceneManager().askForFieldPopup(player, fields);
             }
 
             BroadcastPlayerChoiceRequest packet = new BroadcastPlayerChoiceRequest();

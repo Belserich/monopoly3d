@@ -43,7 +43,7 @@ public class Global {
     }
     
     public void setGameSceneManager(GameSceneManager sceneManager) {
-        this.gameSceneMan = gameSceneMan;
+        this.gameSceneMan = sceneManager;
     }
     
     public GameSceneManager getGameSceneManager() {
