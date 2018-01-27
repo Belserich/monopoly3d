@@ -88,9 +88,10 @@ public class Fx3dPlayer extends Cylinder {
     
     private void updateAnimationsRunning() {
         animationQueue.remove(0);
-        animationsRunning.set(animationQueue.size() != 0);
-        if (animationsRunning.get())
+        if (animationQueue.size() > 0) {
             animationQueue.get(0).play();
+        }
+        else animationsRunning.set(false);
     }
     
     public IntegerProperty positionProperty() {

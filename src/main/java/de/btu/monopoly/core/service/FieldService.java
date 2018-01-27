@@ -104,11 +104,10 @@ public class FieldService {
     public static int getRent(PropertyField prop, int[] rollResult, int amplifier) {
     
         Objects.requireNonNull(prop);
-        Objects.requireNonNull(rollResult);
         
         int rent = prop.getRent();
         if (prop instanceof SupplyField) {
-            rent *= (rollResult[0] + rollResult[1]);
+            rent *= rollResult != null ? (rollResult[0] + rollResult[1]) : 1;
         }
         return rent * amplifier;
     }

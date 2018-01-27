@@ -114,8 +114,9 @@ public class MonopolyBoard extends Group
         
         fxPlayer.positionProperty().addListener((val, old, nev) -> {
             List<Transform> waypoints = new LinkedList<>();
-            int newV = nev.intValue() + 1;
-            for (int v = old.intValue() + 1; v != newV; v = (v + 1) % FIELD_COUNT)
+            int newV = (nev.intValue()) + 1 % FIELD_COUNT;
+            int v = (old.intValue()) + 1 % FIELD_COUNT;
+            for (; v != newV; v = (v + 1) % FIELD_COUNT)
                 waypoints.add(fieldModels[v].getLocalToParentTransform());
             fxPlayer.move(waypoints.toArray(new Transform[waypoints.size()]));
         });
