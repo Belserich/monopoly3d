@@ -8,12 +8,14 @@ package de.btu.monopoly.ki;
 import de.btu.monopoly.core.GameBoard;
 import de.btu.monopoly.core.service.AuctionService;
 import de.btu.monopoly.core.service.IOService;
-import de.btu.monopoly.data.card.CardAction;
+import de.btu.monopoly.data.card.Card;
 import de.btu.monopoly.data.card.CardStack;
 import de.btu.monopoly.data.field.FieldManager;
 import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.field.StreetField;
 import de.btu.monopoly.data.player.Player;
+
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
@@ -63,7 +65,7 @@ public class HardKi {
 
         // Ist die Obergrenze noch nicht erreicht, versucht die KI sofort rauszukommen
         if (soldProps < PROPERTY_CAP_FOR_STAYING_IN_PRISON) {
-            if (stack.countCardsOfAction(CardAction.JAIL) > 0) { // mit Karte
+            if (stack.countCardsOfAction(Card.Action.JAIL) > 0) { // mit Karte
                 return 3;
             }
             else if (player.getMoney() > 100) {                  // mit Geld
@@ -74,7 +76,7 @@ public class HardKi {
             }
         }
         else {    // sonst bleibt sie so lang wie moeglich drin
-            if (days >= 3 && stack.countCardsOfAction(CardAction.JAIL) > 0) {
+            if (days >= 3 && stack.countCardsOfAction(Card.Action.JAIL) > 0) {
                 return 3;
             }
             else {
@@ -303,7 +305,7 @@ public class HardKi {
         List<PropertyField> props = buyableBuildingsList(player);
 
         // lukrative Strassen aussuchen:
-        List<PropertyField> best = null;
+        List<PropertyField> best = new ArrayList<>();
         props.stream().filter((b) -> (FIELDMANAGER.getFieldId(b) > BEGIN_LUCRATIVE_AREA
                 && FIELDMANAGER.getFieldId(b) < END_LUCTRATIVE_AREA)).forEachOrdered(best::add);
 

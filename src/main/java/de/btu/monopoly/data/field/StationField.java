@@ -1,6 +1,5 @@
 package de.btu.monopoly.data.field;
 
-import de.btu.monopoly.core.service.FieldService;
 import de.btu.monopoly.data.player.Player;
 
 /**
@@ -41,7 +40,13 @@ public class StationField extends PropertyField {
 
     @Override
     public String toString() {
-        return String.format("[Bahnhof] %nName: %s, %nPreis: %s, %nMiete0: %s, %nMiete1: %s, %nMiete2: %s, %nMiete3: %s, %nHypothekswert: %s, %nHypotheksrückwert: %s",
+        return String.format("[Bahnhof] Name: %s, Preis: %s, Miete0: %s, Miete1: %s, Miete2: %s, Miete3: %s, Hypothekswert: %s, Hypotheksrückwert: %s",
+                getName(), getPrice(), rents[0], rents[1], rents[2], rents[3], getMortgageValue(), getMortgageBack());
+    }
+    
+    public String stationInformation() {
+        return String.format("[Bahnhof] %nName: %s, %nPreis: %s, %nMiete bei 1 Bahnhof: %s, %nMiete bei 2 Bahnhöfe: %s,"
+                + " %nMiete bei 3 Bahnhöfe: %s, %nMiete bei 4 Bahnhöfe: %s, %nHypothekswert: %s, %nHypotheksrückwert: %s",
                 getName(), getPrice(), rents[0], rents[1], rents[2], rents[3], getMortgageValue(), getMortgageBack());
     }
 }

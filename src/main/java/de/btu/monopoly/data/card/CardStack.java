@@ -7,6 +7,7 @@ package de.btu.monopoly.data.card;
 
 import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -15,8 +16,13 @@ import java.util.Random;
  */
 public class CardStack {
 
+    public enum Type {
+        COMMUNITY,
+        EVENT;
+    }
+    
     /**
-     * Die Kartenliste
+     * Liste der Karten
      */
     protected final LinkedList<Card> cards;
 
@@ -34,16 +40,20 @@ public class CardStack {
         this();
         Arrays.asList(cards).forEach(this::addCard);
     }
+    
+    public CardStack(List<Card> cards) {
+        this(cards.toArray(new Card[cards.size()]));
+    }
 
     /**
-     * Mischt den Kartenstapel.
+     * Mischt den Kartenstapel nach deterministischen Werten einer Zufallsinstanz.
      */
     public void shuffle(Random random) {
-        
+
         Card temp;
         int index;
         for (int i = cards.size() - 1; i > 0; i--) {
-            
+
             index = random.nextInt(i + 1);
             temp = cards.get(index);
             cards.set(index, cards.get(i));
@@ -52,7 +62,9 @@ public class CardStack {
     }
 
     /**
-     * Gibt die nächste Karte vom Stapel zurück und legt sie wieder ans "Ende".
+     * Gibt die oberste Karte im Stapel zurück und legt sie wieder nach unten.
+     *
+     * @return die oberste Karte im Stapel
      */
     public Card nextCard() {
         Card retObj = cards.remove();
@@ -61,14 +73,15 @@ public class CardStack {
     }
 
     /**
-     * Gibt die naechste Karte des angegebenen Typs zuruec, entfernt sie und fügt sie wieder ans Ende des Stapels.
+     * Gibt die naechste Karte des angegebenen Typs zurueck, entfernt sie und
+     * legt sie wieder nach unten.
      *
      * @param action Aktionstyp
      * @return nächste Karte vom angegebenen Typ
      */
-    private Card nextCardOfAction(CardAction action) {
+    public Card nextCardOfAction(Card.Action action) {
         for (Card c : cards) {
-            if (c.getActions().contains(action)) {
+            if (c.getAction() == action) {
                 return c;
             }
         }
@@ -81,7 +94,6 @@ public class CardStack {
      * @param card Karte
      */
     public void addCard(Card card) {
-        card.setCardStack(this);
         cards.add(card);
     }
 
@@ -105,26 +117,30 @@ public class CardStack {
      * @param action Aktionstyp
      * @return nächste Karte eines bestimmten Aktionstyps
      */
-    public Card removeCardOfAction(CardAction action) {
+    public Card removeCardOfAction(Card.Action action) {
         Card retObj = nextCardOfAction(action);
         cards.remove(retObj);
         return retObj;
     }
 
     /**
-     * Zählt die Anzahl der Karten einer bestimmten Aktionsart im Stapel.
+     * Zählt die Karten eines bestimmten Aktionstyps im Stapel.
      *
-     * @param action Action
+     * @param action Aktion
      * @return Anzahl Karten des festgelegten Typs
      */
-    public int countCardsOfAction(CardAction action) {
+    public int countCardsOfAction(Card.Action action) {
         int counter = 0;
         for (Card c : cards) {
-            counter += c.getActions().contains(action) ? 1 : 0;
+            counter += c.getAction() == action ? 1 : 0;
         }
         return counter;
     }
     
+    /**
+     * @param index Index
+     * @return Karte an der Stelle {@code index} im Stapel
+     */
     public Card cardAt(int index) {
         return cards.get(index);
     }
@@ -135,16 +151,25 @@ public class CardStack {
     void removeAll() {
         cards.clear();
     }
+    
+    /**
+     * @return Anzahl der Karten im Stapel
+     */
+    public int size() {
+        return cards.size();
+    }
 
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder("[Kartenstapel]");
-        
+
         if (cards.isEmpty()) {
             builder.append(" -");
         }
-        else builder.append("\n");
-        
+        else {
+            builder.append("\n");
+        }
+
         cards.forEach(c -> {
             builder.append("\t");
             builder.append(c);

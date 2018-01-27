@@ -1,9 +1,14 @@
 package de.btu.monopoly.ui.controller;
 
+import de.btu.monopoly.Global;
 import de.btu.monopoly.core.service.IOService;
 import de.btu.monopoly.menu.LobbyService;
 import de.btu.monopoly.menu.MainMenu;
-import de.btu.monopoly.ui.SceneManager;
+import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.animation.FadeTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -17,12 +22,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.util.Duration;
-
-import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -60,11 +59,27 @@ public class JoinGameController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
-        String image = " -fx-background-image: url(\"/images/Main_Background.png\") ;\n"
+        String image = " -fx-background-image: url('/images/Main_Background.png');\n"
                 + "    -fx-background-position: center;\n"
                 + "    -fx-background-size: stretch;";
         grid.setStyle(image);
         stackPane.setBackground(new Background(new BackgroundImage(new Image(getClass().getResourceAsStream("/images/Lobby_Background.jpg")), BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT)));
+
+        backButton.setOnKeyPressed((event) -> {
+            if (event.getCode().equals(KeyCode.ENTER)) {
+                try {
+                    backButtonAction(new ActionEvent());
+                } catch (IOException ex) {
+                    Logger.getLogger(JoinGameController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+
+        searchButton.setOnKeyPressed((event) -> {
+            if (event.getCode().equals(KeyCode.ENTER)) {
+                searchButtonAction(new ActionEvent());
+            }
+        });
 
         // Animation
         nameTextField.setOpacity(0);
@@ -116,7 +131,7 @@ public class JoinGameController implements Initializable {
     private void backButtonAction(ActionEvent event) throws IOException {
 
         // Wechselt die Scene auf Menu
-        changeScene(new FXMLLoader(getClass().getResource("/fxml/Menu.fxml")), false);
+        changeScene(new FXMLLoader(getClass().getResource("/fxml/menu_scene.fxml")), false);
     }
 
     @FXML
@@ -141,15 +156,8 @@ public class JoinGameController implements Initializable {
         // Namen wechseln
         IOService.sleep(200);
         LobbyService.changeName(nameTextField.getText());
-
-        if (GuiMessages.getConnectionError() == false) {
-            // Wechselt die Scene auf lobby
-            changeScene(new FXMLLoader(getClass().getResource("/fxml/Lobby.fxml")), true);
-        }
-        else {
-            errorLabel.setText("Keine Verbindung möglich.");
-        }
-
+    
+        changeScene(new FXMLLoader(getClass().getResource("/fxml/lobby_scene.fxml")), true);
     }
 
     private void changeScene(FXMLLoader loader, boolean changeToLobby) {
@@ -196,8 +204,7 @@ public class JoinGameController implements Initializable {
                 fadeGrid.playFromStart();
                 fadeGrid.setOnFinished((ActionEvent event1) -> {
                     try {
-
-                        SceneManager.changeSceneToLobby(loader);
+                        Global.ref().getMenuSceneManager().changeSceneToLobby(loader);
                     } catch (IOException ex) {
                         Logger.getLogger(StartGameController.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -205,7 +212,7 @@ public class JoinGameController implements Initializable {
             }
             else {
                 try {
-                    SceneManager.changeScene(loader);
+                    Global.ref().getMenuSceneManager().changeScene(loader);
                 } catch (IOException ex) {
                     Logger.getLogger(MenuController.class.getName()).log(Level.SEVERE, null, ex);
                 }

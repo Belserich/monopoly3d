@@ -17,8 +17,9 @@ import de.btu.monopoly.menu.Lobby;
 import de.btu.monopoly.menu.LobbyService;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.server.GameServer;
-import java.util.Arrays;
 import org.junit.Assert;
+
+import java.util.Arrays;
 
 /**
  *
@@ -68,7 +69,6 @@ public class NetDependedUnitTests {
         Game controller = new Game(lobby.getPlayerClient(), LobbyService.generatePlayerArray(), lobby.getRandomSeed());
         lobby.setController(controller);
         lobby.getPlayerClient().setGame(controller);
-        controller.init();
 
         game = LobbyService.getLobby().getController();
         board = game.getBoard();
@@ -90,12 +90,12 @@ public class NetDependedUnitTests {
         players = null;
         fm = null;
         cm = null;
-        System.out.println("\nCLEAR GAME ---- ALLES ZURUECKGESETZT!!!");
+        System.out.println("CLEAR GAME ---- ALLES ZURUECKGESETZT!!!");
         IOService.sleep(100);
     }
 
     private void testOutput(String testName) {
-        System.out.println("\n__________________________________________________\n"
+        System.out.println("___________________________________________________________________________________________\n\n"
                 + "STARTE TEST: " + testName);
     }
 

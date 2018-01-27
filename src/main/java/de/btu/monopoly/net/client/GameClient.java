@@ -7,16 +7,17 @@ package de.btu.monopoly.net.client;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Client;
+import com.esotericsoftware.kryonet.Connection;
+import com.esotericsoftware.kryonet.FrameworkMessage;
+import com.esotericsoftware.kryonet.Listener;
 import de.btu.monopoly.core.Game;
 import de.btu.monopoly.core.service.AuctionService;
 import de.btu.monopoly.core.service.NetworkService;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.menu.LobbyService;
-import de.btu.monopoly.ui.controller.GuiMessages;
 
 import java.io.IOException;
 import java.util.Optional;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -26,7 +27,7 @@ import java.util.logging.Logger;
 public class GameClient {
 
     private static final Logger LOGGER = Logger.getLogger(GameClient.class.getCanonicalName());
-    
+
     private int tcpPort;
     private int timeout;
     private Client client;
@@ -39,7 +40,7 @@ public class GameClient {
     public GameClient(int tcp, int timeout) {
         this.tcpPort = tcp;
         this.timeout = timeout;
-        
+
         client = new Client();
         kryo = client.getKryo();
         NetworkService.registerKryoClasses(kryo);
@@ -48,22 +49,24 @@ public class GameClient {
     }
 
     public void connect(String serverIP) {
-        LOGGER.finer("Client verbindet");
+        
+        LOGGER.finer("Die Client versucht, eine Verbindung aufzubauen.");
         try {
+            
             client.start();
             client.connect(timeout, serverIP, tcpPort);
             listener = new ClientListener();
             client.addListener(listener);
             client.addListener(new LobbyService());
             client.addListener(new AuctionService());
-            // lobby wird in GUI geöffnet
-            GuiMessages.setConnectionError(false);
+            client.addListener(new TrafficListener());
+            
         } catch (IOException ex) {
-            LOGGER.log(Level.WARNING, "Client konnte nicht gestartet werden {0}", ex);
-            // GUI meldet Fehler
-            GuiMessages.setConnectionError(true);
+            
+            String errorMsg = String.format("Connection error! ip: %s port: %d", serverIP, tcpPort);
+            LOGGER.warning(errorMsg);
+            throw new RuntimeException(errorMsg);
         }
-
     }
 
     public void disconnect() {
@@ -72,16 +75,20 @@ public class GameClient {
     }
 
     public void sendTCP(Object object) {
+        NetworkService.logClientSendMessage(object,
+                (playerOnClient == null) ? String.valueOf(client.getID()) : playerOnClient.getName());
         client.sendTCP(object);
     }
-    
+
     public Object waitForObjectOfClass(Class<?> clazz) {
         Optional<Object> optional = listener.waitForObjectOfClass(clazz);
         if (optional.isPresent()) {
             return optional.get();
         }
-        else throw new RuntimeException(String.format("Thread %s interrupted while waiting for network data.",
-                Thread.currentThread().getName()));
+        else {
+            throw new RuntimeException(String.format("Thread %s interrupted while waiting for network data.",
+                    Thread.currentThread().getName()));
+        }
     }
 
     /**
@@ -112,4 +119,14 @@ public class GameClient {
         this.game = game;
     }
 
+    private class TrafficListener extends Listener {
+
+        @Override
+        public void received(Connection connection, Object object) {
+            if (!(object instanceof FrameworkMessage)) {
+                NetworkService.logClientReceiveMessage(object,
+                        (playerOnClient == null) ? String.valueOf(client.getID()) : playerOnClient.getName());
+            }
+        }
+    }
 }

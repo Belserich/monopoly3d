@@ -2,6 +2,7 @@ package de.btu.monopoly.menu;
 
 import de.btu.monopoly.core.Game;
 import de.btu.monopoly.net.client.GameClient;
+import javafx.scene.paint.Color;
 
 /**
  *
@@ -13,7 +14,7 @@ public class Lobby {
     private boolean ki = false;
     private static String[][] users;
     private String playerName;
-    private String playerColor = "0xffffffff";
+    private String playerColor = (new Color(Math.random(), Math.random(), Math.random(), 1)).toString();
     private static GameClient playerClient;
     private int playerID = -1;
     private long randomSeed;
@@ -71,7 +72,7 @@ public class Lobby {
     /**
      * @param aPlayerClient the playerClient to set
      */
-    public void setPlayerClient(GameClient aPlayerClient) {
+    public static void setPlayerClient(GameClient aPlayerClient) {
         playerClient = aPlayerClient;
     }
 

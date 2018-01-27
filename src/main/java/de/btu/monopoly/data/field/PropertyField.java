@@ -2,6 +2,8 @@ package de.btu.monopoly.data.field;
 
 import de.btu.monopoly.data.Tradeable;
 import de.btu.monopoly.data.player.Player;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 
 /**
  * @author Maximilian Bels (belsmaxi@b-tu.de)
@@ -31,7 +33,7 @@ public abstract class PropertyField extends Field implements Tradeable {
     /**
      * Gibt an, ob die Hypothek aufgenommen wurde.
      */
-    private boolean mortgageTaken;
+    private SimpleBooleanProperty mortgageTaken;
 
     /**
      * Die abstrakte Oberklasse aller Felder, die kaufbar und mit Mietspreisen belegt sind. Man soll diese Felder außerdem mit
@@ -47,6 +49,8 @@ public abstract class PropertyField extends Field implements Tradeable {
         this.price = price;
         this.mortgage = mortgage;
         this.mortgageBack = mortgageBack;
+        
+        mortgageTaken = new SimpleBooleanProperty();
     }
 
     /**
@@ -74,7 +78,7 @@ public abstract class PropertyField extends Field implements Tradeable {
      * @return Gibt an, ob die Hypothek aufgenommen wurde.
      */
     public boolean isMortgageTaken() {
-        return mortgageTaken;
+        return mortgageTaken.get();
     }
 
     /**
@@ -95,10 +99,14 @@ public abstract class PropertyField extends Field implements Tradeable {
      * @param mortgageTaken Gibt an, ob die Hypothek aufgenommen wurde.
      */
     public void setMortgageTaken(boolean mortgageTaken) {
-        this.mortgageTaken = mortgageTaken;
+        this.mortgageTaken.set(mortgageTaken);
     }
     
     public int getRent() { return 0; }
+    
+    public BooleanProperty mortgageTakenProperty() {
+        return mortgageTaken;
+    }
     
     @Override
     public int getTradingValue() {

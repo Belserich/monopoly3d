@@ -1,9 +1,14 @@
 package de.btu.monopoly.ui.controller;
 
+import de.btu.monopoly.Global;
 import de.btu.monopoly.core.service.IOService;
 import de.btu.monopoly.menu.LobbyService;
 import de.btu.monopoly.net.client.GameClient;
-import de.btu.monopoly.ui.SceneManager;
+import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.animation.FadeTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -18,19 +23,10 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.util.Duration;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 /**
- *
  * @author augat
  */
 public class StartGameController implements Initializable {
-
-    private static GameClient client;
 
     @FXML
     private Button backButton;
@@ -53,11 +49,27 @@ public class StartGameController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
-        String image = " -fx-background-image: url(\"/images/Main_Background.png\") ;\n"
+        String image = " -fx-background-image: url('/images/Main_Background.png');\n"
                 + "    -fx-background-position: center;\n"
                 + "    -fx-background-size: stretch;";
         grid.setStyle(image);
         stackPane.setBackground(new Background(new BackgroundImage(new Image(getClass().getResourceAsStream("/images/Lobby_Background.jpg")), BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT)));
+
+        backButton.setOnKeyPressed((event) -> {
+            if (event.getCode().equals(KeyCode.ENTER)) {
+                try {
+                    backButtonAction(new ActionEvent());
+                } catch (IOException ex) {
+                    Logger.getLogger(StartGameController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+
+        createLobbyButton.setOnKeyPressed((event) -> {
+            if (event.getCode().equals(KeyCode.ENTER)) {
+                createLobbyButtonAction(new ActionEvent());
+            }
+        });
 
         // Animation
         backButton.setOpacity(0);
@@ -90,12 +102,8 @@ public class StartGameController implements Initializable {
         fadeInButton4.playFromStart();
     }
 
-    public static void setClient(GameClient client) {
-        StartGameController.client = client;
-    }
-
     //-----------------------------------------------------------------------------------------
-    // startGame.fxml
+    // start_game_scene.fxml
     //-----------------------------------------------------------------------------------------
     @FXML
     private void enterStartsLobby(KeyEvent event) throws IOException {
@@ -113,18 +121,18 @@ public class StartGameController implements Initializable {
     private void backButtonAction(ActionEvent event) throws IOException {
 
         // Wechselt die Scene auf Menu
-        changeScene(new FXMLLoader(getClass().getResource("/fxml/Menu.fxml")), false);
+        changeScene(new FXMLLoader(getClass().getResource("/fxml/menu_scene.fxml")), false);
     }
 
     private void joinLobby() {
 
         // JoinLobby und Namen übernehmen
-        LobbyService.joinLobby(client, true);
+        LobbyService.joinLobby(Global.ref().getClient(), true);
         IOService.sleep(200);
         LobbyService.changeName(nicknameHostTextView.getText());
 
         // Wechselt die Scene auf lobby
-        changeScene(new FXMLLoader(getClass().getResource("/fxml/Lobby.fxml")), true);
+        changeScene(new FXMLLoader(getClass().getResource("/fxml/lobby_scene.fxml")), true);
 
     }
 
@@ -161,7 +169,7 @@ public class StartGameController implements Initializable {
                 fadeGrid.playFromStart();
                 fadeGrid.setOnFinished((ActionEvent event1) -> {
                     try {
-                        SceneManager.changeSceneToLobby(loader);
+                        Global.ref().getMenuSceneManager().changeSceneToLobby(loader);
                     } catch (IOException ex) {
                         Logger.getLogger(StartGameController.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -169,7 +177,7 @@ public class StartGameController implements Initializable {
             }
             else {
                 try {
-                    SceneManager.changeScene(loader);
+                    Global.ref().getMenuSceneManager().changeScene(loader);
                 } catch (IOException ex) {
                     Logger.getLogger(MenuController.class.getName()).log(Level.SEVERE, null, ex);
                 }

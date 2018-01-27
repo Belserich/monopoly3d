@@ -1,7 +1,7 @@
 package de.btu.monopoly.ui.controller;
 
+import de.btu.monopoly.Global;
 import de.btu.monopoly.menu.MainMenu;
-import de.btu.monopoly.ui.SceneManager;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -15,13 +15,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundImage;
-import javafx.scene.layout.BackgroundPosition;
-import javafx.scene.layout.BackgroundRepeat;
-import javafx.scene.layout.BackgroundSize;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
+import javafx.scene.input.KeyCode;
+import javafx.scene.layout.*;
 import javafx.util.Duration;
 
 /**
@@ -37,7 +32,7 @@ public class MenuController implements Initializable {
     private Button startGameButton;
 
     @FXML
-    private Button settingsButton;
+    private Button ruleButton;
 
     @FXML
     private Button closeButton;
@@ -55,18 +50,53 @@ public class MenuController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
 
         //Image image = new Image(getClass().getResourceAsStream("/images/Main_Background.png"), 1200, 800, false, false);
-        String image = " -fx-background-image: url(\"/images/Main_Background.png\") ;\n"
+        String image = " -fx-background-image: url('/images/Main_Background.png\') ;\n"
                 + "    -fx-background-position: center;\n"
                 + "    -fx-background-size: stretch;";
         grid.setStyle(image);
         //grid.setBackground(new Background(new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
         stackPane.setBackground(new Background(new BackgroundImage(new Image(getClass().getResourceAsStream("/images/Lobby_Background.jpg")), BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT)));
 
+        startGameButton.setOnKeyPressed((event) -> {
+            if (event.getCode().equals(KeyCode.ENTER)) {
+                try {
+                    startGameButtonAction(new ActionEvent());
+                } catch (IOException ex) {
+                    Logger.getLogger(MenuController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+
+        joinGameButton.setOnKeyPressed((event) -> {
+            if (event.getCode().equals(KeyCode.ENTER)) {
+                try {
+                    joinGameButtonAction(new ActionEvent());
+                } catch (IOException ex) {
+                    Logger.getLogger(MenuController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+
+        closeButton.setOnKeyPressed((event) -> {
+            if (event.getCode().equals(KeyCode.ENTER)) {
+                closeButtonAction(new ActionEvent());
+            }
+        });
+
+        ruleButton.setOnKeyPressed((event) -> {
+            if (event.getCode().equals(KeyCode.ENTER)) {
+                try {
+                    ruleButtonAction(new ActionEvent());
+                } catch (IOException ex) {
+                    Logger.getLogger(MenuController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
         // Animation
         closeButton.setOpacity(0);
         joinGameButton.setOpacity(0);
         startGameButton.setOpacity(0);
-        settingsButton.setOpacity(0);
+        ruleButton.setOpacity(0);
 
         FadeTransition fadeInButton1
                 = new FadeTransition(Duration.millis(1000), joinGameButton);
@@ -81,7 +111,7 @@ public class MenuController implements Initializable {
         fadeInButton2.playFromStart();
 
         FadeTransition fadeInButton3
-                = new FadeTransition(Duration.millis(1000), settingsButton);
+                = new FadeTransition(Duration.millis(1000), ruleButton);
         fadeInButton3.setFromValue(0);
         fadeInButton3.setToValue(1);
         fadeInButton3.playFromStart();
@@ -99,7 +129,7 @@ public class MenuController implements Initializable {
     private void startGameButtonAction(ActionEvent event) throws IOException {
 
         // Wechselt die Scene auf startGame
-        changeScene(new FXMLLoader(getClass().getResource("/fxml/startGame.fxml")));
+        changeScene(new FXMLLoader(getClass().getResource("/fxml/start_game_scene.fxml")));
 
         // Server initialisieren
         MainMenu menu = new MainMenu();
@@ -111,14 +141,14 @@ public class MenuController implements Initializable {
     @FXML
     private void joinGameButtonAction(ActionEvent event) throws IOException {
         // Wechselt die Scene auf joinGame
-        changeScene(new FXMLLoader(getClass().getResource("/fxml/joinGame.fxml")));
+        changeScene(new FXMLLoader(getClass().getResource("/fxml/join_scene.fxml")));
     }
 
     // Button Einstellungen
     @FXML
-    private void settingButtonAction(ActionEvent event) throws IOException {
+    private void ruleButtonAction(ActionEvent event) throws IOException {
 
-        changeScene(new FXMLLoader(getClass().getResource("/fxml/settings.fxml")));
+        changeScene(new FXMLLoader(getClass().getResource("/fxml/rules_scene.fxml")));
         // Wechselt die Scene auf Einstellungen
 
     }
@@ -132,7 +162,7 @@ public class MenuController implements Initializable {
         System.exit(0); //NOSONAR
 
     }
-
+    
     private void changeScene(FXMLLoader loader) {
         FadeTransition fadeInButton1
                 = new FadeTransition(Duration.millis(500), joinGameButton);
@@ -147,7 +177,7 @@ public class MenuController implements Initializable {
         fadeInButton2.playFromStart();
 
         FadeTransition fadeInButton3
-                = new FadeTransition(Duration.millis(500), settingsButton);
+                = new FadeTransition(Duration.millis(500), ruleButton);
         fadeInButton3.setFromValue(1);
         fadeInButton3.setToValue(0);
         fadeInButton3.playFromStart();
@@ -159,7 +189,7 @@ public class MenuController implements Initializable {
         fadeInButton4.playFromStart();
         fadeInButton4.setOnFinished((event) -> {
             try {
-                SceneManager.changeScene(loader);
+                Global.ref().getMenuSceneManager().changeScene(loader);
             } catch (IOException ex) {
                 Logger.getLogger(MenuController.class.getName()).log(Level.SEVERE, null, ex);
             }

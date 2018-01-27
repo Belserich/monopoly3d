@@ -1,6 +1,5 @@
 package de.btu.monopoly.data.field;
 
-import de.btu.monopoly.core.service.FieldService;
 import de.btu.monopoly.data.player.Player;
 
 /**
@@ -45,7 +44,14 @@ public class SupplyField extends PropertyField {
 
     @Override
     public String toString() {
-        return String.format("[Versorgungswerk] Name: %s, Preis: %s, Multiplikator1: %s, Multiplikator2: %s, Hypothekswert: %s, Hypotheksrückwert: %s",
+        return String.format("[Versorgungswerk] Name: %s, Preis: %s, "
+                + "Multiplikator1: %s, Multiplikator2: %s, Hypothekswert: %s, Hypotheksrückwert: %s",
+                getName(), getPrice(), mult1, mult2, getMortgageValue(), getMortgageBack());
+    }
+    
+    public String supplyInformation() {
+        return String.format("[Versorgungswerk] %nName: %s, %nPreis: %s, "
+                + "%nBei einem Werk: %s, %nBei zwei Werke : %s, %nHypothekswert: %s, %nHypotheksrückwert: %s",
                 getName(), getPrice(), mult1, mult2, getMortgageValue(), getMortgageBack());
     }
 }

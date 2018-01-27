@@ -1,5 +1,6 @@
 package de.btu.monopoly.core.service;
 
+import de.btu.monopoly.Global;
 import de.btu.monopoly.GlobalSettings;
 import de.btu.monopoly.core.GameBoard;
 import de.btu.monopoly.core.mechanics.Trade;
@@ -13,7 +14,6 @@ import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.data.PlayerTradeRequest;
 import de.btu.monopoly.net.data.PlayerTradeResponse;
-import de.btu.monopoly.ui.SceneManager;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -95,7 +95,7 @@ public class TradeService {
 
             LOGGER.info(String.format("Spieler %s hat dir eine Handelsanfrage gemacht:%n%n%s%n\t[1] - annehmen%n\t[2] - ablehnen",
                     board.getPlayer(trade.getSupply().getPlayerId()).getName(), trade.toString(board)));
-            int choice = IOService.getClientChoice(receipt, 2);
+            int choice = IOService.getUserInput(2);
 
             response = new PlayerTradeResponse();
             response.setRequest(request);
@@ -141,11 +141,11 @@ public class TradeService {
             trade.setDemand(TradeService.createTradeOffer(receipt, board));
         }
         else {
-            SceneManager.initTradePopup();
-            while (!SceneManager.getPartnerIsChoosen()) {
+            Global.ref().getGameSceneManager().initTradePopup();
+            while (!Global.ref().getGameSceneManager().getPartnerIsChoosen()) {
                 IOService.sleep(500);
             }
-            SceneManager.resetPartnerIsChoosen();
+            Global.ref().getGameSceneManager().resetPartnerIsChoosen();
         }
         if (GlobalSettings.RUN_IN_CONSOLE) {
             LOGGER.info(String.format("Zusammenfassung:%n%n%s%nHandelsanfrage wirklich absenden?%n\t[1] - Ja%n\t[2] - Nein",
@@ -218,10 +218,9 @@ public class TradeService {
 
         TradeOffer offer = new TradeOffer();
 
-        offer.setPropertyIds(SceneManager.propertiesForTrade(player));
-        offer.setCardIds(SceneManager.cardsForTrade(player));
-        offer.setMoney(SceneManager.moneyForTrade(player));
-
+//        offer.setPropertyIds(SceneManager.propertiesForTrade(player));
+//        offer.setCardIds(SceneManager.cardsForTrade(player));
+//        offer.setMoney(SceneManager.moneyForTrade(player));
         return offer;
     }
 
@@ -286,8 +285,10 @@ public class TradeService {
 
         builder = new StringBuilder(String.format("Welche Karte bietet Spieler %s%s?%n",
                 player.getName(), runOnce ? " noch" : ""));
+
+        CardStack playerStack = player.getCardStack();
         for (id = 0; id < ownedCardIds.size(); id++) {
-            builder.append(String.format("[%d] - %s%n", id + 1, cm.getCard(player, ownedCardIds.get(id)).getName()));
+            builder.append(String.format("[%d] - %s%n", id + 1, playerStack.cardAt(id).getName()));
         }
 
         builder.append(String.format("[%d] - Keine%n", id + 1));

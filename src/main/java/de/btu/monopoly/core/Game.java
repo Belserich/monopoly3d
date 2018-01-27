@@ -3,22 +3,15 @@ package de.btu.monopoly.core;
 import de.btu.monopoly.GlobalSettings;
 import de.btu.monopoly.core.service.*;
 import de.btu.monopoly.data.card.Card;
-import de.btu.monopoly.data.card.CardAction;
-import de.btu.monopoly.data.card.CardStack;
 import de.btu.monopoly.data.field.*;
-import de.btu.monopoly.data.parser.CardStackParser;
-import de.btu.monopoly.data.parser.GameBoardParser;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.ki.HardKi;
 import de.btu.monopoly.net.client.GameClient;
-import de.btu.monopoly.ui.TextAreaHandler;
-import java.io.IOException;
+
 import java.util.Arrays;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.xml.parsers.ParserConfigurationException;
-import org.xml.sax.SAXException;
 
 /**
  * @author Christian Prinz
@@ -49,42 +42,37 @@ public class Game {
      * Die Zufallsinstanz für sämtliche zufällige Spielereignisse
      */
     private final Random random;
+    
+    /**
+     * momentaner Spieler
+     */
+    private Player currPlayer;
 
     /**
-     * Die fachliche Komponente des Spiels als Einheit, bestehend aus einem Spielbrett, den Spielern sowie Zuschauern.
+     * Die fachliche Komponente des Spiels als Einheit, bestehend aus einem
+     * Spielbrett, den Spielern sowie Zuschauern.
      *
      * @param client GameClient
      * @param players Spieler
      * @param seed RandomSeed
      */
     public Game(GameClient client, Player[] players, long seed) {
-
+        
         this.client = client;
         this.players = players;
         random = new Random(seed);
-
+        
         IOService.setClient(client);
-        if (!GlobalSettings.RUN_AS_TEST && !GlobalSettings.RUN_IN_CONSOLE) {
-            TextAreaHandler logHandler = new TextAreaHandler();
-            LOGGER.addHandler(logHandler);
-        }
+        
+        init();
     }
 
-    public void init() {
+    private void init() {
 
         LOGGER.info("Spiel wird initialisiert.");
 
-        try {
-            CardStack stack = CardStackParser.parse("/data/card_data.xml");
-            stack.shuffle(getRandom());
-            LOGGER.finest(stack.toString());
-            GameBoardParser.setCardLoadout0(stack);
-            GameBoardParser.setCardLoadout1(stack);
-            board = GameBoardParser.parse("/data/field_data.xml");
-            AuctionService.initAuction(players, client);
-        } catch (IOException | SAXException | ParserConfigurationException ex) {
-            LOGGER.warning(String.format("Fehler beim initialisieren des Boards / der Karten.", ex));
-        }
+        this.board = new GameBoard();
+        AuctionService.initAuction(players, client);
 
         for (Player player : players) {
             board.addPlayer(player);
@@ -99,6 +87,7 @@ public class Game {
 
         while (board.updateActivePlayers().getActivePlayers().size() > 1) {
             for (Player activePlayer : board.getActivePlayers()) {
+                currPlayer = activePlayer;
                 turn(activePlayer);
                 if (!activePlayer.getBank().isLiquid()) {
                     PlayerService.bankrupt(activePlayer, board);
@@ -189,12 +178,12 @@ public class Game {
     }
 
     public void processJailCardOption(Player player) {
-        if (board.getCardManager().useJailCard(player)) {
+        if (board.getCardManager().hasJailCards(player)) {
+            
+            board.getCardManager().applyCardAction(Card.Action.JAIL, player);
             LOGGER.info(String.format("%s hat eine Gefängnis-Frei-Karte benutzt.", player.getName()));
         }
-        else {
-            LOGGER.info(String.format("%s hat keine Gefängnis-Frei-Karten mehr.", player.getName()));
-        }
+        else LOGGER.info(String.format("%s hat keine Gefängnis-Frei-Karten mehr.", player.getName()));
     }
 
     private int[] rollPhase(Player player, int doubletCounter) {
@@ -221,25 +210,22 @@ public class Game {
         boolean repeatPhase;
         do {
             repeatPhase = false;
-            switch (GameBoard.FIELD_STRUCTURE[player.getPosition()]) {
-
+            GameBoard.FieldType type = GameBoard.FIELD_STRUCTURE[player.getPosition()];
+            LOGGER.fine(String.format("Feldphase begonnen: Spieler %s Feld: %s", player.getName(), type));
+            
+            switch (type) {
+                
                 case TAX: // Steuerfeld
                     TaxField taxField = (TaxField) board.getFields()[player.getPosition()];
-                    LOGGER.fine(String.format("%s steht auf einem Steuer-Zahlen-Feld.", player.getName()));
+                    
                     FieldService.payTax(player, taxField);
                     break;
 
                 case CARD: // Kartenfeld
                     CardField cardField = (CardField) board.getFields()[player.getPosition()];
-                    Card nextCard = cardField.nextCard();
+                    
                     LOGGER.fine(String.format("%s steht auf einem Kartenfeld (%s).", player.getName(), cardField.getName()));
-                    board.getCardManager().manageCardActions(player, nextCard);
-
-                    if (nextCard.getActions().contains(CardAction.SET_POSITION)
-                            || nextCard.getActions().contains(CardAction.MOVE_PLAYER)
-                            || nextCard.getActions().contains(CardAction.NEXT_SUPPLY)) {
-                        repeatPhase = true;
-                    }
+                    board.getCardManager().pullAndProcess(cardField.getStackType(), player);
                     break;
 
                 case GO_JAIL: // "Gehen Sie Ins Gefaengnis"-Feld
@@ -260,7 +246,8 @@ public class Game {
                     processPlayerOnPropertyField(player, prop, rollResult);
                     break;
             }
-        } while (repeatPhase);
+        }
+        while (repeatPhase);
     }
 
     private void processPlayerOnPropertyField(Player player, PropertyField prop, int[] rollResult) {
@@ -326,7 +313,12 @@ public class Game {
                         .toArray(String[]::new);
                 int chosenFieldId;
                 if (player.getAiLevel() < 2) {
-                    chosenFieldId = ownedFieldIds[IOService.askForField(player, fieldNames) - 1];
+                    int chosenFieldChoice = IOService.askForField(player, fieldNames) - 1;
+                    if (chosenFieldChoice < 0) {
+                        LOGGER.info("Straßenauswahl wurde abgebrochen!");
+                        continue;
+                    }
+                    chosenFieldId = ownedFieldIds[chosenFieldChoice];
                 }
                 else {
                     // Das hier verwendete Feld wurde vorher in HardKi.processActionSequence() festgelegt.
@@ -399,5 +391,12 @@ public class Game {
      */
     public Random getRandom() {
         return random;
+    }
+    
+    /**
+     * @return momentaner Spieler
+     */
+    public Player getCurrentPlayer() {
+        return currPlayer;
     }
 }

@@ -4,6 +4,7 @@ import de.btu.monopoly.data.card.CardManager;
 import de.btu.monopoly.data.field.Field;
 import de.btu.monopoly.data.field.FieldManager;
 import de.btu.monopoly.data.player.Player;
+import de.btu.monopoly.ui.util.Assets;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -50,11 +51,9 @@ public class GameBoard {
 
     /**
      * Erstellt eine neue Spielbrett-Instanz.
-     *
-     * @param fields Felder des Spielbretts
      */
-    public GameBoard(Field[] fields) {
-        this.fieldManager = new FieldManager(fields);
+    public GameBoard() {
+        this.fieldManager = new FieldManager(Assets.getFields());
         this.cardManager = new CardManager(this);
         activePlayers = new LinkedList<>();
     }
@@ -74,7 +73,7 @@ public class GameBoard {
     public List<Player> getActivePlayers() {
         return activePlayers;
     }
-
+    
     public Player getPlayer(int playerId) {
         for (Player player : activePlayers) {
             if (player.getId() == playerId) {

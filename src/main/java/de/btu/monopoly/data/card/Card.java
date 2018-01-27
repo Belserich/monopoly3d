@@ -1,18 +1,21 @@
 package de.btu.monopoly.data.card;
 
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-
 /**
  * @author Maximilian Bels (belsmaxi@b-tu.de)
  */
 public class Card {
     
-    /**
-     * zugehöriger Kartenstapel
-     */
-    private CardStack stack;
+    public enum Action {
+        JAIL,
+        GO_JAIL,
+        GET_MONEY,
+        MOVE_NEXT_STATION_RENT_AMP,
+        MOVE,
+        PAY_BANK,
+        SET_POSITION,
+        RENOVATE, MOVE_NEXT_SUPPLY,
+        BIRTHDAY, PAY_ALL;
+    }
     
     /**
      * Kartentitel
@@ -25,30 +28,32 @@ public class Card {
     private final String text;
     
     /**
-     * Kartentypen
+     * Kartentyp
      */
-    private final List<CardAction> actions;
+    private final Action action;
 
     /**
-     * Kartenargumente
+     * Kartenargument
      */
-    private final int[] args;
+    private final int arg;
 
     /**
-     * Repräsentiert eine Ereignis- oder Gemeinschaftskarte
+     * Repräsentiert eine Ereignis- oder Gemeinschaftskarte.
      *
-     * @param actions Kartentaktionen
      * @param name Kartentitel
      * @param text Kartentext
-     * @param args Zusatzargumente
+     * @param action Kartentaktion
+     * @param arg Zusatzargument
      */
-    public Card(String name, String text, CardAction[] actions, int[] args) {
+    public Card(String name, String text, Action action, int arg) {
         this.name = name;
         this.text = text;
-        this.args = args;
-        
-        this.actions = new LinkedList<>();
-        this.actions.addAll(Arrays.asList(actions));
+        this.action = action;
+        this.arg = arg;
+    }
+    
+    public Card(String name, String text, Action action) {
+        this(name, text, action, 0);
     }
     
     /**
@@ -66,38 +71,22 @@ public class Card {
     }
     
     /**
-     * @return Typen der Karte
+     * @return Typ der Karte
      */
-    public List<CardAction> getActions() {
-        return actions;
+    public Action getAction() {
+        return action;
     }
 
     /**
-     * @return Kartenargumente
+     * @return Kartenargument
      */
-    public int[] getArgs() {
-        return args;
-    }
-    
-    /**
-     * Setzt den derzeitigen zugehörigen Kartenstapel
-     *
-     * @param stack Kartenstapel
-     */
-    void setCardStack(CardStack stack) {
-        this.stack = stack;
-    }
-    
-    /**
-     * @return der zugehörige Kartenstapel
-     */
-    CardStack getCardStack() {
-        return stack;
+    public int getArg() {
+        return arg;
     }
     
     @Override
     public String toString() {
         return String.format("[Karte] Name: \"%s\", Text: \"%s\", Aktionen: %s, Argumente: %s",
-                name, text, Arrays.toString(actions.toArray()), Arrays.toString(args));
+                name, text, action, arg);
     }
 }

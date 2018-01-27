@@ -2,6 +2,7 @@ package de.btu.monopoly.core.service;
 
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
+import de.btu.monopoly.Global;
 import de.btu.monopoly.GlobalSettings;
 import de.btu.monopoly.core.mechanics.Auction;
 import de.btu.monopoly.data.field.PropertyField;
@@ -11,8 +12,7 @@ import de.btu.monopoly.net.data.BidRequest;
 import de.btu.monopoly.net.data.BroadcastAuctionResponse;
 import de.btu.monopoly.net.data.ExitAuctionRequest;
 import de.btu.monopoly.net.data.JoinAuctionRequest;
-import de.btu.monopoly.ui.SceneManager;
-import de.btu.monopoly.ui.TextAreaHandler;
+
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -35,8 +35,6 @@ public class AuctionService extends Listener {
     public static void initAuction(Player[] players, GameClient client) {
         auc = new Auction(players, client);
         LOGGER.setLevel(Level.FINEST);
-        TextAreaHandler handler = new TextAreaHandler();
-        LOGGER.addHandler(handler);
     }
 
     /**
@@ -53,11 +51,11 @@ public class AuctionService extends Listener {
 
         auc.setProperty(prop);
         JoinAuctionRequest jaReq = new JoinAuctionRequest();
-        NetworkService.logClientSendMessage(jaReq, auc.getPlayerName());
+        
         auc.getClient().sendTCP(jaReq);
-        SceneManager.auctionPopup();
-        SceneManager.bidTextFieldFocus();
         if (!GlobalSettings.RUN_AS_TEST) { // nicht fuer Test
+            Global.ref().getGameSceneManager().auctionPopup();
+            Global.ref().getGameSceneManager().bidTextFieldFocus();
             while (auctionRun) {
                 IOService.sleepDeep(500);
                 if (GlobalSettings.RUN_IN_CONSOLE) { // nur fuer @Console
@@ -77,14 +75,13 @@ public class AuctionService extends Listener {
                 }
                 else { //Nur fuer @GUI
                     /*
-                    Falls nur noch ein Bieter uebrig ist, hat dieser dank dem Boolean auctionRun noch
-                    die Moeglichkeit weiterhin zu bieten, so lange der (weiter unten implementierte) Countdown
-                    noch laeuft.
+                     * Falls nur noch ein Bieter uebrig ist, hat dieser dank dem Boolean auctionRun noch die Moeglichkeit
+                     * weiterhin zu bieten, so lange der (weiter unten implementierte) Countdown noch laeuft.
                      */
                     if (!auctionStillActive()) {
                         /*
-                        Falls das Gebot 0 betraegt und nur noch 1 Bieter uebrig ist, bekommt dieser
-                        die Chance innerhalb des (weiter unten implementierten) Countdowns zu bieten.
+                         * Falls das Gebot 0 betraegt und nur noch 1 Bieter uebrig ist, bekommt dieser die Chance innerhalb des
+                         * (weiter unten implementierten) Countdowns zu bieten.
                          */
                         if (AuctionService.getHighestBid() == 0) {
                             noBidder = true;
@@ -103,12 +100,12 @@ public class AuctionService extends Listener {
                             if (noBidder) {
                                 LOGGER.fine("Das Grundstück " + AuctionService.getPropertyString() + " wurde nicht verkauft!");
                                 auctionRun = false;
-                                SceneManager.updateAuctionPopup(auctionStillActive(), noBidder);
+                                Global.ref().getGameSceneManager().updateAuctionPopup(auctionStillActive(), noBidder);
                             }
                             //Falls sich ein Bieter gefunden hat
                             else {
                                 auctionRun = false;
-                                SceneManager.updateAuctionPopup(auctionStillActive(), noBidder);
+                                Global.ref().getGameSceneManager().updateAuctionPopup(auctionStillActive(), noBidder);
                                 sellProperty();
                             }
                         }
@@ -120,12 +117,12 @@ public class AuctionService extends Listener {
                                 IOService.sleep(1000);
                             }
                             auctionRun = false;
-                            SceneManager.updateAuctionPopup(auctionStillActive(), noBidder);
+                            Global.ref().getGameSceneManager().updateAuctionPopup(auctionStillActive(), noBidder);
                             sellProperty();
                         }
                     }
                     else {
-                        SceneManager.updateAuctionPopup(auctionStillActive(), noBidder);
+                        Global.ref().getGameSceneManager().updateAuctionPopup(auctionStillActive(), noBidder);
                     }
 
                 }
@@ -162,7 +159,7 @@ public class AuctionService extends Listener {
             BidRequest bidReq = new BidRequest();
             bidReq.setBid(bid);
             bidReq.setPlayerID(playerID);
-            NetworkService.logClientSendMessage(bidReq, auc.getPlayerName());
+            
             auc.getClient().sendTCP(bidReq);
         }
 
@@ -178,7 +175,7 @@ public class AuctionService extends Listener {
 
         ExitAuctionRequest exReq = new ExitAuctionRequest();
         exReq.setPlayerID(playerID);
-        NetworkService.logClientSendMessage(exReq, auc.getPlayerName());
+        
         auc.getClient().sendTCP(exReq);
 
     }
@@ -225,7 +222,7 @@ public class AuctionService extends Listener {
     public void received(Connection connection, Object object) {
 
         if (object instanceof BroadcastAuctionResponse) {
-            NetworkService.logClientReceiveMessage(object, auc.getPlayerName());
+            
             auc.setAucPlayers(((BroadcastAuctionResponse) object).getAucPlayers());
             auc.setHighestBid(((BroadcastAuctionResponse) object).getHighestBid());
             auc.setHighestBidder(((BroadcastAuctionResponse) object).getHighestBidder());

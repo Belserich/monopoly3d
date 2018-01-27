@@ -1,6 +1,5 @@
 package de.btu.monopoly.data.field;
 
-import de.btu.monopoly.data.card.Card;
 import de.btu.monopoly.data.card.CardStack;
 
 /**
@@ -8,22 +7,26 @@ import de.btu.monopoly.data.card.CardStack;
  */
 public class CardField extends Field {
 
-    private CardStack cards;
+    private CardStack.Type stackType;
 
     /**
      * @param name Name des Kartenfeldes
      */
-    public CardField(String name, CardStack cards) {
+    public CardField(String name, CardStack.Type stackType) {
         super(name);
-        this.cards = cards;
+        this.stackType = stackType;
     }
     
-    public Card nextCard() {
-        return cards.nextCard();
+    public CardStack.Type getStackType() {
+        return stackType;
+    }
+    
+    public void setStackType(CardStack.Type stackType) {
+        this.stackType = stackType;
     }
     
     @Override
     public String toString() {
-        return String.format("[Kartenfeld] Name: %s, Stapel: %s", getName(), cards);
+        return String.format("[Kartenfeld] Name: %s, Stapel: %s", getName(), stackType);
     }
 }
