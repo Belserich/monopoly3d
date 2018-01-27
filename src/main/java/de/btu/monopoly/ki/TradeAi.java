@@ -73,7 +73,7 @@ public class TradeAi {
         }
 
         ChatAi.tradeResultMessage(name, balance, MINIMUM_ACCEPT_AMOUNT);
-        return (balance > 0);
+        return (balance > 0 + MINIMUM_ACCEPT_AMOUNT);
     }
 
     private static int calcMoney(Player ki, int sMoney, int dMoney) {

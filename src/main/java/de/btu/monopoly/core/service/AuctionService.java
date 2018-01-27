@@ -48,7 +48,6 @@ public class AuctionService extends Listener {
     public static void startAuction(PropertyField prop) {
 
         boolean auctionRun = true;
-        boolean noBidder = false;
 
         auc.setProperty(prop);
         JoinAuctionRequest jaReq = new JoinAuctionRequest();

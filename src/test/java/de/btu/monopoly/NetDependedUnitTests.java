@@ -7,12 +7,15 @@ package de.btu.monopoly;
 
 import de.btu.monopoly.core.Game;
 import de.btu.monopoly.core.GameBoard;
+import de.btu.monopoly.core.mechanics.Trade;
+import de.btu.monopoly.core.mechanics.TradeOffer;
 import de.btu.monopoly.core.service.AuctionService;
 import de.btu.monopoly.core.service.IOService;
 import de.btu.monopoly.data.card.CardManager;
 import de.btu.monopoly.data.field.FieldManager;
 import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.player.Player;
+import de.btu.monopoly.ki.HardKi;
 import de.btu.monopoly.menu.Lobby;
 import de.btu.monopoly.menu.LobbyService;
 import de.btu.monopoly.net.client.GameClient;
@@ -105,6 +108,29 @@ public class NetDependedUnitTests {
     }
 
     @Test
+    public void testHardKiCalcTrade() {
+        testOutput("testHardKiCalcTrade");
+        initGame();
+
+        Player ki = players[1];
+        ki.setAiLevel(2);
+
+        Trade trade = new Trade();
+        TradeOffer supply = new TradeOffer();
+        TradeOffer demand = new TradeOffer();
+        trade.setDemand(demand);
+        trade.setSupply(supply);
+
+        // Geld testen
+        ki.getBank().deposit(100 - ki.getMoney());
+        supply.setMoney(300);
+        demand.setMoney(350);
+        test("armer KI ist Geld nicht viel wert", !HardKi.calculateTradingChoice(trade, ki));
+
+        clearGame();
+    }
+
+//    @Test
     public void testInitNetwork() {
         testOutput("testInitNetwork");
         initNetwork();
@@ -113,7 +139,7 @@ public class NetDependedUnitTests {
         clearGame();
     }
 
-    @Test
+//    @Test
     public void testInitLobby() {
         testOutput("testInitLobby");
         initLobby();
@@ -145,7 +171,7 @@ public class NetDependedUnitTests {
         clearGame();
     }
 
-    @Test
+//    @Test
     public void testInitGame() {
         testOutput("testInitGame");
         initGame();
@@ -157,7 +183,7 @@ public class NetDependedUnitTests {
         clearGame();
     }
 
-    @Test
+//    @Test
     public void testEasyKiJailOption() {
         testOutput("testEasyKiJailOption");
         initGame();
@@ -205,7 +231,7 @@ public class NetDependedUnitTests {
         clearGame();
     }
 
-    @Test
+//    @Test
     public void testHardKiBuyProperty() {
         testOutput("testHardKiBuyProperty");
         initGame();

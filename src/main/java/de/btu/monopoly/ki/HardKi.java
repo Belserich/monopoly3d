@@ -42,8 +42,8 @@ public class HardKi {
     // nach der lukrativen Zone teure Strassen, die aber trotzdem kaufenswert sind (Zone 3)
 
     // Reichtumsbereiche (bis zu...): (arm -> fluessig -> reich -> superreich)
-    private static final int RICH = 800;        // reich
-    private static final int LIQUID = 600;      // fluessig
+    private static final int RICH = 1300;       // reich
+    private static final int LIQUID = 700;      // fluessig
     private static final int POOR = 300;        // arm
 
     // Auktion:
@@ -208,14 +208,15 @@ public class HardKi {
         // Gebotswichtigkeit wie Kaufentscheidung
         switch (buyPropOption(player, prop)) {
             case 1: // Diese Strasse will die KI haben
-                EasyKi.processBetSequence(player, HIGH_BID);
+                boolean cheap = FIELDMANAGER.getFieldId(prop) < BEGIN_LUCRATIVE_AREA;
+                EasyKi.processBetSequence(player, (cheap) ? LOW_BID : HIGH_BID);
                 break;
             case 2: // Diese nur wenn sie mindestens reich ist
                 if (player.getMoney() > LIQUID) {
                     EasyKi.processBetSequence(player, LOW_BID);
                 }
                 else { // Ansonsten bietet sie nicht und steigt sofort aus
-                    EasyKi.processBetSequence(player, 0);
+                    AuctionService.playerExit(player.getId());
                 }
                 break;
             default:

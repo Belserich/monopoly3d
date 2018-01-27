@@ -124,18 +124,6 @@ public class IOService {
         Collections.shuffle(aiPlayers);                             // Liste shuffeln
         Player rndAi = aiPlayers.get(0);                            // erster aus der Liste ist dran
 
-//        if (AuctionService.getActiveBidderCount() == 1) {           // falls die KI alleine ist
-//            AuctionService.playerExit(rndAi.getId());
-//        }
-//        Player[] kiPlayers = new Player[auc.getPlayers().length];
-//        System.arraycopy(auc.getPlayers(), 0, kiPlayers, 0, kiPlayers.length);
-//        Collections.shuffle(Arrays.asList(kiPlayers));
-//
-//        Player rndAi = kiPlayers[0];
-//
-//        for (Player ki : kiPlayers) {
-//            rndKi = (ki.getAiLevel() > 0) ? ki : rndKi;
-//        }
         LOGGER.log(Level.FINE, "{0} (KI) nimmt an Auktion teil.", rndAi.getName());
         switch (rndAi.getAiLevel()) {
             case 0:
