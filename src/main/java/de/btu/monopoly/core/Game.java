@@ -97,9 +97,13 @@ public class Game {
 
         LOGGER.info(String.format("%s hat das Spiel gewonnen!", board.getActivePlayers().get(0).getName()));
     }
-
+    
     private void turn(Player player) {
-        int[] rollResult;
+        turn(player, null);
+    }
+
+    public void turn(Player player, int[] res) {
+        int[] rollResult = res;
         int doubletCounter = 0;
 
         LOGGER.info(String.format("%s ist an der Reihe.", player.getName()));
@@ -109,7 +113,7 @@ public class Game {
 
         if (!player.isInJail()) {
             do {
-                rollResult = rollPhase(player, doubletCounter);
+                rollResult = rollPhase(player, doubletCounter, rollResult);
                 doubletCounter += (rollResult[0] == rollResult[1]) ? 1 : 0;
 
                 if (doubletCounter < 3) {
@@ -186,13 +190,13 @@ public class Game {
         else LOGGER.info(String.format("%s hat keine Gefängnis-Frei-Karten mehr.", player.getName()));
     }
 
-    private int[] rollPhase(Player player, int doubletCounter) {
-        int[] rollResult;
+    private int[] rollPhase(Player player, int doubletCounter, int[] result) {
+        int[] rollResult = result;
         int doubletCount = doubletCounter;
 
         LOGGER.info(String.format("%s ist dran mit würfeln.", player.getName()));
         IOService.sleep(2000);
-        rollResult = PlayerService.roll(getRandom());
+        if (rollResult == null) rollResult = PlayerService.roll(getRandom());
         doubletCount += (rollResult[0] == rollResult[1]) ? 1 : 0;
 
         if (doubletCount >= 3) {
