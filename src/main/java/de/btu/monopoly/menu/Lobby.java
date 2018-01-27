@@ -72,7 +72,7 @@ public class Lobby {
     /**
      * @param aPlayerClient the playerClient to set
      */
-    public void setPlayerClient(GameClient aPlayerClient) {
+    public static void setPlayerClient(GameClient aPlayerClient) {
         playerClient = aPlayerClient;
     }
 
