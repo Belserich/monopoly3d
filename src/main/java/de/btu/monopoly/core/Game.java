@@ -3,7 +3,6 @@ package de.btu.monopoly.core;
 import de.btu.monopoly.GlobalSettings;
 import de.btu.monopoly.core.service.*;
 import de.btu.monopoly.data.card.Card;
-import de.btu.monopoly.data.card.CardAction;
 import de.btu.monopoly.data.field.*;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.ki.HardKi;
@@ -179,12 +178,12 @@ public class Game {
     }
 
     public void processJailCardOption(Player player) {
-        if (board.getCardManager().useJailCard(player)) {
+        if (board.getCardManager().hasJailCards(player)) {
+            
+            board.getCardManager().applyCardAction(Card.Action.JAIL, player);
             LOGGER.info(String.format("%s hat eine Gefängnis-Frei-Karte benutzt.", player.getName()));
         }
-        else {
-            LOGGER.info(String.format("%s hat keine Gefängnis-Frei-Karten mehr.", player.getName()));
-        }
+        else LOGGER.info(String.format("%s hat keine Gefängnis-Frei-Karten mehr.", player.getName()));
     }
 
     private int[] rollPhase(Player player, int doubletCounter) {
@@ -211,26 +210,22 @@ public class Game {
         boolean repeatPhase;
         do {
             repeatPhase = false;
-            switch (GameBoard.FIELD_STRUCTURE[player.getPosition()]) {
-
+            GameBoard.FieldType type = GameBoard.FIELD_STRUCTURE[player.getPosition()];
+            LOGGER.fine(String.format("Feldphase begonnen: Spieler %s Feld: %s", player.getName(), type));
+            
+            switch (type) {
+                
                 case TAX: // Steuerfeld
                     TaxField taxField = (TaxField) board.getFields()[player.getPosition()];
-                    LOGGER.fine(String.format("%s steht auf einem Steuer-Zahlen-Feld.", player.getName()));
+                    
                     FieldService.payTax(player, taxField);
                     break;
 
                 case CARD: // Kartenfeld
                     CardField cardField = (CardField) board.getFields()[player.getPosition()];
-                    Card nextCard = cardField.nextCard();
+                    
                     LOGGER.fine(String.format("%s steht auf einem Kartenfeld (%s).", player.getName(), cardField.getName()));
-                    board.getCardManager().manageCardActions(player, nextCard);
-
-                    if (nextCard.getActions().contains(CardAction.SET_POSITION)
-                            || nextCard.getActions().contains(CardAction.MOVE_PLAYER)
-                            || nextCard.getActions().contains(CardAction.NEXT_SUPPLY)
-                            || nextCard.getActions().contains(CardAction.NEXT_STATION_RENT_AMP)) {
-                        repeatPhase = true;
-                    }
+                    board.getCardManager().pullAndProcess(cardField.getStackType(), player);
                     break;
 
                 case GO_JAIL: // "Gehen Sie Ins Gefaengnis"-Feld
@@ -251,7 +246,8 @@ public class Game {
                     processPlayerOnPropertyField(player, prop, rollResult);
                     break;
             }
-        } while (repeatPhase);
+        }
+        while (repeatPhase);
     }
 
     private void processPlayerOnPropertyField(Player player, PropertyField prop, int[] rollResult) {

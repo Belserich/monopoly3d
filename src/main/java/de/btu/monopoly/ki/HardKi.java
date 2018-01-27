@@ -8,7 +8,7 @@ package de.btu.monopoly.ki;
 import de.btu.monopoly.core.GameBoard;
 import de.btu.monopoly.core.service.AuctionService;
 import de.btu.monopoly.core.service.IOService;
-import de.btu.monopoly.data.card.CardAction;
+import de.btu.monopoly.data.card.Card;
 import de.btu.monopoly.data.card.CardStack;
 import de.btu.monopoly.data.field.FieldManager;
 import de.btu.monopoly.data.field.PropertyField;
@@ -65,7 +65,7 @@ public class HardKi {
 
         // Ist die Obergrenze noch nicht erreicht, versucht die KI sofort rauszukommen
         if (soldProps < PROPERTY_CAP_FOR_STAYING_IN_PRISON) {
-            if (stack.countCardsOfAction(CardAction.JAIL) > 0) { // mit Karte
+            if (stack.countCardsOfAction(Card.Action.JAIL) > 0) { // mit Karte
                 return 3;
             }
             else if (player.getMoney() > 100) {                  // mit Geld
@@ -76,7 +76,7 @@ public class HardKi {
             }
         }
         else {    // sonst bleibt sie so lang wie moeglich drin
-            if (days >= 3 && stack.countCardsOfAction(CardAction.JAIL) > 0) {
+            if (days >= 3 && stack.countCardsOfAction(Card.Action.JAIL) > 0) {
                 return 3;
             }
             else {

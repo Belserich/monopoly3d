@@ -1,7 +1,7 @@
 package de.btu.monopoly.data.parser;
 
 import de.btu.monopoly.data.card.Card;
-import de.btu.monopoly.data.card.CardAction;
+import de.btu.monopoly.data.card.CardStack;
 import de.btu.monopoly.data.card.JailCard;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -14,7 +14,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -35,7 +34,8 @@ public class CardDataParser {
      * @throws IOException Die Datei konnte nicht gefunden werden.
      * @throws SAXException wenn das Dokument nicht gelesen werden konnte, also eine beschädigte Grobstruktur vorliegt
      */
-    public static Card[] parse(String path) throws ParserConfigurationException, IOException, SAXException {
+    public static CardStack parse(String path) throws ParserConfigurationException, IOException, SAXException {
+        CardStack stack = new CardStack();
         List<Card> cards;
 
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -43,16 +43,18 @@ public class CardDataParser {
 
         File file = new File(CardDataParser.class.getResource(path).getFile());
         Document doc = builder.parse(file);
-
+        
         NodeList nList = doc.getElementsByTagName("card");
         cards = new LinkedList<>();
         for (int i = 0; i < nList.getLength(); i++) {
             Node node = nList.item(i);
             if (node.getNodeType() == Node.ELEMENT_NODE) {
-                cards.addAll(parseElement((Element) node));
+                cards.addAll(parseElement(stack, (Element) node));
             }
         }
-        return cards.toArray(new Card[cards.size()]);
+        
+        stack = new CardStack(cards);
+        return stack;
     }
 
     /**
@@ -62,28 +64,27 @@ public class CardDataParser {
      * @param elem Die Element Instanz eines card-Tags
      * @return Die Karte, die mit den entsprechenden Daten erstellt wurde.
      */
-    private static List<Card> parseElement(Element elem) {
+    private static List<Card> parseElement(CardStack stack, Element elem) {
         String name = null, text = null;
-        CardAction[] types = null;
-        int[] args = null;
+        Card.Action type = null;
+        int arg = 0;
         int amount;
 
         try {
             name = elem.getAttribute("name");
             text = elem.getAttribute("text");
-
-            types = convertNodesToStream(elem.getElementsByTagName("action"))
-                    .map(Node::getTextContent)
-                    .map(s -> CardAction.valueOf(s.toUpperCase()))
-                    .toArray(CardAction[]::new);
-        } catch (NullPointerException ex) {
+            type = Card.Action.valueOf(elem.getAttribute("action").toUpperCase());
+        }
+        catch (NullPointerException ex) {
             logException(ex);
         }
 
         try {
-            args = convertNodesToStream(elem.getElementsByTagName("arg"))
-                    .mapToInt(n -> Integer.parseInt(n.getTextContent()))
-                    .toArray();
+            NodeList nList = elem.getElementsByTagName("arg");
+            int length = nList.getLength();
+            if (length != 0) {
+                arg = Integer.parseInt(nList.item(length - 1).getTextContent());
+            }
         } catch (NumberFormatException ex) {
             logException(ex);
         }
@@ -97,10 +98,10 @@ public class CardDataParser {
         
         List<Card> retObj = new LinkedList<>();
         for (int i = 0; i < amount; i++) {
-            if (Arrays.binarySearch(types, CardAction.JAIL) >= 0) {
-                retObj.add(new JailCard(name, text));
+            if (type == Card.Action.JAIL) {
+                retObj.add(new JailCard(stack));
             }
-            else retObj.add(new Card(name, text, types, args));
+            else retObj.add(new Card(name, text, type, arg));
         }
         return retObj;
     }

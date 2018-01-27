@@ -1,6 +1,5 @@
 package de.btu.monopoly.ui.util;
 
-import de.btu.monopoly.data.card.Card;
 import de.btu.monopoly.data.card.CardStack;
 import de.btu.monopoly.data.field.Field;
 import de.btu.monopoly.data.parser.CardDataParser;
@@ -69,20 +68,27 @@ public class Assets
     
     private static Field[] fields;
     
-    private static Card[] commCards;
-    private static Card[] eventCards;
+    private static CardStack commCards;
+    private static CardStack eventCards;
+    
+    public static void loadCards() {
+    
+        try {
+            commCards = CardDataParser.parse(COMM_CARDS_PATH);
+            eventCards = CardDataParser.parse(EVENT_CARDS_PATH);
+        }
+        catch (IOException | SAXException | ParserConfigurationException ex) {
+            LOGGER.warning(String.format("Exception while loading card data.", ex));
+        }
+    }
     
     public static void loadGeneral() {
         
         try {
-            commCards = CardDataParser.parse(COMM_CARDS_PATH);
-            eventCards = CardDataParser.parse(EVENT_CARDS_PATH);
-            FieldDataParser.setCardLoadout0(new CardStack(commCards));
-            FieldDataParser.setCardLoadout1(new CardStack(eventCards));
             fields = FieldDataParser.parse(DATA_FIELD_PATH);
         }
         catch (IOException | SAXException | ParserConfigurationException ex) {
-            LOGGER.warning(String.format("Exception while initializing field or card data.", ex));
+            LOGGER.warning(String.format("Exception while loading field data.", ex));
         }
     }
     
@@ -128,6 +134,7 @@ public class Assets
     
     public static void load()
     {
+        loadCards();
         loadGeneral();
         loadFxContent();
     }
@@ -173,11 +180,11 @@ public class Assets
         return fields;
     }
     
-    public static Card[] getCommunityCards() {
+    public static CardStack getCommunityCards() {
         return commCards;
     }
     
-    public static Card[] getEventCards() {
+    public static CardStack getEventCards() {
         return eventCards;
     }
 }

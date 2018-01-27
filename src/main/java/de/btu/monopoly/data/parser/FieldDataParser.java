@@ -27,9 +27,6 @@ public class FieldDataParser {
 
     private static final Logger LOGGER = Logger.getLogger(FieldDataParser.class.getCanonicalName());
 
-    private static CardStack CARD_LOADOUT_0 = null;
-    private static CardStack CARD_LOADOUT_1 = null;
-
     public static Field[] parse(String path) throws ParserConfigurationException, IOException, SAXException {
         
         Field[] fields = new Field[GameBoard.FIELD_STRUCTURE.length];
@@ -216,18 +213,10 @@ public class FieldDataParser {
         String name = elem.getAttribute("name");
         try {
             int type = Integer.parseInt(elem.getAttribute("type"));
-            retObj = new CardField(name, type == 0 ? CARD_LOADOUT_0 : CARD_LOADOUT_1);
+            retObj = new CardField(name, type == 0 ? CardStack.Type.COMMUNITY : CardStack.Type.EVENT);
         } catch (NumberFormatException ex) {
             LOGGER.log(Level.WARNING, "", ex);
         }
         return retObj;
-    }
-
-    public static void setCardLoadout0(CardStack stack) {
-        CARD_LOADOUT_0 = stack;
-    }
-
-    public static void setCardLoadout1(CardStack stack) {
-        CARD_LOADOUT_1 = stack;
     }
 }

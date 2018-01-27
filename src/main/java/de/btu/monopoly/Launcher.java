@@ -60,7 +60,7 @@ public class Launcher extends Application {
             Global.ref().setMenuSceneManager(menuMan);
         }
         else {
-            Assets.loadFxContent();
+            Assets.load();
             Player[] players = new Player[]{ new Player("Peti", 0, 1500), new Player("Tom", 1, 1500) };
             players[1].setAiLevel(1);
             

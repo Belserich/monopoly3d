@@ -247,8 +247,10 @@ public class TradeService {
         
         builder = new StringBuilder(String.format("Welche Karte bietet Spieler %s%s?%n",
                 player.getName(), runOnce ? " noch" : ""));
+        
+        CardStack playerStack = player.getCardStack();
         for (id = 0; id < ownedCardIds.size(); id++) {
-            builder.append(String.format("[%d] - %s%n", id + 1, cm.getCard(player, ownedCardIds.get(id)).getName()));
+            builder.append(String.format("[%d] - %s%n", id + 1, playerStack.cardAt(id).getName()));
         }
         
         builder.append(String.format("[%d] - Keine%n", id + 1));
