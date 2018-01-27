@@ -1,6 +1,7 @@
 package de.btu.monopoly.ui;
 
 import javafx.animation.RotateTransition;
+import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
@@ -29,7 +30,7 @@ public class CameraManager {
     private static final int DEFAULT_NEAR_CLIP = 1;
     private static final int DEFAULT_FAR_CLIP = 5000;
     
-    private static final double ORTHO_CAM_Y = -2250;
+    private static final double ORTHO_CAM_Z = -2250;
     private static final Point3D ORTHO_CAM_AXIS = Rotate.X_AXIS;
     private static final double ORTHO_CAM_ANGLE = -90;
     
@@ -37,8 +38,10 @@ public class CameraManager {
     private static final double ORTHO_CAM_ROTATE_ANGLE = 90;
     private static final int ORTHO_CAM_ROTATE_MILLIS = 200;
     
-    private static final double NODE_CAM_Y = -1500;
-    private static final double NODE_CAM_Z = -1500;
+    private static final double PREF_NODE_CAM_Z = -2000;
+    private static final double MIN_NODE_CAM_Z = PREF_NODE_CAM_Z * 0.75;
+    private static final double MAX_NODE_CAM_Z = PREF_NODE_CAM_Z * 1.5;
+    
     private static final Point3D NODE_CAM_AXIS = Rotate.X_AXIS;
     private static final double NODE_CAM_ANGLE = -45;
     
@@ -50,6 +53,8 @@ public class CameraManager {
     private final ObjectProperty<Camera> currCam;
     private final ObjectProperty<Node> watchedNode;
     
+    private final DoubleProperty nodeCamDist;
+    
     private Point2D.Double dragPoint;
     private boolean transitioning;
     
@@ -57,13 +62,16 @@ public class CameraManager {
         this.scene = scene;
         
         orthoCam = initCam(
-                new Translate(0, ORTHO_CAM_Y, 0),
-                new Rotate(ORTHO_CAM_ANGLE, ORTHO_CAM_AXIS)
+                new Rotate(ORTHO_CAM_ANGLE, ORTHO_CAM_AXIS),
+                new Translate(0, 0, ORTHO_CAM_Z)
         );
-    
+        
+        Translate nodeCamTransl = new Translate(0, 0, PREF_NODE_CAM_Z);
+        nodeCamDist = nodeCamTransl.zProperty();
+        
         nodeCam = initCam(
-                new Translate(0, NODE_CAM_Y, NODE_CAM_Z),
-                new Rotate(NODE_CAM_ANGLE, NODE_CAM_AXIS)
+                new Rotate(NODE_CAM_ANGLE, NODE_CAM_AXIS),
+                nodeCamTransl
         );
         
         currCam = new SimpleObjectProperty<>(orthoCam);
@@ -90,20 +98,30 @@ public class CameraManager {
         scene.setOnMousePressed(this::setDragPoint);
         scene.setOnMouseDragged(event -> {
             Camera cam = currCam.get();
-            double deltaX = event.getScreenX() - dragPoint.getX();
+            double delta = event.getScreenX() - dragPoint.getX();
             if (cam == nodeCam) {
-                cam.setRotationAxis(Rotate.Y_AXIS);
-                cam.setRotate(cam.getRotate() + deltaX / 2);
+                nodeCam.setRotationAxis(Rotate.Y_AXIS);
+                nodeCam.setRotate(nodeCam.getRotate() + delta / 2);
                 setDragPoint(event);
             }
-            else if (Math.abs(deltaX) >= ORTHO_CAM_ROTATE_THRESHOLD && !transitioning) {
+            else if (Math.abs(delta) >= ORTHO_CAM_ROTATE_THRESHOLD && !transitioning) {
                 transitioning = true;
                 setDragPoint(event);
                 RotateTransition trans = new RotateTransition(Duration.millis(ORTHO_CAM_ROTATE_MILLIS), cam);
                 trans.setAxis(Rotate.Y_AXIS);
-                trans.setByAngle(Math.signum(deltaX) * ORTHO_CAM_ROTATE_ANGLE);
+                trans.setByAngle(Math.signum(delta) * ORTHO_CAM_ROTATE_ANGLE);
                 trans.setOnFinished(e -> transitioning = false);
                 trans.play();
+            }
+        });
+        scene.setOnScroll(event -> {
+            Camera cam = currCam.get();
+            if (cam == nodeCam) {
+                double delta = event.getDeltaY();
+                double newDist = nodeCamDist.get() + delta;
+                newDist = Math.max(newDist, MAX_NODE_CAM_Z);
+                newDist = Math.min(newDist, MIN_NODE_CAM_Z);
+                nodeCamDist.set(newDist);
             }
         });
     }
