@@ -22,8 +22,6 @@ import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Transform;
 import javafx.scene.transform.Translate;
 
-import java.awt.geom.Point2D;
-import java.util.LinkedList;
 import java.util.List;
 
 import static de.btu.monopoly.ui.fx3d.Fx3dField.FIELD_DEPTH;
@@ -55,10 +53,6 @@ public class MonopolyBoard extends Group
     
     private final IntegerProperty runningAnimationCount;
     private final BooleanProperty readyForPopup;
-    
-    private Point2D.Double dragPoint;
-    private boolean fluentRotation;
-    private boolean transitioning;
     
     public MonopolyBoard(GameBoard board) {
         super();
@@ -112,13 +106,18 @@ public class MonopolyBoard extends Group
         Shape3D positionField = fieldModels[player.getPosition()];
         fxPlayer.getTransforms().add(positionField.getLocalToSceneTransform());
         
-        fxPlayer.positionProperty().addListener((val, old, nev) -> {
-            List<Transform> waypoints = new LinkedList<>();
-            int newV = (nev.intValue()) + 1 % FIELD_COUNT;
-            int v = (old.intValue()) + 1 % FIELD_COUNT;
-            for (; v != newV; v = (v + 1) % FIELD_COUNT)
-                waypoints.add(fieldModels[v].getLocalToParentTransform());
-            fxPlayer.move(waypoints.toArray(new Transform[waypoints.size()]));
+        fxPlayer.positionProperty().addListener((val, oldI, newI) -> {
+            
+            int oldV = oldI.intValue();
+            int diff = newI.intValue() + 1 - oldV;
+            if (diff < 0) diff = FIELD_COUNT + diff;
+            
+            Transform[] waypoints = new Transform[diff];
+            for (int i = 0; i < diff; i++) {
+                waypoints[i % FIELD_COUNT] = fieldModels[(oldV + i) % FIELD_COUNT].getLocalToParentTransform();
+            }
+            
+            fxPlayer.move(waypoints);
         });
         
         fxPlayer.animationsRunningProperty().addListener((prop, oldV, newV) ->
@@ -162,11 +161,6 @@ public class MonopolyBoard extends Group
             fieldModels[id] = fieldShape;
             children.add(fieldShape);
         }
-    }
-    
-    public void setFluentRotation(boolean val)
-    {
-        this.fluentRotation = val;
     }
     
     public BooleanProperty readyForPopupProperty() { return readyForPopup; }

@@ -25,7 +25,7 @@ import java.util.List;
 public class Fx3dPlayer extends Cylinder {
     
     private static final Cylinder PLAYER_MODEL = new Cylinder(20, 50);
-    private static final double INIT_PLAYER_Y = PLAYER_MODEL.getHeight() / -2;
+    private static final double INIT_PLAYER_Y = -PLAYER_MODEL.getHeight();
     
     private static final double FIELD_MOVE_DURATION = 400;
     private static final double JUMP_HEIGHT = 100;
@@ -45,6 +45,12 @@ public class Fx3dPlayer extends Cylinder {
         animationQueue = new LinkedList<>();
         animationsRunning = new SimpleBooleanProperty(false);
         
+        TranslateTransition tt = new TranslateTransition(Duration.millis(400), this);
+        tt.setByY(-20);
+        tt.setAutoReverse(true);
+        tt.setCycleCount(Animation.INDEFINITE);
+        tt.play();
+        
         getTransforms().add(new Translate(0, INIT_PLAYER_Y, 0));
         setMaterial(FxHelper.getMaterialFor(color));
     }
@@ -55,8 +61,8 @@ public class Fx3dPlayer extends Cylinder {
         ObservableList<Animation> anims = st.getChildren();
         
         Transform currTransform;
-        Transform nextTransform = getLocalToParentTransform();
-        for (int i = 0; i < waypoints.length; i++) {
+        Transform nextTransform = waypoints[0];
+        for (int i = 1; i < waypoints.length; i++) {
             
             currTransform = nextTransform;
             nextTransform = waypoints[i];
@@ -74,7 +80,7 @@ public class Fx3dPlayer extends Cylinder {
                 Duration.millis(FIELD_MOVE_DURATION / 2), this);
         tt.setByY(-JUMP_HEIGHT);
         tt.setAutoReverse(true);
-        tt.setCycleCount(2 * waypoints.length);
+        tt.setCycleCount(2 * (waypoints.length - 1));
         
         ParallelTransition transition = new ParallelTransition(st, tt);
         transition.setOnFinished(event -> updateAnimationsRunning());

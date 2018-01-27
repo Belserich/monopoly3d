@@ -60,7 +60,8 @@ public class Launcher extends Application {
             Global.ref().setMenuSceneManager(menuMan);
         }
         else {
-            Assets.load();
+            Assets.loadGeneral();
+            Assets.loadFxContent();
             Player[] players = new Player[]{ new Player("Peti", 0, 1500), new Player("Tom", 1, 1500) };
             players[1].setAiLevel(1);
             
@@ -84,7 +85,8 @@ public class Launcher extends Application {
             stage.setOnCloseRequest(ev -> System.exit(0));
     
             Thread thread = new Thread(() -> {
-                try { game.start(); } catch (InterruptedException ex) { ex.printStackTrace(); }
+//                try { game.start(); } catch (InterruptedException ex) { ex.printStackTrace(); }
+                game.turn(players[0], new int[]{ 30, 0 });
             });
             thread.start();
         }
