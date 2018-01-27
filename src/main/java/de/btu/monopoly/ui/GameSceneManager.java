@@ -34,12 +34,16 @@ public class GameSceneManager
     private static final double DEFAULT_SCENE_WIDTH = 1280;
     private static final double DEFAULT_SCENE_HEIGHT = 720;
     
+    private static final Pane EMPTY_POPUP_PANE = new Pane();
+    
     private final Scene scene;
     private final BorderPane uiPane;
     
     private final Group uiGroup;
     private final Group popupGroup;
+    
     private final List<Pane> popupQueue;
+    private final BorderPane popupWrapper;
     
     private final MonopolyBoard board3d;
     private final SubScene gameSub;
@@ -57,24 +61,18 @@ public class GameSceneManager
         gameSub = new SubScene(board3d, 0, 0, true, SceneAntialiasing.BALANCED);
         gameSub.setCache(true);
         gameSub.setCacheHint(CacheHint.SPEED);
-    
-        popupGroup = new Group();
+        
+        popupWrapper = new BorderPane();        
         popupQueue = new LinkedList<>();
-        board3d.readyForPopupProperty().addListener((prop, oldB, newB) -> {
-            Platform.runLater(() ->{
-                popupGroup.getChildren().addAll(popupQueue);
-                popupQueue.clear();
-            });
-        });
+        popupGroup = new Group(popupWrapper);
         
         uiGroup = new Group(popupGroup);
-        
         uiPane = new BorderPane();
         
-        StackPane stackPane = new StackPane();
-        stackPane.getChildren().addAll(gameSub, uiPane, uiGroup);
-        
-        scene = new Scene(stackPane, DEFAULT_SCENE_WIDTH, DEFAULT_SCENE_HEIGHT);
+        scene = new Scene(
+                new StackPane(gameSub, uiGroup, uiPane),
+                DEFAULT_SCENE_WIDTH, DEFAULT_SCENE_HEIGHT
+        );
         
         initScene();
     }
@@ -86,8 +84,21 @@ public class GameSceneManager
         gameSub.widthProperty().bind(scene.widthProperty());
         gameSub.heightProperty().bind(scene.heightProperty());
         
+        initPopups();
         initUi();
         initCams();
+    }
+    
+    private void initPopups() {
+    
+        board3d.readyForPopupProperty().addListener((prop, oldB, newB) -> {
+            if (newB && !popupQueue.isEmpty()) {
+                popupWrapper.setCenter(popupQueue.remove(0));
+            }
+        });
+        
+        popupWrapper.layoutXProperty().bind(gameSub.widthProperty().divide(2).subtract(popupWrapper.widthProperty().divide(2)));
+        popupWrapper.layoutYProperty().bind(gameSub.heightProperty().divide(2).subtract(popupWrapper.heightProperty().divide(2)));
     }
     
     private void initUi() {
@@ -140,22 +151,16 @@ public class GameSceneManager
         return scene;
     }
     
-    public void queuePopupPane(Pane pane) {
+    public void queuePopup(Pane pane) {
         Platform.runLater(() -> {
-            pane.layoutXProperty().bind(scene.widthProperty().divide(2).subtract(pane.widthProperty().divide(2)));
-            pane.layoutYProperty().bind(scene.heightProperty().divide(2).subtract(pane.heightProperty().divide(2)));
             if (board3d.readyForPopupProperty().get())
-                popupGroup.getChildren().add(pane);
+                popupWrapper.setCenter(pane);
             else popupQueue.add(pane);
         });
     }
     
-    public void removePopupPane(Pane pane) {
-        Platform.runLater(() -> popupGroup.getChildren().remove(pane));
-    }
-    
-    public void clearPopups() {
-        Platform.runLater(() -> { popupGroup.getChildren().clear(); });
+    private void queueNullPopup() {
+        queuePopup(EMPTY_POPUP_PANE);
     }
     
     public MonopolyBoard getBoard3d() {
@@ -197,16 +202,16 @@ public class GameSceneManager
         box.getChildren().addAll(label, buyButton, dontBuyButton);
         box.setAlignment(Pos.CENTER);
         
-        queuePopupPane(gridpane);
+        queuePopup(gridpane);
         
         while (!buyButton.isPressed() || !dontBuyButton.isPressed()) {
             IOService.sleep(50);
             if (buyButton.isPressed()) {
-                removePopupPane(gridpane);
+                queueNullPopup();
                 return 1;
             }
             if (dontBuyButton.isPressed()) {
-                removePopupPane(gridpane);
+                queueNullPopup();
                 return 2;
             }
         }
@@ -250,20 +255,20 @@ public class GameSceneManager
         box.getChildren().addAll(label, rollButton, payButton, cardButton);
         box.setAlignment(Pos.CENTER);
         
-        queuePopupPane(gridpane);
+        queuePopup(gridpane);
         
         while (!rollButton.isPressed() || !payButton.isPressed() || !cardButton.isPressed()) {
             IOService.sleep(50);
             if (rollButton.isPressed()) {
-                removePopupPane(gridpane);
+                queueNullPopup();
                 return 1;
             }
             if (payButton.isPressed()) {
-                removePopupPane(gridpane);
+                queueNullPopup();
                 return 2;
             }
             if (cardButton.isPressed()) {
-                removePopupPane(gridpane);
+                queueNullPopup();
                 return 3;
             }
         }
@@ -336,32 +341,32 @@ public class GameSceneManager
         box.setAlignment(Pos.CENTER);
         vbox.setAlignment(Pos.CENTER);
         
-        queuePopupPane(gridpane);
+        queuePopup(gridpane);
         
         while (!nothingButton.isPressed() || !buyHouseButton.isPressed() || !removeHouseButton.isPressed() || !addMortgageButton.isPressed() || !removeMortgageButton.isPressed() || !tradeButton.isPressed()) {
             IOService.sleep(50);
             if (nothingButton.isPressed()) {
-                removePopupPane(gridpane);
+                queueNullPopup();
                 return 1;
             }
             if (buyHouseButton.isPressed()) {
-                removePopupPane(gridpane);
+                queueNullPopup();
                 return 2;
             }
             if (removeHouseButton.isPressed()) {
-                removePopupPane(gridpane);
+                queueNullPopup();
                 return 3;
             }
             if (addMortgageButton.isPressed()) {
-                removePopupPane(gridpane);
+                queueNullPopup();
                 return 4;
             }
             if (removeMortgageButton.isPressed()) {
-                removePopupPane(gridpane);
+                queueNullPopup();
                 return 5;
             }
             if (tradeButton.isPressed()) {
-                removePopupPane(gridpane);
+                queueNullPopup();
                 return 6;
             }
         }
@@ -406,7 +411,7 @@ public class GameSceneManager
         box.getChildren().addAll(label, fieldBox, eingabeButton, exitButton);
         box.setAlignment(Pos.CENTER);
         
-        queuePopupPane(gridPane);
+        queuePopup(gridPane);
         
         if (fields.length == 0) {
             Task task = new Task() {
@@ -418,7 +423,7 @@ public class GameSceneManager
             };
             Platform.runLater(task);
             IOService.sleep(3000);
-            removePopupPane(gridPane);
+            queueNullPopup();
             return 0;
         }
         
@@ -432,7 +437,7 @@ public class GameSceneManager
             IOService.sleep(50);
         }
         
-        removePopupPane(gridPane);
+        queueNullPopup();
         
         return 0;
     }
@@ -492,7 +497,7 @@ public class GameSceneManager
         auctionHBox.getChildren().addAll(hoechstgebotLabel, auctionLabel, gebotsLabel, bidTextField, auctionVBox);
         auctionHBox.setAlignment(Pos.CENTER);
         
-        queuePopupPane(auctionGP);
+        queuePopup(auctionGP);
         
         //Verknuepfung mit EventHandler(n)
         bidTextField.setOnAction(bid);
@@ -501,7 +506,7 @@ public class GameSceneManager
             @Override
             public void handle(ActionEvent event) {
                 AuctionService.playerExit(Lobby.getPlayerClient().getPlayerOnClient().getId());
-                clearPopups();
+                queueNullPopup();
             }
         });
     }
@@ -522,7 +527,7 @@ public class GameSceneManager
         IOService.sleep(500);
         if (!stillActive) {
             
-            clearPopups();
+            queueNullPopup();
             
             GridPane resetGridPane = new GridPane();
             VBox resetBox = new VBox();
@@ -551,9 +556,9 @@ public class GameSceneManager
             resetBox.setCenterShape(true);
             resetBox.getChildren().addAll(endLabel);
             resetBox.setAlignment(Pos.CENTER);
-            queuePopupPane(resetGridPane);
+            queuePopup(resetGridPane);
             IOService.sleep(3500);
-            clearPopups();
+            queueNullPopup();
             auctionLabel.setText("0 €");
         }
         
