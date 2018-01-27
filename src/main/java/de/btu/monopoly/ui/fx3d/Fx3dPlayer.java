@@ -13,6 +13,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Cylinder;
 import javafx.scene.transform.Transform;
+import javafx.scene.transform.Translate;
 import javafx.util.Duration;
 
 import java.util.LinkedList;
@@ -23,7 +24,8 @@ import java.util.List;
  */
 public class Fx3dPlayer extends Cylinder {
     
-    private static final Cylinder PLAYER_MODEL = new Cylinder(20, 25);
+    private static final Cylinder PLAYER_MODEL = new Cylinder(20, 50);
+    private static final double INIT_PLAYER_Y = PLAYER_MODEL.getHeight() / -2;
     
     private static final double FIELD_MOVE_DURATION = 400;
     private static final double JUMP_HEIGHT = 100;
@@ -43,6 +45,7 @@ public class Fx3dPlayer extends Cylinder {
         animationQueue = new LinkedList<>();
         animationsRunning = new SimpleBooleanProperty(false);
         
+        getTransforms().add(new Translate(0, INIT_PLAYER_Y, 0));
         setMaterial(FxHelper.getMaterialFor(color));
     }
     

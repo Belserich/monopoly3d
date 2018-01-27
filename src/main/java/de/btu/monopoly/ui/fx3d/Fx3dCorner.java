@@ -1,12 +1,11 @@
 package de.btu.monopoly.ui.fx3d;
 
 import de.btu.monopoly.data.field.Field;
-import de.btu.monopoly.ui.util.Cuboid;
 import de.btu.monopoly.ui.util.FxHelper;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
-public class Fx3dCorner extends Cuboid
+public class Fx3dCorner extends Fx3dField
 {
     public static final double FIELD_WIDTH = Fx3dField.FIELD_DEPTH;
     public static final double FIELD_HEIGHT = Fx3dField.FIELD_HEIGHT;
@@ -16,7 +15,7 @@ public class Fx3dCorner extends Cuboid
     private final Image texture;
     
     public Fx3dCorner(Field field, Image texture) {
-        super(FIELD_WIDTH, FIELD_HEIGHT, FIELD_DEPTH);
+        super(field, texture, FIELD_WIDTH, FIELD_HEIGHT, FIELD_DEPTH);
         this.field = field;
         this.texture = texture;
         

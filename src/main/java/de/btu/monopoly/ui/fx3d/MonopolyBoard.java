@@ -7,7 +7,6 @@ import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.ui.util.Assets;
 import de.btu.monopoly.ui.util.Cuboid;
 import de.btu.monopoly.ui.util.FxHelper;
-import javafx.animation.RotateTransition;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -22,7 +21,6 @@ import javafx.scene.transform.Affine;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Transform;
 import javafx.scene.transform.Translate;
-import javafx.util.Duration;
 
 import java.awt.geom.Point2D;
 import java.util.LinkedList;
@@ -35,8 +33,9 @@ public class MonopolyBoard extends Group
 {
     public static final int FIELD_COUNT = FieldType.GAMEBOARD_FIELD_STRUCTURE.length;
     
-    private static final double BOARD_LENGTH = 2 * FIELD_DEPTH + 9 * FIELD_WIDTH;
-    private static final Cuboid BOARD_MODEL = new Cuboid(BOARD_LENGTH, 10, BOARD_LENGTH);
+    private static final double BOARD_MIDDLE_LENGTH = 9 * FIELD_WIDTH;
+    private static final double BOARD_LENGTH = 2 * FIELD_DEPTH + BOARD_MIDDLE_LENGTH;
+    private static final Cuboid BOARD_MODEL = new Cuboid(BOARD_MIDDLE_LENGTH, 10, BOARD_MIDDLE_LENGTH);
     
     private static final double FIELDS_OFF_X = BOARD_LENGTH / 2 + Fx3dField.FIELD_WIDTH / 2;
     private static final double FIELDS_OFF_Y = -4;
@@ -44,8 +43,6 @@ public class MonopolyBoard extends Group
     
     private static final double CORNER_DIST = -(Fx3dCorner.FIELD_WIDTH / 2 + Fx3dField.FIELD_WIDTH / 2);
     private static final double FIELD_DIST = -Fx3dField.FIELD_WIDTH;
-    
-    private int CHUNKY_ROTATION_THRESHOLD = 200;
     
     private final GameBoard board;
     
@@ -96,23 +93,6 @@ public class MonopolyBoard extends Group
     private void initBoard() {
         
         boardModel.setMaterial(FxHelper.getMaterialFor(Assets.getImage("game_board")));
-    }
-    
-    public void rotateChunky(boolean clockwise) {
-        transitioning = true;
-        RotateTransition rt = new RotateTransition(Duration.millis(200), this);
-        rt.setOnFinished(ev -> transitioning = false);
-    
-        rt.setAxis(Rotate.Y_AXIS);
-        double checkVal = getRotate() % 90;
-        if (checkVal == 0)
-            rt.setByAngle(clockwise ? -90 : 90);
-        else if (checkVal >= 90 / 2)
-            rt.setByAngle((90 - checkVal) % 90);
-        else
-            rt.setByAngle(-checkVal);
-        
-        rt.playFromStart();
     }
     
     private void initPlayers() {
