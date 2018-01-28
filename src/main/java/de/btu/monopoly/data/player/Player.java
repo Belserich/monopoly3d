@@ -199,7 +199,9 @@ public class Player {
     public IntegerProperty positionProperty() {
         return position;
     }
-
+    
+    public IntegerProperty balanceProperty() { return bank.balanceProperty(); }
+    
     @Override
     public String toString() {
         return String.format("[Spieler] Name: %s, ID: %d, %s %s %n\t%s %n\t%s",

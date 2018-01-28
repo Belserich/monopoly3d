@@ -34,7 +34,7 @@ public class CoreUnitTest {
 
     public CoreUnitTest() {
         GlobalSettings.RUN_AS_TEST = true;
-        Assets.loadGeneral();
+        Assets.loadFields();
         
         players = new Player[4];
         for (int i = 0; i < 4; i++) {

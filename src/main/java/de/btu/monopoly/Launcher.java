@@ -41,7 +41,7 @@ public class Launcher extends Application {
     }
     
     private static void loadResources() {
-        Assets.loadGeneral();
+        Assets.load();
     }
     
     private static void initGame() {
@@ -60,9 +60,10 @@ public class Launcher extends Application {
             Global.ref().setMenuSceneManager(menuMan);
         }
         else {
-            Assets.loadGeneral();
-            Assets.loadFxContent();
-            Player[] players = new Player[]{ new Player("Peti", 0, 1500), new Player("Tom", 1, 1500) };
+            Assets.load();
+            Assets.loadFx();
+            
+            Player[] players = new Player[]{ new Player("Patrick", 0, 1500), new Player("Christian", 1, 1500) };
             players[1].setAiLevel(1);
             
             GameClient client = new GameClient(55556, 1000);
@@ -71,7 +72,7 @@ public class Launcher extends Application {
             client.setPlayerOnClient(players[0]);
             AuctionService.initAuction(players, client);
     
-            Game game = new Game(client, players, 1);
+            Game game = new Game(client, players, 23);
             client.setGame(game);
             
             Global.ref().setGame(game);
@@ -85,8 +86,7 @@ public class Launcher extends Application {
             stage.setOnCloseRequest(ev -> System.exit(0));
     
             Thread thread = new Thread(() -> {
-//                try { game.start(); } catch (InterruptedException ex) { ex.printStackTrace(); }
-                game.turn(players[0], new int[]{ 30, 0 });
+                game.start();
             });
             thread.start();
         }

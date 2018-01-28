@@ -11,8 +11,8 @@ import javafx.util.Duration;
 public class Fx3dField extends Cuboid
 {
     public static final double FIELD_WIDTH = 94;
+    public static final double FIELD_DEPTH = 158;
     public static final double FIELD_HEIGHT = 4;
-    static final double FIELD_DEPTH = 158;
     
     private static final int ANIM_DURATION_MILLIS = 200;
     private static final double RAISE_HEIGHT = 30;

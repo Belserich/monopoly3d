@@ -23,6 +23,7 @@ import javafx.scene.transform.Transform;
 import javafx.scene.transform.Translate;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 import static de.btu.monopoly.ui.fx3d.Fx3dField.FIELD_DEPTH;
 import static de.btu.monopoly.ui.fx3d.Fx3dField.FIELD_WIDTH;
@@ -45,7 +46,7 @@ public class MonopolyBoard extends Group
     private final GameBoard board;
     
     private final Cuboid boardModel;
-    private final Shape3D[] fieldModels;
+    private final Fx3dField[] fieldModels;
     
     private final Group fieldGroup;
     private final Group houseGroup;
@@ -59,7 +60,7 @@ public class MonopolyBoard extends Group
         this.board = board;
         
         boardModel = new Cuboid(BOARD_MODEL.getWidth(), BOARD_MODEL.getHeight(), BOARD_MODEL.getDepth());
-        fieldModels = new Shape3D[FIELD_COUNT];
+        fieldModels = new Fx3dField[FIELD_COUNT];
         
         fieldGroup = new Group();
         houseGroup = new Group();
@@ -138,7 +139,7 @@ public class MonopolyBoard extends Group
         Affine affine = new Affine(new Translate(FIELDS_OFF_X, FIELDS_OFF_Y, FIELDS_OFF_Z));
         for (int id = 0; id < struct.length; id++) {
             
-            Shape3D fieldShape;
+            Fx3dField fieldShape;
             lastType = currType;
             currType = struct[id];
             
@@ -164,4 +165,10 @@ public class MonopolyBoard extends Group
     }
     
     public BooleanProperty readyForPopupProperty() { return readyForPopup; }
+    
+    public Stream<Fx3dPlayer> getPlayers() {
+        return playerGroup.getChildren().stream()
+                .filter(Fx3dPlayer.class::isInstance)
+                .map(Fx3dPlayer.class::cast);
+    }
 }

@@ -9,6 +9,8 @@ import de.btu.monopoly.ki.HardKi;
 import de.btu.monopoly.net.client.GameClient;
 
 import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -44,9 +46,9 @@ public class Game {
     private final Random random;
     
     /**
-     * momentaner Spieler
+     * Alle registrierten Listener die auf das Ende einer Runde warten.
      */
-    private Player currPlayer;
+    private List<GameStateListener> stateListeners;
 
     /**
      * Die fachliche Komponente des Spiels als Einheit, bestehend aus einem
@@ -61,6 +63,8 @@ public class Game {
         this.client = client;
         this.players = players;
         random = new Random(seed);
+        
+        stateListeners = new LinkedList<>();
         
         IOService.setClient(client);
         
@@ -81,16 +85,29 @@ public class Game {
         System.err.println("-------------------------");
     }
 
-    public void start() throws InterruptedException {
+    public void start() {
+        
         LOGGER.setLevel(Level.ALL);
         LOGGER.info("Spiel beginnt.");
-
-        while (board.updateActivePlayers().getActivePlayers().size() > 1) {
-            for (Player activePlayer : board.getActivePlayers()) {
-                currPlayer = activePlayer;
-                turn(activePlayer);
-                if (!activePlayer.getBank().isLiquid()) {
-                    PlayerService.bankrupt(activePlayer, board);
+        
+        List<Player> activePlayers = board.getActivePlayers();
+        Player currPlayer;
+        
+        while (activePlayers.size() > 1) {
+            
+            for (int id = 0; id < activePlayers.size(); id++) {
+                
+                currPlayer = activePlayers.get(id);
+                turn(currPlayer);
+                
+                if (!currPlayer.getBank().isLiquid()) {
+                    PlayerService.bankrupt(currPlayer, board);
+                }
+                board.updateActivePlayers();
+                
+                Player nextPlayer = activePlayers.get((id + 1) % activePlayers.size());
+                for (GameStateListener li : stateListeners) {
+                    li.onTurnEnd(currPlayer, nextPlayer);
                 }
             }
         }
@@ -98,12 +115,16 @@ public class Game {
         LOGGER.info(String.format("%s hat das Spiel gewonnen!", board.getActivePlayers().get(0).getName()));
     }
     
-    private void turn(Player player) {
-        turn(player, null);
+    public void addGameStateListener(GameStateListener listener) {
+        stateListeners.add(listener);
     }
-
-    public void turn(Player player, int[] res) {
-        int[] rollResult = res;
+    
+    public void removeGameStateListener(GameStateListener listener) {
+        stateListeners.remove(listener);
+    }
+    
+    public void turn(Player player) {
+        int[] rollResult;
         int doubletCounter = 0;
 
         LOGGER.info(String.format("%s ist an der Reihe.", player.getName()));
@@ -113,7 +134,7 @@ public class Game {
 
         if (!player.isInJail()) {
             do {
-                rollResult = rollPhase(player, doubletCounter, rollResult);
+                rollResult = rollPhase(player, doubletCounter);
                 doubletCounter += (rollResult[0] == rollResult[1]) ? 1 : 0;
 
                 if (doubletCounter < 3) {
@@ -190,13 +211,15 @@ public class Game {
         else LOGGER.info(String.format("%s hat keine Gefängnis-Frei-Karten mehr.", player.getName()));
     }
 
-    private int[] rollPhase(Player player, int doubletCounter, int[] result) {
-        int[] rollResult = result;
+    private int[] rollPhase(Player player, int doubletCounter) {
+        int[] rollResult;
         int doubletCount = doubletCounter;
 
         LOGGER.info(String.format("%s ist dran mit würfeln.", player.getName()));
         IOService.sleep(2000);
-        if (rollResult == null) rollResult = PlayerService.roll(getRandom());
+        rollResult = PlayerService.roll(getRandom());
+        stateListeners.forEach(l -> l.onDiceThrow(rollResult));
+        
         doubletCount += (rollResult[0] == rollResult[1]) ? 1 : 0;
 
         if (doubletCount >= 3) {
@@ -395,12 +418,5 @@ public class Game {
      */
     public Random getRandom() {
         return random;
-    }
-    
-    /**
-     * @return momentaner Spieler
-     */
-    public Player getCurrentPlayer() {
-        return currPlayer;
     }
 }

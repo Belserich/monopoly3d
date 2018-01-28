@@ -58,7 +58,6 @@ public class GUIChat extends Chat {
         ChatMessage mess = createMessage(player, message);
         client.sendTCP(mess);
         //</editor-fold>
-
     }
 
     @Override
