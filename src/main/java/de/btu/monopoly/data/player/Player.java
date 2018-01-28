@@ -195,11 +195,11 @@ public class Player {
         return position;
     }
     
+    public IntegerProperty balanceProperty() { return bank.balanceProperty(); }
+    
     @Override
     public String toString() {
         return String.format("[Spieler] Name: %s, ID: %d, %s %s %n\t%s %n\t%s",
                 name, id, isInJail ? "(" + daysInJail + " Tage im Gefängnis)" : "", isBankrupt ? "(Pleite)" : "", bank, stack);
     }
-    
-    
 }
