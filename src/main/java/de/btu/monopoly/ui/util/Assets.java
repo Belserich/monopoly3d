@@ -63,8 +63,8 @@ public class Assets
     
     private static final String DATA_FIELD_PATH = "/data/field_data.xml";
     
-    private static final String COMM_CARDS_PATH = "/data/card_data.xml";
-    private static final String EVENT_CARDS_PATH = "/data/card_data.xml";
+    private static final String COMM_CARDS_PATH = "/data/cardCommunity_data.xml";
+    private static final String EVENT_CARDS_PATH = "/data/cardEvent_data.xml";
     
     private static Field[] fields;
     
