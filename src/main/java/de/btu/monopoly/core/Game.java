@@ -1,5 +1,6 @@
 package de.btu.monopoly.core;
 
+import de.btu.monopoly.Global;
 import de.btu.monopoly.GlobalSettings;
 import de.btu.monopoly.core.service.*;
 import de.btu.monopoly.data.card.Card;
@@ -42,7 +43,7 @@ public class Game {
      * Die Zufallsinstanz für sämtliche zufällige Spielereignisse
      */
     private final Random random;
-    
+
     /**
      * momentaner Spieler
      */
@@ -57,13 +58,13 @@ public class Game {
      * @param seed RandomSeed
      */
     public Game(GameClient client, Player[] players, long seed) {
-        
+
         this.client = client;
         this.players = players;
         random = new Random(seed);
-        
+
         IOService.setClient(client);
-        
+
         init();
     }
 
@@ -97,7 +98,7 @@ public class Game {
 
         LOGGER.info(String.format("%s hat das Spiel gewonnen!", board.getActivePlayers().get(0).getName()));
     }
-    
+
     private void turn(Player player) {
         turn(player, null);
     }
@@ -183,11 +184,13 @@ public class Game {
 
     public void processJailCardOption(Player player) {
         if (board.getCardManager().hasJailCards(player)) {
-            
+
             board.getCardManager().applyCardAction(Card.Action.JAIL, player);
             LOGGER.info(String.format("%s hat eine Gefängnis-Frei-Karte benutzt.", player.getName()));
         }
-        else LOGGER.info(String.format("%s hat keine Gefängnis-Frei-Karten mehr.", player.getName()));
+        else {
+            LOGGER.info(String.format("%s hat keine Gefängnis-Frei-Karten mehr.", player.getName()));
+        }
     }
 
     private int[] rollPhase(Player player, int doubletCounter, int[] result) {
@@ -196,7 +199,9 @@ public class Game {
 
         LOGGER.info(String.format("%s ist dran mit würfeln.", player.getName()));
         IOService.sleep(2000);
-        if (rollResult == null) rollResult = PlayerService.roll(getRandom());
+        if (rollResult == null) {
+            rollResult = PlayerService.roll(getRandom());
+        }
         doubletCount += (rollResult[0] == rollResult[1]) ? 1 : 0;
 
         if (doubletCount >= 3) {
@@ -216,20 +221,21 @@ public class Game {
             repeatPhase = false;
             GameBoard.FieldType type = GameBoard.FIELD_STRUCTURE[player.getPosition()];
             LOGGER.fine(String.format("Feldphase begonnen: Spieler %s Feld: %s", player.getName(), type));
-            
+
             switch (type) {
-                
+
                 case TAX: // Steuerfeld
                     TaxField taxField = (TaxField) board.getFields()[player.getPosition()];
-                    
+
                     FieldService.payTax(player, taxField);
                     break;
 
                 case CARD: // Kartenfeld
                     CardField cardField = (CardField) board.getFields()[player.getPosition()];
-                    
+
                     LOGGER.fine(String.format("%s steht auf einem Kartenfeld (%s).", player.getName(), cardField.getName()));
                     board.getCardManager().pullAndProcess(cardField.getStackType(), player);
+                    Global.ref().getGameSceneManager().showCard();
                     break;
 
                 case GO_JAIL: // "Gehen Sie Ins Gefaengnis"-Feld
@@ -250,8 +256,7 @@ public class Game {
                     processPlayerOnPropertyField(player, prop, rollResult);
                     break;
             }
-        }
-        while (repeatPhase);
+        } while (repeatPhase);
     }
 
     private void processPlayerOnPropertyField(Player player, PropertyField prop, int[] rollResult) {
@@ -396,7 +401,7 @@ public class Game {
     public Random getRandom() {
         return random;
     }
-    
+
     /**
      * @return momentaner Spieler
      */
