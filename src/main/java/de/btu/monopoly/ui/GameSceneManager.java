@@ -172,12 +172,9 @@ public class GameSceneManager
     public int buyPropertyPopup() {
         
         GridPane gridpane = new GridPane();
-        // ScrollPane scroll = new ScrollPane();
         VBox box = new VBox();
         gridpane.setAlignment(Pos.CENTER);
-        // scroll.setCenterShape(true);
         gridpane.add(box, 0, 0);
-        // box.setContent(box);
     
         Label label = new Label("Möchtest du die " + Lobby.getPlayerClient().getGame().getBoard().getFields()[Lobby.getPlayerClient().getPlayerOnClient().getPosition()].getName() + " kaufen?");
         
@@ -222,12 +219,9 @@ public class GameSceneManager
     public int jailChoicePopup() {
         
         GridPane gridpane = new GridPane();
-        // ScrollPane scroll = new ScrollPane();
         VBox box = new VBox();
         gridpane.setAlignment(Pos.CENTER);
-        //scroll.setCenterShape(true);
         gridpane.add(box, 0, 0);
-        //scroll.setContent(box);
         
         Label label = new Label("Du bist im Gefängnis. Was möchtest du tun?");
         
@@ -279,7 +273,6 @@ public class GameSceneManager
     public int actionSequencePopup() {
         
         GridPane gridpane = new GridPane();
-        //ScrollPane scroll = new ScrollPane();
         VBox vbox = new VBox();
         VBox vbox1 = new VBox();
         VBox vbox2 = new VBox();
@@ -287,9 +280,7 @@ public class GameSceneManager
         HBox box = new HBox();
         
         gridpane.setAlignment(Pos.CENTER);
-        //scroll.setCenterShape(true);
         
-        // scroll.setContent(box);
         Label label = new Label("Was möchtest du noch tun?");
         
         gridpane.getChildren().add(vbox);
