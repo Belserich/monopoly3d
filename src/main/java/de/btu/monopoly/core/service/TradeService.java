@@ -51,12 +51,14 @@ public class TradeService {
             response = (PlayerTradeResponse) client.waitForObjectOfClass(PlayerTradeResponse.class);
         }
 
-        if (response.isAccepted()) {
-            LOGGER.info("<<< HANDEL ANGENOMMEN >>>");
-            TradeService.completeTrade(response.getRequest().getTrade(), board);
-        }
-        else {
-            LOGGER.info("<<< HANDEL ABGELEHNT >>>");
+        if (GlobalSettings.RUN_IN_CONSOLE) {
+            if (response.isAccepted()) {
+                LOGGER.info("<<< HANDEL ANGENOMMEN >>>");
+                TradeService.completeTrade(response.getRequest().getTrade(), board);
+            }
+            else {
+                LOGGER.info("<<< HANDEL ABGELEHNT >>>");
+            }
         }
     }
 
@@ -93,15 +95,29 @@ public class TradeService {
 
         if (receipt == thisPlayer) {
 
-            LOGGER.info(String.format("Spieler %s hat dir eine Handelsanfrage gemacht:%n%n%s%n\t[1] - annehmen%n\t[2] - ablehnen",
-                    board.getPlayer(trade.getSupply().getPlayerId()).getName(), trade.toString(board)));
-            int choice = IOService.getUserInput(2);
+            if (GlobalSettings.RUN_IN_CONSOLE) {
 
-            response = new PlayerTradeResponse();
-            response.setRequest(request);
-            response.setAccepted(choice == 1);
+                LOGGER.info(String.format("Spieler %s hat dir eine Handelsanfrage gemacht:%n%n%s%n\t[1] - annehmen%n\t[2] - ablehnen",
+                        board.getPlayer(trade.getSupply().getPlayerId()).getName(), trade.toString(board)));
+                int choice = IOService.getUserInput(2);
 
-            client.sendTCP(response);
+                response = new PlayerTradeResponse();
+                response.setRequest(request);
+                response.setAccepted(choice == 1);
+
+                client.sendTCP(response);
+            }
+            else {
+                response = new PlayerTradeResponse();
+                response.setRequest(request);
+                while (!Global.ref().getGameSceneManager().getTradeAnswerIsGiven()) {
+                    IOService.sleep(500);
+                }
+                Global.ref().getGameSceneManager().resteTradeAnswerIsGiven();
+                response.setAccepted(Global.ref().getGameSceneManager().getTradeAnswer());
+
+                client.sendTCP(response);
+            }
         }
         return response;
     }
@@ -118,7 +134,7 @@ public class TradeService {
             request.setDenied(IOService.getUserInput(2) == 2);
         }
         else {
-            request.setDenied(true);
+            request.setDenied(false);
         }
         return request;
     }
@@ -141,11 +157,13 @@ public class TradeService {
             trade.setDemand(TradeService.createTradeOffer(receipt, board));
         }
         else {
-            Global.ref().getGameSceneManager().initTradePopup();
-            while (!Global.ref().getGameSceneManager().getPartnerIsChoosen()) {
+            Global.ref().getGameSceneManager().startTradePopup(supplier);
+            while (!Global.ref().getGameSceneManager().getTradeOfferIsCreated()) {
                 IOService.sleep(500);
             }
-            Global.ref().getGameSceneManager().resetPartnerIsChoosen();
+            trade.setSupply(TradeService.createTradeOfferGui(supplier));
+            trade.setDemand(TradeService.createTradeOfferGui(Global.ref().getGameSceneManager().getTradePartner()));
+            Global.ref().getGameSceneManager().resetTradeOfferIsCreated();
         }
         if (GlobalSettings.RUN_IN_CONSOLE) {
             LOGGER.info(String.format("Zusammenfassung:%n%n%s%nHandelsanfrage wirklich absenden?%n\t[1] - Ja%n\t[2] - Nein",
@@ -158,9 +176,10 @@ public class TradeService {
      * Erstellt eine TradeOffer-Instanz, die alle gebotenen handelbaren Objekt-IDs eines Spielers zusammenfasst.
      *
      * @param player Spieler
+     * @param board Board
      * @return Angebots-Instanz
      */
-    public static TradeOffer createTradeOffer(Player player, GameBoard board) {
+    private static TradeOffer createTradeOffer(Player player, GameBoard board) {
 
         TradeOffer retObj = new TradeOffer();
 
@@ -218,9 +237,12 @@ public class TradeService {
 
         TradeOffer offer = new TradeOffer();
 
-//        offer.setPropertyIds(SceneManager.propertiesForTrade(player));
-//        offer.setCardIds(SceneManager.cardsForTrade(player));
-//        offer.setMoney(SceneManager.moneyForTrade(player));
+        offer.setPlayerId(player.getId());
+        offer.setPropertyIds(Global.ref().getGameSceneManager().getPropertyIdsForTrade(player));
+        offer.setCardIds(Global.ref().getGameSceneManager().getCardIdsForTrade(player));
+        offer.setMoney(Global.ref().getGameSceneManager().getMoneyForTrade(player));
+
+        System.out.println("Bin hier mit Spieler " + player.getName());
         return offer;
     }
 
