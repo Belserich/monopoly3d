@@ -1,0 +1,12 @@
+/* 
+    Created on : Jan 24, 2018, 8:40:47 PM
+    Author     : Eleonora Kostova
+*/
+
+.askforfieldPopUp{
+    -fx-background-color: #b2dfdb;
+    -fx-border-color: black;
+    -fx-border-insets: 5;
+    -fx-border-width: 1;
+    -fx-border-style: double;
+}
