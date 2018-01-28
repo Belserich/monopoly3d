@@ -1,7 +1,7 @@
 package de.btu.monopoly.ui.util;
 
 import de.btu.monopoly.ui.fx3d.Fx3dFieldType;
-import de.btu.monopoly.ui.fx3d.MonopolyBoard;
+import de.btu.monopoly.ui.fx3d.Fx3dGameBoard;
 import javafx.scene.Group;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
@@ -70,7 +70,7 @@ public class TextUtils
     
     private static void rangeCheck(int fieldId)
     {
-        if (fieldId < 0 || fieldId > MonopolyBoard.FIELD_COUNT)
+        if (fieldId < 0 || fieldId > Fx3dGameBoard.FIELD_COUNT)
             throw new IllegalArgumentException(String.format("id (%d) out of range!", fieldId));
     }
     

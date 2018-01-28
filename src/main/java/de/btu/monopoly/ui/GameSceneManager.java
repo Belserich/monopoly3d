@@ -11,7 +11,7 @@ import de.btu.monopoly.core.service.IOService;
 import de.btu.monopoly.data.field.Field;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.menu.Lobby;
-import de.btu.monopoly.ui.fx3d.MonopolyBoard;
+import de.btu.monopoly.ui.fx3d.Fx3dGameBoard;
 import de.btu.monopoly.ui.util.Assets;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
@@ -48,7 +48,7 @@ public class GameSceneManager implements GameStateListener
     private final List<Pane> popupQueue;
     private final BorderPane popupWrapper;
     
-    private final MonopolyBoard board3d;
+    private final Fx3dGameBoard board3d;
     private final SubScene gameSub;
     
     private CameraManager camMan;
@@ -61,7 +61,7 @@ public class GameSceneManager implements GameStateListener
     
     public GameSceneManager(GameBoard board) {
         
-        this.board3d = new MonopolyBoard(board);
+        this.board3d = new Fx3dGameBoard(board);
         
         gameSub = new SubScene(board3d, 0, 0, true, SceneAntialiasing.BALANCED);
         gameSub.setCache(true);

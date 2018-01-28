@@ -28,7 +28,7 @@ import java.util.stream.Stream;
 import static de.btu.monopoly.ui.fx3d.Fx3dField.FIELD_DEPTH;
 import static de.btu.monopoly.ui.fx3d.Fx3dField.FIELD_WIDTH;
 
-public class MonopolyBoard extends Group
+public class Fx3dGameBoard extends Group
 {
     public static final int FIELD_COUNT = Fx3dFieldType.GAMEBOARD_FIELD_STRUCTURE.length;
     
@@ -55,7 +55,7 @@ public class MonopolyBoard extends Group
     private final IntegerProperty runningAnimationCount;
     private final BooleanProperty readyForPopup;
     
-    public MonopolyBoard(GameBoard board) {
+    public Fx3dGameBoard(GameBoard board) {
         super();
         this.board = board;
         
