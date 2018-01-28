@@ -1,6 +1,6 @@
 package de.btu.monopoly.ui.util;
 
-import de.btu.monopoly.ui.fx3d.FieldType;
+import de.btu.monopoly.ui.fx3d.Fx3dFieldType;
 import de.btu.monopoly.ui.fx3d.MonopolyBoard;
 import javafx.scene.Group;
 import javafx.scene.text.Text;
@@ -33,7 +33,7 @@ public class TextUtils
         String str = Assets.getString(String.format(FIELD_NAME_KEY, fieldId));
         Group group = new Group();
         
-        FieldType type = FieldType.GAMEBOARD_FIELD_STRUCTURE[fieldId];
+        Fx3dFieldType type = Fx3dFieldType.GAMEBOARD_FIELD_STRUCTURE[fieldId];
         if (!type.isCorner() && !type.isCard())
         {
             Text name = createText(str);
@@ -54,7 +54,7 @@ public class TextUtils
         {
             int delim = str.lastIndexOf(' ');
             delim = delim == -1 ? 0 : delim;
-            if (type == FieldType.CORNER_0)
+            if (type == Fx3dFieldType.CORNER_0)
             {
                 Text text = createText(str.substring(0, delim));
                 Text name = createText(str.substring(delim));

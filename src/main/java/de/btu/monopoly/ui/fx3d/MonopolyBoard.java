@@ -30,7 +30,7 @@ import static de.btu.monopoly.ui.fx3d.Fx3dField.FIELD_WIDTH;
 
 public class MonopolyBoard extends Group
 {
-    public static final int FIELD_COUNT = FieldType.GAMEBOARD_FIELD_STRUCTURE.length;
+    public static final int FIELD_COUNT = Fx3dFieldType.GAMEBOARD_FIELD_STRUCTURE.length;
     
     private static final double BOARD_MIDDLE_LENGTH = 9 * FIELD_WIDTH;
     private static final double BOARD_LENGTH = 2 * FIELD_DEPTH + BOARD_MIDDLE_LENGTH;
@@ -130,11 +130,11 @@ public class MonopolyBoard extends Group
     private void initFields() {
         
         ObservableList<Node> children = fieldGroup.getChildren();
-        FieldType[] struct = FieldType.GAMEBOARD_FIELD_STRUCTURE;
+        Fx3dFieldType[] struct = Fx3dFieldType.GAMEBOARD_FIELD_STRUCTURE;
         FieldManager fieldMan = board.getFieldManager();
         
-        FieldType lastType;
-        FieldType currType = struct[0];
+        Fx3dFieldType lastType;
+        Fx3dFieldType currType = struct[0];
         
         Affine affine = new Affine(new Translate(FIELDS_OFF_X, FIELDS_OFF_Y, FIELDS_OFF_Z));
         for (int id = 0; id < struct.length; id++) {
@@ -146,7 +146,7 @@ public class MonopolyBoard extends Group
             if (currType.isCorner()) {
     
                 affine.appendTranslation(CORNER_DIST, 0);
-                if (currType != FieldType.CORNER_0) affine.appendRotation(90, 0, 0, 0, Rotate.Y_AXIS);
+                if (currType != Fx3dFieldType.CORNER_0) affine.appendRotation(90, 0, 0, 0, Rotate.Y_AXIS);
                 
                 fieldShape = new Fx3dCorner(fieldMan.getField(id), Assets.getImage(currType));
             }

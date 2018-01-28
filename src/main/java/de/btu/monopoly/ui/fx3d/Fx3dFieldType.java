@@ -1,6 +1,6 @@
 package de.btu.monopoly.ui.fx3d;
 
-public enum FieldType
+public enum Fx3dFieldType
 {
     CORNER_0,
     CORNER_1,
@@ -22,7 +22,7 @@ public enum FieldType
     SUPPLY_0,
     SUPPLY_1;
     
-    public static final FieldType[] GAMEBOARD_FIELD_STRUCTURE = {
+    public static final Fx3dFieldType[] GAMEBOARD_FIELD_STRUCTURE = {
             CORNER_0, STREET_0, CARD_0, STREET_0, TAX_0, STATION, STREET_1, CARD_1, STREET_1, STREET_1,
             CORNER_1, STREET_2, SUPPLY_0, STREET_2, STREET_2, STATION, STREET_3, CARD_0, STREET_3, STREET_3,
             CORNER_2, STREET_4, CARD_1, STREET_4, STREET_4, STATION, STREET_5, STREET_5, SUPPLY_1, STREET_5,

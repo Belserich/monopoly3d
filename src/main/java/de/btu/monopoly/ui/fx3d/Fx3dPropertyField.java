@@ -19,7 +19,7 @@ public class Fx3dPropertyField extends Fx3dField {
     
     private final DoubleProperty zRotateAngle;
     
-    public Fx3dPropertyField(PropertyField field, FieldType type) {
+    public Fx3dPropertyField(PropertyField field, Fx3dFieldType type) {
         super(field, Assets.getImage(type));
         
         Rotate zRotate = new Rotate(0, Rotate.Z_AXIS);
