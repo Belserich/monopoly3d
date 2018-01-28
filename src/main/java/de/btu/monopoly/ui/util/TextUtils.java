@@ -41,11 +41,6 @@ public class TextUtils
     
             Text price = createText(Assets.getString(String.format(FIELD_PRICE_KEY, fieldId)));
             price.getTransforms().add(FIELD_PRICE_TRANSFORM);
-    
-            if (type.isStation() || type.isSupply())
-                name.setFont(Assets.getFont("font_big"));
-            else if (type.isTax())
-                name.setFont(Assets.getFont("font_huge"));
             
             group.getChildren().addAll(name, price);
         }
@@ -62,10 +57,7 @@ public class TextUtils
             if (type == FieldType.CORNER_0)
             {
                 Text text = createText(str.substring(0, delim));
-                text.setFont(Assets.getFont("font_default"));
-                
                 Text name = createText(str.substring(delim));
-                name.setFont(Assets.getFont("font_huge"));
                 
                 group.getChildren().addAll(text, name);
                 group.getTransforms().add(FIELD_NAME_TRANSFORM_1);
@@ -87,7 +79,6 @@ public class TextUtils
         Text text = new Text(content);
         text.setWrappingWidth(LINE_WRAPPING_WIDTH);
         text.setTextAlignment(TextAlignment.CENTER);
-        text.setFont(Assets.getFont("font_default"));
         text.setTranslateX(-text.getLayoutBounds().getWidth() / 2);
         return text;
     }

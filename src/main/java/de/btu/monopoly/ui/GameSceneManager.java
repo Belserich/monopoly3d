@@ -3,14 +3,19 @@ package de.btu.monopoly.ui;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
+import de.btu.monopoly.Global;
 import de.btu.monopoly.core.GameBoard;
+import de.btu.monopoly.core.GameStateListener;
 import de.btu.monopoly.core.service.AuctionService;
 import de.btu.monopoly.core.service.IOService;
+import de.btu.monopoly.data.field.Field;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.menu.Lobby;
+import de.btu.monopoly.ui.fx3d.Fx3dPlayer;
 import de.btu.monopoly.ui.fx3d.MonopolyBoard;
 import de.btu.monopoly.ui.util.Assets;
 import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -18,7 +23,6 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.*;
 import javafx.scene.control.*;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -29,7 +33,7 @@ import java.util.List;
 
 import static de.btu.monopoly.ui.CameraManager.WatchMode;
 
-public class GameSceneManager
+public class GameSceneManager implements GameStateListener
 {
     private static final double DEFAULT_SCENE_WIDTH = 1280;
     private static final double DEFAULT_SCENE_HEIGHT = 720;
@@ -50,6 +54,8 @@ public class GameSceneManager
     
     private CameraManager camMan;
     
+    private VBox playerBox;
+    
     private Label auctionLabel = new Label("0 €");
     private Label hoechstgebotLabel = new Label("Höchstgebot:");
     private JFXTextField bidTextField = new JFXTextField();
@@ -62,7 +68,7 @@ public class GameSceneManager
         gameSub.setCache(true);
         gameSub.setCacheHint(CacheHint.SPEED);
         
-        popupWrapper = new BorderPane();        
+        popupWrapper = new BorderPane();
         popupQueue = new LinkedList<>();
         popupGroup = new Group(popupWrapper);
         
@@ -74,7 +80,29 @@ public class GameSceneManager
                 DEFAULT_SCENE_WIDTH, DEFAULT_SCENE_HEIGHT
         );
         
+        Global.ref().getGame().addGameStateListener(this);
+        
         initScene();
+    }
+    
+    @Override
+    public void onDiceThrow(int[] result) {
+        
+        Platform.runLater(() -> {
+            Fx3dPlayer.InfoPane infoPane = (Fx3dPlayer.InfoPane) playerBox.getChildren().get(0);
+            infoPane.addIcon(Assets.getIcon("dice_1"));
+        });
+    }
+    
+    @Override
+    public void onTurnEnd(Player oldPlayer, Player newPlayer) {
+        Platform.runLater(() -> {
+            if (playerBox != null) {
+                Fx3dPlayer.InfoPane infoPane = (Fx3dPlayer.InfoPane) playerBox.getChildren().remove(0);
+                infoPane.removeIcon(Assets.getIcon("dice_1"));
+                playerBox.getChildren().add(infoPane);
+            }
+        });
     }
     
     private void initScene()
@@ -121,7 +149,7 @@ public class GameSceneManager
         BorderPane topButtonPane = new BorderPane();
         topButtonPane.setPickOnBounds(false);
         
-        ToggleButton viewButton = new ToggleButton(null, new ImageView(Assets.getImage("3d_icon")));
+        ToggleButton viewButton = new ToggleButton(null, Assets.getIcon("3d_icon"));
         viewButton.setOnMousePressed(event -> {
             boolean selected = !viewButton.isSelected();
             camMan.watch(board3d, selected ? WatchMode.PERSPECTIVE : WatchMode.ORTHOGONAL);
@@ -137,7 +165,15 @@ public class GameSceneManager
         topButtonPane.setRight(chatButton);
         
         uiPane.setTop(topButtonPane);
-    
+        
+        playerBox = new VBox();
+        playerBox.setPadding(new Insets(10, 0, 0, 0));
+        playerBox.setSpacing(10);
+        ObservableList<Node> children = playerBox.getChildren();
+        board3d.getPlayers().forEach(p -> children.add(p.infoPane()));
+        
+        uiPane.setLeft(playerBox);
+        
         uiPane.setPadding(new Insets(5, 5, 5, 5));
         uiPane.setPickOnBounds(false);
     }
@@ -162,12 +198,6 @@ public class GameSceneManager
     private void queueNullPopup() {
         queuePopup(EMPTY_POPUP_PANE);
     }
-    
-    public MonopolyBoard getBoard3d() {
-        return board3d;
-    }
-    
-    // TODO
     
     public int buyPropertyPopup() {
         
@@ -393,6 +423,7 @@ public class GameSceneManager
                 + "-fx-border-width: 1";
         
         box.setStyle(cssLayout);
+
         box.setSpacing(7);
         box.setPrefSize(200, 250);
         box.setCenterShape(true);
@@ -442,6 +473,47 @@ public class GameSceneManager
         return 0;
     }
     
+    public void showCard() {
+    
+        GridPane cardInfoPane = new GridPane();
+        HBox box = new HBox();
+    
+        cardInfoPane.setAlignment(Pos.CENTER);
+        cardInfoPane.getChildren().add(box);
+        box.setStyle(
+                "-fx-background-color: #fff59d;"
+                        + "-fx-border-color: #ff7043;"
+                        + "-fx-border-insets: 5;"
+                        + "-fx-border-width: 1;"
+        );
+    
+        Label text = new Label();
+        
+        box.setAlignment(Pos.CENTER);
+        box.setPrefSize(250, 150);
+        Player[] players = Lobby.getPlayerClient().getGame().getPlayers();
+        Field[] fields = Lobby.getPlayerClient().getGame().getBoard().getFieldManager().getFields();
+    
+//        for (Player p : players) {
+//            for (Card.Action action : Card.Action.values()) { //TODO :/
+//
+//                CardStack stack = p.getCardStack();
+//
+//                Card card = Lobby.getPlayerClient().getGame().getBoard()
+//                        .getCardManager().getCard(p, stack.countCardsOfAction(action));
+//
+//                if (fields[p.getPosition()] instanceof CardField) {
+//                    text.setText(card.getName() + "\n" + card.getText());
+//                    cardInfoPane.getChildren().add(text);
+//                    GameController.setPopupAbove(cardInfoPane);
+//                }
+//
+//            }
+//        }
+//
+//        GameController.resetPopupAbove();
+    }
+
     public void auctionPopup() {
         
         //initialisierung der benoetigten Objekte

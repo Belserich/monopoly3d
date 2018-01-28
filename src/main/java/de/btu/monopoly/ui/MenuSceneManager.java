@@ -38,8 +38,7 @@ public class MenuSceneManager extends Stage {
     public MenuSceneManager() throws IOException {
         stage = this;
         
-        if (!Assets.loadedFxContent())
-            Assets.loadFxContent();
+        Assets.loadFx();
         
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/menu_scene.fxml"));
         
