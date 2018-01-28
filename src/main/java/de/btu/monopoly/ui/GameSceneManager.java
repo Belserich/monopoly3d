@@ -9,6 +9,7 @@ import de.btu.monopoly.core.service.IOService;
 import de.btu.monopoly.data.card.Card;
 import de.btu.monopoly.data.card.Card.Action;
 import de.btu.monopoly.data.card.CardStack;
+import de.btu.monopoly.data.card.CardStack.Type;
 import de.btu.monopoly.data.field.CardField;
 import de.btu.monopoly.data.field.Field;
 import de.btu.monopoly.data.player.Player;
@@ -571,12 +572,6 @@ public class GameSceneManager {
 
                 kartPane.setAlignment(Pos.CENTER);
                 kartPane.getChildren().add(box);
-                box.setStyle("-fx-background-color: #fff59d;\n"
-                        + "    -fx-border-color: #ff7043;\n"
-                        + "    -fx-border-insets: 5;\n"
-                        + "    -fx-border-width: 1;\n"
-                        + "    -fx-effect: dropshadow(gaussian, #aabb97, 20, 0, 0, 0);\n"
-                        + "    -fx-border-style: double;");
 
                 //TODO Text der Karten
                 Label text = new Label();
@@ -594,6 +589,24 @@ public class GameSceneManager {
                     Card card;
                     if (fields[p.getPosition()] instanceof CardField) {
 
+                        if (p.getPosition() == 2 || p.getPosition() == 17 || p.getPosition() == 33) {
+                            //Gemeinschaft
+                            box.setStyle("-fx-background-color: #fff59d;\n"
+                                    + "    -fx-border-color: #ff7043;\n"
+                                    + "    -fx-border-insets: 5;\n"
+                                    + "    -fx-border-width: 1;\n"
+                                    + "    -fx-effect: dropshadow(gaussian, #aabb97, 20, 0, 0, 0);\n"
+                                    + "    -fx-border-style: double;");
+                        }
+                        else {
+                            //Ereignis
+                            box.setStyle("-fx-background-color: #ff8a65;\n"
+                                    + "    -fx-border-color: #ffd54f;\n"
+                                    + "    -fx-border-insets: 5;\n"
+                                    + "    -fx-border-width: 1;\n"
+                                    + "    -fx-effect: dropshadow(gaussian, #e57373, 20, 0, 0, 0);\n"
+                                    + "    -fx-border-style: double;");
+                        }
                         for (int i = 0; i < stack.size(); i++) {
                             if (stack.cardAt(i).equals(stack.nextCardOfAction(Action.JAIL))
                                     || stack.cardAt(i).equals(stack.nextCardOfAction(Action.BIRTHDAY))
@@ -607,20 +620,23 @@ public class GameSceneManager {
                                     || stack.cardAt(i).equals(stack.nextCardOfAction(Action.PAY_BANK))
                                     || stack.cardAt(i).equals(stack.nextCardOfAction(Action.SET_POSITION))) {
                                 card = stack.cardAt(i);
-                                text.setText( "\t" + card.getText());
+                                text.setText("\t" + card.getText());
 
                             }
                         }
 
                         queuePopup(kartPane);
+                         System.out.println("ascsaklncl___1__");
+                        IOService.sleep(500);
+                        System.out.println("ascsaklncl___2__");
+                        queueNullPopup();
+                         System.out.println("ascsaklncl___3__");
                     }
-
                 }
-                IOService.sleep(500);
 
             }
+
         }
-        queueNullPopup();
     }
 
     public void bidTextFieldFocus() {
