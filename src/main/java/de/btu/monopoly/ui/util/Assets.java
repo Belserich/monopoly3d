@@ -6,9 +6,9 @@ import de.btu.monopoly.data.parser.CardDataParser;
 import de.btu.monopoly.data.parser.FieldDataParser;
 import de.btu.monopoly.ui.fx3d.FieldType;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -27,6 +27,7 @@ public class Assets
     private static final Color REPLACEMENT_COLOR = new Color(205d / 255, 230d / 255, 208d / 255, 1);
     
     private static final String IMAGE_3D_PATH = "3d_rotation.png";
+    private static final String IMAGE_DICE_1_PATH = "dice_1.png";
     
     private static final String BOARD_PATH = "game_board.png";
     
@@ -55,16 +56,14 @@ public class Assets
     private static final String TAX_0_PATH = "tax_0.png";
     private static final String TAX_1_PATH = "tax_1.png";
     
-    private static final String FONT_PATH = "kabel.ttf";
-    
-    private static final HashMap<String, WritableImage> registeredImages = new HashMap<>();
-    private static final HashMap<String, String> registeredStrings = new HashMap<>();
-    private static final HashMap<String, Font> registeredFonts = new HashMap<>();
-    
     private static final String DATA_FIELD_PATH = "/data/field_data.xml";
     
     private static final String COMM_CARDS_PATH = "/data/card_data.xml";
     private static final String EVENT_CARDS_PATH = "/data/card_data.xml";
+    
+    private static final HashMap<String, WritableImage> registeredImages = new HashMap<>();
+    private static final HashMap<String, ImageView> registeredIcons = new HashMap<>();
+    private static final HashMap<String, String> registeredStrings = new HashMap<>();
     
     private static Field[] fields;
     
@@ -82,8 +81,7 @@ public class Assets
         }
     }
     
-    public static void loadGeneral() {
-        
+    public static void loadFields() {
         try {
             fields = FieldDataParser.parse(DATA_FIELD_PATH);
         }
@@ -92,9 +90,13 @@ public class Assets
         }
     }
     
-    public static void loadFxContent() {
+    public static void loadFxIcons() {
         
-        registeredImages.put("3d_icon", loadImage(IMAGE_3D_PATH));
+        registeredIcons.put("3d_icon", loadImageView(IMAGE_3D_PATH));
+        registeredIcons.put("dice_1", loadImageView(IMAGE_DICE_1_PATH));
+    }
+    
+    public static void loadFxImages() {
     
         registeredImages.put("game_board", loadImage(BOARD_PATH));
     
@@ -125,18 +127,16 @@ public class Assets
     
         registeredStrings.put("field_1_name", "WARSCHAUER STRASSE");
         registeredStrings.put("field_3_name", "GEMEINSCHAFTSKARTE");
-    
-        registeredFonts.put("font_default", loadFont(FONT_PATH, 12));
-        registeredFonts.put("font_big", loadFont(FONT_PATH, 15));
-        registeredFonts.put("font_huge", loadFont(FONT_PATH, 18));
-        
     }
     
     public static void load()
     {
-        loadCards();
-        loadGeneral();
-        loadFxContent();
+        loadFields();
+    }
+    
+    public static void loadFx() {
+        loadFxIcons();
+        loadFxImages();
     }
     
     public static boolean loadedFxContent() {
@@ -151,8 +151,8 @@ public class Assets
         return img;
     }
     
-    private static Font loadFont(String path, double size) {
-        return Font.loadFont(Assets.class.getResource(R + path).toExternalForm(), size);
+    private static ImageView loadImageView(String path) {
+        return new ImageView(loadImage(path));
     }
     
     public void registerString(String key, String val)
@@ -165,15 +165,17 @@ public class Assets
         return registeredImages.get(name);
     }
     
-    public static WritableImage getImage(FieldType type) { return registeredImages.get(type.toString().toLowerCase()); }
+    public static WritableImage getImage(FieldType type) {
+        return registeredImages.get(type.toString().toLowerCase());
+    }
+    
+    public static ImageView getIcon(String name) {
+        return registeredIcons.get(name);
+    }
     
     public static String getString(String key)
     {
         return registeredStrings.getOrDefault(key.toLowerCase(), UNDEFINED);
-    }
-    
-    public static Font getFont(String key) {
-        return registeredFonts.get(key);
     }
     
     public static Field[] getFields() {
