@@ -123,12 +123,8 @@ public class Game {
         stateListeners.remove(listener);
     }
     
-    private void turn(Player player) {
-        turn(player, null);
-    }
-
-    public void turn(Player player, int[] res) {
-        int[] rollResult = res;
+    public void turn(Player player) {
+        int[] rollResult;
         int doubletCounter = 0;
 
         LOGGER.info(String.format("%s ist an der Reihe.", player.getName()));
@@ -138,7 +134,7 @@ public class Game {
 
         if (!player.isInJail()) {
             do {
-                rollResult = rollPhase(player, doubletCounter, rollResult);
+                rollResult = rollPhase(player, doubletCounter);
                 doubletCounter += (rollResult[0] == rollResult[1]) ? 1 : 0;
 
                 if (doubletCounter < 3) {
@@ -215,14 +211,14 @@ public class Game {
         else LOGGER.info(String.format("%s hat keine Gefängnis-Frei-Karten mehr.", player.getName()));
     }
 
-    private int[] rollPhase(Player player, int doubletCounter, int[] result) {
-        int[] rollResult = result;
+    private int[] rollPhase(Player player, int doubletCounter) {
+        int[] rollResult;
         int doubletCount = doubletCounter;
 
         LOGGER.info(String.format("%s ist dran mit würfeln.", player.getName()));
         IOService.sleep(2000);
-        if (rollResult == null) rollResult = PlayerService.roll(getRandom());
-        stateListeners.forEach(l -> l.onDiceThrow(result));
+        rollResult = PlayerService.roll(getRandom());
+        stateListeners.forEach(l -> l.onDiceThrow(rollResult));
         
         doubletCount += (rollResult[0] == rollResult[1]) ? 1 : 0;
 

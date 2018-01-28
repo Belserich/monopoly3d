@@ -11,7 +11,6 @@ import de.btu.monopoly.core.service.IOService;
 import de.btu.monopoly.data.field.Field;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.menu.Lobby;
-import de.btu.monopoly.ui.fx3d.Fx3dPlayer;
 import de.btu.monopoly.ui.fx3d.MonopolyBoard;
 import de.btu.monopoly.ui.util.Assets;
 import javafx.application.Platform;
@@ -87,22 +86,21 @@ public class GameSceneManager implements GameStateListener
     
     @Override
     public void onDiceThrow(int[] result) {
-        
-        Platform.runLater(() -> {
-            Fx3dPlayer.InfoPane infoPane = (Fx3dPlayer.InfoPane) playerBox.getChildren().get(0);
-            infoPane.addIcon(Assets.getIcon("dice_1"));
-        });
+//        Platform.runLater(() -> {
+//            Fx3dPlayer.InfoPane infoPane = (Fx3dPlayer.InfoPane) playerBox.getChildren().get(0);
+//            infoPane.addIcon(Assets.getIcon("dice_1"));
+//        });
     }
     
     @Override
     public void onTurnEnd(Player oldPlayer, Player newPlayer) {
-        Platform.runLater(() -> {
-            if (playerBox != null) {
-                Fx3dPlayer.InfoPane infoPane = (Fx3dPlayer.InfoPane) playerBox.getChildren().remove(0);
-                infoPane.removeIcon(Assets.getIcon("dice_1"));
-                playerBox.getChildren().add(infoPane);
-            }
-        });
+//        Platform.runLater(() -> {
+//            if (playerBox != null) {
+//                Fx3dPlayer.InfoPane infoPane = (Fx3dPlayer.InfoPane) playerBox.getChildren().remove(0);
+//                infoPane.removeIcon(Assets.getIcon("dice_1"));
+//                playerBox.getChildren().add(infoPane);
+//            }
+//        });
     }
     
     private void initScene()

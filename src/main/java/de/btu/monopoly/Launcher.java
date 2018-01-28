@@ -86,7 +86,6 @@ public class Launcher extends Application {
             stage.setOnCloseRequest(ev -> System.exit(0));
     
             Thread thread = new Thread(() -> {
-//                game.turn(players[0], new int[]{ 30, 0 });
                 game.start();
             });
             thread.start();
