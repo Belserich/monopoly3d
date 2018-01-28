@@ -7,6 +7,7 @@ package de.btu.monopoly.ki;
 
 import de.btu.monopoly.core.service.IOService;
 import java.util.Random;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -19,7 +20,14 @@ public class ChatAi {
 
     public static void sendChatMessage(String chatter, String message, boolean isLocal) {
         //TODO
-        LOGGER.info(chatter + ": " + message);
+        LOGGER.log(Level.INFO, "{0}: {1}", new Object[]{chatter, message});
+
+//        if (isLocal){
+//            GUIChat.getInstance().msgLocal(chatter, message);
+//        }
+//        else {
+//            GUIChat.getInstance().msg(chatter, message);
+//        }
     }
 
     static void tradeResultMessage(String ki, int balance, int MINIMUM_ACCEPT_AMOUNT) {
