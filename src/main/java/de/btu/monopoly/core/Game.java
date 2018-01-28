@@ -1,6 +1,6 @@
 package de.btu.monopoly.core;
 
-import de.btu.monopoly.GlobalSettings;
+import de.btu.monopoly.Global;
 import de.btu.monopoly.core.service.*;
 import de.btu.monopoly.data.card.Card;
 import de.btu.monopoly.data.field.*;
@@ -152,7 +152,7 @@ public class Game {
     public void jailPhase(Player player) {
         int choice;
         do {
-            if (GlobalSettings.RUN_IN_CONSOLE) {
+            if (Global.RUN_IN_CONSOLE) {
                 LOGGER.info(String.format(" %s ist im Gefängnis und kann: %n[1] - 3-mal Würfeln, um mit einem Pasch freizukommen "
                         + "%n[2] - Bezahlen (50€) %n[3] - Gefängnis-Frei-Karte benutzen", player.getName()));
             }
@@ -280,7 +280,7 @@ public class Game {
     private void processPlayerOnPropertyField(Player player, PropertyField prop, int[] rollResult) {
         Player other = prop.getOwner();
         if (other == null) { // Feld frei
-            if (GlobalSettings.RUN_IN_CONSOLE) {
+            if (Global.RUN_IN_CONSOLE) {
                 LOGGER.info(String.format("%s steht auf %s. Wähle eine Aktion!%n[1] Kaufen %n[2] Nicht kaufen",
                         player.getName(), prop.getName()));
             }
@@ -324,7 +324,7 @@ public class Game {
 
         int choice;
         do {
-            if (GlobalSettings.RUN_IN_CONSOLE) {
+            if (Global.RUN_IN_CONSOLE) {
                 LOGGER.info(String.format("%s ist an der Reihe! Waehle eine Aktion:%n[1] - Nichts%n[2] - Haus kaufen%n[3] - Haus verkaufen%n[4] - "
                         + "Hypothek aufnehmen%n[5] - Hypothek abbezahlen%n[6] - Handeln", player.getName()));
             }

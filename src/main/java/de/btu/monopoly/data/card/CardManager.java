@@ -7,7 +7,7 @@ import de.btu.monopoly.data.Tradeable;
 import de.btu.monopoly.data.field.FieldManager;
 import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.player.Player;
-import de.btu.monopoly.ui.util.Assets;
+import de.btu.monopoly.util.Assets;
 
 import java.util.logging.Logger;
 import java.util.stream.IntStream;

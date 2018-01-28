@@ -1,7 +1,7 @@
 package de.btu.monopoly.ui.fx3d;
 
 import de.btu.monopoly.data.field.PropertyField;
-import de.btu.monopoly.ui.util.Assets;
+import de.btu.monopoly.util.Assets;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;

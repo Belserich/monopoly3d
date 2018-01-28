@@ -13,7 +13,7 @@ import de.btu.monopoly.data.card.JailCard;
 import de.btu.monopoly.data.field.*;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.net.client.GameClient;
-import de.btu.monopoly.ui.util.Assets;
+import de.btu.monopoly.util.Assets;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -33,7 +33,7 @@ public class CoreUnitTest {
     private static CardManager cm;
 
     public CoreUnitTest() {
-        GlobalSettings.RUN_AS_TEST = true;
+        Global.RUN_AS_TEST = true;
         Assets.loadFields();
         
         players = new Player[4];

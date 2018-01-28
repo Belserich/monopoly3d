@@ -12,7 +12,7 @@ import de.btu.monopoly.data.field.Field;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.menu.Lobby;
 import de.btu.monopoly.ui.fx3d.Fx3dGameBoard;
-import de.btu.monopoly.ui.util.Assets;
+import de.btu.monopoly.util.Assets;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;

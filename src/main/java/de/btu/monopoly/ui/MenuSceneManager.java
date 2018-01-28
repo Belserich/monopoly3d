@@ -1,14 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package de.btu.monopoly.ui;
 
 import de.btu.monopoly.Global;
 import de.btu.monopoly.menu.Lobby;
-import de.btu.monopoly.ui.controller.LobbyController;
-import de.btu.monopoly.ui.util.Assets;
+import de.btu.monopoly.ui.fxml.LobbyController;
+import de.btu.monopoly.util.Assets;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;

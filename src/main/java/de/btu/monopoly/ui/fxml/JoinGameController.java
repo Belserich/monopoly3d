@@ -1,14 +1,9 @@
-package de.btu.monopoly.ui.controller;
+package de.btu.monopoly.ui.fxml;
 
 import de.btu.monopoly.Global;
 import de.btu.monopoly.core.service.IOService;
 import de.btu.monopoly.menu.LobbyService;
-import de.btu.monopoly.net.client.GameClient;
-import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import de.btu.monopoly.menu.MainMenu;
 import javafx.animation.FadeTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -23,22 +18,38 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.util.Duration;
 
+import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
+ *
  * @author augat
  */
-public class StartGameController implements Initializable {
+public class JoinGameController implements Initializable {
 
     @FXML
-    private Button backButton;
+    private TextField nameTextField;
 
     @FXML
-    private TextField nicknameHostTextView;
+    private TextField ipAdressTextField;
 
     @FXML
     private Label nameLabel;
 
     @FXML
-    private Button createLobbyButton;
+    private Label ipLabel;
+
+    @FXML
+    private Button backButton;
+
+    @FXML
+    private Button searchButton;
+
+    @FXML
+    private Label errorLabel;
 
     @FXML
     private GridPane grid;
@@ -60,22 +71,24 @@ public class StartGameController implements Initializable {
                 try {
                     backButtonAction(new ActionEvent());
                 } catch (IOException ex) {
-                    Logger.getLogger(StartGameController.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(JoinGameController.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });
 
-        createLobbyButton.setOnKeyPressed((event) -> {
+        searchButton.setOnKeyPressed((event) -> {
             if (event.getCode().equals(KeyCode.ENTER)) {
-                createLobbyButtonAction(new ActionEvent());
+                searchButtonAction(new ActionEvent());
             }
         });
 
         // Animation
-        backButton.setOpacity(0);
+        nameTextField.setOpacity(0);
+        ipAdressTextField.setOpacity(0);
         nameLabel.setOpacity(0);
-        nicknameHostTextView.setOpacity(0);
-        createLobbyButton.setOpacity(0);
+        ipLabel.setOpacity(0);
+        backButton.setOpacity(0);
+        searchButton.setOpacity(0);
 
         FadeTransition fadeInButton1
                 = new FadeTransition(Duration.millis(500), backButton);
@@ -84,7 +97,7 @@ public class StartGameController implements Initializable {
         fadeInButton1.playFromStart();
 
         FadeTransition fadeInButton2
-                = new FadeTransition(Duration.millis(500), nicknameHostTextView);
+                = new FadeTransition(Duration.millis(500), ipLabel);
         fadeInButton2.setFromValue(0);
         fadeInButton2.setToValue(1);
         fadeInButton2.playFromStart();
@@ -96,27 +109,25 @@ public class StartGameController implements Initializable {
         fadeInButton3.playFromStart();
 
         FadeTransition fadeInButton4
-                = new FadeTransition(Duration.millis(500), createLobbyButton);
+                = new FadeTransition(Duration.millis(500), ipAdressTextField);
         fadeInButton4.setFromValue(0);
         fadeInButton4.setToValue(1);
         fadeInButton4.playFromStart();
+
+        FadeTransition fadeInButton5
+                = new FadeTransition(Duration.millis(500), searchButton);
+        fadeInButton5.setFromValue(0);
+        fadeInButton5.setToValue(1);
+        fadeInButton5.playFromStart();
+
+        FadeTransition fadeInButton6
+                = new FadeTransition(Duration.millis(500), nameTextField);
+        fadeInButton6.setFromValue(0);
+        fadeInButton6.setToValue(1);
+        fadeInButton6.playFromStart();
     }
 
-    //-----------------------------------------------------------------------------------------
-    // start_game_scene.fxml
-    //-----------------------------------------------------------------------------------------
-    @FXML
-    private void enterStartsLobby(KeyEvent event) throws IOException {
-        if (event.getCode().equals(KeyCode.ENTER)) {
-            joinLobby();
-        }
-    }
-
-    @FXML
-    private void createLobbyButtonAction(ActionEvent event) {
-        joinLobby();
-    }
-
+    // Button back
     @FXML
     private void backButtonAction(ActionEvent event) throws IOException {
 
@@ -124,16 +135,30 @@ public class StartGameController implements Initializable {
         changeScene(new FXMLLoader(getClass().getResource("/fxml/menu_scene.fxml")), false);
     }
 
+    @FXML
+    private void enterJoinsLobby(KeyEvent event) {
+
+        if (event.getCode().equals(KeyCode.ENTER)) {
+            joinLobby();
+        }
+    }
+
+    // Button joinLobby
+    @FXML
+    private void searchButtonAction(ActionEvent event) {
+        joinLobby();
+    }
+
     private void joinLobby() {
+        // Server initialisieren
+        MainMenu menu = new MainMenu();
+        menu.joinGame(ipAdressTextField.getText());
 
-        // JoinLobby und Namen übernehmen
-        LobbyService.joinLobby(Global.ref().getClient(), true);
+        // Namen wechseln
         IOService.sleep(200);
-        LobbyService.changeName(nicknameHostTextView.getText());
-
-        // Wechselt die Scene auf lobby
+        LobbyService.changeName(nameTextField.getText());
+    
         changeScene(new FXMLLoader(getClass().getResource("/fxml/lobby_scene.fxml")), true);
-
     }
 
     private void changeScene(FXMLLoader loader, boolean changeToLobby) {
@@ -144,7 +169,7 @@ public class StartGameController implements Initializable {
         fadeInButton1.playFromStart();
 
         FadeTransition fadeInButton2
-                = new FadeTransition(Duration.millis(500), createLobbyButton);
+                = new FadeTransition(Duration.millis(500), ipAdressTextField);
         fadeInButton2.setFromValue(1);
         fadeInButton2.setToValue(0);
         fadeInButton2.playFromStart();
@@ -155,13 +180,24 @@ public class StartGameController implements Initializable {
         fadeInButton3.setToValue(0);
         fadeInButton3.playFromStart();
 
+        FadeTransition fadeInButton5
+                = new FadeTransition(Duration.millis(500), searchButton);
+        fadeInButton5.setFromValue(1);
+        fadeInButton5.setToValue(0);
+        fadeInButton5.playFromStart();
+
+        FadeTransition fadeInButton6
+                = new FadeTransition(Duration.millis(500), nameTextField);
+        fadeInButton6.setFromValue(1);
+        fadeInButton6.setToValue(0);
+        fadeInButton6.playFromStart();
+
         FadeTransition fadeInButton4
-                = new FadeTransition(Duration.millis(500), nicknameHostTextView);
+                = new FadeTransition(Duration.millis(500), ipLabel);
         fadeInButton4.setFromValue(1);
         fadeInButton4.setToValue(0);
         fadeInButton4.playFromStart();
-        fadeInButton4.setOnFinished((ActionEvent event) -> {
-
+        fadeInButton4.setOnFinished((event) -> {
             if (changeToLobby) {
                 FadeTransition fadeGrid = new FadeTransition(Duration.millis(400), grid);
                 fadeGrid.setFromValue(1);
@@ -171,7 +207,7 @@ public class StartGameController implements Initializable {
                     try {
                         Global.ref().getMenuSceneManager().changeSceneToLobby(loader);
                     } catch (IOException ex) {
-                        Logger.getLogger(StartGameController.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(de.btu.monopoly.ui.fxml.StartGameController.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 });
             }

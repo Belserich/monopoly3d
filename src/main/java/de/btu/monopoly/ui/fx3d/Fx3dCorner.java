@@ -1,7 +1,6 @@
 package de.btu.monopoly.ui.fx3d;
 
 import de.btu.monopoly.data.field.Field;
-import de.btu.monopoly.ui.util.FxHelper;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 

@@ -1,7 +1,6 @@
 package de.btu.monopoly.ui.fx3d;
 
 import de.btu.monopoly.data.player.Player;
-import de.btu.monopoly.ui.util.FxHelper;
 import javafx.animation.Animation;
 import javafx.animation.ParallelTransition;
 import javafx.animation.SequentialTransition;

@@ -13,7 +13,7 @@ import de.btu.monopoly.menu.MainMenu;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.ui.GameSceneManager;
 import de.btu.monopoly.ui.MenuSceneManager;
-import de.btu.monopoly.ui.util.Assets;
+import de.btu.monopoly.util.Assets;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -45,7 +45,7 @@ public class Launcher extends Application {
     }
     
     private static void initGame() {
-        if (GlobalSettings.RUN_IN_CONSOLE) {
+        if (Global.RUN_IN_CONSOLE) {
             MainMenu mainMenu = new MainMenu();
             mainMenu.start();
         }
@@ -55,7 +55,7 @@ public class Launcher extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         
-        if (!GlobalSettings.FX_3D_TEST) {
+        if (!Global.FX_3D_TEST) {
             MenuSceneManager menuMan = new MenuSceneManager();
             Global.ref().setMenuSceneManager(menuMan);
         }

@@ -4,7 +4,7 @@ import de.btu.monopoly.data.card.CardManager;
 import de.btu.monopoly.data.field.Field;
 import de.btu.monopoly.data.field.FieldManager;
 import de.btu.monopoly.data.player.Player;
-import de.btu.monopoly.ui.util.Assets;
+import de.btu.monopoly.util.Assets;
 
 import java.util.LinkedList;
 import java.util.List;

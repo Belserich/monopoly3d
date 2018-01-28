@@ -1,4 +1,4 @@
-package de.btu.monopoly.ui.util;
+package de.btu.monopoly.util;
 
 import de.btu.monopoly.ui.fx3d.Fx3dFieldType;
 import de.btu.monopoly.ui.fx3d.Fx3dGameBoard;

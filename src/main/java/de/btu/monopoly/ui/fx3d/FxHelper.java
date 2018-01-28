@@ -1,4 +1,4 @@
-package de.btu.monopoly.ui.util;
+package de.btu.monopoly.ui.fx3d;
 
 import javafx.scene.Group;
 import javafx.scene.Node;

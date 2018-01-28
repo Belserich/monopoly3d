@@ -1,8 +1,6 @@
 package de.btu.monopoly.ui.fx3d;
 
 import de.btu.monopoly.data.field.Field;
-import de.btu.monopoly.ui.util.Cuboid;
-import de.btu.monopoly.ui.util.FxHelper;
 import javafx.animation.TranslateTransition;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
