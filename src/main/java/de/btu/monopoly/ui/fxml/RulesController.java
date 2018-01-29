@@ -1,13 +1,8 @@
-package de.btu.monopoly.ui.controller;
+package de.btu.monopoly.ui.fxml;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXDialog;
 import com.jfoenix.controls.JFXDialogLayout;
-import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import de.btu.monopoly.Global;
 import javafx.animation.FadeTransition;
 import javafx.event.ActionEvent;
@@ -26,6 +21,12 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
+
+import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *

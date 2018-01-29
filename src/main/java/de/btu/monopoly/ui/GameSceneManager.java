@@ -3,20 +3,22 @@ package de.btu.monopoly.ui;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
+import de.btu.monopoly.Global;
 import de.btu.monopoly.core.GameBoard;
+import de.btu.monopoly.core.GameStateListener;
 import de.btu.monopoly.core.service.AuctionService;
 import de.btu.monopoly.core.service.IOService;
 import de.btu.monopoly.data.card.Card;
 import de.btu.monopoly.data.card.Card.Action;
 import de.btu.monopoly.data.card.CardStack;
-import de.btu.monopoly.data.card.CardStack.Type;
 import de.btu.monopoly.data.field.CardField;
 import de.btu.monopoly.data.field.Field;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.menu.Lobby;
-import de.btu.monopoly.ui.fx3d.MonopolyBoard;
-import de.btu.monopoly.ui.util.Assets;
+import de.btu.monopoly.ui.fx3d.Fx3dGameBoard;
+import de.btu.monopoly.util.Assets;
 import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -24,7 +26,6 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.*;
 import javafx.scene.control.*;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -35,7 +36,7 @@ import java.util.List;
 
 import static de.btu.monopoly.ui.CameraManager.WatchMode;
 
-public class GameSceneManager {
+public class GameSceneManager implements GameStateListener {
 
     private static final double DEFAULT_SCENE_WIDTH = 1280;
     private static final double DEFAULT_SCENE_HEIGHT = 720;
@@ -51,10 +52,12 @@ public class GameSceneManager {
     private final List<Pane> popupQueue;
     private final BorderPane popupWrapper;
 
-    private final MonopolyBoard board3d;
+    private final Fx3dGameBoard board3d;
     private final SubScene gameSub;
 
     private CameraManager camMan;
+
+    private VBox playerBox;
 
     private Label auctionLabel = new Label("0 €");
     private Label hoechstgebotLabel = new Label("Höchstgebot:");
@@ -62,9 +65,9 @@ public class GameSceneManager {
 
     public GameSceneManager(GameBoard board) {
 
-        this.board3d = new MonopolyBoard(board);
+        this.board3d = new Fx3dGameBoard(board);
 
-        gameSub = new SubScene(board3d, 0, 0, true, SceneAntialiasing.BALANCED);
+        gameSub = new SubScene(board3d, 0, 0, true, SceneAntialiasing.DISABLED);
         gameSub.setCache(true);
         gameSub.setCacheHint(CacheHint.SPEED);
 
@@ -80,7 +83,28 @@ public class GameSceneManager {
                 DEFAULT_SCENE_WIDTH, DEFAULT_SCENE_HEIGHT
         );
 
+        Global.ref().getGame().addGameStateListener(this);
+
         initScene();
+    }
+
+    @Override
+    public void onDiceThrow(int[] result) {
+//        Platform.runLater(() -> {
+//            Fx3dPlayer.InfoPane infoPane = (Fx3dPlayer.InfoPane) playerBox.getChildren().get(0);
+//            infoPane.addIcon(Assets.getIcon("dice_1"));
+//        });
+    }
+
+    @Override
+    public void onTurnEnd(Player oldPlayer, Player newPlayer) {
+//        Platform.runLater(() -> {
+//            if (playerBox != null) {
+//                Fx3dPlayer.InfoPane infoPane = (Fx3dPlayer.InfoPane) playerBox.getChildren().remove(0);
+//                infoPane.removeIcon(Assets.getIcon("dice_1"));
+//                playerBox.getChildren().add(infoPane);
+//            }
+//        });
     }
 
     private void initScene() {
@@ -126,7 +150,7 @@ public class GameSceneManager {
         BorderPane topButtonPane = new BorderPane();
         topButtonPane.setPickOnBounds(false);
 
-        ToggleButton viewButton = new ToggleButton(null, new ImageView(Assets.getImage("3d_icon")));
+        ToggleButton viewButton = new ToggleButton(null, Assets.getIcon("3d_icon"));
         viewButton.setOnMousePressed(event -> {
             boolean selected = !viewButton.isSelected();
             camMan.watch(board3d, selected ? WatchMode.PERSPECTIVE : WatchMode.ORTHOGONAL);
@@ -142,6 +166,15 @@ public class GameSceneManager {
         topButtonPane.setRight(chatButton);
 
         uiPane.setTop(topButtonPane);
+
+        playerBox = new VBox();
+        playerBox.setPickOnBounds(false);
+        playerBox.setPadding(new Insets(10, 0, 0, 0));
+        playerBox.setSpacing(10);
+        ObservableList<Node> children = playerBox.getChildren();
+        board3d.getPlayers().forEach(p -> children.add(p.infoPane()));
+
+        uiPane.setLeft(playerBox);
 
         uiPane.setPadding(new Insets(5, 5, 5, 5));
         uiPane.setPickOnBounds(false);
@@ -171,11 +204,6 @@ public class GameSceneManager {
         queuePopup(EMPTY_POPUP_PANE);
     }
 
-    public MonopolyBoard getBoard3d() {
-        return board3d;
-    }
-
-    // TODO
     public int buyPropertyPopup() {
 
         GridPane gridpane = new GridPane();
@@ -391,6 +419,7 @@ public class GameSceneManager {
                 + "-fx-border-width: 1";
 
         box.setStyle(cssLayout);
+
         box.setSpacing(7);
         box.setPrefSize(200, 250);
         box.setCenterShape(true);
@@ -585,9 +614,11 @@ public class GameSceneManager {
 
                 for (Player p : players) {
 
-                    CardStack stack = p.getCardStack();
                     Card card;
                     if (fields[p.getPosition()] instanceof CardField) {
+                        
+                        CardField cf = ((CardField) fields[p.getPosition()]);
+                        CardStack stack = Lobby.getPlayerClient().getGame().getBoard().getCardManager().getStack(cf.getStackType());
 
                         if (p.getPosition() == 2 || p.getPosition() == 17 || p.getPosition() == 33) {
                             //Gemeinschaft
@@ -596,7 +627,7 @@ public class GameSceneManager {
                                     + "    -fx-border-insets: 5;\n"
                                     + "    -fx-border-width: 1;\n"
                                     + "    -fx-effect: dropshadow(gaussian, #aabb97, 20, 0, 0, 0);\n"
-                                    + "    -fx-border-style: double;");
+                            );
                         }
                         else {
                             //Ereignis
@@ -604,38 +635,23 @@ public class GameSceneManager {
                                     + "    -fx-border-color: #ffd54f;\n"
                                     + "    -fx-border-insets: 5;\n"
                                     + "    -fx-border-width: 1;\n"
-                                    + "    -fx-effect: dropshadow(gaussian, #e57373, 20, 0, 0, 0);\n"
-                                    + "    -fx-border-style: double;");
+                                    + "    -fx-effect: dropshadow(gaussian, #e57373, 20, 0, 0, 0);\n");
                         }
-                        for (int i = 0; i < stack.size(); i++) {
-                            if (stack.cardAt(i).equals(stack.nextCardOfAction(Action.JAIL))
-                                    || stack.cardAt(i).equals(stack.nextCardOfAction(Action.BIRTHDAY))
-                                    || stack.cardAt(i).equals(stack.nextCardOfAction(Action.GET_MONEY))
-                                    || stack.cardAt(i).equals(stack.nextCardOfAction(Action.GO_JAIL))
-                                    || stack.cardAt(i).equals(stack.nextCardOfAction(Action.MOVE))
-                                    || stack.cardAt(i).equals(stack.nextCardOfAction(Action.MOVE_NEXT_STATION_RENT_AMP))
-                                    || stack.cardAt(i).equals(stack.nextCardOfAction(Action.MOVE_NEXT_SUPPLY))
-                                    || stack.cardAt(i).equals(stack.nextCardOfAction(Action.PAY_ALL))
-                                    || stack.cardAt(i).equals(stack.nextCardOfAction(Action.RENOVATE))
-                                    || stack.cardAt(i).equals(stack.nextCardOfAction(Action.PAY_BANK))
-                                    || stack.cardAt(i).equals(stack.nextCardOfAction(Action.SET_POSITION))) {
-                                card = stack.cardAt(i);
-                                text.setText("\t" + card.getText());
 
-                            }
-                        }
+                        card = stack.nextCard();
+                        text.setText("\t" + card.getText());
 
                         queuePopup(kartPane);
-                         System.out.println("ascsaklncl___1__");
-                        IOService.sleep(500);
-                        System.out.println("ascsaklncl___2__");
-                        queueNullPopup();
-                         System.out.println("ascsaklncl___3__");
+                        System.out.println("ascsaklncl___1__");
+
                     }
                 }
 
             }
-
+            IOService.sleep(300);
+            System.out.println("ascsaklncl___2__");
+            queueNullPopup();
+            System.out.println("ascsaklncl___3__");
         }
     }
 

@@ -2,7 +2,7 @@
 
 **User story:**\<Grafische Oberfläche bereitstellen / MONOPOLY-102\>
 
-<\Entscheidung, ob bei der GUI Implementierung beachtet werden soll, dass über die GlobalSettings.java die alte Konsolenversion, anstelle der GUI, gestartet werden kann.\>
+<\Entscheidung, ob bei der GUI Implementierung beachtet werden soll, dass über die Global.java die alte Konsolenversion, anstelle der GUI, gestartet werden kann.\>
 
 ## Considered Alternatives
 

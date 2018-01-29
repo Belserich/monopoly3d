@@ -1,6 +1,5 @@
 package de.btu.monopoly.ui.fx3d;
 
-import de.btu.monopoly.ui.util.FxHelper;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Material;
 import javafx.scene.shape.Box;

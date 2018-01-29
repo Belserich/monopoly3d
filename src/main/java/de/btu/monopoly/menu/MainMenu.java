@@ -6,7 +6,6 @@
 package de.btu.monopoly.menu;
 
 import de.btu.monopoly.Global;
-import de.btu.monopoly.GlobalSettings;
 import de.btu.monopoly.core.service.IOService;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.server.GameServer;
@@ -49,7 +48,7 @@ public class MainMenu {
         
         Global.ref().setClient(client);
         
-        if (GlobalSettings.RUN_IN_CONSOLE) {
+        if (Global.RUN_IN_CONSOLE) {
             LobbyService.joinLobby(client, true);
         }
     }
@@ -59,7 +58,7 @@ public class MainMenu {
         GameClient client = new GameClient(PORT, 5000);
         Global.ref().setClient(client);
         
-        if (GlobalSettings.RUN_IN_CONSOLE) {
+        if (Global.RUN_IN_CONSOLE) {
             LOGGER.fine("Geben sie die IP-Adresse des Servers ein");
             client.connect(IOService.askForString());
         }

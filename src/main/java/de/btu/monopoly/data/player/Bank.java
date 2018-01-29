@@ -1,37 +1,40 @@
 package de.btu.monopoly.data.player;
 
-import java.util.logging.Logger;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 
 public class Bank {
 
-    private int balance;
-
+    private IntegerProperty balance;
+    
     public Bank(int startMoney) {
-        this.balance = startMoney;
+        this.balance = new SimpleIntegerProperty(startMoney);
     }
 
     public boolean checkLiquidity(int loss) {
-        return (balance - loss >= 0);
+        return (balance.get() - loss >= 0);
     }
 
     public int balance() {
-        return balance;
+        return balance.get();
     }
 
     public void deposit(int amount) {
-        balance += amount;
+        balance.set(balance.get() + amount);
     }
 
     public void withdraw(int amount) {
-        balance -= amount;
+        balance.set(balance.get() - amount);
     }
 
     public boolean isLiquid() {
-        return balance >= 0;
+        return balance.get() >= 0;
     }
 
+    public IntegerProperty balanceProperty() { return balance; }
+    
     @Override
     public String toString() {
-        return String.format("[Bank-Account] Balance: %d", balance);
+        return String.format("[Bank-Account] Balance: %d", balance.get());
     }
 }

@@ -6,7 +6,6 @@
 package de.btu.monopoly.core.service;
 
 import de.btu.monopoly.Global;
-import de.btu.monopoly.GlobalSettings;
 import de.btu.monopoly.core.Game;
 import de.btu.monopoly.core.GameBoard;
 import de.btu.monopoly.core.mechanics.Auction;
@@ -41,7 +40,7 @@ public class IOService {
         int choice = -1;
         switch (player.getAiLevel()) {
             case 0:
-                if (GlobalSettings.RUN_IN_CONSOLE) {
+                if (Global.RUN_IN_CONSOLE) {
                     choice = getClientChoice(player, 3);
                 }
                 else {
@@ -65,7 +64,7 @@ public class IOService {
         switch (player.getAiLevel()) {
             case 0:
 
-                if (GlobalSettings.RUN_IN_CONSOLE) {
+                if (Global.RUN_IN_CONSOLE) {
                     choice = getClientChoice(player, 2);
                 }
                 else {
@@ -89,7 +88,7 @@ public class IOService {
         int choice = 1;
         switch (player.getAiLevel()) {
             case 0:
-                if (GlobalSettings.RUN_IN_CONSOLE) {
+                if (Global.RUN_IN_CONSOLE) {
                     choice = getClientChoice(player, 6);
                 }
                 else {
@@ -241,7 +240,7 @@ public class IOService {
             mesg += String.format("[%d] - %s%n", i + 1, fieldNames[i]);
         }
         LOGGER.info(mesg);
-        if (GlobalSettings.RUN_IN_CONSOLE) {
+        if (Global.RUN_IN_CONSOLE) {
             return IOService.getClientChoice(player, 39);
         }
         else {

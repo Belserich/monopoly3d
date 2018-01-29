@@ -1,10 +1,12 @@
 package de.btu.monopoly.ui.util;
 
+import de.btu.monopoly.core.GameBoard.FieldType;
 import de.btu.monopoly.data.card.CardStack;
 import de.btu.monopoly.data.field.Field;
 import de.btu.monopoly.data.parser.CardDataParser;
 import de.btu.monopoly.data.parser.FieldDataParser;
-import de.btu.monopoly.ui.fx3d.FieldType;
+import de.btu.monopoly.ui.fx3d.Fx3dFieldType;
+import de.btu.monopoly.ui.fx3d.FxHelper;
 import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;

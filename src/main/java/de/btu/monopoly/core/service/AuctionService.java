@@ -3,7 +3,6 @@ package de.btu.monopoly.core.service;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import de.btu.monopoly.Global;
-import de.btu.monopoly.GlobalSettings;
 import de.btu.monopoly.core.mechanics.Auction;
 import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.player.Player;
@@ -53,12 +52,12 @@ public class AuctionService extends Listener {
         JoinAuctionRequest jaReq = new JoinAuctionRequest();
         
         auc.getClient().sendTCP(jaReq);
-        if (!GlobalSettings.RUN_AS_TEST) { // nicht fuer Test
+        if (!Global.RUN_AS_TEST) { // nicht fuer Test
             Global.ref().getGameSceneManager().auctionPopup();
             Global.ref().getGameSceneManager().bidTextFieldFocus();
             while (auctionRun) {
                 IOService.sleepDeep(500);
-                if (GlobalSettings.RUN_IN_CONSOLE) { // nur fuer @Console
+                if (Global.RUN_IN_CONSOLE) { // nur fuer @Console
                     LOGGER.finest("Wähle [1] für bieten [2] für aussteigen");
                     Scanner scanner = new Scanner(System.in);
                     switch (scanner.nextInt()) {
@@ -127,7 +126,7 @@ public class AuctionService extends Listener {
 
                 }
             }
-            if (GlobalSettings.RUN_IN_CONSOLE) {
+            if (Global.RUN_IN_CONSOLE) {
                 sellProperty();
             }
         }

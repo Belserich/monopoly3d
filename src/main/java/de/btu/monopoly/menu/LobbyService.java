@@ -8,7 +8,6 @@ package de.btu.monopoly.menu;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import de.btu.monopoly.Global;
-import de.btu.monopoly.GlobalSettings;
 import de.btu.monopoly.core.Game;
 import de.btu.monopoly.core.service.IOService;
 import de.btu.monopoly.data.player.Player;
@@ -31,8 +30,8 @@ import java.util.logging.Logger;
 public class LobbyService extends Listener {
 
     private static final Logger LOGGER = Logger.getLogger(LobbyService.class.getCanonicalName());
-    private static final boolean isRunAsTest = GlobalSettings.RUN_AS_TEST;
-    private static final boolean isRunInConsole = GlobalSettings.RUN_IN_CONSOLE;
+    private static final boolean isRunAsTest = Global.RUN_AS_TEST;
+    private static final boolean isRunInConsole = Global.RUN_IN_CONSOLE;
     private static Lobby lobby;
 
     /**
@@ -253,7 +252,7 @@ public class LobbyService extends Listener {
             RefreshLobbyResponse refres = (RefreshLobbyResponse) object;
             lobby.setUsers(refres.getUsers());
 
-            if (!GlobalSettings.RUN_AS_TEST && !GlobalSettings.RUN_IN_CONSOLE) {
+            if (!Global.RUN_AS_TEST && !Global.RUN_IN_CONSOLE) {
                 try {
                     // Lobby updaten
                     Global.ref().getMenuSceneManager().updateLobby();

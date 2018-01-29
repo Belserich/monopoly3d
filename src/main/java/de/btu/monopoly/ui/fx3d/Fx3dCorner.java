@@ -1,7 +1,6 @@
 package de.btu.monopoly.ui.fx3d;
 
 import de.btu.monopoly.data.field.Field;
-import de.btu.monopoly.ui.util.FxHelper;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
@@ -15,7 +14,7 @@ public class Fx3dCorner extends Fx3dField
     private final Image texture;
     
     public Fx3dCorner(Field field, Image texture) {
-        super(field, texture, FIELD_WIDTH, FIELD_HEIGHT, FIELD_DEPTH);
+        super(field, Fx3dFieldType.CORNER, texture, FIELD_WIDTH, FIELD_HEIGHT, FIELD_DEPTH);
         this.field = field;
         this.texture = texture;
         

@@ -13,7 +13,7 @@ import de.btu.monopoly.menu.MainMenu;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.ui.GameSceneManager;
 import de.btu.monopoly.ui.MenuSceneManager;
-import de.btu.monopoly.ui.util.Assets;
+import de.btu.monopoly.util.Assets;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -41,11 +41,11 @@ public class Launcher extends Application {
     }
     
     private static void loadResources() {
-        Assets.loadGeneral();
+        Assets.load();
     }
     
     private static void initGame() {
-        if (GlobalSettings.RUN_IN_CONSOLE) {
+        if (Global.RUN_IN_CONSOLE) {
             MainMenu mainMenu = new MainMenu();
             mainMenu.start();
         }
@@ -55,14 +55,15 @@ public class Launcher extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         
-        if (!GlobalSettings.FX_3D_TEST) {
+        if (!Global.FX_3D_TEST) {
             MenuSceneManager menuMan = new MenuSceneManager();
             Global.ref().setMenuSceneManager(menuMan);
         }
         else {
-            Assets.loadGeneral();
-            Assets.loadFxContent();
-            Player[] players = new Player[]{ new Player("Peti", 0, 1500), new Player("Tom", 1, 1500) };
+            Assets.load();
+            Assets.loadFx();
+            
+            Player[] players = new Player[]{ new Player("Patrick", 0, 1500), new Player("Christian", 1, 1500) };
             players[1].setAiLevel(1);
             
             GameClient client = new GameClient(55556, 1000);
@@ -71,7 +72,7 @@ public class Launcher extends Application {
             client.setPlayerOnClient(players[0]);
             AuctionService.initAuction(players, client);
     
-            Game game = new Game(client, players, 1);
+            Game game = new Game(client, players, 23);
             client.setGame(game);
             
             Global.ref().setGame(game);
@@ -85,8 +86,7 @@ public class Launcher extends Application {
             stage.setOnCloseRequest(ev -> System.exit(0));
     
             Thread thread = new Thread(() -> {
-//                try { game.start(); } catch (InterruptedException ex) { ex.printStackTrace(); }
-                game.turn(players[0], new int[]{ 30, 0 });
+                game.start();
             });
             thread.start();
         }
