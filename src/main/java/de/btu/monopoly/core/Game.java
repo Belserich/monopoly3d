@@ -201,6 +201,7 @@ public class Game {
 
         do {
             repeatPhase = false;
+            IOService.sleep(1000);
             type = FieldTypes.GAMEBOARD_FIELD_STRUCT[player.getPosition()];
             field = board.getFieldManager().getField(player.getPosition());
 
@@ -209,7 +210,7 @@ public class Game {
                 l.onPlayerOnNewField(player, type);
             }
 
-            if (type.isStation()) {
+            if (type.isProperty()) {
                 PropertyField prop = (PropertyField) board.getFields()[player.getPosition()];
                 onPlayerOnProperty(prop);
             }
@@ -291,11 +292,12 @@ public class Game {
             if (actionChoice > ACTION_NOTHING && actionChoice < ACTION_TRADE) {
 
                 FieldManager fima = board.getFieldManager();
+                int fieldChoice;
                 if (player.getAiLevel() < 2) {
-                    int fieldChoice = getFieldChoice();
+                    fieldChoice = getFieldChoice();
                 }
                 else {
-                    int fieldChoice = HardKi.getChosenFieldId();
+                    fieldChoice = HardKi.getChosenFieldId();
                 }
                 if (fieldChoice == -1) {
                     continue;
