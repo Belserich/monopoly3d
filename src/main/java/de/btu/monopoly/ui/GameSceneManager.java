@@ -150,6 +150,8 @@ public class GameSceneManager implements GameStateListener {
         ScrollPane scrollChat = new ScrollPane();
         scrollChat.setContent(obs.getTextFlow());
         scrollChat.setStyle("-fx-background-color: white");
+        scrollChat.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        chatArea.setMaxWidth(380);
         VBox wholeChatBox = new VBox(scrollChat, chatInteractionBox);
         VBox.setVgrow(scrollChat, Priority.ALWAYS);
 
