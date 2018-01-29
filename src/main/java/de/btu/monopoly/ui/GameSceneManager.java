@@ -194,7 +194,6 @@ public class GameSceneManager implements GameStateListener {
 
     private class ChatObserver implements Observer {
 
-//        private TextFlow area;
         private TextFlow area;
 
         ChatObserver(TextFlow textFlow) {
