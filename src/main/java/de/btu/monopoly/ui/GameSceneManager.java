@@ -63,7 +63,7 @@ public class GameSceneManager implements GameStateListener
         
         this.board3d = new Fx3dGameBoard(board);
         
-        gameSub = new SubScene(board3d, 0, 0, true, SceneAntialiasing.BALANCED);
+        gameSub = new SubScene(board3d, 0, 0, true, SceneAntialiasing.DISABLED);
         gameSub.setCache(true);
         gameSub.setCacheHint(CacheHint.SPEED);
         
@@ -165,6 +165,7 @@ public class GameSceneManager implements GameStateListener
         uiPane.setTop(topButtonPane);
         
         playerBox = new VBox();
+        playerBox.setPickOnBounds(false);
         playerBox.setPadding(new Insets(10, 0, 0, 0));
         playerBox.setSpacing(10);
         ObservableList<Node> children = playerBox.getChildren();

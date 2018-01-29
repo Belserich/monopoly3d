@@ -23,19 +23,18 @@ import javafx.scene.transform.Translate;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static de.btu.monopoly.ui.fx3d.Fx3dField.FIELD_DEPTH;
-import static de.btu.monopoly.ui.fx3d.Fx3dField.FIELD_WIDTH;
+import static de.btu.monopoly.ui.fx3d.Fx3dField.*;
 
 public class Fx3dGameBoard extends Group
 {
     public static final int FIELD_COUNT = Fx3dFieldType.GAMEBOARD_FIELD_STRUCTURE.length;
+    public static final double BOARD_MODEL_LENGTH = 9 * FIELD_WIDTH;
     
-    private static final double BOARD_MIDDLE_LENGTH = 9 * FIELD_WIDTH;
-    private static final double BOARD_LENGTH = 2 * FIELD_DEPTH + BOARD_MIDDLE_LENGTH;
-    private static final Cuboid BOARD_MODEL = new Cuboid(BOARD_MIDDLE_LENGTH, 10, BOARD_MIDDLE_LENGTH);
+    private static final double BOARD_LENGTH = 2 * FIELD_DEPTH + BOARD_MODEL_LENGTH;
+    private static final Cuboid BOARD_MODEL = new Cuboid(BOARD_MODEL_LENGTH, 10, BOARD_MODEL_LENGTH);
     
     private static final double FIELDS_OFF_X = BOARD_LENGTH / 2 + Fx3dField.FIELD_WIDTH / 2;
-    private static final double FIELDS_OFF_Y = -4;
+    private static final double FIELDS_OFF_Y = -FIELD_HEIGHT;
     private static final double FIELDS_OFF_Z = -BOARD_LENGTH / 2 + Fx3dField.FIELD_DEPTH / 2;
     
     private static final double CORNER_DIST = -(Fx3dCorner.FIELD_WIDTH / 2 + Fx3dField.FIELD_WIDTH / 2);
@@ -153,7 +152,7 @@ public class Fx3dGameBoard extends Group
                 
                 if (currType.isStreet() || currType.isStation() || currType.isSupply())
                     fieldShape = new Fx3dPropertyField((PropertyField) fieldMan.getField(id), currType);
-                else fieldShape = new Fx3dField(fieldMan.getField(id), Assets.getImage(currType));
+                else fieldShape = new Fx3dField(fieldMan.getField(id), currType, Assets.getImage(currType));
             }
             
             fieldShape.getTransforms().add(0, affine.clone());

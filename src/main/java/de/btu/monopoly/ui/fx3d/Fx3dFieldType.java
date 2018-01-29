@@ -2,10 +2,12 @@ package de.btu.monopoly.ui.fx3d;
 
 public enum Fx3dFieldType
 {
+    CORNER,
     CORNER_0,
     CORNER_1,
     CORNER_2,
     CORNER_3,
+    STREET,
     STREET_0,
     STREET_1,
     STREET_2,
@@ -14,11 +16,14 @@ public enum Fx3dFieldType
     STREET_5,
     STREET_6,
     STREET_7,
+    CARD,
     CARD_0,
     CARD_1,
+    TAX,
     TAX_0,
     TAX_1,
     STATION,
+    SUPPLY,
     SUPPLY_0,
     SUPPLY_1;
     
