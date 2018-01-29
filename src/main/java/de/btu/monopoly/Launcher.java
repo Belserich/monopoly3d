@@ -84,10 +84,8 @@ public class Launcher extends Application {
             stage.setScene(man.getScene());
             stage.show();
             stage.setOnCloseRequest(ev -> System.exit(0));
-    
-            Thread thread = new Thread(() -> {
-                game.start();
-            });
+            
+            Thread thread = new Thread(game::start);
             thread.start();
         }
     }
