@@ -15,7 +15,6 @@ import de.btu.monopoly.data.field.FieldManager;
 import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.field.StreetField;
 import de.btu.monopoly.data.player.Player;
-import de.btu.monopoly.net.chat.GUIChat;
 import de.btu.monopoly.util.Assets;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -151,7 +150,6 @@ public class HardKi {
         int buildings = FIELDMANAGER.getHouseAndHotelCount(player)[0] + FIELDMANAGER.getHouseAndHotelCount(player)[1];
 
         if (amount < POOR) {                     // Wenn die ki arm ist
-            GUIChat.getInstance().msg(player, "oha, ich bin ja fast pleite.");
             if (buildings > 0) {                        // verkauft sie erst Haeuser
                 sellBuilding(player);
                 return 3;
@@ -168,7 +166,6 @@ public class HardKi {
             return 1;                                   // beendet sie die AktionsPhase
         }
         else if (amount < RICH) {                // Wenn sie reich ist
-            GUIChat.getInstance().msg(player, "So jetzt wird erstmal reingehaun");
             if (getSoldProperties() < BEGINNING) {      // zu Spielbeginn
                 if (numberOfMortgages(player) > 0) {        // zahlt sie zuerst Hypotheken ab
                     payMortgage(player);
