@@ -5,6 +5,7 @@ import de.btu.monopoly.data.field.FieldManager;
 import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.util.Assets;
+import javafx.animation.Animation;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -20,6 +21,7 @@ import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Transform;
 import javafx.scene.transform.Translate;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -49,6 +51,8 @@ public class Fx3dGameBoard extends Group
     private final Group houseGroup;
     private final Group playerGroup;
     
+    private List<Animation> animQueue;
+    
     private final IntegerProperty runningAnimationCount;
     private final BooleanProperty readyForPopup;
     
@@ -63,6 +67,8 @@ public class Fx3dGameBoard extends Group
         houseGroup = new Group();
         playerGroup = new Group();
         
+        animQueue = new LinkedList<>();
+        
         getChildren().addAll(boardModel, fieldGroup, houseGroup, playerGroup);
         
         runningAnimationCount = new SimpleIntegerProperty(0);
@@ -70,6 +76,10 @@ public class Fx3dGameBoard extends Group
         readyForPopup.bind(runningAnimationCount.isEqualTo(0));
         
         init();
+    }
+    
+    private void queueAnimation() {
+    
     }
     
     private void init() {
@@ -83,7 +93,6 @@ public class Fx3dGameBoard extends Group
     }
     
     private void initBoard() {
-        
         boardModel.setMaterial(FxHelper.getMaterialFor(Assets.getImage("game_board")));
     }
     

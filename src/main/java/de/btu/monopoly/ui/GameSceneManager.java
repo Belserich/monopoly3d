@@ -5,7 +5,7 @@ import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
 import de.btu.monopoly.Global;
 import de.btu.monopoly.core.GameBoard;
-import de.btu.monopoly.core.GameStateListener;
+import de.btu.monopoly.core.GameStateAdapter;
 import de.btu.monopoly.core.service.AuctionService;
 import de.btu.monopoly.core.service.IOService;
 import de.btu.monopoly.data.field.Field;
@@ -32,28 +32,24 @@ import java.util.List;
 
 import static de.btu.monopoly.ui.CameraManager.WatchMode;
 
-public class GameSceneManager implements GameStateListener
-{
+public class GameSceneManager extends GameStateAdapter {
+    
     private static final double DEFAULT_SCENE_WIDTH = 1280;
     private static final double DEFAULT_SCENE_HEIGHT = 720;
     
     private static final Pane EMPTY_POPUP_PANE = new Pane();
     
     private final Scene scene;
-    private final BorderPane uiPane;
-    
-    private final Group uiGroup;
-    private final Group popupGroup;
-    
-    private final List<Pane> popupQueue;
-    private final BorderPane popupWrapper;
-    
     private final Fx3dGameBoard board3d;
     private final SubScene gameSub;
     
-    private CameraManager camMan;
+    private final BorderPane uiPane;
+    private final VBox popupWrapper;
+    private final List<Pane> popupQueue;
     
     private VBox playerBox;
+    
+    private CameraManager camMan;
     
     private Label auctionLabel = new Label("0 €");
     private Label hoechstgebotLabel = new Label("Höchstgebot:");
@@ -67,41 +63,24 @@ public class GameSceneManager implements GameStateListener
         gameSub.setCache(true);
         gameSub.setCacheHint(CacheHint.SPEED);
         
-        popupWrapper = new BorderPane();
-        popupQueue = new LinkedList<>();
-        popupGroup = new Group(popupWrapper);
-        
-        uiGroup = new Group(popupGroup);
         uiPane = new BorderPane();
+        popupWrapper = new VBox();
+        popupQueue = new LinkedList<>();
         
+        playerBox = new VBox();
+    
+        StackPane uiStack = new StackPane(gameSub, uiPane, popupWrapper);
+        uiStack.setAlignment(Pos.CENTER);
         scene = new Scene(
-                new StackPane(gameSub, uiGroup, uiPane),
+                uiStack,
                 DEFAULT_SCENE_WIDTH, DEFAULT_SCENE_HEIGHT
         );
         
         Global.ref().getGame().addGameStateListener(this);
-        
         initScene();
     }
     
-    @Override
-    public void onDiceThrow(int[] result) {
-//        Platform.runLater(() -> {
-//            Fx3dPlayer.InfoPane infoPane = (Fx3dPlayer.InfoPane) playerBox.getChildren().get(0);
-//            infoPane.addIcon(Assets.getIcon("dice_1"));
-//        });
-    }
-    
-    @Override
-    public void onTurnEnd(Player oldPlayer, Player newPlayer) {
-//        Platform.runLater(() -> {
-//            if (playerBox != null) {
-//                Fx3dPlayer.InfoPane infoPane = (Fx3dPlayer.InfoPane) playerBox.getChildren().remove(0);
-//                infoPane.removeIcon(Assets.getIcon("dice_1"));
-//                playerBox.getChildren().add(infoPane);
-//            }
-//        });
-    }
+
     
     private void initScene()
     {
@@ -119,15 +98,14 @@ public class GameSceneManager implements GameStateListener
     
         board3d.readyForPopupProperty().addListener((prop, oldB, newB) -> {
             if (newB && !popupQueue.isEmpty()) {
-                popupWrapper.setCenter(popupQueue.remove(0));
+                nextPopup();
             }
         });
-        
-        popupWrapper.layoutXProperty().bind(gameSub.widthProperty().divide(2).subtract(popupWrapper.widthProperty().divide(2)));
-        popupWrapper.layoutYProperty().bind(gameSub.heightProperty().divide(2).subtract(popupWrapper.heightProperty().divide(2)));
     }
     
     private void initUi() {
+        
+        popupWrapper.setAlignment(Pos.CENTER);
         
         TextField chatField = new TextField();
         
@@ -182,20 +160,26 @@ public class GameSceneManager implements GameStateListener
         camMan.watch(board3d, WatchMode.ORTHOGONAL);
     }
     
-    public Scene getScene() {
-        return scene;
+    private void nextPopup() {
+        popupWrapper.getChildren().clear();
+        Pane pop = popupQueue.remove(0);
+        popupWrapper.getChildren().add(pop);
     }
     
-    public void queuePopup(Pane pane) {
+    private void queuePopup(Pane pane) {
         Platform.runLater(() -> {
+            popupQueue.add(pane);
             if (board3d.readyForPopupProperty().get())
-                popupWrapper.setCenter(pane);
-            else popupQueue.add(pane);
+                nextPopup();
         });
     }
     
     private void queueNullPopup() {
         queuePopup(EMPTY_POPUP_PANE);
+    }
+    
+    public Scene getScene() {
+        return scene;
     }
     
     public int buyPropertyPopup() {
