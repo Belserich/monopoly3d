@@ -6,15 +6,17 @@
 package de.btu.monopoly.ki;
 
 import de.btu.monopoly.core.GameBoard;
+import de.btu.monopoly.core.mechanics.Trade;
 import de.btu.monopoly.core.service.AuctionService;
 import de.btu.monopoly.core.service.IOService;
-import de.btu.monopoly.data.card.Card;
+import de.btu.monopoly.data.card.Card.Action;
 import de.btu.monopoly.data.card.CardStack;
 import de.btu.monopoly.data.field.FieldManager;
 import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.field.StreetField;
 import de.btu.monopoly.data.player.Player;
-
+import de.btu.monopoly.net.chat.GUIChat;
+import de.btu.monopoly.util.Assets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -42,9 +44,9 @@ public class HardKi {
     // nach der lukrativen Zone teure Strassen, die aber trotzdem kaufenswert sind (Zone 3)
 
     // Reichtumsbereiche (bis zu...): (arm -> fluessig -> reich -> superreich)
-    private static final int RICH = 800;        // reich
-    private static final int LIQUID = 600;      // fluessig
-    private static final int POOR = 300;        // arm
+    private static final int RICH = (int) (Assets.START_MONEY * 0.87);      // reich
+    private static final int LIQUID = Assets.START_MONEY / 2;               // fluessig
+    private static final int POOR = Assets.START_MONEY / 5;                 // arm
 
     // Auktion:
     private static final int HIGH_BID = 120;    // Maiximalgebot (in %) fuer eine gute Strasse
@@ -52,6 +54,24 @@ public class HardKi {
 
     // Aktionsphase:
     private static int chosenFieldId;
+
+    /**
+     * (0)PROPERTY_CAP_FOR_STAYING_IN_PRISON, (1)BEGINNING, (2)BEGIN_LUCRATIVE_AREA, (3)END_LUCTRATIVE_AREA, (4)RICH, (5)LIQUID,
+     * (6)POOR, (7)HIGH_BID, (8)LOW_BID
+     *
+     * @return int[] parameters
+     */
+    public static int[] getParameters() {
+        int[] para = {
+            PROPERTY_CAP_FOR_STAYING_IN_PRISON,
+            BEGINNING,
+            BEGIN_LUCRATIVE_AREA, END_LUCTRATIVE_AREA,
+            RICH, LIQUID, POOR,
+            HIGH_BID, LOW_BID
+        };
+
+        return para;
+    }
 
     /**
      * @param player ki
@@ -65,7 +85,7 @@ public class HardKi {
 
         // Ist die Obergrenze noch nicht erreicht, versucht die KI sofort rauszukommen
         if (soldProps < PROPERTY_CAP_FOR_STAYING_IN_PRISON) {
-            if (stack.countCardsOfAction(Card.Action.JAIL) > 0) { // mit Karte
+            if (stack.countCardsOfAction(Action.JAIL) > 0) { // mit Karte
                 return 3;
             }
             else if (player.getMoney() > 100) {                  // mit Geld
@@ -76,7 +96,7 @@ public class HardKi {
             }
         }
         else {    // sonst bleibt sie so lang wie moeglich drin
-            if (days >= 3 && stack.countCardsOfAction(Card.Action.JAIL) > 0) {
+            if (days >= 3 && stack.countCardsOfAction(Action.JAIL) > 0) {
                 return 3;
             }
             else {
@@ -107,7 +127,7 @@ public class HardKi {
         }//ist die KI arm kauft sie nicht
         else {
             //Es sei denn sie hat bereits Straßen des selben Zuges
-            if (areThereAlreadyNeighboursOwned(prop, player)) {
+            if (someNeighboursOwned(prop, player)) {
                 //Dann nur wenn sie genug Geld hat
                 buy = (player.getMoney() > prop.getPrice());
             }
@@ -131,6 +151,7 @@ public class HardKi {
         int buildings = FIELDMANAGER.getHouseAndHotelCount(player)[0] + FIELDMANAGER.getHouseAndHotelCount(player)[1];
 
         if (amount < POOR) {                     // Wenn die ki arm ist
+            GUIChat.getInstance().msg(player, "oha, ich bin ja fast pleite.");
             if (buildings > 0) {                        // verkauft sie erst Haeuser
                 sellBuilding(player);
                 return 3;
@@ -147,6 +168,7 @@ public class HardKi {
             return 1;                                   // beendet sie die AktionsPhase
         }
         else if (amount < RICH) {                // Wenn sie reich ist
+            GUIChat.getInstance().msg(player, "So jetzt wird erstmal reingehaun");
             if (getSoldProperties() < BEGINNING) {      // zu Spielbeginn
                 if (numberOfMortgages(player) > 0) {        // zahlt sie zuerst Hypotheken ab
                     payMortgage(player);
@@ -190,14 +212,15 @@ public class HardKi {
         // Gebotswichtigkeit wie Kaufentscheidung
         switch (buyPropOption(player, prop)) {
             case 1: // Diese Strasse will die KI haben
-                EasyKi.processBetSequence(player, HIGH_BID);
+                boolean cheap = FIELDMANAGER.getFieldId(prop) < BEGIN_LUCRATIVE_AREA;
+                EasyKi.processBetSequence(player, (cheap) ? LOW_BID : HIGH_BID);
                 break;
             case 2: // Diese nur wenn sie mindestens reich ist
                 if (player.getMoney() > LIQUID) {
                     EasyKi.processBetSequence(player, LOW_BID);
                 }
                 else { // Ansonsten bietet sie nicht und steigt sofort aus
-                    EasyKi.processBetSequence(player, 0);
+                    AuctionService.playerExit(player.getId());
                 }
                 break;
             default:
@@ -205,11 +228,21 @@ public class HardKi {
         }
     }
 
+    /**
+     * Der KI wird ein Trade übergeben, sie liest es aus und entscheidet dann, ob sie annimmt, oder ablehnt.
+     *
+     * @param trade Handel
+     * @return Gibt an, ob die KI mit dem Handel einverstanden ist
+     */
+    public static boolean calculateTradingChoice(Trade trade, Player ki) {
+        return TradeAi.calculateChoice(trade, ki, FIELDMANAGER);
+    }
+
     //________________________HILFSMETHODEN________________________________________________________
     /**
      * @return Anzahl der Properties die einen Besitzer haben
      */
-    private static int getSoldProperties() {
+    static int getSoldProperties() {
         return (int) Arrays.stream(IOService.getGame().getBoard().getFields())
                 .filter(p -> p instanceof PropertyField).map(p -> (PropertyField) p)
                 .filter(p -> p.getOwner() != null)
@@ -229,9 +262,21 @@ public class HardKi {
      * @param player Ki
      * @return Gibt an, ob bereits Strassen des selben Strassenzuges, wie dem der uebergebenen Strasse im Besitz sind
      */
-    private static boolean areThereAlreadyNeighboursOwned(PropertyField prop, Player player) {
+    static boolean someNeighboursOwned(PropertyField prop, Player player) {
         List<PropertyField> neighborList = FIELDMANAGER.getNeighborList(prop);
         return neighborList.stream().anyMatch((neigh) -> (neigh.getOwner() == player));
+    }
+
+    /**
+     * analog zu someNeighboursOwned()
+     *
+     * @param ki
+     * @param prop
+     * @return ob alle Nachbarn im Besitz sind
+     */
+    static boolean allNeighboursOwned(PropertyField prop, Player ki) {
+        List<PropertyField> neighborList = FIELDMANAGER.getNeighborList(prop);
+        return neighborList.stream().allMatch((neigh) -> (neigh.getOwner() == ki));
     }
 
     /**

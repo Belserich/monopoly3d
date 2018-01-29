@@ -74,6 +74,17 @@ public class GUIChat extends Chat {
         //</editor-fold>
     }
 
+    public void msgLocal(String botName, String message) {
+        // <editor-fold defaultstate="collapsed" desc="sends local Message form Bot to Chat">
+        ChatMessage mess = new ChatMessage();
+        mess.setAutor(botName);
+        mess.setMessage(message);
+        mess.setfColor("#000000");
+        mess.setIsEvent(false);
+        addMessage(mess);
+        //</editor-fold>
+    }
+
     @Override
     public void event(String eventMessage) {
         // <editor-fold defaultstate="collapsed" desc="creates and sends eventMessage to Server">
