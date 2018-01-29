@@ -106,6 +106,7 @@ public class GameSceneManager extends GameStateAdapter {
     private void initUi() {
         
         popupWrapper.setAlignment(Pos.CENTER);
+        popupWrapper.setPickOnBounds(false);
         
         TextField chatField = new TextField();
         
