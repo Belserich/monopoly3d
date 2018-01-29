@@ -1,5 +1,6 @@
 package de.btu.monopoly.ui.fx3d;
 
+import de.btu.monopoly.core.FieldTypes;
 import de.btu.monopoly.core.GameBoard;
 import de.btu.monopoly.data.field.FieldManager;
 import de.btu.monopoly.data.field.PropertyField;
@@ -29,7 +30,7 @@ import static de.btu.monopoly.ui.fx3d.Fx3dField.*;
 
 public class Fx3dGameBoard extends Group
 {
-    public static final int FIELD_COUNT = Fx3dFieldType.GAMEBOARD_FIELD_STRUCTURE.length;
+    public static final int FIELD_COUNT = FieldTypes.GAMEBOARD_FIELD_STRUCTURE.length;
     public static final double BOARD_MODEL_LENGTH = 9 * FIELD_WIDTH;
     
     private static final double BOARD_LENGTH = 2 * FIELD_DEPTH + BOARD_MODEL_LENGTH;
@@ -136,11 +137,11 @@ public class Fx3dGameBoard extends Group
     private void initFields() {
         
         ObservableList<Node> children = fieldGroup.getChildren();
-        Fx3dFieldType[] struct = Fx3dFieldType.GAMEBOARD_FIELD_STRUCTURE;
+        FieldTypes[] struct = FieldTypes.GAMEBOARD_FIELD_STRUCTURE;
         FieldManager fieldMan = board.getFieldManager();
         
-        Fx3dFieldType lastType;
-        Fx3dFieldType currType = struct[0];
+        FieldTypes lastType;
+        FieldTypes currType = struct[0];
         
         Affine affine = new Affine(new Translate(FIELDS_OFF_X, FIELDS_OFF_Y, FIELDS_OFF_Z));
         for (int id = 0; id < struct.length; id++) {
@@ -152,7 +153,7 @@ public class Fx3dGameBoard extends Group
             if (currType.isCorner()) {
     
                 affine.appendTranslation(CORNER_DIST, 0);
-                if (currType != Fx3dFieldType.CORNER_0) affine.appendRotation(90, 0, 0, 0, Rotate.Y_AXIS);
+                if (currType != FieldTypes.CORNER_0) affine.appendRotation(90, 0, 0, 0, Rotate.Y_AXIS);
                 
                 fieldShape = new Fx3dCorner(fieldMan.getField(id), Assets.getImage(currType));
             }

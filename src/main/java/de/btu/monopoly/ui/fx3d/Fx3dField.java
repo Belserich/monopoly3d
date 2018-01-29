@@ -1,5 +1,6 @@
 package de.btu.monopoly.ui.fx3d;
 
+import de.btu.monopoly.core.FieldTypes;
 import de.btu.monopoly.data.field.Field;
 import javafx.animation.TranslateTransition;
 import javafx.scene.image.Image;
@@ -16,16 +17,16 @@ public class Fx3dField extends Cuboid
     private static final double RAISE_HEIGHT = 30;
     
     protected final Field field;
-    protected final Fx3dFieldType type;
+    protected final FieldTypes type;
     protected Image texture;
     
     private final TranslateTransition hoverTransition;
     
-    public Fx3dField(Field field, Fx3dFieldType type, Image texture) {
+    public Fx3dField(Field field, FieldTypes type, Image texture) {
         this(field, type, texture, FIELD_WIDTH, FIELD_HEIGHT, FIELD_DEPTH);
     }
     
-    Fx3dField(Field field, Fx3dFieldType type, Image texture, double width, double height, double depth) {
+    Fx3dField(Field field, FieldTypes type, Image texture, double width, double height, double depth) {
         super(width, height, depth);
         this.field = field;
         this.type = type;

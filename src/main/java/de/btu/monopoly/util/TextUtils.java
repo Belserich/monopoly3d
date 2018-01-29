@@ -3,7 +3,6 @@ package de.btu.monopoly.util;
 import de.btu.monopoly.data.field.Field;
 import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.field.TaxField;
-import de.btu.monopoly.ui.fx3d.Fx3dFieldType;
 import javafx.geometry.VPos;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.text.Font;

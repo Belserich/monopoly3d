@@ -584,7 +584,7 @@ public class CoreUnitTest {
         int patrickMoney = patrick.getMoney();
 
         //Freikaufen + Tests
-        game.processJailPayOption(patrick);
+        game.onJailPayOption(patrick);
         Assert.assertTrue("Gefaengnisfreikauf hat nicht funktioniert", patrick.getMoney() == (patrickMoney - 50));
 
     }
@@ -603,7 +603,7 @@ public class CoreUnitTest {
 
         //Freiwuerfeln + Tests
         do {
-            game.processJailRollOption(patrick);
+            game.onJailRollOption(patrick);
             patrick.setDaysInJail(0);
         } while (patrick.isInJail());
         Assert.assertTrue("Spieler ist immer noch im Gefaengnis", patrick.isInJail() == false);
@@ -626,7 +626,7 @@ public class CoreUnitTest {
         patrick.getCardStack().addCard(jailCard);
 
         //Freikarte + testen
-        game.processJailCardOption(patrick);
+        game.onJailCardOption(patrick);
         Assert.assertTrue("Spieler immer noch im Gefaengnis", patrick.isInJail() == false);
     }
 

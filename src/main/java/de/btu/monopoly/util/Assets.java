@@ -1,11 +1,11 @@
 package de.btu.monopoly.util;
 
+import de.btu.monopoly.core.FieldTypes;
 import de.btu.monopoly.data.card.CardStack;
 import de.btu.monopoly.data.field.Field;
 import de.btu.monopoly.data.parser.CardDataParser;
 import de.btu.monopoly.data.parser.FieldDataParser;
 import de.btu.monopoly.ui.fx3d.Fx3dCorner;
-import de.btu.monopoly.ui.fx3d.Fx3dFieldType;
 import de.btu.monopoly.ui.fx3d.Fx3dGameBoard;
 import de.btu.monopoly.ui.fx3d.FxHelper;
 import javafx.scene.image.Image;
@@ -196,7 +196,7 @@ public class Assets
         return registeredImages.get(name);
     }
     
-    public static WritableImage getImage(Fx3dFieldType type) {
+    public static WritableImage getImage(FieldTypes type) {
         return registeredImages.get(type.toString().toLowerCase());
     }
     

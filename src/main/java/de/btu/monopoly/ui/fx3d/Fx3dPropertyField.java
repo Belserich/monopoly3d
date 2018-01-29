@@ -1,5 +1,6 @@
 package de.btu.monopoly.ui.fx3d;
 
+import de.btu.monopoly.core.FieldTypes;
 import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.util.Assets;
 import javafx.animation.KeyFrame;
@@ -19,7 +20,7 @@ public class Fx3dPropertyField extends Fx3dField {
     
     private final DoubleProperty zRotateAngle;
     
-    public Fx3dPropertyField(PropertyField field, Fx3dFieldType type) {
+    public Fx3dPropertyField(PropertyField field, FieldTypes type) {
         super(field, type, Assets.getImage(type));
         
         Rotate zRotate = new Rotate(0, Rotate.Z_AXIS);
