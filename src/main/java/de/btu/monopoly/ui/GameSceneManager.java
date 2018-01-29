@@ -62,19 +62,11 @@ public class GameSceneManager {
     private JFXTextField bidTextField = new JFXTextField();
 
     //Handelsspezifisch
-    private Player tradeStarter;
-    private Player tradePartner;
     private boolean tradeOfferIsCreated = false;
     private boolean exitTrade = false;
     private boolean tradeAnswerIsGiven = false;
     private boolean tradeAnswer = false;
     private char currency = '€';
-    private int[] yourPropIds;
-    private int[] partnersPropIds;
-    private int[] yourCardIds;
-    private int[] partnersCardIds;
-    private int yourMoney = -1;
-    private int partnersMoney = -1;
 
     public GameSceneManager(GameBoard board) {
 
@@ -600,49 +592,57 @@ public class GameSceneManager {
 
     }
 
-    public void startTradePopup(Player player) {
-
-        tradeStarter = player;
-
-        //Initialisierung der benoetigten Objekte
-        //Gridpane(s)
-        GridPane tradeStartGridPane = new GridPane();
-        //Label(s)
-        Label tradeStartLabel = new Label(tradeStarter.getName() + " erstellt gerade einen Handel!");
-        tradeStartLabel.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
-        //VBox(en)
-        VBox tradeStartVBox = new VBox();
-
-        //Einstellung der Objekte
-        String cssLayout = "-fx-background-color: #dcedc8;\n"
-                + "-fx-border-color: black;\n"
-                + "-fx-border-insets: 5;\n"
-                + "-fx-border-width: 1;\n"
-                + "-fx-border-style: double;\n";
-
-        tradeStartGridPane.setAlignment(Pos.CENTER);
-        tradeStartGridPane.add(tradeStartVBox, 0, 0);
-
-        tradeStartVBox.setStyle(cssLayout);
-        tradeStartVBox.setSpacing(10);
-        tradeStartVBox.setPrefSize(800, 200);
-        tradeStartVBox.setAlignment(Pos.CENTER);
-        tradeStartVBox.getChildren().addAll(tradeStartLabel);
-
-        if (Lobby.getPlayerClient().getPlayerOnClient().equals(tradeStarter)) {
-            initTradePopup();
-        }
-        else {
-            Global.ref().getGameSceneManager().queuePopupPane(tradeStartGridPane);
-        }
-    }
+//    public void startTradePopup(Player player) {
+//
+//        clearPopups();
+//
+//        tradeGui.setTradeStarter(player);
+//        Player[] players = Lobby.getPlayerClient().getGame().getPlayers();
+//
+//        //Initialisierung der benoetigten Objekte
+//        //Gridpane(s)
+//        GridPane tradeStartGridPane = new GridPane();
+//        //Label(s)
+//        Label tradeStartLabel = new Label(tradeGui.getTradeStarter() + " erstellt gerade einen Handel!");
+//        tradeStartLabel.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
+//        //VBox(en)
+//        VBox tradeStartVBox = new VBox();
+//
+//        //Einstellung der Objekte
+//        String cssLayout = "-fx-background-color: #dcedc8;\n"
+//                + "-fx-border-color: black;\n"
+//                + "-fx-border-insets: 5;\n"
+//                + "-fx-border-width: 1;\n"
+//                + "-fx-border-style: double;\n";
+//
+//        tradeStartGridPane.setAlignment(Pos.CENTER);
+//        tradeStartGridPane.add(tradeStartVBox, 0, 0);
+//
+//        tradeStartVBox.setStyle(cssLayout);
+//        tradeStartVBox.setSpacing(10);
+//        tradeStartVBox.setPrefSize(800, 200);
+//        tradeStartVBox.setAlignment(Pos.CENTER);
+//        tradeStartVBox.getChildren().addAll(tradeStartLabel);
+//
+////        for (Player gamer : players) {
+//        if (Lobby.getPlayerClient().getPlayerOnClient().equals(tradeGui.getTradeStarter())) {
+//            initTradePopup();
+////            queuePopupPane(tradeStartGridPane);
+//        }
+//        else {
+//            queuePopupPane(tradeStartGridPane);
+//        }
+////        }
+//    }
 
     /*
          Init Popup fuer den Handel
      */
-    private void initTradePopup() {
+    public void initTradePopup(Player player, GuiTrade tradeGui) {
 
-        Global.ref().getGameSceneManager().clearPopups();
+        clearPopups();
+
+        tradeGui.setTradePartner(player);
 
         //Liste(n)
         ObservableList<String> choosePlayerOptions = FXCollections.observableArrayList(tradePlayersNames());
@@ -674,9 +674,8 @@ public class GameSceneManager {
 
                     for (int i = 0; i < Lobby.getPlayerClient().getGame().getBoard().getActivePlayers().size(); i++) {
                         if (tradePartnersName.equals(Lobby.getPlayerClient().getGame().getPlayers()[i].getName())) {
-                            tradePartner = Lobby.getPlayerClient().getGame().getPlayers()[i];
+                            tradeGui.setTradePartner(Lobby.getPlayerClient().getGame().getPlayers()[i]);
                             //gibt an, ob sich fuer ein Tauschpartner entschieden wurde
-                            // partnerIsChoosen = true;
                             break;
                         }
                     }
@@ -684,7 +683,7 @@ public class GameSceneManager {
                     Task task = new Task() {
                         @Override
                         protected Object call() throws Exception {
-                            showTradeInfoPopup();
+                            showTradeInfoPopup(tradeGui);
                             return null;
                         }
                     };
@@ -747,8 +746,8 @@ public class GameSceneManager {
         return tradePlayers;
     }
 
-    public Player getTradePartner() {
-        return tradePartner;
+    public Player getTradePartner(GuiTrade tradeGui) {
+        return tradeGui.getTradePartner();
     }
 
     public boolean getTradeOfferIsCreated() {
@@ -759,7 +758,7 @@ public class GameSceneManager {
         tradeOfferIsCreated = false;
     }
 
-    private void showTradeInfoPopup() {
+    private void showTradeInfoPopup(GuiTrade tradeGui) {
 
         Global.ref().getGameSceneManager().clearPopups();
 
@@ -793,7 +792,7 @@ public class GameSceneManager {
         //Weiterleitung an das naechste Popup
         Timeline timer = new Timeline(new KeyFrame(
                 Duration.millis(2500),
-                timeOver -> selectTradeOfferPopup()));
+                timeOver -> selectTradeOfferPopup(tradeGui)));
 
         timer.play();
 
@@ -802,14 +801,14 @@ public class GameSceneManager {
     /**
      * Erzeugt das Gui-Fenster in dem man ein TradeOffer erstellt
      */
-    private void selectTradeOfferPopup() {
+    private void selectTradeOfferPopup(GuiTrade tradeGui) {
 
         Global.ref().getGameSceneManager().clearPopups();
 
         //Liste(n)
         List<CheckMenuItem> yourProps = tradePlayersProps(Lobby.getPlayerClient().getPlayerOnClient());
         List<CheckMenuItem> yourPropsForMenu = new LinkedList<>();
-        List<CheckMenuItem> partnersProps = FXCollections.observableArrayList(tradePlayersProps(tradePartner));
+        List<CheckMenuItem> partnersProps = FXCollections.observableArrayList(tradePlayersProps(tradeGui.getTradePartner()));
         List<CheckMenuItem> partnersPropsForMenu = new LinkedList<>();
         //Listen mit CheckMenuItems fuellen
         while (!yourProps.isEmpty()) {
@@ -882,7 +881,7 @@ public class GameSceneManager {
         Label partnersOfferMoneyLabel = new Label("Verlange Geld:");
         partnersOfferMoneyLabel.setFont(Font.font("Tahoma", FontWeight.NORMAL, 14));
 
-        Label partnersCardLabel = new Label("Gefängnisfreikarten: " + tradePartner.getCardStack().countCardsOfAction(Card.Action.JAIL));
+        Label partnersCardLabel = new Label("Gefängnisfreikarten: " + tradeGui.getTradePartner().getCardStack().countCardsOfAction(Card.Action.JAIL));
         partnersCardLabel.setFont(Font.font("Tahoma", FontWeight.NORMAL, 14));
 
         Label partnersOfferCardLabel = new Label("Verlange Karten:");
@@ -953,25 +952,22 @@ public class GameSceneManager {
         offerTradeButton.setOnAction(event -> {
 
             try {
-                int yourCardAmount = -1;
-                int partnersCardAmount = -1;
-
                 try {
-                    yourMoney = Integer.parseInt(yourMoneyTextField.getText());
-                    yourCardAmount = Integer.parseInt(yourCardsTextField.getText());
-                    partnersMoney = Integer.parseInt(partnersMoneyTextField.getText());
-                    partnersCardAmount = Integer.parseInt(partnersCardsTextField.getText());
+                    tradeGui.setYourMoney(Integer.parseInt(yourMoneyTextField.getText()));
+                    tradeGui.setYourCardAmount(Integer.parseInt(yourCardsTextField.getText()));
+                    tradeGui.setPartnersMoney(Integer.parseInt(partnersMoneyTextField.getText()));
+                    tradeGui.setPartnersCardAmount(Integer.parseInt(partnersCardsTextField.getText()));
                 } catch (NumberFormatException n) {
-                    showTradeWarningPopup();
+                    showTradeWarningPopup(tradeGui);
                 }
 
-                if (checkIfInputIsOk(yourMoney, yourCardAmount, Lobby.getPlayerClient().getPlayerOnClient())
-                        && checkIfInputIsOk(partnersMoney, partnersCardAmount, tradePartner)) {
+                if (checkIfInputIsOk(tradeGui.getYourMoney(), tradeGui.getYourCardAmount(), tradeGui.getTradeStarter())
+                        && checkIfInputIsOk(tradeGui.getPartnersMoney(), tradeGui.getPartnersCardAmount(), tradeGui.getTradePartner())) {
 
-                    yourPropIds = collectPropertyIds(yourProps);
-                    partnersPropIds = collectPropertyIds(partnersProps);
-                    yourCardIds = collectCardIds(yourCardAmount);
-                    partnersCardIds = collectCardIds(partnersCardAmount);
+                    tradeGui.setYourPropIds(collectPropertyIds(yourProps));
+                    tradeGui.setPartnersPropIds(collectPropertyIds(partnersProps));
+                    tradeGui.setYourCardIds(collectCardIds(tradeGui.getYourCardAmount()));
+                    tradeGui.setPartnersCardIds(collectCardIds(tradeGui.getPartnersCardAmount()));
 
                     tradeOfferIsCreated = true;
 
@@ -980,7 +976,7 @@ public class GameSceneManager {
                 }
 
                 else {
-                    showTradeWarningPopup();
+                    showTradeWarningPopup(tradeGui);
                 }
             } catch (InputMismatchException i) {
                 //Fehler
@@ -1079,7 +1075,7 @@ public class GameSceneManager {
     /**
      * Zeigt fuer 3,5 Sekunden ein Warining Popup
      */
-    private void showTradeWarningPopup() {
+    private void showTradeWarningPopup(GuiTrade tradeGui) {
         Global.ref().getGameSceneManager().clearPopups();
 
         //Initialisierung der benoetigten Objekte
@@ -1116,7 +1112,7 @@ public class GameSceneManager {
         //Weiterleitung an das naechste Popup
         Timeline timer = new Timeline(new KeyFrame(
                 Duration.millis(3500),
-                timeOver -> selectTradeOfferPopup()));
+                timeOver -> selectTradeOfferPopup(tradeGui)));
 
         timer.play();
     }
@@ -1127,13 +1123,13 @@ public class GameSceneManager {
      * @param player
      * @return
      */
-    public int[] getPropertyIdsForTrade(Player player) {
+    public int[] getPropertyIdsForTrade(Player player, GuiTrade tradeGui) {
 
         if (player.equals(Lobby.getPlayerClient().getPlayerOnClient())) {
-            return yourPropIds;
+            return tradeGui.getYourPropIds();
         }
         else {
-            return partnersPropIds;
+            return tradeGui.getPartnersPropIds();
         }
     }
 
@@ -1143,27 +1139,27 @@ public class GameSceneManager {
      * @param player
      * @return
      */
-    public int[] getCardIdsForTrade(Player player) {
+    public int[] getCardIdsForTrade(Player player, GuiTrade tradeGui) {
 
         if (player.equals(Lobby.getPlayerClient().getPlayerOnClient())) {
-            return yourCardIds;
+            return tradeGui.getYourCardIds();
         }
         else {
-            return partnersCardIds;
+            return tradeGui.getPartnersCardIds();
         }
     }
 
-    public int getMoneyForTrade(Player player) {
+    public int getMoneyForTrade(Player player, GuiTrade tradeGui) {
 
         if (player.equals(Lobby.getPlayerClient().getPlayerOnClient())) {
-            return yourMoney;
+            return tradeGui.getYourMoney();
         }
         else {
-            return partnersMoney;
+            return tradeGui.getPartnersMoney();
         }
     }
 
-    public void showOfferPopup() {
+    public void showOfferPopup(GuiTrade tradeGui) {
 
         Global.ref().getGameSceneManager().clearPopups();
 
@@ -1178,23 +1174,23 @@ public class GameSceneManager {
         HBox yourOfferHBox = new HBox();
         HBox partnersOfferHBox = new HBox();
         //Label(s) mit Einstellungen
-        Label offerLabel = new Label("Angebot von " + tradeStarter);
+        Label offerLabel = new Label("Angebot von " + tradeGui.getTradeStarter().getName());
         offerLabel.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
         Label yourSideLabel = new Label("Du bekommst:");
         yourSideLabel.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
-        Label yourPropsLabel = new Label(generatePropertyString(yourPropIds));
+        Label yourPropsLabel = new Label(generatePropertyString(tradeGui.getYourPropIds()));
         yourPropsLabel.setFont(Font.font("Tahoma", FontWeight.NORMAL, 14));
-        Label yourCardsLabel = new Label(yourCardIds.length + " Gefängnisfreikarten");
+        Label yourCardsLabel = new Label(tradeGui.getYourCardIds().length + " Gefängnisfreikarten");
         yourCardsLabel.setFont(Font.font("Tahoma", FontWeight.NORMAL, 14));
-        Label yourMoneyLabel = new Label(yourMoney + " " + currency);
+        Label yourMoneyLabel = new Label(tradeGui.getYourMoney() + " " + currency);
         yourMoneyLabel.setFont(Font.font("Tahoma", FontWeight.NORMAL, 14));
         Label partnersSideLabel = new Label("Du gibst:");
         partnersSideLabel.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
-        Label partnersPropsLabel = new Label(generatePropertyString(partnersPropIds));
+        Label partnersPropsLabel = new Label(generatePropertyString(tradeGui.getPartnersPropIds()));
         partnersPropsLabel.setFont(Font.font("Tahoma", FontWeight.NORMAL, 14));
-        Label partnersCardsLabel = new Label(partnersCardIds.length + " Gefängnisfreikarten");
+        Label partnersCardsLabel = new Label(tradeGui.getPartnersCardIds().length + " Gefängnisfreikarten");
         partnersCardsLabel.setFont(Font.font("Tahoma", FontWeight.NORMAL, 14));
-        Label partnersMoneyLabel = new Label(partnersMoney + " " + currency);
+        Label partnersMoneyLabel = new Label(tradeGui.getPartnersMoney() + " " + currency);
         partnersMoneyLabel.setFont(Font.font("Tahoma", FontWeight.NORMAL, 14));
 
         //Button(s) mit Einstellungen
@@ -1255,6 +1251,9 @@ public class GameSceneManager {
         Field[] fields = Lobby.getPlayerClient().getGame().getBoard().getFields();
         String allPropertyString = "Grundstücke:\n";
 
+        /*
+        Versuche die LinkedList auseinander zunehmen ;D
+         */
         for (Field prop : fields) {
             for (int i = 0; i < propertyIds.length; i++) {
                 if (prop.equals(propertyIds[i])) {
@@ -1285,7 +1284,7 @@ public class GameSceneManager {
 
     private void waitForResponsePopup() {
 
-        Global.ref().getGameSceneManager().clearPopups();
+        clearPopups();
 
         //Initialisierung der benoetigten Objekte
         //Gridpane(s)
@@ -1313,13 +1312,13 @@ public class GameSceneManager {
         tradeResponseVBox.setAlignment(Pos.CENTER);
         tradeResponseVBox.getChildren().addAll(tradeResponseLabel);
 
-        Global.ref().getGameSceneManager().queuePopupPane(tradeResponseGridPane);
+        queuePopupPane(tradeResponseGridPane);
 
     }
 
     private void showAnswerPopup(boolean choice) {
 
-        Global.ref().getGameSceneManager().clearPopups();
+        clearPopups();
 
         //Initialisierung der benoetigten Objekte
         //Gridpane(s)
@@ -1357,7 +1356,7 @@ public class GameSceneManager {
 
         Timeline timer = new Timeline(new KeyFrame(
                 Duration.millis(3000),
-                timeOver -> Global.ref().getGameSceneManager().clearPopups()));
+                timeOver -> clearPopups()));
 
         timer.play();
 
