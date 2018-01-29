@@ -7,7 +7,6 @@ package de.btu.monopoly.net.chat;
 
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
-import com.jfoenix.controls.JFXTextArea;
 import de.btu.monopoly.Global;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.net.client.GameClient;
@@ -20,7 +19,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextFlow;
 
 /**
  *
@@ -101,39 +99,23 @@ public class GUIChat extends Chat {
      */
     private void addMessage(ChatMessage mess) {
         messageList.add(mess);
-//        prepareAndNotifyChatList();
-        prepareAndNotifyChat();
+        notifyChat(mess);
     }
 
-    private void prepareAndNotifyChatList() {
-        TextFlow area = new TextFlow();
-        long chatBoarder = (messageList.size() > 50) ? (messageList.size() - 50) : 0;
-
-        messageList.stream().skip(chatBoarder).forEach((mess) -> {
-            Text autor = new Text(mess.getAutor() + ": ");
-            Text message = new Text(mess.getMessage());
-            autor.setFill(Color.web(mess.getfColor()));
-            if (mess.isEvent()) {
-                message.setFont(Font.font("Helvetica", FontWeight.BOLD, 12));
-            }
-            area.getChildren().addAll(autor, message);
-        });
-        area.setStyle("-fx-background-color: white");
-//        notifier.notify(area);
-    }
-
-    private void prepareAndNotifyChat() {
-        JFXTextArea area = new JFXTextArea();
-        String chat = "";
-        long chatBoarder = (messageList.size() > 50) ? (messageList.size() - 50) : 0;
-
-        for (int i = (int) chatBoarder; i < messageList.size(); i++) {
-            ChatMessage mess = messageList.get(i);
-            chat += mess.getAutor() + ": " + mess.getMessage() + "\n";
+    private void notifyChat(ChatMessage mess) {
+        Text[] message = new Text[2];
+        message[1] = new Text(mess.getMessage() + "\n");
+        if (mess.isEvent()) {
+            message[0] = new Text("");
+            message[1].setFont(Font.font("Roboto", FontWeight.BOLD, 12));
         }
-        area.setText(chat);
-        notifier.notify(area);
-
+        else {
+            message[0] = new Text(mess.getAutor() + ": ");
+            message[0].setFont(Font.font("Roboto", FontWeight.BOLD, 16));
+            message[0].setFill(Color.web(mess.getfColor()));
+            message[1].setFont(Font.font("Roboto", FontWeight.NORMAL, 14));
+        }
+        notifier.notify(message);
     }
 
     /**
@@ -187,9 +169,9 @@ public class GUIChat extends Chat {
     private class Notifier extends Observable {
         // <editor-fold defaultstate="collapsed" desc="Notifier --ChatMessage--> Observers">
 
-        private void notify(JFXTextArea chat) {
+        private void notify(Text[] message) {
             setChanged();
-            notifyObservers(chat);
+            notifyObservers(message);
         }
         //</editor-fold>
     }
