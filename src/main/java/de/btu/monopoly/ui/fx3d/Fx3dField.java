@@ -1,7 +1,6 @@
 package de.btu.monopoly.ui.fx3d;
 
 import de.btu.monopoly.data.field.Field;
-import de.btu.monopoly.util.TextUtils;
 import javafx.animation.TranslateTransition;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -41,11 +40,11 @@ public class Fx3dField extends Cuboid
     }
     
     protected void init() {
-        MultiCanvas multi = new MultiCanvas(2, texture.getWidth(), texture.getHeight());
-        multi.setImage(texture, 0);
-        TextUtils.drawText(multi.getGraphicsContext(1), field, type);
-        
-        this.texture = multi.blend();
+//        MultiCanvas multi = new MultiCanvas(2, texture.getWidth(), texture.getHeight());
+//        multi.setImage(texture, 0);
+//        TextUtils.drawText(multi.getGraphicsContext(1), field, type);
+//
+//        this.texture = multi.blend();
         
         setMaterial(texture != null ? FxHelper.getMaterialFor(texture) : FxHelper.getMaterialFor(Color.WHITE));
     }
