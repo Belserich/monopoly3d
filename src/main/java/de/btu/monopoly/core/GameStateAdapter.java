@@ -1,5 +1,6 @@
 package de.btu.monopoly.core;
 
+import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.player.Player;
 
 /**
@@ -110,5 +111,25 @@ public class GameStateAdapter implements GameStateListener {
     @Override
     public void onPlayerActionOption(Player player, int choice) {
         // nothing
+    }
+    
+    @Override
+    public void onAuctionStart(PropertyField prop) {
+    
+    }
+    
+    @Override
+    public void onAuctionEnd(Player winner, PropertyField prop) {
+    
+    }
+    
+    @Override
+    public void onTradeStart(Player player) {
+    
+    }
+    
+    @Override
+    public void onTradeEnd(Player player) {
+    
     }
 }

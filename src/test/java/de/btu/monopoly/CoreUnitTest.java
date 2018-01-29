@@ -2,7 +2,6 @@ package de.btu.monopoly;
 
 //Imports
 
-import de.btu.monopoly.core.Game;
 import de.btu.monopoly.core.GameBoard;
 import de.btu.monopoly.core.service.FieldService;
 import de.btu.monopoly.core.service.PlayerService;
@@ -25,7 +24,7 @@ import java.util.Random;
  */
 public class CoreUnitTest {
 
-    private static Game game;
+    private static GameAccessWrapper game;
     private static GameBoard board;
     private static Player[] players;
     private static FieldManager fm;
@@ -43,7 +42,7 @@ public class CoreUnitTest {
         }
         client = new GameClient(59687, 5000);
         client.setPlayerOnClient(players[0]);
-        game = new Game(client, players, 42);
+        game = new GameAccessWrapper(client, players, 42);
     }
 
     @Test

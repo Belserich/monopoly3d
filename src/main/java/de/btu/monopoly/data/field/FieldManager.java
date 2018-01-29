@@ -1,6 +1,6 @@
 package de.btu.monopoly.data.field;
 
-import de.btu.monopoly.core.GameBoard;
+import de.btu.monopoly.core.FieldTypes;
 import de.btu.monopoly.core.service.FieldService;
 import de.btu.monopoly.core.service.PlayerService;
 import de.btu.monopoly.data.player.Player;
@@ -137,12 +137,20 @@ public class FieldManager {
      * @param nextFieldType Feldtyp
      * @return das neue Feld auf dem sich der Spieler befindet
      */
-    public Field movePlayer(Player player, GameBoard.FieldType nextFieldType) {
+    public Field movePlayer(Player player, FieldTypes nextFieldType) {
+        
         int pos = player.getPosition();
         int movedFields = 0;
-        while (GameBoard.FIELD_STRUCTURE[(pos + movedFields) % FieldService.FIELD_COUNT] != nextFieldType) {
+        FieldTypes type;
+        
+        do {
+            System.out.println(pos + " "  + movedFields + " " + FieldService.FIELD_COUNT);
+            int i = (pos + movedFields) % FieldService.FIELD_COUNT;
+            type = FieldTypes.GAMEBOARD_FIELD_STRUCT[i];
             movedFields++;
         }
+        while (!type.is(nextFieldType));
+        
         return movePlayer(player, movedFields);
     }
 

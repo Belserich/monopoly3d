@@ -1,5 +1,6 @@
 package de.btu.monopoly.util;
 
+import de.btu.monopoly.core.FieldTypes;
 import de.btu.monopoly.data.field.Field;
 import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.field.TaxField;
@@ -25,7 +26,7 @@ public class TextUtils
     private static final double STREET_NAME_OFF = -25;
     private static final double STREET_PRICE_OFF = 2.7 * -STREET_NAME_OFF;
     
-    public static void drawText(GraphicsContext context, Field field, Fx3dFieldType type)
+    public static void drawText(GraphicsContext context, Field field, FieldTypes type)
     {
         context.setFont(Font.font("Kabel", 14));
         context.setTextAlign(TextAlignment.CENTER);

@@ -1,6 +1,6 @@
 package de.btu.monopoly.data.parser;
 
-import de.btu.monopoly.core.GameBoard;
+import de.btu.monopoly.core.FieldTypes;
 import de.btu.monopoly.data.card.CardStack;
 import de.btu.monopoly.data.field.*;
 import org.w3c.dom.Document;
@@ -20,16 +20,11 @@ import java.util.logging.Logger;
  */
 public class FieldDataParser {
 
-    /**
-     * Die allgemeine Exception-Nachricht für diese Klasse
-     */
-    private static final String IO_EXCEPTION_MESSAGE = "Exception while reading game board data. Corrupted file data!";
-
     private static final Logger LOGGER = Logger.getLogger(FieldDataParser.class.getCanonicalName());
 
     public static Field[] parse(String path) throws ParserConfigurationException, IOException, SAXException {
         
-        Field[] fields = new Field[GameBoard.FIELD_STRUCTURE.length];
+        Field[] fields = new Field[FieldTypes.GAMEBOARD_FIELD_STRUCT.length];
         DocumentBuilder builder;
         Element elem;
         int id;
@@ -42,48 +37,40 @@ public class FieldDataParser {
 
         NodeList fieldList = doc.getElementsByTagName("field");
 
-        if (fieldList.getLength() != GameBoard.FIELD_STRUCTURE.length) {
+        if (fieldList.getLength() != FieldTypes.GAMEBOARD_FIELD_STRUCT.length) {
             LOGGER.warning("Anzahl Felder in " + path + " ungleich dem erwarteten Wert.");
-            throw new IOException(IO_EXCEPTION_MESSAGE);
+            throw new IOException("Exception while reading game board data. Corrupted file data!");
         }
 
         for (int i = 0; i < fieldList.getLength(); i++) {
             elem = (Element) fieldList.item(i);
             id = parseId(elem);
 
+            FieldTypes type = FieldTypes.GAMEBOARD_FIELD_STRUCT[id];
             Field field;
-            switch (GameBoard.FIELD_STRUCTURE[id]) {
-                case GO:
+            
+            if (type.isCorner()) {
+                if (type == FieldTypes.CORNER_0)
                     field = parseGoField(elem);
-                    break;
-                case GO_JAIL:
-                // siehe case CORNER
-                case CORNER:
-                    field = parseCornerField(elem);
-                    break;
-                case STREET:
-                    field = parseStreetField(elem);
-                    break;
-                case STATION:
-                    field = parseStationField(elem);
-                    break;
-                case SUPPLY:
-                    field = parseSupplyField(elem);
-                    break;
-                case TAX:
-                    field = parseTaxField(elem);
-                    break;
-                case CARD:
-                    field = parseCardField(elem);
-                    break;
-                default:
-                    LOGGER.warning("Der Feldtyp " + elem.getParentNode().getNodeName() + " existiert nicht!");
-                    throw new IOException(IO_EXCEPTION_MESSAGE);
+                else field = parseCornerField(elem);
             }
-            if (field == null) {
-                LOGGER.warning("Das Feld " + i + " vom Typ " + elem.getParentNode().getNodeName() + " konnte nicht erstellt werden.");
-                throw new IOException(IO_EXCEPTION_MESSAGE);
+            else if (type.isStreet()) {
+                field = parseStreetField(elem);
             }
+            else if (type.isStation()) {
+                field = parseStationField(elem);
+            }
+            else if (type.isSupply()) {
+                field = parseSupplyField(elem);
+            }
+            else if (type.isTax()) {
+                field = parseTaxField(elem);
+            }
+            else if (type.isCard()) {
+                field = parseCardField(elem);
+            }
+            else throw new IOException(String.format("Undefined field type: %s", type));
+            
             fields[id] = field;
         }
         LOGGER.info("Alle Feldinstanzen erfolgreich erstellt.");
@@ -141,7 +128,7 @@ public class FieldDataParser {
         return retObj;
     }
 
-    private static StationField parseStationField(Element elem) {
+    private static StationField parseStationField(Element elem) throws IOException {
         StationField retObj = null;
 
         String name = elem.getAttribute("name");
@@ -165,7 +152,7 @@ public class FieldDataParser {
                     mortgageBack
             );
         } catch (NumberFormatException ex) {
-            LOGGER.log(Level.WARNING, "", ex); // TODO Exception im Logging-Formatter integrieren.
+            throw new IOException("Exception while parsing station field.");
         }
         return retObj;
     }

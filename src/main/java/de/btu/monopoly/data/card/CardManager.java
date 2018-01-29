@@ -1,5 +1,6 @@
 package de.btu.monopoly.data.card;
 
+import de.btu.monopoly.core.FieldTypes;
 import de.btu.monopoly.core.GameBoard;
 import de.btu.monopoly.core.service.FieldService;
 import de.btu.monopoly.core.service.PlayerService;
@@ -105,12 +106,12 @@ public class CardManager {
                 break;
         
             case MOVE_NEXT_SUPPLY:
-                PropertyField prop = (PropertyField) board.getFieldManager().movePlayer(player, GameBoard.FieldType.SUPPLY);
+                PropertyField prop = (PropertyField) board.getFieldManager().movePlayer(player, FieldTypes.SUPPLY);
                 FieldService.payRent(player, prop, null, 1);
                 break;
         
             case MOVE_NEXT_STATION_RENT_AMP:
-                prop = (PropertyField) board.getFieldManager().movePlayer(player, GameBoard.FieldType.STATION);
+                prop = (PropertyField) board.getFieldManager().movePlayer(player, FieldTypes.STATION);
                 FieldService.payRent(player, prop, null, arg);
                 break;
         

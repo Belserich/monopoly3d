@@ -30,7 +30,7 @@ public class NetDependedUnitTests {
     private Lobby lobby;
     private GameServer server;
     private GameClient client;
-    private Game game;
+    private GameAccessWrapper game;
     private GameBoard board;
     private Player[] players;
     private FieldManager fm;
@@ -66,11 +66,11 @@ public class NetDependedUnitTests {
         LobbyService.addKI("Gegner", 1);
         IOService.sleep(100);
 
-        Game controller = new Game(lobby.getPlayerClient(), LobbyService.generatePlayerArray(), lobby.getRandomSeed());
+        GameAccessWrapper controller = new GameAccessWrapper(lobby.getPlayerClient(), LobbyService.generatePlayerArray(), lobby.getRandomSeed());
         lobby.setController(controller);
         lobby.getPlayerClient().setGame(controller);
 
-        game = LobbyService.getLobby().getController();
+        game = controller;
         board = game.getBoard();
         players = game.getPlayers();
         fm = board.getFieldManager();

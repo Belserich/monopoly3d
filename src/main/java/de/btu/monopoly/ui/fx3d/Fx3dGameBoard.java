@@ -30,7 +30,7 @@ import static de.btu.monopoly.ui.fx3d.Fx3dField.*;
 
 public class Fx3dGameBoard extends Group
 {
-    public static final int FIELD_COUNT = FieldTypes.GAMEBOARD_FIELD_STRUCTURE.length;
+    public static final int FIELD_COUNT = FieldTypes.GAMEBOARD_FIELD_STRUCT.length;
     public static final double BOARD_MODEL_LENGTH = 9 * FIELD_WIDTH;
     
     private static final double BOARD_LENGTH = 2 * FIELD_DEPTH + BOARD_MODEL_LENGTH;
@@ -137,7 +137,7 @@ public class Fx3dGameBoard extends Group
     private void initFields() {
         
         ObservableList<Node> children = fieldGroup.getChildren();
-        FieldTypes[] struct = FieldTypes.GAMEBOARD_FIELD_STRUCTURE;
+        FieldTypes[] struct = FieldTypes.GAMEBOARD_FIELD_STRUCT;
         FieldManager fieldMan = board.getFieldManager();
         
         FieldTypes lastType;

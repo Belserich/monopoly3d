@@ -61,7 +61,7 @@ public class Game {
      */
     private List<GameStateListener> stateListeners;
     
-    private Player player;
+    protected Player player;
     
     protected int rollResult[];
     protected int doubletCount;
@@ -72,7 +72,7 @@ public class Game {
      *
      * @param client GameClient
      * @param players Spieler
-     * @param seed RandomSeed
+     * @param seed Seed
      */
     public Game(GameClient client, Player[] players, long seed) {
         
@@ -147,18 +147,18 @@ public class Game {
         
         if (player.isInJail()) {
             stateListeners.forEach(l -> l.onPlayerStartsTurnInJail(player));
-            jailPhase(player);
+            jailPhase();
         }
 
         if (!player.isInJail()) {
             do {
                 rollPhase();
                 if (doubletCount < 3) {
-                    fieldPhase(player);
+                    fieldPhase();
                     if (player.isInJail())
                         break;
                 }
-                actionPhase(player);
+                actionPhase();
             }
             while (rollResult[0] == rollResult[1]);
         }
@@ -182,7 +182,7 @@ public class Game {
         else board.getFieldManager().movePlayer(player, rollResult[0] + rollResult[1]);
     }
     
-    protected void fieldPhase(Player player) {
+    protected void fieldPhase() {
         stateListeners.forEach(l -> l.onFieldPhaseStart(player));
         
         boolean repeatPhase;
@@ -191,15 +191,16 @@ public class Game {
         
         do {
             repeatPhase = false;
-            type = FieldTypes.GAMEBOARD_FIELD_STRUCTURE[player.getPosition()];
+            type = FieldTypes.GAMEBOARD_FIELD_STRUCT[player.getPosition()];
             field = board.getFieldManager().getField(player.getPosition());
             
             LOGGER.fine(String.format("Feldphase begonnen: Spieler %s Feld: %s", player.getName(), type));
-            stateListeners.forEach(l -> l.onPlayerOnNewField(player, type));
+            for (GameStateListener l : stateListeners)
+                l.onPlayerOnNewField(player, type);
             
             if (type.isStation()) {
                 PropertyField prop = (PropertyField) board.getFields()[player.getPosition()];
-                processPlayerOnPropertyField(player, prop, rollResult);
+                onPlayerOnProperty(prop);
             }
             else if (type.isTax()) {
                 TaxField taxField = (TaxField) field;
@@ -216,14 +217,15 @@ public class Game {
         while (repeatPhase);
     }
     
-    protected void processPlayerOnPropertyField(Player player, PropertyField prop, int[] rollResult) {
+    protected void onPlayerOnProperty(PropertyField prop) {
+        
         Player other = prop.getOwner();
         if (other == null) { // Feld frei
             if (Global.RUN_IN_CONSOLE) {
                 LOGGER.info(String.format("%s steht auf %s. Wähle eine Aktion!%n[1] Kaufen %n[2] Nicht kaufen",
                         player.getName(), prop.getName()));
             }
-            processBuyPropertyFieldOption(player, prop);
+            onBuyPropertyOption(prop);
         }
         else if (other == player) { // PropertyField im eigenen Besitz
             LOGGER.fine(String.format("%s steht auf seinem eigenen Grundstück.", player.getName()));
@@ -235,22 +237,22 @@ public class Game {
         }
     }
     
-    protected void processBuyPropertyFieldOption(Player player, PropertyField prop) {
-        int choice = IOService.buyPropertyChoice(player, prop);
+    protected void onBuyPropertyOption(PropertyField prop) {
         
+        int choice = IOService.buyPropertyChoice(player, prop);
         switch (choice) {
             case 1: // Kaufen
                 LOGGER.info(String.format("%s >> %s", player.getName(), prop.getName()));
                 if (!FieldService.buyPropertyField(player, prop)) {
                     LOGGER.warning(String.format("%s hat nicht genug Geld! %s wird zwangsversteigert.",
                             player.getName(), prop.getName()));
-                    processAuction(prop);
+                    onAuction(prop);
                 }
                 break;
             
             case 2: // Auktion
                 LOGGER.log(Level.INFO, "{0} hat sich gegen den Kauf entschieden, die Stra\u00dfe wird nun versteigert.", player.getName());
-                processAuction(prop);
+                onAuction(prop);
                 break;
             
             default:
@@ -259,7 +261,7 @@ public class Game {
         }
     }
     
-    protected void actionPhase(Player player) {
+    protected void actionPhase() {
         stateListeners.forEach(l -> l.onActionPhaseStart(player));
         
         int actionChoice;
@@ -270,7 +272,8 @@ public class Game {
             }
             
             actionChoice = IOService.actionSequence(player, board);
-            stateListeners.forEach(l -> l.onPlayerActionOption(player, actionChoice));
+            for (GameStateListener l : stateListeners)
+                l.onPlayerActionOption(player, actionChoice);
             
             if (actionChoice > ACTION_NOTHING && actionChoice < ACTION_TRADE) {
                 
@@ -302,7 +305,7 @@ public class Game {
                         break;
                 }
             }
-            else if (actionChoice == ACTION_TRADE) processPlayerTradeOption(player);
+            else if (actionChoice == ACTION_TRADE) onPlayerTradeOption();
         }
         while (actionChoice != 1);
     }
@@ -326,7 +329,7 @@ public class Game {
         // Das hier verwendete Feld wurde vorher in HardKi.processActionSequence() festgelegt.
     }
 
-    protected void jailPhase(Player player) {
+    protected void jailPhase() {
         stateListeners.forEach(l -> l.onJailPhaseStart(player));
         
         int choice;
@@ -337,7 +340,8 @@ public class Game {
             }
             
             choice = IOService.jailChoice(player);
-            stateListeners.forEach(l -> l.onPlayerJailOption(player, choice));
+            for (GameStateListener l : stateListeners)
+                l.onPlayerJailOption(player, choice);
             
             switch (choice) {
                 
@@ -345,10 +349,10 @@ public class Game {
                     onJailRollOption();
                     break;
                 case JAIL_PAY_OPTION:
-                    onJailPayOption(player);
+                    onJailPayOption();
                     break;
                 case JAIL_CARD_OPTION:
-                    onJailCardOption(player);
+                    onJailCardOption();
                     break;
                 default:
                     throw new RuntimeException("Undefined player jail choice!");
@@ -386,7 +390,7 @@ public class Game {
         PlayerService.freeFromJail(player);
     }
 
-    protected void onJailPayOption(Player player) {
+    protected void onJailPayOption() {
         if (PlayerService.takeMoney(player, 50))
             onJailPayFailure();
         else onJailPaySuccess();
@@ -403,7 +407,7 @@ public class Game {
         PlayerService.freeFromJail(player);
     }
 
-    protected void onJailCardOption(Player player) {
+    protected void onJailCardOption() {
         if (board.getCardManager().hasJailCards(player))
             onJailCardSuccess();
         else onJailCardFailure();
@@ -422,20 +426,22 @@ public class Game {
 
     /**
      * Initiiert einen Tausch/Handel ausgehend von einem speziellen Spieler.
-     *
-     * @param player Spieler
      */
-    protected void processPlayerTradeOption(Player player) {
+    protected void onPlayerTradeOption() {
+        stateListeners.forEach(l -> l.onTradeStart(player));
         TradeService.processPlayerTradeOption(player, client, board);
+        stateListeners.forEach(l -> l.onTradeEnd(player));
     }
 
     /**
      * Initiiert die Auktion eines angegebenen Grundstuecks.
      *
-     * @param property Grundstueck
+     * @param prop Grundstueck
      */
-    protected void processAuction(PropertyField property) {
-        AuctionService.startAuction(property);
+    protected void onAuction(PropertyField prop) {
+        stateListeners.forEach(l -> l.onAuctionStart(prop));
+        AuctionService.startAuction(prop);
+        stateListeners.forEach(l -> l.onAuctionEnd(prop.getOwner(), prop));
     }
     
     /**

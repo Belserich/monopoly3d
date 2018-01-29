@@ -125,17 +125,12 @@ public class Assets
         registeredImages.put("street_5", loadFieldImage(STREET_5_PATH));
         registeredImages.put("street_6", loadFieldImage(STREET_6_PATH));
         registeredImages.put("street_7", loadFieldImage(STREET_7_PATH));
-    
-        registeredImages.put("card_0", loadFieldImage(CARD_0_PATH));
-        registeredImages.put("card_1", loadFieldImage(CARD_1_PATH));
-    
-        WritableImage station = loadFieldImage(STATION_PATH);
-        registeredImages.put("station", station);
-        System.out.println(station.getWidth() + " " + station.getHeight());
-    
+        
         registeredImages.put("supply_0", loadFieldImage(SUPPLY_0_PATH));
         registeredImages.put("supply_1", loadFieldImage(SUPPLY_1_PATH));
-    
+        registeredImages.put("station", loadFieldImage(STATION_PATH));
+        registeredImages.put("card_0", loadFieldImage(CARD_0_PATH));
+        registeredImages.put("card_1", loadFieldImage(CARD_1_PATH));
         registeredImages.put("tax_0", loadFieldImage(TAX_0_PATH));
         registeredImages.put("tax_1", loadFieldImage(TAX_1_PATH));
     

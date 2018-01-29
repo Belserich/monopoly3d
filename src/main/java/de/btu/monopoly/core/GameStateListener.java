@@ -1,5 +1,6 @@
 package de.btu.monopoly.core;
 
+import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.player.Player;
 
 /**
@@ -48,4 +49,12 @@ public interface GameStateListener {
     void onPlayerJailOption(Player player, int choice);
     
     void onPlayerActionOption(Player player, int choice);
+    
+    void onAuctionStart(PropertyField prop);
+    
+    void onAuctionEnd(Player winner, PropertyField prop);
+    
+    void onTradeStart(Player player);
+    
+    void onTradeEnd(Player player);
 }
