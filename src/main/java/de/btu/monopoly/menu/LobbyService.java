@@ -15,6 +15,7 @@ import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.data.lobby.*;
 import de.btu.monopoly.net.server.AuctionTable;
+import de.btu.monopoly.ui.util.Assets;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -166,7 +167,7 @@ public class LobbyService extends Listener {
         for (int i = 0; i < users.length; i++) {
             int id = Integer.parseInt(users[i][0]);
             int kilvl = Integer.parseInt(users[i][3]);
-            Player player = new Player(users[i][1], i, 1500);
+            Player player = new Player(users[i][1], i, Assets.START_MONEY);
             player.setAiLevel(kilvl);
             player.setColor(users[i][4]);
 

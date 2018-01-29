@@ -82,6 +82,7 @@ public class GameSceneManager implements GameStateListener {
                 new StackPane(gameSub, uiGroup, uiPane),
                 DEFAULT_SCENE_WIDTH, DEFAULT_SCENE_HEIGHT
         );
+        scene.getStylesheets().add("http://propeller.in/components/card/css/card.css");
 
         Global.ref().getGame().addGameStateListener(this);
 
@@ -149,7 +150,8 @@ public class GameSceneManager implements GameStateListener {
         GUIChat.getInstance().addObserver(obs);
         ScrollPane scrollChat = new ScrollPane();
         scrollChat.setContent(obs.getTextFlow());
-        scrollChat.setStyle("-fx-background-color: white");
+//        scrollChat.setStyle("-fx-background-color: white");
+        scrollChat.getStyleClass().add("content-2");
         scrollChat.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         chatArea.setMaxWidth(380);
         VBox wholeChatBox = new VBox(scrollChat, chatInteractionBox);
