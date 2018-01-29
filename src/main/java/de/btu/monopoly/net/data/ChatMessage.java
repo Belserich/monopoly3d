@@ -14,7 +14,7 @@ public class ChatMessage {
     private String autor;
     private String message;
     private String fColor;
-    private String bColor;
+    private boolean isEvent;
 
     /**
      * @return the autor
@@ -35,13 +35,6 @@ public class ChatMessage {
      */
     public String getfColor() {
         return fColor;
-    }
-
-    /**
-     * @return the bColor
-     */
-    public String getbColor() {
-        return bColor;
     }
 
     /**
@@ -66,9 +59,16 @@ public class ChatMessage {
     }
 
     /**
-     * @param bColor the bColor to set
+     * @return the isEvent
      */
-    public void setbColor(String bColor) {
-        this.bColor = bColor;
+    public boolean isEvent() {
+        return isEvent;
+    }
+
+    /**
+     * @param isEvent the isEvent to set
+     */
+    public void setIsEvent(boolean isEvent) {
+        this.isEvent = isEvent;
     }
 }

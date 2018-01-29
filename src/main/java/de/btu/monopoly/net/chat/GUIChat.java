@@ -7,12 +7,20 @@ package de.btu.monopoly.net.chat;
 
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
+import com.jfoenix.controls.JFXTextArea;
 import de.btu.monopoly.Global;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.data.ChatMessage;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 
 /**
  *
@@ -27,19 +35,19 @@ public class GUIChat extends Chat {
 
     // Vorder- und Hintergrundfarben der Eventnachrichten
     private final String EVENT_MESSAGE_F_COLOR;     //see @ constructor
-    private final String EVENT_MESSAGE_B_COLOR;     //see @ constructor
     private final GameClient client;                //see @ constructor
+    private final Notifier notifier;
 
     /**
      * der Singleton-Konstruktor. Wird ausschließlich intern und nur ein mal aufgerufen
      */
     private GUIChat() {
         // <editor-fold defaultstate="collapsed" desc="Singleton">
-        this.EVENT_MESSAGE_B_COLOR = "#000000";
         this.EVENT_MESSAGE_F_COLOR = "#FFFFFF";
         Global global = Global.ref();
         client = global.getClient();
         client.addExternalListener(new ChatListener());
+        notifier = new Notifier();
         // </editor-fold>
     }
 
@@ -73,11 +81,11 @@ public class GUIChat extends Chat {
         // <editor-fold defaultstate="collapsed" desc="creates and sends eventMessage to Server">
         ChatMessage mess = new ChatMessage();
         mess.setMessage(eventMessage);
-        mess.setbColor(EVENT_MESSAGE_B_COLOR);
         mess.setfColor(EVENT_MESSAGE_F_COLOR);
         mess.setAutor("");
+        mess.setIsEvent(true);
 
-        client.sendTCP(mess);
+        addMessage(mess);
         //</editor-fold>
     }
 
@@ -93,6 +101,39 @@ public class GUIChat extends Chat {
      */
     private void addMessage(ChatMessage mess) {
         messageList.add(mess);
+//        prepareAndNotifyChatList();
+        prepareAndNotifyChat();
+    }
+
+    private void prepareAndNotifyChatList() {
+        TextFlow area = new TextFlow();
+        long chatBoarder = (messageList.size() > 50) ? (messageList.size() - 50) : 0;
+
+        messageList.stream().skip(chatBoarder).forEach((mess) -> {
+            Text autor = new Text(mess.getAutor() + ": ");
+            Text message = new Text(mess.getMessage());
+            autor.setFill(Color.web(mess.getfColor()));
+            if (mess.isEvent()) {
+                message.setFont(Font.font("Helvetica", FontWeight.BOLD, 12));
+            }
+            area.getChildren().addAll(autor, message);
+        });
+        area.setStyle("-fx-background-color: white");
+//        notifier.notify(area);
+    }
+
+    private void prepareAndNotifyChat() {
+        JFXTextArea area = new JFXTextArea();
+        String chat = "";
+        long chatBoarder = (messageList.size() > 50) ? (messageList.size() - 50) : 0;
+
+        for (int i = (int) chatBoarder; i < messageList.size(); i++) {
+            ChatMessage mess = messageList.get(i);
+            chat += mess.getAutor() + ": " + mess.getMessage() + "\n";
+        }
+        area.setText(chat);
+        notifier.notify(area);
+
     }
 
     /**
@@ -107,11 +148,15 @@ public class GUIChat extends Chat {
         ChatMessage mess = new ChatMessage();
         mess.setAutor(player.getName());
         mess.setMessage(message);
-        mess.setbColor("#FFFFFF");
         mess.setfColor(player.getColor());
+        mess.setIsEvent(false);
 
         return mess;
         //</editor-fold>
+    }
+
+    public void addObserver(Observer obs) {
+        notifier.addObserver(obs);
     }
 
     /**
@@ -135,6 +180,16 @@ public class GUIChat extends Chat {
             if (object instanceof ChatMessage) {
                 addMessage((ChatMessage) object);
             }
+        }
+        //</editor-fold>
+    }
+
+    private class Notifier extends Observable {
+        // <editor-fold defaultstate="collapsed" desc="Notifier --ChatMessage--> Observers">
+
+        private void notify(JFXTextArea chat) {
+            setChanged();
+            notifyObservers(chat);
         }
         //</editor-fold>
     }
