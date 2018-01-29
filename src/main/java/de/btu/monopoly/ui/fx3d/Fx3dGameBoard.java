@@ -2,15 +2,17 @@ package de.btu.monopoly.ui.fx3d;
 
 import de.btu.monopoly.core.FieldTypes;
 import de.btu.monopoly.core.GameBoard;
+import de.btu.monopoly.core.GameStateAdapter;
 import de.btu.monopoly.data.field.FieldManager;
 import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.util.Assets;
 import javafx.animation.Animation;
+import javafx.animation.ParallelTransition;
+import javafx.animation.SequentialTransition;
+import javafx.animation.TranslateTransition;
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.ObservableList;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
@@ -21,6 +23,7 @@ import javafx.scene.transform.Affine;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Transform;
 import javafx.scene.transform.Translate;
+import javafx.util.Duration;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -44,6 +47,7 @@ public class Fx3dGameBoard extends Group
     private static final double FIELD_DIST = -Fx3dField.FIELD_WIDTH;
     
     private final GameBoard board;
+    private final GameStateAdapterImpl stateAdapter;
     
     private final Cuboid boardModel;
     private final Fx3dField[] fieldModels;
@@ -53,13 +57,13 @@ public class Fx3dGameBoard extends Group
     private final Group playerGroup;
     
     private List<Animation> animQueue;
-    
-    private final IntegerProperty runningAnimationCount;
-    private final BooleanProperty readyForPopup;
+    private BooleanProperty isAnimatingProperty;
     
     public Fx3dGameBoard(GameBoard board) {
         super();
         this.board = board;
+        
+        stateAdapter = new GameStateAdapterImpl();
         
         boardModel = new Cuboid(BOARD_MODEL.getWidth(), BOARD_MODEL.getHeight(), BOARD_MODEL.getDepth());
         fieldModels = new Fx3dField[FIELD_COUNT];
@@ -69,20 +73,37 @@ public class Fx3dGameBoard extends Group
         playerGroup = new Group();
         
         animQueue = new LinkedList<>();
+        isAnimatingProperty = new SimpleBooleanProperty(false);
+        isAnimatingProperty.addListener((inv, oldV, newV) -> requestNextMoveAnim());
         
         getChildren().addAll(boardModel, fieldGroup, houseGroup, playerGroup);
-        
-        runningAnimationCount = new SimpleIntegerProperty(0);
-        readyForPopup = new SimpleBooleanProperty(true);
-        readyForPopup.bind(runningAnimationCount.isEqualTo(0));
         
         init();
     }
     
-    private void queueAnimation() {
-    
+    private void requestNextMoveAnim() {
+        if (!isAnimatingProperty.get() && !animQueue.isEmpty()) {
+            isAnimatingProperty.set(true);
+            Animation anim = animQueue.remove(0);
+            anim.setOnFinished(inv -> isAnimatingProperty.set(false));
+            anim.play();
+        }
     }
     
+    private Fx3dPlayer findEquivalent(Player player) {
+        ObservableList<Node> players = playerGroup.getChildren();
+        for (Node n : players) {
+            if (n instanceof Fx3dPlayer && player == ((Fx3dPlayer) n).player()) {
+                return (Fx3dPlayer) n;
+            }
+        }
+        throw new RuntimeException(
+                String.format("Couldn't find a proper 3d equivalent for player: %s", player.getName()));
+    }
+    
+    /**
+     * Ruft sämtliche Untermethoden zum initialiseren des Boards auf und setzt die Lichtquelle.
+     */
     private void init() {
         
         initBoard();
@@ -93,45 +114,94 @@ public class Fx3dGameBoard extends Group
         getChildren().add(light);
     }
     
+    /**
+     * Erstellt das Spielbrett und lädt die Texturen.
+     */
     private void initBoard() {
         boardModel.setMaterial(FxHelper.getMaterialFor(Assets.getImage("game_board")));
     }
     
+    /**
+     * Erstellt 3d-Repräsentanten für sämtliche Spieler.
+     */
     private void initPlayers() {
         
         List<Player> activePlayers = board.getActivePlayers();
         ObservableList<Node> children = playerGroup.getChildren();
         
         for (int i = 0; i < activePlayers.size(); i++) {
-            children.add(initFxPlayer(activePlayers.get(i)));
+            children.add(initPlayer(activePlayers.get(i)));
         }
     }
     
-    private Fx3dPlayer initFxPlayer(Player player) {
+    /**
+     * Erstellt 3D-Repräsentanten für den gegebenen Spieler. Gibt ihm eine Position.
+     *
+     * @param player Spieler
+     * @return Spieler 3D-Repräsentation
+     */
+    private Fx3dPlayer initPlayer(Player player) {
     
         Fx3dPlayer fxPlayer = new Fx3dPlayer(player, new Color(Math.random(), Math.random(), Math.random(), 1));
         
         Shape3D positionField = fieldModels[player.getPosition()];
         fxPlayer.getTransforms().add(positionField.getLocalToSceneTransform());
         
-        fxPlayer.positionProperty().addListener((val, oldI, newI) -> {
-            
-            int oldV = oldI.intValue();
-            int diff = newI.intValue() + 1 - oldV;
-            if (diff < 0) diff = FIELD_COUNT + diff;
-            
-            Transform[] waypoints = new Transform[diff];
-            for (int i = 0; i < diff; i++) {
-                waypoints[i % FIELD_COUNT] = fieldModels[(oldV + i) % FIELD_COUNT].getLocalToParentTransform();
-            }
-            
-            fxPlayer.move(waypoints);
-        });
-        
-        fxPlayer.animationsRunningProperty().addListener((prop, oldV, newV) ->
-                runningAnimationCount.set(runningAnimationCount.get() + (newV ? 1 : -1)));
-        
         return fxPlayer;
+    }
+    
+    /**
+     * Erstellt eine Laufanimation zwischen den Feldern mit den Indizes oldPos und newPos.
+     *
+     * @param player Spieler
+     * @param oldPos Startindex
+     * @param newPos Zielindex
+     * @return Animation
+     */
+    private ParallelTransition createMoveTransition(Fx3dPlayer player, int oldPos, int newPos) {
+        
+        int diff = newPos + 1 - oldPos;
+        if (diff < 0) diff = FIELD_COUNT + diff;
+    
+        Transform[] waypoints = new Transform[diff];
+        for (int i = 0; i < diff; i++) {
+            waypoints[i % FIELD_COUNT] = fieldModels[(oldPos + i) % FIELD_COUNT].getLocalToParentTransform();
+        }
+        return createMoveTransition(player, waypoints);
+    }
+    
+    /**
+     * Hilfsmethode für {@link #createMoveTransition(Fx3dPlayer, int, int)}.
+     *
+     * @param player Spieler
+     * @param waypoints Wegpunkte
+     * @return Animation
+     */
+    private ParallelTransition createMoveTransition(Fx3dPlayer player, Transform[] waypoints) {
+        
+        TranslateTransition jt = player.createJumpAnimation();
+        jt.setCycleCount(2 * (waypoints.length - 1));
+    
+        SequentialTransition st = new SequentialTransition(player);
+        ObservableList<Animation> anims = st.getChildren();
+    
+        Transform currTransform;
+        Transform nextTransform = waypoints[0];
+        for (int i = 1; i < waypoints.length; i++) {
+        
+            currTransform = nextTransform;
+            nextTransform = waypoints[i];
+        
+            TranslateTransition tt = new TranslateTransition(
+                    Duration.millis(Fx3dPlayer.FIELD_MOVE_DURATION), player);
+            tt.setByX(nextTransform.getTx() - currTransform.getTx());
+            tt.setByY(nextTransform.getTy() - currTransform.getTy());
+            tt.setByZ(nextTransform.getTz() - currTransform.getTz());
+        
+            anims.add(tt);
+        }
+        
+        return new ParallelTransition(st, jt);
     }
     
     private void initFields() {
@@ -171,11 +241,27 @@ public class Fx3dGameBoard extends Group
         }
     }
     
-    public BooleanProperty readyForPopupProperty() { return readyForPopup; }
-    
     public Stream<Fx3dPlayer> getPlayers() {
         return playerGroup.getChildren().stream()
                 .filter(Fx3dPlayer.class::isInstance)
                 .map(Fx3dPlayer.class::cast);
+    }
+    
+    public GameStateAdapterImpl gameStateAdapter() {
+        return stateAdapter;
+    }
+    
+    public BooleanProperty animatingProperty() {
+        return isAnimatingProperty;
+    }
+    
+    class GameStateAdapterImpl extends GameStateAdapter {
+        
+        @Override
+        public void onPlayerMove(Player player, int oldPos, int newPos, boolean passedGo) {
+            Fx3dPlayer fxplayer = findEquivalent(player);
+            animQueue.add(createMoveTransition(fxplayer, oldPos, newPos));
+            requestNextMoveAnim();
+        }
     }
 }

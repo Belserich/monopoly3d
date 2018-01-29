@@ -2,12 +2,7 @@ package de.btu.monopoly.ui.fx3d;
 
 import de.btu.monopoly.data.player.Player;
 import javafx.animation.Animation;
-import javafx.animation.ParallelTransition;
-import javafx.animation.SequentialTransition;
 import javafx.animation.TranslateTransition;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.ObservableList;
 import javafx.geometry.Orientation;
 import javafx.geometry.VPos;
@@ -21,26 +16,19 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Cylinder;
 import javafx.scene.text.Font;
-import javafx.scene.transform.Transform;
 import javafx.scene.transform.Translate;
 import javafx.util.Duration;
-
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * @author Maximilian Bels (belsmaxi@b-tu.de)
  */
 public class Fx3dPlayer extends Cylinder {
     
+    public static final double FIELD_MOVE_DURATION = 400;
+    
     private static final Cylinder PLAYER_MODEL = new Cylinder(20, 50);
     private static final double INIT_PLAYER_Y = -PLAYER_MODEL.getHeight();
-    
-    private static final double FIELD_MOVE_DURATION = 400;
     private static final double JUMP_HEIGHT = 100;
-    
-    private final List<Animation> animationQueue;
-    private final BooleanProperty animationsRunning;
     
     private Player player;
     private Color color;
@@ -52,9 +40,6 @@ public class Fx3dPlayer extends Cylinder {
         super(PLAYER_MODEL.getRadius(), PLAYER_MODEL.getHeight());
         this.player = player;
         this.color = color;
-        
-        animationQueue = new LinkedList<>();
-        animationsRunning = new SimpleBooleanProperty(false);
         
         TranslateTransition tt = new TranslateTransition(Duration.millis(400), this);
         tt.setByY(-20);
@@ -68,58 +53,21 @@ public class Fx3dPlayer extends Cylinder {
         infoPane = new InfoPane();
     }
     
-    public void move(Transform... waypoints) {
-        
-        SequentialTransition st = new SequentialTransition(this);
-        ObservableList<Animation> anims = st.getChildren();
-        
-        Transform currTransform;
-        Transform nextTransform = waypoints[0];
-        for (int i = 1; i < waypoints.length; i++) {
-            
-            currTransform = nextTransform;
-            nextTransform = waypoints[i];
-            
-            TranslateTransition tt = new TranslateTransition(
-                    Duration.millis(FIELD_MOVE_DURATION), this);
-            tt.setByX(nextTransform.getTx() - currTransform.getTx());
-            tt.setByY(nextTransform.getTy() - currTransform.getTy());
-            tt.setByZ(nextTransform.getTz() - currTransform.getTz());
-    
-            anims.add(tt);
-        }
-        
-        TranslateTransition tt = new TranslateTransition(
+    TranslateTransition createJumpAnimation() {
+        TranslateTransition jt = new TranslateTransition(
                 Duration.millis(FIELD_MOVE_DURATION / 2), this);
-        tt.setByY(-JUMP_HEIGHT);
-        tt.setAutoReverse(true);
-        tt.setCycleCount(2 * (waypoints.length - 1));
-        
-        ParallelTransition transition = new ParallelTransition(st, tt);
-        transition.setOnFinished(event -> updateAnimationsRunning());
-        animationQueue.add(transition);
-        
-        if (!animationsRunning.get()) {
-            animationsRunning.set(true);
-            transition.play();
-        }
+        jt.setByY(-JUMP_HEIGHT);
+        jt.setAutoReverse(true);
+        return jt;
     }
     
-    private void updateAnimationsRunning() {
-        animationQueue.remove(0);
-        if (animationQueue.size() > 0) {
-            animationQueue.get(0).play();
-        }
-        else animationsRunning.set(false);
+    public InfoPane infoPane() {
+        return infoPane;
     }
     
-    public InfoPane infoPane() { return infoPane; }
-    
-    public IntegerProperty positionProperty() {
-        return player.positionProperty();
+    Player player() {
+        return player;
     }
-    
-    public BooleanProperty animationsRunningProperty() { return animationsRunning; }
     
     public class InfoPane extends HBox {
         

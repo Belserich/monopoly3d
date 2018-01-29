@@ -179,7 +179,19 @@ public class Game {
             LOGGER.info(String.format("%s hat seinen 3. Pasch und geht nicht über LOS, direkt ins Gefängnis!", player.getName()));
             FieldService.toJail(player);
         }
-        else board.getFieldManager().movePlayer(player, rollResult[0] + rollResult[1]);
+        else {
+            int oldPos = player.getPosition();
+            int moveAmount = rollResult[0] + rollResult[1];
+            int newPos = (oldPos + moveAmount) % FieldTypes.GAMEBOARD_FIELD_STRUCT.length;
+            
+            board.getFieldManager().movePlayer(player, moveAmount);
+            boolean passedGo = (oldPos >= newPos);
+            
+            for (GameStateListener l : stateListeners) {
+                l.onPlayerMove(player, oldPos, newPos, passedGo);
+            }
+            
+        }
     }
     
     protected void fieldPhase() {

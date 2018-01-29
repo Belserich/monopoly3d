@@ -41,7 +41,8 @@ public class Launcher extends Application {
     }
     
     private static void loadResources() {
-        Assets.load();
+        Assets.loadData();
+        Assets.loadFx();
     }
     
     private static void initGame() {
@@ -60,8 +61,7 @@ public class Launcher extends Application {
             Global.ref().setMenuSceneManager(menuMan);
         }
         else {
-            Assets.load();
-            Assets.loadFx();
+            
             
             Player[] players = new Player[]{ new Player("Patrick", 0, 1500), new Player("Christian", 1, 1500) };
             players[1].setAiLevel(1);

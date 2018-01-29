@@ -114,7 +114,7 @@ public class FieldManager {
      *
      * @param player Spieler
      * @param amount Anzahl Felder
-     * @return Field
+     * @return ob der Spieler über LOS gelaufen ist.
      */
     public Field movePlayer(Player player, int amount) {
         int pos = PlayerService.movePlayer(player, amount);

@@ -7,10 +7,8 @@ import de.btu.monopoly.data.parser.CardDataParser;
 import de.btu.monopoly.data.parser.FieldDataParser;
 import de.btu.monopoly.ui.fx3d.Fx3dCorner;
 import de.btu.monopoly.ui.fx3d.Fx3dGameBoard;
-import de.btu.monopoly.ui.fx3d.FxHelper;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 import org.xml.sax.SAXException;
 
@@ -23,10 +21,10 @@ import static de.btu.monopoly.ui.fx3d.Fx3dField.*;
 
 public class Assets
 {
-    public static final Logger LOGGER = Logger.getLogger(Assets.class.getCanonicalName());
+    private static final Logger LOGGER = Logger.getLogger(Assets.class.getCanonicalName());
     
-    public static final String UNDEFINED = "UNDEFINED";
-    public static final String R = "/images/new/";
+    private static final String UNDEFINED = "UNDEFINED";
+    private static final String R = "/images/new/";
     
     private static final Color COLOR_TO_REPLACE = Color.TRANSPARENT;
     private static final Color REPLACEMENT_COLOR = new Color(205d / 255, 230d / 255, 208d / 255, 1);
@@ -72,7 +70,7 @@ public class Assets
     private static final String COMM_CARDS_PATH = "/data/card_data.xml";
     private static final String EVENT_CARDS_PATH = "/data/card_data.xml";
     
-    private static final HashMap<String, WritableImage> registeredImages = new HashMap<>();
+    private static final HashMap<String, Image> registeredImages = new HashMap<>();
     private static final HashMap<String, ImageView> registeredIcons = new HashMap<>();
     private static final HashMap<String, String> registeredStrings = new HashMap<>();
     
@@ -144,8 +142,9 @@ public class Assets
         registeredStrings.put("corner_3_name", "Gehen Sie ins Gefängnis");
     }
     
-    public static void load()
+    public static void loadData()
     {
+        loadCards();
         loadFields();
     }
     
@@ -154,26 +153,19 @@ public class Assets
         loadFxImages();
     }
     
-    public static boolean loadedFxContent() {
-        return !registeredImages.isEmpty() || !registeredStrings.isEmpty();
-    }
-    
-    private static WritableImage loadImage(String path, double requestedWidth, double requestedHeight) {
-        Image image = new Image(R + path, requestedWidth, requestedHeight, true, true);
-        WritableImage img = new WritableImage(image.getPixelReader(), (int) image.getWidth(), (int) image.getHeight());
-        img = FxHelper.replaceColorInImage(img, COLOR_TO_REPLACE, REPLACEMENT_COLOR);
-        return img;
+    private static Image loadImage(String path, double requestedWidth, double requestedHeight) {
+        return new Image(R + path, requestedWidth, requestedHeight, true, true);
     }
     
     private static Image loadImage(String path) {
         return new Image(R + path);
     }
     
-    private static WritableImage loadCornerImage(String path) {
+    private static Image loadCornerImage(String path) {
         return loadImage(path, CORNER_TEXTURE_WIDTH, CORNER_TEXTURE_HEIGHT);
     }
     
-    private static WritableImage loadFieldImage(String path) {
+    private static Image loadFieldImage(String path) {
         return loadImage(path, FIELD_TEXTURE_WIDTH, FIELD_TEXTURE_HEIGHT);
     }
     
@@ -181,17 +173,15 @@ public class Assets
         return new ImageView(loadImage(path));
     }
     
-    public void registerString(String key, String val)
-    {
+    public void registerString(String key, String val) {
         registeredStrings.put(key, val.toLowerCase());
     }
     
-    public static Image getImage(String name)
-    {
+    public static Image getImage(String name) {
         return registeredImages.get(name);
     }
     
-    public static WritableImage getImage(FieldTypes type) {
+    public static Image getImage(FieldTypes type) {
         return registeredImages.get(type.toString().toLowerCase());
     }
     
@@ -199,8 +189,7 @@ public class Assets
         return registeredIcons.get(name);
     }
     
-    public static String getString(String key)
-    {
+    public static String getString(String key) {
         return registeredStrings.getOrDefault(key.toLowerCase(), UNDEFINED);
     }
     

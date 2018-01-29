@@ -115,21 +115,26 @@ public class GameStateAdapter implements GameStateListener {
     
     @Override
     public void onAuctionStart(PropertyField prop) {
-    
+        //nothing
     }
     
     @Override
     public void onAuctionEnd(Player winner, PropertyField prop) {
-    
+        //nothing
     }
     
     @Override
     public void onTradeStart(Player player) {
-    
+        //nothing
     }
     
     @Override
     public void onTradeEnd(Player player) {
+        //nothing
+    }
     
+    @Override
+    public void onPlayerMove(Player player, int oldPos, int newPos, boolean passedGo) {
+        //nothing
     }
 }

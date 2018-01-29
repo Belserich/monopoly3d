@@ -5,7 +5,6 @@ import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
 import de.btu.monopoly.Global;
 import de.btu.monopoly.core.GameBoard;
-import de.btu.monopoly.core.GameStateAdapter;
 import de.btu.monopoly.core.service.AuctionService;
 import de.btu.monopoly.core.service.IOService;
 import de.btu.monopoly.data.field.Field;
@@ -32,7 +31,7 @@ import java.util.List;
 
 import static de.btu.monopoly.ui.CameraManager.WatchMode;
 
-public class GameSceneManager extends GameStateAdapter {
+public class GameSceneManager {
     
     private static final double DEFAULT_SCENE_WIDTH = 1280;
     private static final double DEFAULT_SCENE_HEIGHT = 720;
@@ -76,7 +75,7 @@ public class GameSceneManager extends GameStateAdapter {
                 DEFAULT_SCENE_WIDTH, DEFAULT_SCENE_HEIGHT
         );
         
-        Global.ref().getGame().addGameStateListener(this);
+        Global.ref().getGame().addGameStateListener(board3d.gameStateAdapter());
         initScene();
     }
     
@@ -96,8 +95,8 @@ public class GameSceneManager extends GameStateAdapter {
     
     private void initPopups() {
     
-        board3d.readyForPopupProperty().addListener((prop, oldB, newB) -> {
-            if (newB && !popupQueue.isEmpty()) {
+        board3d.animatingProperty().addListener((prop, oldB, newB) -> {
+            if (!newB && !popupQueue.isEmpty()) {
                 nextPopup();
             }
         });
@@ -170,7 +169,7 @@ public class GameSceneManager extends GameStateAdapter {
     private void queuePopup(Pane pane) {
         Platform.runLater(() -> {
             popupQueue.add(pane);
-            if (board3d.readyForPopupProperty().get())
+            if (!board3d.animatingProperty().get())
                 nextPopup();
         });
     }

@@ -57,4 +57,6 @@ public interface GameStateListener {
     void onTradeStart(Player player);
     
     void onTradeEnd(Player player);
+    
+    void onPlayerMove(Player player, int oldPos, int newPos, boolean passedGo);
 }

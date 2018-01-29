@@ -28,14 +28,6 @@ public class CardManager {
     public CardManager(GameBoard board) {
         this.board = board;
         
-        reloadCards();
-        communityCards = Assets.getCommunityCards();
-        eventCards = Assets.getEventCards();
-    }
-    
-    public void reloadCards() {
-        
-        Assets.loadCards();
         communityCards = Assets.getCommunityCards();
         eventCards = Assets.getEventCards();
     }
