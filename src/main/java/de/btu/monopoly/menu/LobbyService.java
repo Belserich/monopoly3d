@@ -15,14 +15,13 @@ import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.data.lobby.*;
 import de.btu.monopoly.net.server.AuctionTable;
-import javafx.scene.paint.Color;
-
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.scene.paint.Color;
 
 /**
  *
@@ -86,7 +85,8 @@ public class LobbyService extends Listener {
     public static void addKI(String name, int kiLevel) {
         if (kiLevel < 1 || kiLevel > 2) {
             LOGGER.warning("kein gültiges KI Level eingegeben!");
-        } else {
+        }
+        else {
             AddKiRequest req = new AddKiRequest();
             req.setKiLevel(kiLevel);
             req.setName(name);
@@ -146,18 +146,17 @@ public class LobbyService extends Listener {
     public static void startGame() throws InterruptedException {
         lobby.getController().start();
     }
-    
+
     private static void initGame() {
         Game controller = new Game(lobby.getPlayerClient(), generatePlayerArray(), lobby.getRandomSeed());
         lobby.setController(controller);
         lobby.getPlayerClient().setGame(controller);
-        
+
         Global.ref().setGame(controller);
     }
 
     /**
-     * erzeugt aus dem users[][] ein Player[], welches fuer das Spiel benoetigt
-     * wird
+     * erzeugt aus dem users[][] ein Player[], welches fuer das Spiel benoetigt wird
      *
      * @return Player[] fuer den Parameter der Game Instanz
      */
@@ -245,11 +244,13 @@ public class LobbyService extends Listener {
         if (object instanceof JoinImpossibleResponse) {
             LOGGER.info("Spiel wurde bereits gestartet");
             Thread.interrupted();
-        } else if (object instanceof JoinResponse) {
+        }
+        else if (object instanceof JoinResponse) {
             JoinResponse joinres = (JoinResponse) object;
             lobby.setPlayerId(joinres.getId());
             lobby.setRandomSeed(joinres.getSeed());
-        } else if (object instanceof RefreshLobbyResponse) {
+        }
+        else if (object instanceof RefreshLobbyResponse) {
             RefreshLobbyResponse refres = (RefreshLobbyResponse) object;
             lobby.setUsers(refres.getUsers());
 
@@ -273,7 +274,8 @@ public class LobbyService extends Listener {
                 System.out.println("Eingabe machen für Spielstart");
             }
 
-        } else if (object instanceof GamestartResponse) {
+        }
+        else if (object instanceof GamestartResponse) {
 
             initGame();
             // Scene bei anderen Spielern öffnen
