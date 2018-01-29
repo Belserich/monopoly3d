@@ -2,7 +2,6 @@ package de.btu.monopoly.ui;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
-import com.jfoenix.controls.JFXTextArea;
 import com.jfoenix.controls.JFXTextField;
 import de.btu.monopoly.Global;
 import de.btu.monopoly.core.GameBoard;
@@ -34,6 +33,8 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 
 public class GameSceneManager implements GameStateListener {
 
@@ -143,16 +144,14 @@ public class GameSceneManager implements GameStateListener {
         HBox chatInteractionBox = new HBox(chatField, sendButton);
         HBox.setHgrow(chatField, Priority.ALWAYS);
 
-        JFXTextArea chatArea = new JFXTextArea();
-//        TextFlow chatArea = new TextFlow();
-//        chatArea.setStyle("-fx-background-color: white");
-//        Text text = new Text("Welkimmen bei Monopoly!");
-//        chatArea.getChildren().add(text);
+        TextFlow chatArea = new TextFlow();
         ChatObserver obs = new ChatObserver(chatArea);
         GUIChat.getInstance().addObserver(obs);
-
-        VBox wholeChatBox = new VBox(obs.getTextFlow(), chatInteractionBox);
-        VBox.setVgrow(chatArea, Priority.ALWAYS);
+        ScrollPane scrollChat = new ScrollPane();
+        scrollChat.setContent(obs.getTextFlow());
+        scrollChat.setStyle("-fx-background-color: white");
+        VBox wholeChatBox = new VBox(scrollChat, chatInteractionBox);
+        VBox.setVgrow(scrollChat, Priority.ALWAYS);
 
         wholeChatBox.setVisible(false);
         wholeChatBox.setPrefWidth(400);
@@ -194,21 +193,29 @@ public class GameSceneManager implements GameStateListener {
     private class ChatObserver implements Observer {
 
 //        private TextFlow area;
-        private JFXTextArea area;
+        private TextFlow area;
 
-        ChatObserver(JFXTextArea textFlow) {
+        ChatObserver(TextFlow textFlow) {
             area = textFlow;
         }
 
-        JFXTextArea getTextFlow() {
+        TextFlow getTextFlow() {
             return area;
         }
 
         @Override
         public void update(Observable o, Object arg) {
-            Platform.runLater(() -> {
-                area = (JFXTextArea) arg;
-            });
+            Task task = new Task() {
+                @Override
+                protected Object call() throws Exception {
+                    for (int i = 0; i < 5; i++) {
+                        Text[] message = (Text[]) arg;
+                        area.getChildren().addAll(message[0], message[1]);
+                    }
+                    return null;
+                }
+            };
+            Platform.runLater(task);
         }
 
     }
