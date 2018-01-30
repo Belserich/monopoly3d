@@ -11,6 +11,7 @@ import de.btu.monopoly.data.card.CardStack;
 import de.btu.monopoly.data.field.FieldManager;
 import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.player.Player;
+import de.btu.monopoly.menu.Lobby;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.data.PlayerTradeRequest;
 import de.btu.monopoly.net.data.PlayerTradeResponse;
@@ -28,12 +29,14 @@ public class TradeService {
 
     private static final Logger LOGGER = Logger.getLogger(TradeService.class.getCanonicalName());
     private static boolean isRunningOnce = false;
+    private static Trade trade;
 
 //    public static void startTradeOption(Player player, GameClient, GameBoard board) {
 //
 //    }
     /**
-     * Initiiert und koordiniert den Handel ausgehend von einem speziellen Spieler.
+     * Initiiert und koordiniert den Handel ausgehend von einem speziellen
+     * Spieler.
      *
      * @param player Initiator
      * @param client Spielclient
@@ -68,9 +71,11 @@ public class TradeService {
     }
 
     /**
-     * Wartet auf das nächste {@link PlayerTradeRequest}-Objekt und versucht es zu verarbeiten.
+     * Wartet auf das nächste {@link PlayerTradeRequest}-Objekt und versucht es
+     * zu verarbeiten.
      *
-     * @see TradeService#tryProcessTradeRequest(GameClient, GameBoard, PlayerTradeRequest)
+     * @see TradeService#tryProcessTradeRequest(GameClient, GameBoard,
+     * PlayerTradeRequest)
      */
     private static PlayerTradeResponse waitAndTryProcessTradeRequest(GameClient client, GameBoard board, GuiTrade tradeGui) {
 
@@ -84,8 +89,8 @@ public class TradeService {
      * @param client Spielclient
      * @param board Spielbrett
      * @param request Handelsanfrage
-     * @return Das gesendete {@link PlayerTradeResponse}-Objekt, falls die empfangene Request an diesen Clienten gerichtet war,
-     * sonst null.
+     * @return Das gesendete {@link PlayerTradeResponse}-Objekt, falls die
+     * empfangene Request an diesen Clienten gerichtet war, sonst null.
      */
     private static PlayerTradeResponse tryProcessTradeRequest(GameClient client, GameBoard board, PlayerTradeRequest request, GuiTrade tradeGui) {
 
@@ -115,6 +120,9 @@ public class TradeService {
             else {
                 response = new PlayerTradeResponse();
                 response.setRequest(request);
+
+                // Hier TradeGui tradeGui initialisieren mithilfe von TradeOffer trade
+                tradeGui.setTradeStarter(Lobby.getPlayerClient().getGame().getPlayers()[trade.getSupply().getPlayerId()]);
 
                 Global.ref().getGameSceneManager().showOfferPopup(tradeGui);
                 while (!Global.ref().getGameSceneManager().getTradeAnswerIsGiven()) {
@@ -152,7 +160,7 @@ public class TradeService {
 
     private static Trade createTrade(Player supplier, GameBoard board, GuiTrade tradeGui) {
 
-        Trade trade = new Trade();
+        trade = new Trade();
         if (GlobalSettings.RUN_IN_CONSOLE) {
             List<Player> activePlayers = board.getActivePlayers();
             StringBuilder builder = new StringBuilder("Waehle einen Spieler:\n");
@@ -186,7 +194,8 @@ public class TradeService {
     }
 
     /**
-     * Erstellt eine TradeOffer-Instanz, die alle gebotenen handelbaren Objekt-IDs eines Spielers zusammenfasst.
+     * Erstellt eine TradeOffer-Instanz, die alle gebotenen handelbaren
+     * Objekt-IDs eines Spielers zusammenfasst.
      *
      * @param player Spieler
      * @param board Board
@@ -241,7 +250,8 @@ public class TradeService {
     }
 
     /**
-     * Erstellt eine TradeOffer-Instanz, die sich alle gebotenen Objekte aus der GUI holt
+     * Erstellt eine TradeOffer-Instanz, die sich alle gebotenen Objekte aus der
+     * GUI holt
      *
      * @param player Spieler
      * @return Angebots-Instanz
@@ -263,7 +273,8 @@ public class TradeService {
      * Hilfsmethode
      *
      * @param ownedIds Die IDs der handelbaren Objekte in Spielerbesitz
-     * @param chosenIds Die IDs der ausgewählten handelbaren Objekte in Spielerbesitz
+     * @param chosenIds Die IDs der ausgewählten handelbaren Objekte in
+     * Spielerbesitz
      * @return ob der Spieler mit der momentanen ID-Auswahl fertig ist
      */
     private static boolean handleOfferChoice(List<Integer> ownedIds, List<Integer> chosenIds) {
