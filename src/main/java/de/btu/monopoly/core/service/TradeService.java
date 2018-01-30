@@ -127,8 +127,8 @@ public class TradeService {
                 tradeGui.setPartnersCardIds(trade.getDemand().getCardIds());
                 tradeGui.setYourMoney(trade.getSupply().getMoney());
                 tradeGui.setPartnersMoney(trade.getDemand().getMoney());
-                tradeGui.setYourCardAmount(trade.getSupply().getCardIds().length);
-                tradeGui.setPartnersCardAmount(trade.getDemand().getCardIds().length);
+//                tradeGui.setYourCardAmount(trade.getSupply().getCardIds().length);
+//                tradeGui.setPartnersCardAmount(trade.getDemand().getCardIds().length);
 
                 Global.ref().getGameSceneManager().showOfferPopup(tradeGui);
                 while (!Global.ref().getGameSceneManager().getTradeAnswerIsGiven()) {

@@ -1012,8 +1012,7 @@ public class GameSceneManager {
     }
 
     /**
-     * Erstellt ein int[] mit Property IDs, welches dem Trade uebergeben werden
-     * kann
+     * Erstellt ein int[] mit Property IDs, welches dem Trade uebergeben werden kann
      *
      * @param itemList
      * @return
@@ -1049,7 +1048,7 @@ public class GameSceneManager {
             cardIds[i] = i;
         }
 
-        return null;
+        return cardIds;
     }
 
     /**

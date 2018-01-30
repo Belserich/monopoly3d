@@ -26,10 +26,10 @@ public class GuiTrade {
 
     public GuiTrade() {
 
-        this.yourMoney = -1;
-        this.partnersMoney = -1;
-        this.yourCardAmount = -1;
-        this.partnersCardAmount = -1;
+        this.yourMoney = 0;
+        this.partnersMoney = 0;
+        this.yourCardAmount = 0;
+        this.partnersCardAmount = 0;
     }
 
     public Player getTradeStarter() {
