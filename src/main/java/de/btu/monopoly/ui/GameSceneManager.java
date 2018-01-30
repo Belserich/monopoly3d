@@ -27,9 +27,6 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.*;
 import javafx.scene.control.*;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -110,34 +107,8 @@ public class GameSceneManager {
         popupWrapper.setAlignment(Pos.CENTER);
         popupWrapper.setPickOnBounds(false);
 
-        TextField chatField = new TextField();
-        chatField.setOnKeyPressed((KeyEvent event) -> {
-            if (event.getCode().equals(KeyCode.ENTER)) {
-                clickSendMessage(chatField);
-            }
-        });
-        Button sendButton = new Button("Senden");
-        sendButton.setOnMouseClicked((MouseEvent event) -> {
-            clickSendMessage(chatField);
-        });
-
-        HBox chatInteractionBox = new HBox(chatField, sendButton);
-        HBox.setHgrow(chatField, Priority.ALWAYS);
-
-        TextFlow chatArea = new TextFlow();
-        ChatObserver obs = new ChatObserver(chatArea);
-        GUIChat.getInstance().addObserver(obs);
-        ScrollPane scrollChat = new ScrollPane();
-        scrollChat.setContent(obs.getTextFlow());
-//        scrollChat.setStyle("-fx-background-color: white");
-        scrollChat.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        scrollChat.vvalueProperty().bind(chatArea.heightProperty());
-        chatArea.setMaxWidth(380);
-        VBox wholeChatBox = new VBox(scrollChat, chatInteractionBox);
-        VBox.setVgrow(scrollChat, Priority.ALWAYS);
-
-        wholeChatBox.setVisible(false);
-        wholeChatBox.setPrefWidth(400);
+        VBox wholeChatBox = ChatUi.getInstance().getWholeChatBox();
+        HBox chatToggleBox = ChatUi.getInstance().getChatToggleBox();
 
         uiPane.setRight(wholeChatBox);
 
@@ -151,13 +122,9 @@ public class GameSceneManager {
         });
         viewButton.setPrefSize(50, 50);
 
-        ToggleButton chatButton = new ToggleButton("Chat");
-        chatButton.setOnMouseReleased(event -> wholeChatBox.setVisible(chatButton.isSelected()));
-        chatButton.setPrefSize(50, 50);
-
         topButtonPane.setPadding(new Insets(0, 0, 5, 0));
         topButtonPane.setLeft(viewButton);
-        topButtonPane.setRight(chatButton);
+        topButtonPane.setRight(chatToggleBox);
 
         uiPane.setTop(topButtonPane);
 
@@ -184,7 +151,7 @@ public class GameSceneManager {
 
     private class ChatObserver implements Observer {
 
-        private TextFlow area;
+        private final TextFlow area;
 
         ChatObserver(TextFlow textFlow) {
             area = textFlow;

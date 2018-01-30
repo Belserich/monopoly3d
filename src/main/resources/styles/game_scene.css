@@ -1,0 +1,16 @@
+#chat_enabled{
+    -fx-background-color: white;
+    -fx-border-color: transparent;
+    -fx-font-family: 'Tahoma';
+}
+
+#send_button{
+    -fx-background-color: #212121;
+    -fx-text-fill: white;
+    -fx-font-size: 13;
+}
+
+.scroll-pane > .viewport {  
+    -fx-background-color: white;
+    -fx-border-color: transparent;
+}
