@@ -1,5 +1,6 @@
 package de.btu.monopoly.core.service;
 
+import de.btu.monopoly.Global;
 import de.btu.monopoly.core.GameBoard;
 import de.btu.monopoly.core.mechanics.Trade;
 import de.btu.monopoly.core.mechanics.TradeOffer;
@@ -10,10 +11,12 @@ import de.btu.monopoly.data.field.FieldManager;
 import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.ki.HardKi;
+import de.btu.monopoly.menu.Lobby;
 import de.btu.monopoly.net.chat.GUIChat;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.data.PlayerTradeRequest;
 import de.btu.monopoly.net.data.PlayerTradeResponse;
+import de.btu.monopoly.ui.GuiTrade;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -26,6 +29,8 @@ import java.util.stream.Collectors;
 public class TradeService {
 
     private static final Logger LOGGER = Logger.getLogger(TradeService.class.getCanonicalName());
+    private static boolean isRunningOnce = false;
+    private static Trade trade;
 
     /**
      * Initiiert und koordiniert den Handel ausgehend von einem speziellen Spieler.
@@ -37,13 +42,20 @@ public class TradeService {
     public static void processPlayerTradeOption(Player player, GameClient client, GameBoard board) {
 
         PlayerTradeResponse response;
+        GuiTrade tradeGui = new GuiTrade();
 
         if (PlayerService.isMainPlayer(player, client)) {
-            TradeService.createAndSendTradeRequest(client, board, player);
-            response = (PlayerTradeResponse) client.waitForObjectOfClass(PlayerTradeResponse.class);
+            PlayerTradeRequest ptr = TradeService.createAndSendTradeRequest(client, board, player, tradeGui);
+            if (board.getPlayer(ptr.getTrade().getDemand().getPlayerId()).getAiLevel() > 0) {
+                response = getLocalKiResponse(board, ptr);
+            }
+            else {
+                response = (PlayerTradeResponse) client.waitForObjectOfClass(PlayerTradeResponse.class);
+            }
+
         }
         else {
-            response = TradeService.waitAndTryProcessTradeRequest(client, board);
+            response = TradeService.waitAndTryProcessTradeRequest(client, board, tradeGui);
         }
 
         if (response == null) {
@@ -51,11 +63,24 @@ public class TradeService {
         }
 
         if (response.isAccepted()) {
-            GUIChat.getInstance().event("<<< HANDEL ANGENOMMEN >>>");
-            TradeService.completeTrade(response.getRequest().getTrade(), board);
+            if (Global.RUN_IN_CONSOLE) {
+                GUIChat.getInstance().event("<<< HANDEL ANGENOMMEN >>>");
+                TradeService.completeTrade(response.getRequest().getTrade(), board);
+            }
+            else {
+                Global.ref().getGameSceneManager().showAnswerPopup(true);
+                IOService.sleep(2100);
+                TradeService.completeTrade(response.getRequest().getTrade(), board);
+            }
         }
         else {
-            GUIChat.getInstance().event("<<< HANDEL ABGELEHNT >>>");
+            if (Global.RUN_IN_CONSOLE) {
+                GUIChat.getInstance().event("<<< HANDEL ABGELEHNT >>>");
+            }
+            else {
+                Global.ref().getGameSceneManager().showAnswerPopup(false);
+                IOService.sleep(2100);
+            }
         }
     }
 
@@ -64,10 +89,10 @@ public class TradeService {
      *
      * @see TradeService#tryProcessTradeRequest(GameClient, GameBoard, PlayerTradeRequest)
      */
-    private static PlayerTradeResponse waitAndTryProcessTradeRequest(GameClient client, GameBoard board) {
+    private static PlayerTradeResponse waitAndTryProcessTradeRequest(GameClient client, GameBoard board, GuiTrade tradeGui) {
 
         PlayerTradeRequest request = (PlayerTradeRequest) client.waitForObjectOfClass(PlayerTradeRequest.class);
-        return tryProcessTradeRequest(client, board, request);
+        return tryProcessTradeRequest(client, board, request, tradeGui);
     }
 
     /**
@@ -79,7 +104,7 @@ public class TradeService {
      * @return Das gesendete {@link PlayerTradeResponse}-Objekt, falls die empfangene Request an diesen Clienten gerichtet war,
      * sonst null.
      */
-    private static PlayerTradeResponse tryProcessTradeRequest(GameClient client, GameBoard board, PlayerTradeRequest request) {
+    private static PlayerTradeResponse tryProcessTradeRequest(GameClient client, GameBoard board, PlayerTradeRequest request, GuiTrade tradeGui) {
 
         if (request.isDenied()) {
             return null;
@@ -99,51 +124,114 @@ public class TradeService {
         }
         if (receipt == thisPlayer) {
 
-            LOGGER.info(String.format("Spieler %s hat dir eine Handelsanfrage gemacht:%n%n%s%n\t[1] - annehmen%n\t[2] - ablehnen",
-                    board.getPlayer(trade.getSupply().getPlayerId()).getName(), trade.toString(board)));
-            accepted = (IOService.getClientChoice(receipt, 2) == 1);
+            if (Global.RUN_IN_CONSOLE) {
 
-            response.setAccepted(accepted);
-            client.sendTCP(response);
+                LOGGER.info(String.format("Spieler %s hat dir eine Handelsanfrage gemacht:%n%n%s%n\t[1] - annehmen%n\t[2] - ablehnen",
+                        board.getPlayer(trade.getSupply().getPlayerId()).getName(), trade.toString(board)));
+                accepted = (IOService.getClientChoice(receipt, 2) == 1);
 
+                response.setAccepted(accepted);
+                client.sendTCP(response);
+            }
+            else {
+                response = new PlayerTradeResponse();
+                response.setRequest(request);
+
+                // Hier TradeGui tradeGui initialisieren mithilfe von TradeOffer trade
+                tradeGui.setTradeStarter(Lobby.getPlayerClient().getGame().getPlayers()[trade.getSupply().getPlayerId()]);
+                tradeGui.setTradePartner(Lobby.getPlayerClient().getGame().getPlayers()[trade.getDemand().getPlayerId()]);
+                tradeGui.setYourPropIds(trade.getSupply().getPropertyIds());
+                tradeGui.setPartnersPropIds(trade.getDemand().getPropertyIds());
+                tradeGui.setYourCardIds(trade.getSupply().getCardIds());
+                tradeGui.setPartnersCardIds(trade.getDemand().getCardIds());
+                tradeGui.setYourMoney(trade.getSupply().getMoney());
+                tradeGui.setPartnersMoney(trade.getDemand().getMoney());
+                tradeGui.setYourCardAmount(trade.getSupply().getCardIds().length);
+                tradeGui.setPartnersCardAmount(trade.getDemand().getCardIds().length);
+
+                Global.ref().getGameSceneManager().showOfferPopup(tradeGui);
+                while (!Global.ref().getGameSceneManager().getTradeAnswerIsGiven()) {
+                    IOService.sleep(500);
+                }
+                Global.ref().getGameSceneManager().resteTradeAnswerIsGiven();
+                response.setAccepted(Global.ref().getGameSceneManager().getTradeAnswer());
+
+                client.sendTCP(response);
+
+            }
         }
 
         return response;
     }
 
-    private static void createAndSendTradeRequest(GameClient client, GameBoard board, Player supplier) {
-        client.sendTCP(createTradeRequest(supplier, board));
+    private static PlayerTradeResponse getLocalKiResponse(GameBoard board, PlayerTradeRequest request) {
+
+        if (request.isDenied()) {
+            return null;
+        }
+
+        PlayerTradeResponse response = new PlayerTradeResponse();
+        response.setRequest(request);
+        Trade trade = request.getTrade();
+        Player receipt = board.getPlayer(request.getTrade().getDemand().getPlayerId());
+        boolean accepted = false;
+        accepted = HardKi.calculateTradingChoice(trade, receipt);
+        response.setAccepted(accepted);
+
+        return response;
     }
 
-    private static PlayerTradeRequest createTradeRequest(Player supplier, GameBoard board) {
+    private static PlayerTradeRequest createAndSendTradeRequest(GameClient client, GameBoard board, Player supplier, GuiTrade tradeGui) {
+        PlayerTradeRequest ptr = createTradeRequest(supplier, board, tradeGui);
+        client.sendTCP(ptr);
+        return ptr;
+    }
+
+    private static PlayerTradeRequest createTradeRequest(Player supplier, GameBoard board, GuiTrade tradeGui) {
 
         PlayerTradeRequest request = new PlayerTradeRequest();
-        request.setTrade(createTrade(supplier, board));
-        request.setDenied(IOService.getUserInput(2) == 2);
+        request.setTrade(createTrade(supplier, board, tradeGui));
+        if (Global.RUN_IN_CONSOLE) {
+            request.setDenied(IOService.getUserInput(2) == 2);
+        }
+        else {
+            request.setDenied(false);
+        }
         return request;
     }
 
-    private static Trade createTrade(Player supplier, GameBoard board) {
+    private static Trade createTrade(Player supplier, GameBoard board, GuiTrade tradeGui) {
 
-        Trade trade = new Trade();
-
-        List<Player> activePlayers = board.getActivePlayers();
-        StringBuilder builder = new StringBuilder("Waehle einen Spieler:\n");
-        for (int i = 0; i < activePlayers.size(); i++) {
-            Player p = activePlayers.get(i);
-            if (p != supplier) {
-                builder.append(String.format("[%d] - %s%n", i + 1, p.toString()));
+        trade = new Trade();
+        if (Global.RUN_IN_CONSOLE) {
+            List<Player> activePlayers = board.getActivePlayers();
+            StringBuilder builder = new StringBuilder("Waehle einen Spieler:\n");
+            for (int i = 0; i < activePlayers.size(); i++) {
+                Player p = activePlayers.get(i);
+                if (p != supplier) {
+                    builder.append(String.format("[%d] - %s%n", i + 1, p.toString()));
+                }
             }
+            LOGGER.info(builder.toString());
+            Player receipt = activePlayers.get(IOService.getUserInput(activePlayers.size()) - 1);
+
+            trade.setSupply(TradeService.createTradeOffer(supplier, board));
+            trade.setDemand(TradeService.createTradeOffer(receipt, board));
         }
-        LOGGER.info(builder.toString());
-        Player receipt = activePlayers.get(IOService.getUserInput(activePlayers.size()) - 1);
+        else {
 
-        trade.setSupply(TradeService.createTradeOffer(supplier, board));
-        trade.setDemand(TradeService.createTradeOffer(receipt, board));
-
-        LOGGER.info(String.format("Zusammenfassung:%n%n%s%nHandelsanfrage wirklich absenden?%n\t[1] - Ja%n\t[2] - Nein",
-                trade.toString(board)));
-
+            Global.ref().getGameSceneManager().initTradePopup(supplier, tradeGui);
+            while (!Global.ref().getGameSceneManager().getTradeOfferIsCreated()) {
+                IOService.sleep(500);
+            }
+            trade.setSupply(TradeService.createTradeOfferGui(supplier, tradeGui));
+            trade.setDemand(TradeService.createTradeOfferGui(Global.ref().getGameSceneManager().getTradePartner(tradeGui), tradeGui));
+            Global.ref().getGameSceneManager().resetTradeOfferIsCreated();
+        }
+        if (Global.RUN_IN_CONSOLE) {
+            LOGGER.info(String.format("Zusammenfassung:%n%n%s%nHandelsanfrage wirklich absenden?%n\t[1] - Ja%n\t[2] - Nein",
+                    trade.toString(board)));
+        }
         return trade;
     }
 
@@ -151,6 +239,7 @@ public class TradeService {
      * Erstellt eine TradeOffer-Instanz, die alle gebotenen handelbaren Objekt-IDs eines Spielers zusammenfasst.
      *
      * @param player Spieler
+     * @param board Board
      * @return Angebots-Instanz
      */
     private static TradeOffer createTradeOffer(Player player, GameBoard board) {
@@ -199,6 +288,24 @@ public class TradeService {
         }
 
         return retObj;
+    }
+
+    /**
+     * Erstellt eine TradeOffer-Instanz, die sich alle gebotenen Objekte aus der GUI holt
+     *
+     * @param player Spieler
+     * @return Angebots-Instanz
+     */
+    public static TradeOffer createTradeOfferGui(Player player, GuiTrade tradeGui) {
+
+        TradeOffer offer = new TradeOffer();
+
+        offer.setPlayerId(player.getId());
+        offer.setPropertyIds(Global.ref().getGameSceneManager().getPropertyIdsForTrade(player, tradeGui));
+        offer.setCardIds(Global.ref().getGameSceneManager().getCardIdsForTrade(player, tradeGui));
+        offer.setMoney(Global.ref().getGameSceneManager().getMoneyForTrade(player, tradeGui));
+
+        return offer;
     }
 
     /**

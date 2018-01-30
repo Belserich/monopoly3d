@@ -76,4 +76,8 @@ public class Global {
     public Player playerOnClient() {
         return client.getPlayerOnClient();
     }
+
+//    public Player currentPlayer() {
+//        return game.getCurrentPlayer();
+//    }
 }

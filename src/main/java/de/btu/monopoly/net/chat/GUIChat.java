@@ -41,11 +41,17 @@ public class GUIChat extends Chat {
 
     // Styles
     String eventMsg = "-fx-background-color: lightgray;\n"
-            + "-fx-font-style: oblique;\n"
             + "-fx-fill: black;\n"
             + "-fx-font-weight: 800;\n"
             + "-fx-font-family: 'Roboto';\n"
             + "-fx-font-size: 15";
+
+    String playerMsg = "-fx-background-color: lightgray;\n"
+            + "-fx-font-style: oblique;\n"
+            + "-fx-fill: black;\n"
+            + "-fx-font-weight: 400;\n"
+            + "-fx-font-family: 'Roboto';\n"
+            + "-fx-font-size: 14";
 
     /**
      * der Singleton-Konstruktor. Wird ausschließlich intern und nur ein mal aufgerufen
@@ -139,7 +145,7 @@ public class GUIChat extends Chat {
             message[0] = new Text(mess.getAutor() + ": ");
             message[0].setFont(Font.font("Roboto", FontWeight.BOLD, 16));
             message[0].setFill(Color.web(mess.getfColor()));
-            message[1].setFont(Font.font("Roboto", FontWeight.NORMAL, 14));
+            message[1].setStyle(playerMsg);
         }
         notifier.notify(message);
         //</editor-fold>
