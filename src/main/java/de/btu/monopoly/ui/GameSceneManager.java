@@ -1244,6 +1244,8 @@ public class GameSceneManager {
             showAnswerPopup(tradeAnswer);
         });
 
+        queuePopupPane(showOfferGridPane);
+
     }
 
     private String generatePropertyString(int[] propertyIds) {
