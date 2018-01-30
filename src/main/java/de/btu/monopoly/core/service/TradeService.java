@@ -58,13 +58,24 @@ public class TradeService {
             response = (PlayerTradeResponse) client.waitForObjectOfClass(PlayerTradeResponse.class);
         }
 
-        if (GlobalSettings.RUN_IN_CONSOLE) {
-            if (response.isAccepted()) {
+        if (response.isAccepted()) {
+            if (GlobalSettings.RUN_IN_CONSOLE) {
                 LOGGER.info("<<< HANDEL ANGENOMMEN >>>");
                 TradeService.completeTrade(response.getRequest().getTrade(), board);
             }
             else {
+                Global.ref().getGameSceneManager().showAnswerPopup(true);
+                IOService.sleep(2100);
+                TradeService.completeTrade(response.getRequest().getTrade(), board);
+            }
+        }
+        else {
+            if (GlobalSettings.RUN_IN_CONSOLE) {
                 LOGGER.info("<<< HANDEL ABGELEHNT >>>");
+            }
+            else {
+                Global.ref().getGameSceneManager().showAnswerPopup(false);
+                IOService.sleep(2100);
             }
         }
     }
@@ -127,8 +138,8 @@ public class TradeService {
                 tradeGui.setPartnersCardIds(trade.getDemand().getCardIds());
                 tradeGui.setYourMoney(trade.getSupply().getMoney());
                 tradeGui.setPartnersMoney(trade.getDemand().getMoney());
-//                tradeGui.setYourCardAmount(trade.getSupply().getCardIds().length);
-//                tradeGui.setPartnersCardAmount(trade.getDemand().getCardIds().length);
+                tradeGui.setYourCardAmount(trade.getSupply().getCardIds().length);
+                tradeGui.setPartnersCardAmount(trade.getDemand().getCardIds().length);
 
                 Global.ref().getGameSceneManager().showOfferPopup(tradeGui);
                 while (!Global.ref().getGameSceneManager().getTradeAnswerIsGiven()) {
@@ -139,9 +150,6 @@ public class TradeService {
 
                 client.sendTCP(response);
 
-                if (response.isAccepted()) {
-                    TradeService.completeTrade(response.getRequest().getTrade(), board);
-                }
             }
         }
         return response;
@@ -269,7 +277,6 @@ public class TradeService {
         offer.setCardIds(Global.ref().getGameSceneManager().getCardIdsForTrade(player, tradeGui));
         offer.setMoney(Global.ref().getGameSceneManager().getMoneyForTrade(player, tradeGui));
 
-        System.out.println("Bin hier mit Spieler " + player.getName());
         return offer;
     }
 

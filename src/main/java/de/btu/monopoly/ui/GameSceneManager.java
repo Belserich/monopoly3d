@@ -592,48 +592,6 @@ public class GameSceneManager {
 
     }
 
-//    public void startTradePopup(Player player) {
-//
-//        clearPopups();
-//
-//        tradeGui.setTradeStarter(player);
-//        Player[] players = Lobby.getPlayerClient().getGame().getPlayers();
-//
-//        //Initialisierung der benoetigten Objekte
-//        //Gridpane(s)
-//        GridPane tradeStartGridPane = new GridPane();
-//        //Label(s)
-//        Label tradeStartLabel = new Label(tradeGui.getTradeStarter() + " erstellt gerade einen Handel!");
-//        tradeStartLabel.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
-//        //VBox(en)
-//        VBox tradeStartVBox = new VBox();
-//
-//        //Einstellung der Objekte
-//        String cssLayout = "-fx-background-color: #dcedc8;\n"
-//                + "-fx-border-color: black;\n"
-//                + "-fx-border-insets: 5;\n"
-//                + "-fx-border-width: 1;\n"
-//                + "-fx-border-style: double;\n";
-//
-//        tradeStartGridPane.setAlignment(Pos.CENTER);
-//        tradeStartGridPane.add(tradeStartVBox, 0, 0);
-//
-//        tradeStartVBox.setStyle(cssLayout);
-//        tradeStartVBox.setSpacing(10);
-//        tradeStartVBox.setPrefSize(800, 200);
-//        tradeStartVBox.setAlignment(Pos.CENTER);
-//        tradeStartVBox.getChildren().addAll(tradeStartLabel);
-//
-////        for (Player gamer : players) {
-//        if (Lobby.getPlayerClient().getPlayerOnClient().equals(tradeGui.getTradeStarter())) {
-//            initTradePopup();
-////            queuePopupPane(tradeStartGridPane);
-//        }
-//        else {
-//            queuePopupPane(tradeStartGridPane);
-//        }
-////        }
-//    }
 
     /*
          Init Popup fuer den Handel
@@ -971,7 +929,7 @@ public class GameSceneManager {
 
                     tradeOfferIsCreated = true;
 
-                    waitForResponsePopup();
+                    waitForResponsePopup(tradeGui);
 
                 }
 
@@ -1167,12 +1125,13 @@ public class GameSceneManager {
         //GridPane(s)
         GridPane showOfferGridPane = new GridPane();
         //VBox(en)
-        VBox labelOfferVBox = new VBox();
-        VBox showOfferVBox = new VBox();
+        VBox mainOfferVBox = new VBox();
+        VBox yourOfferVBox = new VBox();
+        VBox partnersOfferVBox = new VBox();
         //HBox(en)
-        HBox mainOfferHBox = new HBox();
-        HBox yourOfferHBox = new HBox();
-        HBox partnersOfferHBox = new HBox();
+        HBox labelOfferHBox = new HBox();
+        HBox showOfferHBox = new HBox();
+
         //Label(s) mit Einstellungen
         Label offerLabel = new Label("Angebot von " + tradeGui.getTradeStarter().getName());
         offerLabel.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
@@ -1201,12 +1160,12 @@ public class GameSceneManager {
         deniedOfferButton.setBackground(new Background(new BackgroundFill(Color.web("#e1f5fe"), CornerRadii.EMPTY, Insets.EMPTY)));
         deniedOfferButton.setFont(Font.font("Tahoma", FontWeight.NORMAL, 14));
         //Seperator(en)
-        Separator mainSeparator = new Separator(Orientation.VERTICAL);
-        Separator offersSeparator = new Separator(Orientation.HORIZONTAL);
-        Separator underYourPropsSeparator = new Separator(Orientation.VERTICAL);
-        Separator underYourCardsSeparator = new Separator(Orientation.VERTICAL);
-        Separator underPartnersPropsSeparator = new Separator(Orientation.VERTICAL);
-        Separator underPartnersCardsSeparator = new Separator(Orientation.VERTICAL);
+        Separator mainSeparator = new Separator(Orientation.HORIZONTAL);
+        Separator offersSeparator = new Separator(Orientation.VERTICAL);
+        Separator underYourPropsSeparator = new Separator(Orientation.HORIZONTAL);
+        Separator underYourCardsSeparator = new Separator(Orientation.HORIZONTAL);
+        Separator underPartnersPropsSeparator = new Separator(Orientation.HORIZONTAL);
+        Separator underPartnersCardsSeparator = new Separator(Orientation.HORIZONTAL);
 
         //Einstellen des GUI Fensters
         String cssLayout = "-fx-background-color: #dcedc8;\n"
@@ -1215,21 +1174,25 @@ public class GameSceneManager {
                 + "-fx-border-width: 1;\n"
                 + "-fx-border-style: double;\n";
 
-        showOfferGridPane.add(mainOfferHBox, 0, 0);
+        showOfferGridPane.add(mainOfferVBox, 0, 0);
         showOfferGridPane.setAlignment(Pos.CENTER);
 
-        mainOfferHBox.setStyle(cssLayout);
-        mainOfferHBox.setSpacing(10);
-        mainOfferHBox.setPrefSize(800, 200);
-        mainOfferHBox.setAlignment(Pos.CENTER);
-        mainOfferHBox.getChildren().addAll(offerLabel, showOfferVBox);
+        mainOfferVBox.setStyle(cssLayout);
+        mainOfferVBox.setSpacing(10);
+        mainOfferVBox.setPrefSize(800, 300);
+        mainOfferVBox.setAlignment(Pos.CENTER);
+        mainOfferVBox.getChildren().addAll(offerLabel, showOfferHBox);
 
-        showOfferVBox.setPadding(new Insets(2));
-        showOfferVBox.getChildren().addAll(yourOfferHBox, partnersOfferHBox);
+        yourOfferVBox.setPrefSize(400, 275);
+        yourOfferVBox.setAlignment(Pos.CENTER);
+        yourOfferVBox.getChildren().addAll(yourSideLabel, yourPropsLabel, underYourPropsSeparator, yourCardsLabel, underYourCardsSeparator, yourMoneyLabel, acceptOfferButton);
 
-        yourOfferHBox.getChildren().addAll(yourSideLabel, yourPropsLabel, underYourPropsSeparator, yourCardsLabel, underYourCardsSeparator, yourMoneyLabel, acceptOfferButton);
+        partnersOfferVBox.setPrefSize(400, 275);
+        partnersOfferVBox.setAlignment(Pos.CENTER);
+        partnersOfferVBox.getChildren().addAll(partnersSideLabel, partnersPropsLabel, underPartnersPropsSeparator, partnersCardsLabel, underPartnersCardsSeparator, partnersMoneyLabel, deniedOfferButton);
 
-        partnersOfferHBox.getChildren().addAll(partnersSideLabel, partnersPropsLabel, underPartnersPropsSeparator, partnersCardsLabel, underPartnersCardsSeparator, partnersMoneyLabel, deniedOfferButton);
+        showOfferHBox.setPadding(new Insets(2));
+        showOfferHBox.getChildren().addAll(yourOfferVBox, offersSeparator, partnersOfferVBox);
 
         //Eventlistener(s)
         acceptOfferButton.setOnAction(event -> {
@@ -1256,11 +1219,10 @@ public class GameSceneManager {
         /*
         Versuche die LinkedList auseinander zunehmen ;D
          */
-        for (Field prop : fields) {
+        for (int j = 0; j < fields.length; j++) {
             for (int i = 0; i < propertyIds.length; i++) {
-                if (prop.equals(propertyIds[i])) {
-                    String propName = prop.getName();
-                    allPropertyString += propName + "\n";
+                if (j == propertyIds[i]) {
+                    allPropertyString += fields[j].getName() + "\n";
                 }
             }
         }
@@ -1284,7 +1246,7 @@ public class GameSceneManager {
         return tradeAnswer;
     }
 
-    private void waitForResponsePopup() {
+    public void waitForResponsePopup(GuiTrade tradeGui) {
 
         clearPopups();
 
@@ -1318,7 +1280,7 @@ public class GameSceneManager {
 
     }
 
-    private void showAnswerPopup(boolean choice) {
+    public void showAnswerPopup(boolean choice) {
 
         clearPopups();
 
@@ -1357,7 +1319,7 @@ public class GameSceneManager {
         Global.ref().getGameSceneManager().queuePopupPane(tradeAnswerGridPane);
 
         Timeline timer = new Timeline(new KeyFrame(
-                Duration.millis(3000),
+                Duration.millis(2000),
                 timeOver -> clearPopups()));
 
         timer.play();
