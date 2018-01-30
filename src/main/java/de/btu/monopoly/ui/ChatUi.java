@@ -37,9 +37,9 @@ public class ChatUi {
     private boolean fixedToggle = false;
 
     private void initChatBox() {
-        wholeChatBox.getStylesheets().add(this.getClass().getResource("/styles/game_scene.css").toExternalForm());
+        wholeChatBox.getStylesheets().add(this.getClass().getResource("/styles/chat.css").toExternalForm());
         JFXTextField chatField = new JFXTextField();
-        chatField.setId("chat_enabled");
+        chatField.setId("chat_field");
         chatField.setOnKeyPressed((KeyEvent event) -> {
             if (event.getCode().equals(KeyCode.ENTER)) {
                 clickSendMessage(chatField);
@@ -55,12 +55,12 @@ public class ChatUi {
         HBox.setHgrow(chatField, Priority.ALWAYS);
 
         TextFlow chatArea = new TextFlow();
-        chatArea.setId("chat_enabled");
+        chatArea.setId("chat_area");
         ChatObserver obs = new ChatObserver(chatArea);
         GUIChat.getInstance().addObserver(obs);
         ScrollPane scrollChat = new ScrollPane();
         scrollChat.setContent(obs.getTextFlow());
-        scrollChat.setId("scroll-pane");
+        scrollChat.setId("general");
         scrollChat.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scrollChat.vvalueProperty().bind(chatArea.heightProperty());
         chatArea.setMaxWidth(350);
@@ -75,6 +75,7 @@ public class ChatUi {
 
     private void initChatToggleBox() {
         Label toggle = new Label("\n Chat maximieren");
+        toggle.setId("general");
         JFXToggleButton chatButton = new JFXToggleButton();
         chatToggleBox.getChildren().addAll(toggle, chatButton);
         chatButton.setOnMouseReleased((MouseEvent event) -> {
