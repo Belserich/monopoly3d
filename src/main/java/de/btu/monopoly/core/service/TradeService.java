@@ -124,6 +124,10 @@ public class TradeService {
                 response.setAccepted(Global.ref().getGameSceneManager().getTradeAnswer());
 
                 client.sendTCP(response);
+
+                if (response.isAccepted()) {
+                    TradeService.completeTrade(response.getRequest().getTrade(), board);
+                }
             }
         }
         return response;
