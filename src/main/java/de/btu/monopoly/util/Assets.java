@@ -19,6 +19,8 @@ import static de.btu.monopoly.ui.fx3d.Fx3dField.*;
 
 public class Assets
 {
+    public static final int START_MONEY = 1500;
+    
     private static final String ROOT_DIR = "/images/new/";
     
     private static final String IMG_DIR = ROOT_DIR + "images/";
@@ -92,6 +94,7 @@ public class Assets
     }
     
     public static void loadCards() {
+    
         try {
             commCards = CardDataParser.parse(DATA_DIR + COMM_CARDS_PATH);
             eventCards = CardDataParser.parse(DATA_DIR + EVENT_CARDS_PATH);

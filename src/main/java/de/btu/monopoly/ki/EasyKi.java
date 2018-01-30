@@ -8,11 +8,10 @@ package de.btu.monopoly.ki;
 import de.btu.monopoly.core.service.AuctionService;
 import de.btu.monopoly.core.service.IOService;
 import de.btu.monopoly.core.service.PlayerService;
-import de.btu.monopoly.data.card.Card;
+import de.btu.monopoly.data.card.Card.Action;
 import de.btu.monopoly.data.card.CardStack;
 import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.player.Player;
-
 import java.util.Random;
 import java.util.logging.Logger;
 
@@ -36,7 +35,7 @@ public class EasyKi {
     public static int jailOption(Player player) {
         int choice;
         CardStack stack = player.getCardStack();
-        if (stack.countCardsOfAction(Card.Action.JAIL) > 0) {
+        if (stack.countCardsOfAction(Action.JAIL) > 0) {
             choice = 3;
         }
         else if (player.getMoney() > 100) {

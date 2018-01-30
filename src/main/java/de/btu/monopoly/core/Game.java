@@ -6,6 +6,7 @@ import de.btu.monopoly.data.card.Card;
 import de.btu.monopoly.data.field.*;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.ki.HardKi;
+import de.btu.monopoly.net.chat.GUIChat;
 import de.btu.monopoly.net.client.GameClient;
 
 import java.util.Arrays;
@@ -23,14 +24,14 @@ public class Game {
     public static final int JAIL_ROLL_OPTION = 1;
     public static final int JAIL_PAY_OPTION = 2;
     public static final int JAIL_CARD_OPTION = 3;
-    
+
     public static final int ACTION_NOTHING = 1;
     public static final int ACTION_BUY_HOUSE = 2;
     public static final int ACTION_SELL_HOUSE = 3;
     public static final int ACTION_TAKE_MORTGAGE = 4;
     public static final int ACTION_PAY_MORTGAGE = 5;
     public static final int ACTION_TRADE = 6;
-    
+
     /**
      * Zentraler Logger der Spiellogik
      */
@@ -55,7 +56,7 @@ public class Game {
      * Die Zufallsinstanz für sämtliche zufällige Spielereignisse
      */
     private final Random random;
-    
+
     /**
      * Alle registrierten Listener die auf das Ende einer Runde warten.
      */
@@ -95,10 +96,10 @@ public class Game {
     }
 
     protected void init() {
-
+        
         LOGGER.info("Spiel wird initialisiert.");
         stateListeners.forEach(GameStateListener::onGameInit);
-        
+
         this.board = new GameBoard();
         AuctionService.initAuction(players, client);
 
@@ -110,15 +111,15 @@ public class Game {
     }
 
     public void start() {
-        
+
         LOGGER.setLevel(Level.ALL);
-        LOGGER.info("Spiel beginnt.");
+        GUIChat.getInstance().event("Das Spiel beginnt!");
         stateListeners.forEach(l -> l.onGameStart(players));
-        
+
         List<Player> activePlayers = board.getActivePlayers();
-        
+
         while (activePlayers.size() > 1) {
-            
+
             for (int id = 0; id < activePlayers.size(); id++) {
     
                 currPlayer = activePlayers.get(id);
@@ -131,17 +132,17 @@ public class Game {
                     PlayerService.bankrupt(currPlayer, board);
                 }
                 board.updateActivePlayers();
-                
+
                 Player nextPlayer = activePlayers.get((id + 1) % activePlayers.size());
                 stateListeners.forEach(l -> l.onTurnEnd(currPlayer, nextPlayer));
             }
         }
-    
+
         Player winner = board.getActivePlayers().get(0);
-        LOGGER.info(String.format("%s hat das Spiel gewonnen!", winner.getName()));
+        GUIChat.getInstance().event(String.format("%s hat das Spiel gewonnen!", winner.getName()));
         stateListeners.forEach(l -> l.onGameEnd(winner));
     }
-    
+
     protected void turn() {
         
         if (currPlayer.isInJail()) {
@@ -163,19 +164,21 @@ public class Game {
             doubletCount = 0;
         }
     }
-    
+
     protected void rollPhase() {
         
         LOGGER.info(String.format("%s ist dran mit würfeln.", currPlayer.getName()));
         stateListeners.forEach(l -> l.onRollPhaseStart(currPlayer));
         IOService.sleep(2000);
-        
+
         rollResult = PlayerService.roll(random);
         doubletCount += (rollResult[0] == rollResult[1]) ? 1 : 0;
-        
+
         stateListeners.forEach(l -> l.onDiceThrow(rollResult, doubletCount));
-        
+
         if (doubletCount >= 3) {
+            GUIChat.getInstance().event(String.format("%s hat seinen 3. Pasch und geht nicht über LOS, direkt ins Gefängnis!", player.getName()));
+            FieldService.toJail(player);
             LOGGER.info(String.format("%s hat seinen 3. Pasch und geht nicht über LOS, direkt ins Gefängnis!", currPlayer.getName()));
             FieldService.toJail(currPlayer);
         }
@@ -186,7 +189,7 @@ public class Game {
             
             board.getFieldManager().movePlayer(currPlayer, moveAmount);
             boolean passedGo = (oldPos >= newPos);
-            
+
             for (GameStateListener l : stateListeners) {
                 l.onPlayerMove(currPlayer, oldPos, newPos, passedGo);
             }
@@ -200,7 +203,7 @@ public class Game {
         boolean repeatPhase;
         FieldTypes type;
         Field field;
-        
+
         do {
             repeatPhase = false;
             type = FieldTypes.GAMEBOARD_FIELD_STRUCT[currPlayer.getPosition()];
@@ -231,9 +234,9 @@ public class Game {
         }
         while (repeatPhase);
     }
-    
+
     protected void onPlayerOnProperty(PropertyField prop) {
-        
+
         Player other = prop.getOwner();
         if (other == null) { // Feld frei
             if (Global.RUN_IN_CONSOLE) {
@@ -291,30 +294,33 @@ public class Game {
                 l.onPlayerActionOption(currPlayer, actionChoice);
             
             if (actionChoice > ACTION_NOTHING && actionChoice < ACTION_TRADE) {
-                
+
                 FieldManager fima = board.getFieldManager();
-                int fieldChoice = getFieldChoice();
-                if (fieldChoice == -1) continue;
+                int fieldChoice;
+                if (currPlayer.getAiLevel() < 2) fieldChoice = getFieldChoice();
+                else fieldChoice = HardKi.getChosenFieldId();
                 
+                if (fieldChoice == -1) continue;
+
                 PropertyField prop = (PropertyField) board.getFieldManager().getField(fieldChoice);
                 switch (actionChoice) {
-                    
+
                     case ACTION_BUY_HOUSE:
                         if (prop instanceof StreetField)
                            fima.buyHouse((StreetField) prop);
                         else LOGGER.info("Gewähltes Feld ist keine Straße!");
                         break;
-                    
+
                     case ACTION_SELL_HOUSE:
                         if (prop instanceof StreetField)
                             fima.sellHouse((StreetField) prop);
                         else LOGGER.info("Gewähltes Feld ist keine Straße!");
                         break;
-                    
+
                     case ACTION_TAKE_MORTGAGE:
                         fima.takeMortgage(prop);
                         break;
-                    
+
                     case ACTION_PAY_MORTGAGE:
                         fima.payMortgage(prop);
                         break;
@@ -395,7 +401,7 @@ public class Game {
         if (currPlayer.getDaysInJail() >= 3)
             onForceJailPayOption();
     }
-    
+
     protected void onForceJailPayOption() {
         stateListeners.forEach(l -> l.onForceJailPayOption(currPlayer));
     
@@ -432,7 +438,7 @@ public class Game {
         LOGGER.info(String.format("%s hat eine Gefängnis-Frei-Karte benutzt.", currPlayer.getName()));
         board.getCardManager().applyCardAction(Card.Action.JAIL, currPlayer);
     }
-    
+
     protected void onJailCardFailure() {
         stateListeners.forEach(l -> l.onJailCardFailure(currPlayer));
         LOGGER.info(String.format("%s hat keine Gefängnis-Frei-Karten mehr.", currPlayer.getName()));
@@ -457,14 +463,14 @@ public class Game {
         AuctionService.startAuction(prop);
         stateListeners.forEach(l -> l.onAuctionEnd(prop.getOwner(), prop));
     }
-    
+
     /**
      * @return Die Spielbrett-Instanz
      */
     public GameBoard getBoard() {
         return board;
     }
-    
+
     /**
      * @return Die Liste aller Spieler
      */

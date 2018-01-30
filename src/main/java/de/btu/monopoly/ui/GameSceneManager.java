@@ -16,6 +16,8 @@ import de.btu.monopoly.data.field.Field;
 import de.btu.monopoly.data.field.FieldManager;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.menu.Lobby;
+import de.btu.monopoly.net.chat.GUIChat;
+import de.btu.monopoly.ui.CameraManager.WatchMode;
 import de.btu.monopoly.ui.fx3d.Fx3dGameBoard;
 import de.btu.monopoly.ui.fx3d.Fx3dPropertyField;
 import de.btu.monopoly.util.Assets;
@@ -34,20 +36,20 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import javafx.util.Duration;
 
 import java.util.LinkedList;
 import java.util.List;
 
-import static de.btu.monopoly.ui.CameraManager.WatchMode;
-
 public class GameSceneManager {
-    
+
     private static final double DEFAULT_SCENE_WIDTH = 1280;
     private static final double DEFAULT_SCENE_HEIGHT = 720;
-    
+
     private static final Pane EMPTY_POPUP_PANE = new Pane();
-    
+
     private final Scene scene;
     private final SubScene gameSub;
     private final Fx3dGameBoard board3d;
@@ -58,25 +60,25 @@ public class GameSceneManager {
     
     private final VBox playerBox;
     private CameraManager camMan;
-    
+
     private Label auctionLabel = new Label("0 €");
     private Label hoechstgebotLabel = new Label("Höchstgebot:");
     private JFXTextField bidTextField = new JFXTextField();
-    
+
     public GameSceneManager(GameBoard board) {
         this.board3d = new Fx3dGameBoard(board);
-        
+
         gameSub = new SubScene(board3d, 0, 0, true, SceneAntialiasing.DISABLED);
         gameSub.setCache(true);
         gameSub.setCacheHint(CacheHint.SPEED);
-        
+
         uiPane = new BorderPane();
         popupWrapper = new VBox();
         
         popupQueue = new LinkedList<>();
-        
+
         playerBox = new VBox();
-    
+
         StackPane uiStack = new StackPane(gameSub, uiPane, popupWrapper);
         uiStack.setAlignment(Pos.CENTER);
         uiStack.setPickOnBounds(false);
@@ -94,24 +96,24 @@ public class GameSceneManager {
     private void initScene()
     {
         gameSub.setFill(Color.LIGHTGRAY);
-        
+
         gameSub.widthProperty().bind(scene.widthProperty());
         gameSub.heightProperty().bind(scene.heightProperty());
-        
+
         initPopups();
         initUi();
         initCams();
     }
-    
+
     private void initPopups() {
-    
+
         board3d.animatingProperty().addListener((prop, oldB, newB) -> {
             if (!newB && !popupQueue.isEmpty()) {
                 displayPopups();
             }
         });
     }
-    
+
     private void initUi() {
         
         ObservableList<Node> children1 = popupWrapper.getChildren();
@@ -125,40 +127,26 @@ public class GameSceneManager {
         
         popupWrapper.setAlignment(Pos.CENTER);
         popupWrapper.setPickOnBounds(false);
-        
-        TextField chatField = new TextField();
-        
-        HBox chatInteractionBox = new HBox(chatField, new Button("Senden"));
-        HBox.setHgrow(chatField, Priority.ALWAYS);
-    
-        TextArea chatArea = new TextArea();
-        
-        VBox wholeChatBox = new VBox(chatArea, chatInteractionBox);
-        VBox.setVgrow(chatArea, Priority.ALWAYS);
-        
-        wholeChatBox.setVisible(false);
-        wholeChatBox.setPrefWidth(400);
-        
+
+        VBox wholeChatBox = ChatUi.getInstance().getWholeChatBox();
+        HBox chatToggleBox = ChatUi.getInstance().getChatToggleBox();
+
         uiPane.setRight(wholeChatBox);
-        
+
         BorderPane topButtonPane = new BorderPane();
         topButtonPane.setPickOnBounds(false);
-        
+
         ToggleButton viewButton = new ToggleButton(null, Assets.getIcon("3d_icon"));
         viewButton.setOnMousePressed(event -> {
             boolean selected = !viewButton.isSelected();
             camMan.watch(board3d, selected ? WatchMode.PERSPECTIVE : WatchMode.ORTHOGONAL);
         });
         viewButton.setPrefSize(50, 50);
-    
-        ToggleButton chatButton = new ToggleButton("Chat");
-        chatButton.setOnMouseReleased(event -> wholeChatBox.setVisible(chatButton.isSelected()));
-        chatButton.setPrefSize(50, 50);
-        
+
         topButtonPane.setPadding(new Insets(0, 0, 5, 0));
         topButtonPane.setLeft(viewButton);
-        topButtonPane.setRight(chatButton);
-        
+        topButtonPane.setRight(chatToggleBox);
+
         uiPane.setTop(topButtonPane);
         
         playerBox.setPickOnBounds(false);
@@ -166,13 +154,50 @@ public class GameSceneManager {
         playerBox.setSpacing(10);
         ObservableList<Node> children = playerBox.getChildren();
         board3d.getPlayers().forEach(p -> children.add(p.infoPane()));
-        
+
         uiPane.setLeft(playerBox);
-        
+
         uiPane.setPadding(new Insets(5, 5, 5, 5));
         uiPane.setPickOnBounds(false);
     }
-    
+
+    private void clickSendMessage(TextField chatField) {
+        if (!chatField.getText().isEmpty()) {
+            GUIChat.getInstance().msg(Global.ref().playerOnClient(), chatField.getText());
+        }
+        chatField.clear();
+
+    }
+
+    private class ChatObserver implements Observer {
+
+        private final TextFlow area;
+
+        ChatObserver(TextFlow textFlow) {
+            area = textFlow;
+        }
+
+        TextFlow getTextFlow() {
+            return area;
+        }
+
+        @Override
+        public void update(Observable o, Object arg) {
+            Task task = new Task() {
+                @Override
+                protected Object call() throws Exception {
+                    for (int i = 0; i < 5; i++) {
+                        Text[] message = (Text[]) arg;
+                        area.getChildren().addAll(message[0], message[1]);
+                    }
+                    return null;
+                }
+            };
+            Platform.runLater(task);
+        }
+
+    }
+
     private void initCams() {
         camMan = new CameraManager(gameSub);
         camMan.watch(board3d, WatchMode.ORTHOGONAL);
@@ -211,11 +236,11 @@ public class GameSceneManager {
             popupWrapper.getChildren().remove(pop.pane);
         });
     }
-    
+
     public Scene getScene() {
         return scene;
     }
-    
+
     public int buyPropertyPopup() {
         
         GridPane gridpane = new GridPane();
@@ -226,23 +251,23 @@ public class GameSceneManager {
         // scroll.setCenterShape(true);
         gridpane.add(box, 0, 0);
         // box.setContent(box);
-    
+
         Label label = new Label("Möchtest du die " + Lobby.getPlayerClient().getGame().getBoard().getFields()[Lobby.getPlayerClient().getPlayerOnClient().getPosition()].getName() + " kaufen?");
-        
+
         JFXButton buyButton = new JFXButton();
         JFXButton dontBuyButton = new JFXButton();
-        
+
         buyButton.setText("Kaufen");
         buyButton.setBackground(new Background(new BackgroundFill(Color.web("#e1f5fe"), CornerRadii.EMPTY, Insets.EMPTY)));
-        
+
         dontBuyButton.setText("Nicht kaufen");
         dontBuyButton.setBackground(new Background(new BackgroundFill(Color.web("#e1f5fe"), CornerRadii.EMPTY, Insets.EMPTY)));
-        
+
         String cssLayout = "-fx-background-color: #fbe9e7;\n"
                 + "-fx-border-color: black;\n"
                 + "-fx-border-insets: 5;\n"
                 + "-fx-border-width: 1";
-        
+
         box.setStyle(cssLayout);
         box.setSpacing(10);
         box.setPrefSize(300, 200);
@@ -264,12 +289,12 @@ public class GameSceneManager {
                 return 2;
             }
         }
-        
+
         return -1;
     }
-    
+
     public int jailChoicePopup() {
-        
+
         GridPane gridpane = new GridPane();
         // ScrollPane scroll = new ScrollPane();
         VBox box = new VBox();
@@ -277,27 +302,27 @@ public class GameSceneManager {
         //scroll.setCenterShape(true);
         gridpane.add(box, 0, 0);
         //scroll.setContent(box);
-        
+
         Label label = new Label("Du bist im Gefängnis. Was möchtest du tun?");
-        
+
         JFXButton rollButton = new JFXButton();
         JFXButton payButton = new JFXButton();
         JFXButton cardButton = new JFXButton();
-        
+
         rollButton.setText("Würfeln");
         rollButton.setBackground(new Background(new BackgroundFill(Color.web("#e1f5fe"), CornerRadii.EMPTY, Insets.EMPTY)));
-        
+
         payButton.setText("Bezahlen");
         payButton.setBackground(new Background(new BackgroundFill(Color.web("#e1f5fe"), CornerRadii.EMPTY, Insets.EMPTY)));
-        
+
         cardButton.setText("Frei-Karte nutzen");
         cardButton.setBackground(new Background(new BackgroundFill(Color.web("#e1f5fe"), CornerRadii.EMPTY, Insets.EMPTY)));
-        
+
         String cssLayout = "-fx-background-color: #ffccbc;\n"
                 + "-fx-border-color: black;\n"
                 + "-fx-border-insets: 5;\n"
                 + "-fx-border-width: 1";
-        
+
         box.setStyle(cssLayout);
         box.setSpacing(10);
         box.setPrefSize(200, 300);
@@ -322,26 +347,26 @@ public class GameSceneManager {
                 return 3;
             }
         }
-        
+
         return -1;
     }
-    
+
     public int actionSequencePopup() {
-        
+
         GridPane gridpane = new GridPane();
         //ScrollPane scroll = new ScrollPane();
         VBox vbox = new VBox();
         VBox vbox1 = new VBox();
         VBox vbox2 = new VBox();
-        
+
         HBox box = new HBox();
-        
+
         gridpane.setAlignment(Pos.CENTER);
         //scroll.setCenterShape(true);
-        
+
         // scroll.setContent(box);
         Label label = new Label("Was möchtest du noch tun?");
-        
+
         gridpane.getChildren().add(vbox);
         JFXButton nothingButton = new JFXButton();
         JFXButton buyHouseButton = new JFXButton();
@@ -349,34 +374,34 @@ public class GameSceneManager {
         JFXButton addMortgageButton = new JFXButton();
         JFXButton removeMortgageButton = new JFXButton();
         JFXButton tradeButton = new JFXButton();
-        
+
         nothingButton.setText("Nichts");
         nothingButton.setBackground(new Background(new BackgroundFill(Color.web("#e1f5fe"), CornerRadii.EMPTY, Insets.EMPTY)));
         buyHouseButton.setText("Haus kaufen");
         buyHouseButton.setBackground(new Background(new BackgroundFill(Color.web("#e1f5fe"), CornerRadii.EMPTY, Insets.EMPTY)));
-        
+
         removeHouseButton.setText("Haus verkaufen");
         removeHouseButton.setBackground(new Background(new BackgroundFill(Color.web("#e1f5fe"), CornerRadii.EMPTY, Insets.EMPTY)));
-        
+
         addMortgageButton.setText("Hypothek aufnehmen");
         addMortgageButton.setBackground(new Background(new BackgroundFill(Color.web("#e1f5fe"), CornerRadii.EMPTY, Insets.EMPTY)));
-        
+
         removeMortgageButton.setText("Hypothek abbezahlen");
         removeMortgageButton.setBackground(new Background(new BackgroundFill(Color.web("#e1f5fe"), CornerRadii.EMPTY, Insets.EMPTY)));
-        
+
         tradeButton.setText("Handeln");
         tradeButton.setBackground(new Background(new BackgroundFill(Color.web("#e1f5fe"), CornerRadii.EMPTY, Insets.EMPTY)));
-        
+
         label.setFont(Font.font("Tahoma", 14));
-        
+
         vbox.setStyle(
                 "-fx-background-color: #b9f6ca; "
-                        + "-fx-border-color: black; "
-                        + "-fx-effect: dropshadow(gaussian, yellowgreen, 20, 0, 0, 0); "
-                        + "-fx-border-insets: 5; "
-                        + "-fx-border-width: 1"
+                + "-fx-border-color: black; "
+                + "-fx-effect: dropshadow(gaussian, yellowgreen, 20, 0, 0, 0); "
+                + "-fx-border-insets: 5; "
+                + "-fx-border-width: 1"
         );
-        
+
         box.setSpacing(10);
         box.setPrefSize(500, 200);
         vbox1.getChildren().addAll(nothingButton, buyHouseButton, removeHouseButton);
@@ -421,7 +446,7 @@ public class GameSceneManager {
                 return 6;
             }
         }
-        
+
         return -1;
     }
     
@@ -429,20 +454,20 @@ public class GameSceneManager {
         
         GridPane gridPane = new GridPane();
         VBox box = new VBox();
-        
+
         gridPane.setAlignment(Pos.CENTER);
         gridPane.add(box, 0, 0);
-        
+
         Label label = new Label("Wähle ein Feld:");
         JFXComboBox fieldBox = new JFXComboBox();
         Button eingabeButton = new Button();
         Button exitButton = new Button();
-        
+
         String cssLayout = "-fx-background-color: #b2dfdb;\n"
                 + "-fx-border-color: black;\n"
                 + "-fx-border-insets: 5;\n"
                 + "-fx-border-width: 1";
-        
+
         box.setStyle(cssLayout);
 
         box.setSpacing(7);
@@ -460,7 +485,7 @@ public class GameSceneManager {
         fima.getOwnedPropertyFields(currPlayer).forEach(prop -> fieldBox.getItems().add(prop.getName()));
         
         fieldBox.getSelectionModel().selectFirst();
-        
+
         box.getChildren().addAll(label, fieldBox, eingabeButton, exitButton);
         box.setAlignment(Pos.CENTER);
         
@@ -479,7 +504,7 @@ public class GameSceneManager {
             destroyPopup(pop);
             return 0;
         }
-        
+
         while (!eingabeButton.isPressed() || !exitButton.isPressed()) {
             if (eingabeButton.isPressed()) {
                 return fieldBox.getSelectionModel().getSelectedIndex() + 1;
@@ -505,10 +530,10 @@ public class GameSceneManager {
 
         JFXButton bidButton = new JFXButton("Bieten");
         JFXButton exitButton = new JFXButton("Aussteigen");
-        
+
         auctionGP.setAlignment(Pos.CENTER);
         hoechstgebotLabel.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
-        
+
         //Eventhandler(n)
         EventHandler bid = new EventHandler<ActionEvent>() {
             @Override
@@ -522,24 +547,24 @@ public class GameSceneManager {
                 }
             }
         };
-        
+
         //Einstellung der benoetigten Objekte
         auctionGP.setAlignment(Pos.CENTER);
         auctionGP.add(auctionHBox, 0, 0);
         hoechstgebotLabel.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
         gebotsLabel.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
         bidTextField.setAlignment(Pos.CENTER);
-        
+
         bidButton.setBackground(new Background(new BackgroundFill(Color.web("#e1f5fe"), CornerRadii.EMPTY, Insets.EMPTY)));
         exitButton.setBackground(new Background(new BackgroundFill(Color.web("#e1f5fe"), CornerRadii.EMPTY, Insets.EMPTY)));
-        
+
         bidTextField.setPromptText(" ");
-        
+
         String cssLayout = "-fx-background-color: #dcedc8;\n"
                 + "-fx-border-color: black;\n"
                 + "-fx-border-insets: 5;\n"
                 + "-fx-border-width: 1";
-        
+
         auctionHBox.setStyle(cssLayout);
         auctionHBox.setSpacing(10);
         auctionHBox.setPrefSize(700, 200);
@@ -564,9 +589,9 @@ public class GameSceneManager {
             }
         });
     }
-    
+
     public void updateAuctionPopup(boolean stillActive, boolean noBidder) {
-        
+
         Task task = new Task() {
             @Override
             protected Object call() throws Exception {
@@ -577,7 +602,7 @@ public class GameSceneManager {
             }
         };
         Platform.runLater(task);
-        
+
         IOService.sleep(500);
         if (!stillActive) {
             

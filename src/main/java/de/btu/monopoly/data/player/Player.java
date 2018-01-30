@@ -18,7 +18,7 @@ public class Player {
      * Bank-Instanz
      */
     private final Bank bank;
-    
+
     /**
      * Karten in Spielerhaenden
      */
@@ -28,6 +28,11 @@ public class Player {
      * Spielername
      */
     private String name;
+
+    /**
+     * Spielerfarbe (in htmlCode)
+     */
+    private String color;
 
     /**
      * Position als ganzzahlige Feld-ID
@@ -66,15 +71,15 @@ public class Player {
         this.bank = new Bank(startMoney);
         this.aiLevel = 0;
         this.name = name;
-        
+
         position = new SimpleIntegerProperty();
-        
+
         stack = new CardStack();
 
         isInJail = false;
         daysInJail = 0;
     }
-    
+
     /**
      * @return Spielername
      */
@@ -198,4 +203,23 @@ public class Player {
         return String.format("[Spieler] Name: %s, ID: %d, %s %s %n\t%s %n\t%s",
                 name, id, isInJail ? "(" + daysInJail + " Tage im Gefängnis)" : "", isBankrupt ? "(Pleite)" : "", bank, stack);
     }
+
+    /**
+     * Spielerfarbe (in htmlCode)
+     *
+     * @return the color
+     */
+    public String getColor() {
+        return color;
+    }
+
+    /**
+     * Spielerfarbe (in htmlCode)
+     *
+     * @param color the color to set
+     */
+    public void setColor(String color) {
+        this.color = color;
+    }
+
 }
