@@ -10,6 +10,7 @@ import de.btu.monopoly.data.field.FieldManager;
 import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.ki.HardKi;
+import de.btu.monopoly.net.chat.GUIChat;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.data.PlayerTradeRequest;
 import de.btu.monopoly.net.data.PlayerTradeResponse;
@@ -50,11 +51,11 @@ public class TradeService {
         }
 
         if (response.isAccepted()) {
-            LOGGER.info("<<< HANDEL ANGENOMMEN >>>");
+            GUIChat.getInstance().event("<<< HANDEL ANGENOMMEN >>>");
             TradeService.completeTrade(response.getRequest().getTrade(), board);
         }
         else {
-            LOGGER.info("<<< HANDEL ABGELEHNT >>>");
+            GUIChat.getInstance().event("<<< HANDEL ABGELEHNT >>>");
         }
     }
 

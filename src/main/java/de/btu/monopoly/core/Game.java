@@ -6,6 +6,7 @@ import de.btu.monopoly.data.card.Card;
 import de.btu.monopoly.data.field.*;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.ki.HardKi;
+import de.btu.monopoly.net.chat.GUIChat;
 import de.btu.monopoly.net.client.GameClient;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -94,7 +95,6 @@ public class Game {
     }
 
     protected void init() {
-
         LOGGER.info("Spiel wird initialisiert.");
         stateListeners.forEach(GameStateListener::onGameInit);
 
@@ -111,7 +111,7 @@ public class Game {
     public void start() {
 
         LOGGER.setLevel(Level.ALL);
-        LOGGER.info("Spiel beginnt.");
+        GUIChat.getInstance().event("Das Spiel beginnt!");
         stateListeners.forEach(l -> l.onGameStart(players));
 
         List<Player> activePlayers = board.getActivePlayers();
@@ -121,7 +121,7 @@ public class Game {
             for (int id = 0; id < activePlayers.size(); id++) {
 
                 player = activePlayers.get(id);
-                LOGGER.info(String.format("%s ist an der Reihe.", player.getName()));
+                GUIChat.getInstance().event(String.format("%s ist an der Reihe", player.getName()));
                 stateListeners.forEach(l -> l.onTurnStart(player));
 
                 turn();
@@ -137,7 +137,7 @@ public class Game {
         }
 
         Player winner = board.getActivePlayers().get(0);
-        LOGGER.info(String.format("%s hat das Spiel gewonnen!", winner.getName()));
+        GUIChat.getInstance().event(String.format("%s hat das Spiel gewonnen!", winner.getName()));
         stateListeners.forEach(l -> l.onGameEnd(winner));
     }
 
@@ -174,7 +174,7 @@ public class Game {
         stateListeners.forEach(l -> l.onDiceThrow(rollResult, doubletCount));
 
         if (doubletCount >= 3) {
-            LOGGER.info(String.format("%s hat seinen 3. Pasch und geht nicht über LOS, direkt ins Gefängnis!", player.getName()));
+            GUIChat.getInstance().event(String.format("%s hat seinen 3. Pasch und geht nicht über LOS, direkt ins Gefängnis!", player.getName()));
             FieldService.toJail(player);
         }
         else {

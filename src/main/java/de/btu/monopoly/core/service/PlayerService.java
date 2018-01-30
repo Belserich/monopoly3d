@@ -3,8 +3,8 @@ package de.btu.monopoly.core.service;
 import de.btu.monopoly.core.GameBoard;
 import de.btu.monopoly.data.player.Bank;
 import de.btu.monopoly.data.player.Player;
+import de.btu.monopoly.net.chat.GUIChat;
 import de.btu.monopoly.net.client.GameClient;
-
 import java.util.Random;
 import java.util.logging.Logger;
 
@@ -17,19 +17,18 @@ public class PlayerService {
     private static final Logger LOGGER = Logger.getLogger(de.btu.monopoly.core.Game.class.getCanonicalName());
 
     /**
-     * Setzt alle nötigen Attribute, wenn der Spieler ins Gefängnis kommt. Bitte
-     * {@code FieldManager.toJail()} benutzen.
+     * Setzt alle nötigen Attribute, wenn der Spieler ins Gefängnis kommt. Bitte {@code FieldManager.toJail()} benutzen.
      *
      * @param player Spieler
      */
     static void toJail(Player player) {
-        
+
         player.setInJail(true);
         player.setDaysInJail(0);
         IOService.sleep(2000);
-        LOGGER.info(String.format("%s ist jetzt im Gefaengnis.", player.getName()));
+        GUIChat.getInstance().event(String.format("%s ist jetzt im Gefaengnis.", player.getName()));
     }
-    
+
     /**
      * Gibt an, ob die
      *
@@ -40,7 +39,7 @@ public class PlayerService {
     public static boolean isMainPlayer(Player player, GameClient client) {
         return client.getPlayerOnClient() == player;
     }
-    
+
     /**
      * Befreit den Spieler aus dem Gefaengnis.
      *
@@ -49,20 +48,18 @@ public class PlayerService {
     public static void freeFromJail(Player player) {
         player.setInJail(false);
         player.setDaysInJail(-1);
-        LOGGER.info(String.format("%s wurde aus dem Gefängnis befreit.", player.getName()));
+        GUIChat.getInstance().event(String.format("%s wurde aus dem Gefängnis befreit.", player.getName()));
     }
 
     /**
-     * Setzt das Positionsindex für den Spieler. Bitte
-     * {@code FieldManager.movePlayer()} benutzen.
+     * Setzt das Positionsindex für den Spieler. Bitte {@code FieldManager.movePlayer()} benutzen.
      *
      * @param player Spieler
      * @param amount Anzahl der zu laufenden Felder
-     * @return Die neue Position des Spielers auf dem Feld( und darueber
-     * hinaus).
+     * @return Die neue Position des Spielers auf dem Feld( und darueber hinaus).
      */
     public static int movePlayer(Player player, int amount) {
-        
+
         int pos = player.getPosition();
         pos += amount;
         return pos;
@@ -76,7 +73,7 @@ public class PlayerService {
      * @return true, wenn zahlungsfähig, sonst false
      */
     public static boolean checkLiquidity(Player player, int amount) {
-        
+
         Bank bank = player.getBank();
         if (bank.checkLiquidity(amount)) {
             LOGGER.fine("Spielerkonto auf Liquidität geprüft. Er besitzt genug Geld.");
@@ -89,8 +86,7 @@ public class PlayerService {
     }
 
     /**
-     * Versucht, dem Spielerkonto Geld abzubuchen. Bricht ab, wenn der Spieler
-     * nicht genug Geld besitzt.
+     * Versucht, dem Spielerkonto Geld abzubuchen. Bricht ab, wenn der Spieler nicht genug Geld besitzt.
      *
      * @param player Spieler
      * @param amount Summe
@@ -111,7 +107,7 @@ public class PlayerService {
      * @param amount Betrag der dem Spieler abgezogen wird
      */
     public static void takeMoneyUnchecked(Player player, int amount) {
-        
+
         Bank bank = player.getBank();
         bank.withdraw(amount);
         LOGGER.info(bank.toString() + " (" + (amount >= 0 ? "-" : "+") + Math.abs(amount) + ")");
@@ -155,7 +151,7 @@ public class PlayerService {
         result[0] = rng.nextInt(6) + 1;
         result[1] = rng.nextInt(6) + 1;
 
-        LOGGER.info(String.format("Würfelergebnis: %d %d", result[0], result[1]));
+        GUIChat.getInstance().event(String.format("und würfelt eine %d und eine %d.", result[0], result[1]));
         return result;
     }
 
@@ -166,7 +162,7 @@ public class PlayerService {
      * @param board Spielbrett-Instanz
      */
     public static void bankrupt(Player player, GameBoard board) {
-        LOGGER.info(String.format("%s ist Bankrott und ab jetzt nur noch Zuschauer. All sein Besitz geht zurück an die Bank.",
+        GUIChat.getInstance().event(String.format("%s ist Bankrott und ab jetzt nur noch Zuschauer. All sein Besitz geht zurück an die Bank.",
                 player.getName()));
 
         player.setBankrupt(true);
