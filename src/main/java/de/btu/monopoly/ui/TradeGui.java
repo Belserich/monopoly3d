@@ -330,7 +330,7 @@ public class TradeGui {
         Label yourPropsLabel = new Label("Biete Grundstücke:");
         yourPropsLabel.setFont(Font.font("Tahoma", FontWeight.NORMAL, 14));
 
-        Label yourOfferMoneyLabel = new Label("Wieviel " + currency + " bietetst du:");
+        Label yourOfferMoneyLabel = new Label("Wieviel " + currency + " bietest du:");
         yourOfferMoneyLabel.setFont(Font.font("Tahoma", FontWeight.NORMAL, 14));
 
         Label yourCardLabel = new Label("Gefängnisfreikarten: " + Lobby.getPlayerClient().getPlayerOnClient().getCardStack().countCardsOfAction(Card.Action.JAIL));
@@ -482,7 +482,8 @@ public class TradeGui {
     }
 
     /**
-     * Erstellt ein int[] mit Property IDs, welches dem Trade uebergeben werden kann
+     * Erstellt ein int[] mit Property IDs, welches dem Trade uebergeben werden
+     * kann
      *
      * @param itemList
      * @return
