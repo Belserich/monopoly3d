@@ -36,7 +36,7 @@ public class IOService {
     private static int BUY = 2;
     private static int FIELD = 3;
 
-    public static int jailChoice(Player player) {
+    public static int getJailChoice(Player player) {
         int choice = -1;
         switch (player.getAiLevel()) {
             case 0:
@@ -44,7 +44,7 @@ public class IOService {
                     choice = getClientChoice(player, 3);
                 }
                 else {
-                    choice = getClientChoiceFromGUI(player, JAIL, null);
+                    choice = getClientChoiceFromGUI(player, JAIL);
                 }
                 break;
             case 1:
@@ -59,7 +59,7 @@ public class IOService {
         return choice;
     }
 
-    public static int buyPropertyChoice(Player player, PropertyField prop) {
+    public static int getBuyPropertyChoice(Player player, PropertyField prop) {
         int choice = -1;
         switch (player.getAiLevel()) {
             case 0:
@@ -68,7 +68,7 @@ public class IOService {
                     choice = getClientChoice(player, 2);
                 }
                 else {
-                    choice = getClientChoiceFromGUI(player, BUY, null);
+                    choice = getClientChoiceFromGUI(player, BUY);
                 }
 
                 break;
@@ -84,7 +84,7 @@ public class IOService {
         return choice;
     }
 
-    public static int actionSequence(Player player, GameBoard board) {
+    public static int getActionChoice(Player player, GameBoard board) {
         int choice = 1;
         switch (player.getAiLevel()) {
             case 0:
@@ -92,7 +92,7 @@ public class IOService {
                     choice = getClientChoice(player, 6);
                 }
                 else {
-                    choice = getClientChoiceFromGUI(player, ACTION, null);
+                    choice = getClientChoiceFromGUI(player, ACTION);
                 }
                 break;
             case 1:
@@ -153,8 +153,8 @@ public class IOService {
         }
     }
 
-    public static int getClientChoiceFromGUI(Player player, int type, String[] fields) {
-        boolean isChoiceFromThisClient = player == client.getPlayerOnClient();
+    public static int getClientChoiceFromGUI(Player player, int type) {
+        boolean isChoiceFromThisClient = (player == client.getPlayerOnClient());
         if (isChoiceFromThisClient) {
             int choice = -1;
             if (type == JAIL) {
@@ -167,7 +167,7 @@ public class IOService {
                 choice = Global.ref().getGameSceneManager().buyPropertyPopup();
             }
             if (type == FIELD) {
-                choice = Global.ref().getGameSceneManager().askForFieldPopup(player, fields);
+                choice = Global.ref().getGameSceneManager().askForFieldPopup();
             }
 
             BroadcastPlayerChoiceRequest packet = new BroadcastPlayerChoiceRequest();
@@ -244,7 +244,7 @@ public class IOService {
             return IOService.getClientChoice(player, 39);
         }
         else {
-            return IOService.getClientChoiceFromGUI(player, FIELD, fieldNames);
+            return IOService.getClientChoiceFromGUI(player, FIELD);
         }
     }
 
