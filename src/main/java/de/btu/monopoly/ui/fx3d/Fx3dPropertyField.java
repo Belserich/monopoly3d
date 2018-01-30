@@ -3,10 +3,9 @@ package de.btu.monopoly.ui.fx3d;
 import de.btu.monopoly.core.FieldTypes;
 import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.util.Assets;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
-import javafx.beans.property.DoubleProperty;
+import de.btu.monopoly.util.InfoPaneBuilder;
+import javafx.animation.RotateTransition;
+import javafx.scene.layout.Pane;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
@@ -18,23 +17,25 @@ public class Fx3dPropertyField extends Fx3dField {
     private static final int TURN_DURATION_MILLIS = 200;
     private static final double TURN_ANGLE = 180;
     
-    private final DoubleProperty zRotateAngle;
+    private final Pane infoPane;
+    
+    private final RotateTransition turnTrans;
     
     public Fx3dPropertyField(PropertyField field, FieldTypes type) {
-        super(field, type, Assets.getImage(type));
+        super(field, type, Assets.getImage(type.name().toLowerCase()));
+        infoPane = InfoPaneBuilder.buildFor(field, type);
         
-        Rotate zRotate = new Rotate(0, Rotate.Z_AXIS);
-        zRotateAngle = zRotate.angleProperty();
-        getTransforms().add(zRotate);
-        
-        field.mortgageTakenProperty().addListener(prop -> turnAround());
+        field.mortgageTakenProperty().addListener(inv -> turnAround());
+        turnTrans = new RotateTransition(Duration.millis(TURN_DURATION_MILLIS), this);
+        turnTrans.setByAngle(TURN_ANGLE);
+        turnTrans.setAxis(Rotate.Z_AXIS);
     }
     
     public void turnAround() {
-        Timeline anim = new Timeline(
-                new KeyFrame(Duration.millis(TURN_DURATION_MILLIS),
-                        new KeyValue(zRotateAngle, zRotateAngle.get() + TURN_ANGLE))
-        );
-        anim.play();
+        turnTrans.playFromStart();
+    }
+    
+    public Pane infoPane() {
+        return infoPane;
     }
 }

@@ -4,6 +4,7 @@ import de.btu.monopoly.core.FieldTypes;
 import de.btu.monopoly.data.field.Field;
 import javafx.animation.TranslateTransition;
 import javafx.scene.image.Image;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
@@ -20,7 +21,7 @@ public class Fx3dField extends Cuboid
     protected final FieldTypes type;
     protected Image texture;
     
-    private final TranslateTransition hoverTransition;
+    private final TranslateTransition reactTrans;
     
     public Fx3dField(Field field, FieldTypes type, Image texture) {
         this(field, type, texture, FIELD_WIDTH, FIELD_HEIGHT, FIELD_DEPTH);
@@ -32,25 +33,15 @@ public class Fx3dField extends Cuboid
         this.type = type;
         this.texture = texture;
     
-        hoverTransition = new TranslateTransition(Duration.millis(ANIM_DURATION_MILLIS), this);
-        hoverTransition.setFromY(-RAISE_HEIGHT);
-        hoverTransition.setToY(0);
+        reactTrans = new TranslateTransition(Duration.millis(ANIM_DURATION_MILLIS), this);
+        reactTrans.setFromY(-RAISE_HEIGHT);
+        reactTrans.setToY(0);
         
-        setOnMouseEntered(event -> raise());
-        init();
-    }
-    
-    protected void init() {
-//        MultiCanvas multi = new MultiCanvas(2, texture.getWidth(), texture.getHeight());
-//        multi.setImage(texture, 0);
-//        TextUtils.drawText(multi.getGraphicsContext(1), field, type);
-//
-//        this.texture = multi.blend();
-        
+        addEventHandler(MouseEvent.MOUSE_ENTERED, event -> react());
         setMaterial(texture != null ? FxHelper.getMaterialFor(texture) : FxHelper.getMaterialFor(Color.WHITE));
     }
     
-    private void raise() {
-        hoverTransition.play();
+    private void react() {
+        reactTrans.play();
     }
 }

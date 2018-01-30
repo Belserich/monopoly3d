@@ -49,7 +49,7 @@ public class Fx3dPlayer extends Cylinder {
         
         getTransforms().add(new Translate(0, INIT_PLAYER_Y, 0));
         setMaterial(FxHelper.getMaterialFor(color));
-    
+        
         infoPane = new InfoPane();
     }
     
@@ -69,7 +69,7 @@ public class Fx3dPlayer extends Cylinder {
         return player;
     }
     
-    public class InfoPane extends HBox {
+    private class InfoPane extends HBox {
         
         private static final double PANE_WIDTH = 210;
         private static final double PANE_HEIGHT = 60;
