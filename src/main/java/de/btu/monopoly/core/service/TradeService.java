@@ -35,8 +35,7 @@ public class TradeService {
 //
 //    }
     /**
-     * Initiiert und koordiniert den Handel ausgehend von einem speziellen
-     * Spieler.
+     * Initiiert und koordiniert den Handel ausgehend von einem speziellen Spieler.
      *
      * @param player Initiator
      * @param client Spielclient
@@ -71,11 +70,9 @@ public class TradeService {
     }
 
     /**
-     * Wartet auf das nächste {@link PlayerTradeRequest}-Objekt und versucht es
-     * zu verarbeiten.
+     * Wartet auf das nächste {@link PlayerTradeRequest}-Objekt und versucht es zu verarbeiten.
      *
-     * @see TradeService#tryProcessTradeRequest(GameClient, GameBoard,
-     * PlayerTradeRequest)
+     * @see TradeService#tryProcessTradeRequest(GameClient, GameBoard, PlayerTradeRequest)
      */
     private static PlayerTradeResponse waitAndTryProcessTradeRequest(GameClient client, GameBoard board, GuiTrade tradeGui) {
 
@@ -89,8 +86,8 @@ public class TradeService {
      * @param client Spielclient
      * @param board Spielbrett
      * @param request Handelsanfrage
-     * @return Das gesendete {@link PlayerTradeResponse}-Objekt, falls die
-     * empfangene Request an diesen Clienten gerichtet war, sonst null.
+     * @return Das gesendete {@link PlayerTradeResponse}-Objekt, falls die empfangene Request an diesen Clienten gerichtet war,
+     * sonst null.
      */
     private static PlayerTradeResponse tryProcessTradeRequest(GameClient client, GameBoard board, PlayerTradeRequest request, GuiTrade tradeGui) {
 
@@ -123,6 +120,15 @@ public class TradeService {
 
                 // Hier TradeGui tradeGui initialisieren mithilfe von TradeOffer trade
                 tradeGui.setTradeStarter(Lobby.getPlayerClient().getGame().getPlayers()[trade.getSupply().getPlayerId()]);
+                tradeGui.setTradePartner(Lobby.getPlayerClient().getGame().getPlayers()[trade.getDemand().getPlayerId()]);
+                tradeGui.setYourPropIds(trade.getSupply().getPropertyIds());
+                tradeGui.setPartnersPropIds(trade.getDemand().getPropertyIds());
+                tradeGui.setYourCardIds(trade.getSupply().getCardIds());
+                tradeGui.setPartnersCardIds(trade.getDemand().getCardIds());
+                tradeGui.setYourMoney(trade.getSupply().getMoney());
+                tradeGui.setPartnersMoney(trade.getDemand().getMoney());
+                tradeGui.setYourCardAmount(trade.getSupply().getCardIds().length);
+                tradeGui.setPartnersCardAmount(trade.getDemand().getCardIds().length);
 
                 Global.ref().getGameSceneManager().showOfferPopup(tradeGui);
                 while (!Global.ref().getGameSceneManager().getTradeAnswerIsGiven()) {
@@ -194,8 +200,7 @@ public class TradeService {
     }
 
     /**
-     * Erstellt eine TradeOffer-Instanz, die alle gebotenen handelbaren
-     * Objekt-IDs eines Spielers zusammenfasst.
+     * Erstellt eine TradeOffer-Instanz, die alle gebotenen handelbaren Objekt-IDs eines Spielers zusammenfasst.
      *
      * @param player Spieler
      * @param board Board
@@ -250,8 +255,7 @@ public class TradeService {
     }
 
     /**
-     * Erstellt eine TradeOffer-Instanz, die sich alle gebotenen Objekte aus der
-     * GUI holt
+     * Erstellt eine TradeOffer-Instanz, die sich alle gebotenen Objekte aus der GUI holt
      *
      * @param player Spieler
      * @return Angebots-Instanz
@@ -273,8 +277,7 @@ public class TradeService {
      * Hilfsmethode
      *
      * @param ownedIds Die IDs der handelbaren Objekte in Spielerbesitz
-     * @param chosenIds Die IDs der ausgewählten handelbaren Objekte in
-     * Spielerbesitz
+     * @param chosenIds Die IDs der ausgewählten handelbaren Objekte in Spielerbesitz
      * @return ob der Spieler mit der momentanen ID-Auswahl fertig ist
      */
     private static boolean handleOfferChoice(List<Integer> ownedIds, List<Integer> chosenIds) {
