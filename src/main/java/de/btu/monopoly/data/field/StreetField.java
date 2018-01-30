@@ -62,7 +62,6 @@ public class StreetField extends PropertyField {
      * @return Miete der Strasse
      */
     public int getRent() {
-        //System.out.println(houseCount);
         if (!isMortgageTaken() && getOwner() != null) {
             if (fieldManager.isComplete(this) && houseCount == 0) {
                 return rents[0] * 2;
@@ -72,6 +71,13 @@ public class StreetField extends PropertyField {
             }
         }
         return 0;
+    }
+    
+    public int getRent(int num) {
+        if (num < 0 || num >= rents.length) {
+            return -1;
+        }
+        return rents[num];
     }
 
     /**

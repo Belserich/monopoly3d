@@ -37,6 +37,13 @@ public class StationField extends PropertyField {
         }
         else return 0;
     }
+    
+    public int getRent(int num) {
+        if (num < 0 || num >= rents.length) {
+            return -1;
+        }
+        return rents[num];
+    }
 
     @Override
     public String toString() {
