@@ -191,10 +191,6 @@ public class Player {
         this.aiLevel = aiLevel;
     }
     
-    public IntegerProperty positionProperty() {
-        return position;
-    }
-    
     public IntegerProperty balanceProperty() { return bank.balanceProperty(); }
     
     @Override
