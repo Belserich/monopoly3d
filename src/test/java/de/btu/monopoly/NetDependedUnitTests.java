@@ -171,7 +171,7 @@ public class NetDependedUnitTests {
 
         //KI sollte sich freiwuerfeln
         ki.getBank().withdraw(ki.getMoney());
-        int choice = IOService.jailChoice(ki);
+        int choice = IOService.getJailChoice(ki);
         test("KI will sich nicht freiwürfeln", choice == 1);
         clearGame();
     }
@@ -199,7 +199,7 @@ public class NetDependedUnitTests {
         test("Strassen wurden nicht verkauft", ((PropertyField) board.getFields()[1]).getOwner() != null);
 
         //KI sollte sich jetzt freiwuerfeln
-        int choice = IOService.jailChoice(ki);
+        int choice = IOService.getJailChoice(ki);
         test("KI will sich nicht freiwürfeln", choice == 1);
         clearGame();
     }
@@ -219,35 +219,35 @@ public class NetDependedUnitTests {
         PropertyField expan = (PropertyField) IOService.getGame().getBoard().getFields()[39];
 
         // superreich kauft alle Straßen
-        test("supperreich kauft nicht billig", IOService.buyPropertyChoice(ki, cheap) == 1);
-        test("supperreich kauft nicht lukrativ", IOService.buyPropertyChoice(ki, lurca) == 1);
-        test("supperreich kauft nicht teuer", IOService.buyPropertyChoice(ki, expan) == 1);
+        test("supperreich kauft nicht billig", IOService.getBuyPropertyChoice(ki, cheap) == 1);
+        test("supperreich kauft nicht lukrativ", IOService.getBuyPropertyChoice(ki, lurca) == 1);
+        test("supperreich kauft nicht teuer", IOService.getBuyPropertyChoice(ki, expan) == 1);
 
         // reich kauft nur teuer und lukrativ
         ki.getBank().withdraw(250); //Stand 750 -> reich
-        test("reich kauft billig", IOService.buyPropertyChoice(ki, cheap) == 2);
-        test("reich kauft nicht lukrativ", IOService.buyPropertyChoice(ki, lurca) == 1);
-        test("reich kauft nicht teuer", IOService.buyPropertyChoice(ki, expan) == 1);
+        test("reich kauft billig", IOService.getBuyPropertyChoice(ki, cheap) == 2);
+        test("reich kauft nicht lukrativ", IOService.getBuyPropertyChoice(ki, lurca) == 1);
+        test("reich kauft nicht teuer", IOService.getBuyPropertyChoice(ki, expan) == 1);
 
         // fluessig kauft nur lukrativ
         ki.getBank().withdraw(200); //Stand 550 -> fluessig
-        test("flüssig kauft billig", IOService.buyPropertyChoice(ki, cheap) == 2);
-        test("flüssig kauft nicht lukrativ", IOService.buyPropertyChoice(ki, lurca) == 1);
-        test("flüssig kauft teuer", IOService.buyPropertyChoice(ki, expan) == 2);
+        test("flüssig kauft billig", IOService.getBuyPropertyChoice(ki, cheap) == 2);
+        test("flüssig kauft nicht lukrativ", IOService.getBuyPropertyChoice(ki, lurca) == 1);
+        test("flüssig kauft teuer", IOService.getBuyPropertyChoice(ki, expan) == 2);
 
         // arm kauft nichts
         ki.getBank().withdraw(300); //Stand 250 -> arm
-        test("arm kauft billig", IOService.buyPropertyChoice(ki, cheap) == 2);
-        test("arm kauft lukrativ", IOService.buyPropertyChoice(ki, lurca) == 2);
-        test("arm kauft teuer", IOService.buyPropertyChoice(ki, expan) == 2);
+        test("arm kauft billig", IOService.getBuyPropertyChoice(ki, cheap) == 2);
+        test("arm kauft lukrativ", IOService.getBuyPropertyChoice(ki, lurca) == 2);
+        test("arm kauft teuer", IOService.getBuyPropertyChoice(ki, expan) == 2);
 
         // es sei denn sie hat bereits eine Nachbarstrasse
         ((PropertyField) IOService.getGame().getBoard().getFields()[3]).setOwner(ki);
-        test("arm kauft billigen Nachbar nicht", IOService.buyPropertyChoice(ki, cheap) == 1);
+        test("arm kauft billigen Nachbar nicht", IOService.getBuyPropertyChoice(ki, cheap) == 1);
 
         // aber auch nur wenn er genügend Geld hat
         ((PropertyField) IOService.getGame().getBoard().getFields()[37]).setOwner(ki);
-        test("arm kauft teuren Nachbar trotzdem", IOService.buyPropertyChoice(ki, expan) == 2);
+        test("arm kauft teuren Nachbar trotzdem", IOService.getBuyPropertyChoice(ki, expan) == 2);
 
         clearGame();
     }

@@ -21,28 +21,28 @@ class GameAccessWrapper extends Game {
     }
     
     void fieldPhase(Player player, int[] rollResult) {
-        this.player = player;
+        this.currPlayer = player;
         this.rollResult = rollResult;
         super.fieldPhase();
     }
     
     void jailPhase(Player player) {
-        this.player = player;
+        this.currPlayer = player;
         super.jailPhase();
     }
     
     void onJailPayOption(Player player) {
-        this.player = player;
+        this.currPlayer = player;
         super.onJailPayOption();
     }
     
     void onJailRollOption(Player player) {
-        this.player = player;
+        this.currPlayer = player;
         super.onJailPayOption();
     }
     
     void onJailCardOption(Player player) {
-        this.player = player;
+        this.currPlayer = player;
         super.onJailCardOption();
     }
 }
