@@ -7,6 +7,10 @@ import de.btu.monopoly.Global;
 import de.btu.monopoly.core.GameBoard;
 import de.btu.monopoly.core.service.AuctionService;
 import de.btu.monopoly.core.service.IOService;
+import de.btu.monopoly.data.card.Card;
+import de.btu.monopoly.data.card.Card.Action;
+import de.btu.monopoly.data.card.CardStack;
+import de.btu.monopoly.data.field.CardField;
 import de.btu.monopoly.data.field.Field;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.menu.Lobby;
@@ -41,11 +45,10 @@ public class GameSceneManager {
     private final Scene scene;
     private final Fx3dGameBoard board3d;
     private final SubScene gameSub;
-    
+
     private final BorderPane uiPane;
     private final VBox popupWrapper;
     private final List<Pane> popupQueue;
-    
     private VBox playerBox;
     
     private CameraManager camMan;
@@ -78,8 +81,6 @@ public class GameSceneManager {
         Global.ref().getGame().addGameStateListener(board3d.gameStateAdapter());
         initScene();
     }
-    
-
     
     private void initScene()
     {
@@ -455,56 +456,15 @@ public class GameSceneManager {
         
         return 0;
     }
-    
-    public void showCard() {
-    
-        GridPane cardInfoPane = new GridPane();
-        HBox box = new HBox();
-    
-        cardInfoPane.setAlignment(Pos.CENTER);
-        cardInfoPane.getChildren().add(box);
-        box.setStyle(
-                "-fx-background-color: #fff59d;"
-                        + "-fx-border-color: #ff7043;"
-                        + "-fx-border-insets: 5;"
-                        + "-fx-border-width: 1;"
-        );
-    
-        Label text = new Label();
-        
-        box.setAlignment(Pos.CENTER);
-        box.setPrefSize(250, 150);
-        Player[] players = Lobby.getPlayerClient().getGame().getPlayers();
-        Field[] fields = Lobby.getPlayerClient().getGame().getBoard().getFieldManager().getFields();
-    
-//        for (Player p : players) {
-//            for (Card.Action action : Card.Action.values()) { //TODO :/
-//
-//                CardStack stack = p.getCardStack();
-//
-//                Card card = Lobby.getPlayerClient().getGame().getBoard()
-//                        .getCardManager().getCard(p, stack.countCardsOfAction(action));
-//
-//                if (fields[p.getPosition()] instanceof CardField) {
-//                    text.setText(card.getName() + "\n" + card.getText());
-//                    cardInfoPane.getChildren().add(text);
-//                    GameController.setPopupAbove(cardInfoPane);
-//                }
-//
-//            }
-//        }
-//
-//        GameController.resetPopupAbove();
-    }
 
     public void auctionPopup() {
-        
+
         //initialisierung der benoetigten Objekte
         HBox auctionHBox = new HBox();
         VBox auctionVBox = new VBox();
         GridPane auctionGP = new GridPane();
         Label gebotsLabel = new Label("Dein Gebot für \n" + AuctionService.getPropertyString() + ":");
-        
+
         JFXButton bidButton = new JFXButton("Bieten");
         JFXButton exitButton = new JFXButton("Aussteigen");
         
@@ -581,16 +541,16 @@ public class GameSceneManager {
         
         IOService.sleep(500);
         if (!stillActive) {
-            
+
             queueNullPopup();
-            
+
             GridPane resetGridPane = new GridPane();
             VBox resetBox = new VBox();
             Label endLabel = new Label();
-            
+
             resetGridPane.setAlignment(Pos.CENTER);
             resetGridPane.add(resetBox, 0, 0);
-            
+
             if (noBidder) {
                 endLabel.setText("Das Grundstück " + AuctionService.getPropertyString() + " wurde nicht verkauft!");
             }
@@ -603,7 +563,7 @@ public class GameSceneManager {
                     + "-fx-border-color: black;\n"
                     + "-fx-border-insets: 5;\n"
                     + "-fx-border-width: 1";
-            
+
             endLabel.setFont(Font.font("Tahoma", FontWeight.BOLD, 10));
             resetBox.setStyle(cssLayout);
             resetBox.setSpacing(10);
@@ -616,9 +576,73 @@ public class GameSceneManager {
             queueNullPopup();
             auctionLabel.setText("0 €");
         }
-        
+
     }
-    
+
+    public void showCard() {
+
+        if (Lobby.getPlayerClient().getGame() != null) {
+            if (Lobby.getPlayerClient().getGame().getBoard() != null) {
+
+                GridPane kartPane = new GridPane();
+                VBox box = new VBox();
+
+                kartPane.setAlignment(Pos.CENTER);
+                kartPane.getChildren().add(box);
+
+                //TODO Text der Karten
+                Label text = new Label();
+
+                box.setAlignment(Pos.CENTER);
+                box.setPrefSize(250, 150);
+                kartPane.getChildren().add(text);
+                kartPane.setAlignment(Pos.CENTER);
+                Player[] players = Lobby.getPlayerClient().getGame().getPlayers();
+                Field[] fields = Lobby.getPlayerClient().getGame().getBoard().getFieldManager().getFields();
+
+                for (Player p : players) {
+
+                    Card card;
+                    if (fields[p.getPosition()] instanceof CardField) {
+                        
+                        CardField cf = ((CardField) fields[p.getPosition()]);
+                        CardStack stack = Lobby.getPlayerClient().getGame().getBoard().getCardManager().getStack(cf.getStackType());
+
+                        if (p.getPosition() == 2 || p.getPosition() == 17 || p.getPosition() == 33) {
+                            //Gemeinschaft
+                            box.setStyle("-fx-background-color: #fff59d;\n"
+                                    + "    -fx-border-color: #ff7043;\n"
+                                    + "    -fx-border-insets: 5;\n"
+                                    + "    -fx-border-width: 1;\n"
+                                    + "    -fx-effect: dropshadow(gaussian, #aabb97, 20, 0, 0, 0);\n"
+                            );
+                        }
+                        else {
+                            //Ereignis
+                            box.setStyle("-fx-background-color: #ff8a65;\n"
+                                    + "    -fx-border-color: #ffd54f;\n"
+                                    + "    -fx-border-insets: 5;\n"
+                                    + "    -fx-border-width: 1;\n"
+                                    + "    -fx-effect: dropshadow(gaussian, #e57373, 20, 0, 0, 0);\n");
+                        }
+
+                        card = stack.nextCard();
+                        text.setText("\t" + card.getText());
+
+                        queuePopup(kartPane);
+                        System.out.println("ascsaklncl___1__");
+
+                    }
+                }
+
+            }
+            IOService.sleep(300);
+            System.out.println("ascsaklncl___2__");
+            queueNullPopup();
+            System.out.println("ascsaklncl___3__");
+        }
+    }
+
     public void bidTextFieldFocus() {
         Task task = new Task() {
             @Override
