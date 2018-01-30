@@ -8,6 +8,7 @@ package de.btu.monopoly.ki;
 import de.btu.monopoly.core.service.IOService;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.net.chat.GUIChat;
+
 import java.util.Random;
 import java.util.logging.Logger;
 

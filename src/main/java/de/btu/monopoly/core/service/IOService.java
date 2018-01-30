@@ -15,11 +15,8 @@ import de.btu.monopoly.ki.EasyKi;
 import de.btu.monopoly.ki.HardKi;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.data.BroadcastPlayerChoiceRequest;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Scanner;
+
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

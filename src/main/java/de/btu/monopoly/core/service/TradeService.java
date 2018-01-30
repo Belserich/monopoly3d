@@ -14,6 +14,7 @@ import de.btu.monopoly.net.chat.GUIChat;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.data.PlayerTradeRequest;
 import de.btu.monopoly.net.data.PlayerTradeResponse;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

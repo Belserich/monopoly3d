@@ -10,8 +10,6 @@ import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.controls.JFXToggleButton;
 import de.btu.monopoly.Global;
 import de.btu.monopoly.net.chat.GUIChat;
-import java.util.Observable;
-import java.util.Observer;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.scene.control.Label;
@@ -25,6 +23,9 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+
+import java.util.Observable;
+import java.util.Observer;
 
 /**
  *

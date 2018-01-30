@@ -16,6 +16,7 @@ import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.field.StreetField;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.util.Assets;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

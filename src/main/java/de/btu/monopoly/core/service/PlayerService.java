@@ -5,6 +5,7 @@ import de.btu.monopoly.data.player.Bank;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.net.chat.GUIChat;
 import de.btu.monopoly.net.client.GameClient;
+
 import java.util.Random;
 import java.util.logging.Logger;
 

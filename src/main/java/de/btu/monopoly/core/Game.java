@@ -177,8 +177,9 @@ public class Game {
         stateListeners.forEach(l -> l.onDiceThrow(rollResult, doubletCount));
 
         if (doubletCount >= 3) {
-            GUIChat.getInstance().event(String.format("%s hat seinen 3. Pasch und geht nicht über LOS, direkt ins Gefängnis!", player.getName()));
-            FieldService.toJail(player);
+            GUIChat.getInstance().event(String.format("%s hat seinen 3. Pasch und geht nicht über LOS, direkt ins Gefängnis!",
+                    currPlayer.getName()));
+            FieldService.toJail(currPlayer);
             LOGGER.info(String.format("%s hat seinen 3. Pasch und geht nicht über LOS, direkt ins Gefängnis!", currPlayer.getName()));
             FieldService.toJail(currPlayer);
         }
