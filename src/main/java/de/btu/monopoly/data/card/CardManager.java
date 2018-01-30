@@ -9,7 +9,6 @@ import de.btu.monopoly.data.field.FieldManager;
 import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.util.Assets;
-import java.util.Random;
 
 import java.util.logging.Logger;
 import java.util.stream.IntStream;
@@ -32,17 +31,24 @@ public class CardManager {
         communityCards = Assets.getCommunityCards();
         eventCards = Assets.getEventCards();
     }
-
-    public void pullAndProcess(CardStack.Type type, Player player) {
+    
+    /**
+     * @param type Typ des Kartenstapels
+     * @param player Spieler
+     * @return gezogene Karte
+     * @see #pullAndProcess(CardStack.Type, Player)
+     */
+    public Card pullAndProcess(CardStack.Type type, Player player) {
 
         CardStack stack = stackFor(type);
         Card card = stack.nextCard();
-        stack.shuffle(new Random());
 
         LOGGER.info(String.format("%s hat eine Karte gezogen. Kartentyp: %s", player.getName(), card.getAction()));
         
-        if (card instanceof Takeable)  ((Takeable)card).drawTo(player.getCardStack());
+        if (card instanceof Takeable) ((Takeable)card).drawTo(player.getCardStack());
         else applyCardAction(card.getAction(), card.getArg(), player);
+        
+        return card;
     }
 
     private CardStack stackFor(CardStack.Type type) {
@@ -56,7 +62,12 @@ public class CardManager {
                 throw new RuntimeException(String.format("Unknown originalStack type %s", type));
         }
     }
-
+    
+    /**
+     * @param action Kartenaktion
+     * @param arg Kartenargument
+     * @param player Spieler
+     */
     public void applyCardAction(Card.Action action, int arg, Player player) {
 
         LOGGER.info(String.format("%s benutzt eine Karte (Aktion: %s)", player.getName(), action));
