@@ -242,6 +242,7 @@ public class GameSceneManager {
         String cssLayout = "-fx-background-color: #fbe9e7;\n"
                 + "-fx-border-color: black;\n"
                 + "-fx-border-insets: 5;\n"
+                + "-fx-effect: dropshadow(gaussian, #cb9b8c, 20, 0, 0, 0);\n"
                 + "-fx-border-width: 1";
 
         box.setStyle(cssLayout);
@@ -297,6 +298,7 @@ public class GameSceneManager {
         String cssLayout = "-fx-background-color: #ffccbc;\n"
                 + "-fx-border-color: black;\n"
                 + "-fx-border-insets: 5;\n"
+                + "-fx-effect: dropshadow(gaussian, #ec407a, 20, 0, 0, 0);\n"
                 + "-fx-border-width: 1";
 
         box.setStyle(cssLayout);
@@ -442,6 +444,7 @@ public class GameSceneManager {
         String cssLayout = "-fx-background-color: #b2dfdb;\n"
                 + "-fx-border-color: black;\n"
                 + "-fx-border-insets: 5;\n"
+                + "-fx-effect: dropshadow(gaussian, #4db6ac, 20, 0, 0, 0);"
                 + "-fx-border-width: 1";
 
         box.setStyle(cssLayout);
@@ -541,6 +544,7 @@ public class GameSceneManager {
         String cssLayout = "-fx-background-color: #dcedc8;\n"
                 + "-fx-border-color: black;\n"
                 + "-fx-border-insets: 5;\n"
+                + "-fx-effect: dropshadow(gaussian, #94af76, 20, 0, 0, 0);"
                 + "-fx-border-width: 1";
 
         auctionHBox.setStyle(cssLayout);
@@ -1070,7 +1074,8 @@ public class GameSceneManager {
     }
 
     /**
-     * Erstellt ein int[] mit Property IDs, welches dem Trade uebergeben werden kann
+     * Erstellt ein int[] mit Property IDs, welches dem Trade uebergeben werden
+     * kann
      *
      * @param itemList
      * @return
