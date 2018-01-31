@@ -1,7 +1,6 @@
 package de.btu.monopoly;
 
 //Imports
-
 import de.btu.monopoly.core.GameBoard;
 import de.btu.monopoly.core.service.FieldService;
 import de.btu.monopoly.core.service.PlayerService;
@@ -13,10 +12,9 @@ import de.btu.monopoly.data.field.*;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.util.Assets;
+import java.util.Random;
 import org.junit.Assert;
 import org.junit.Test;
-
-import java.util.Random;
 
 /**
  *
@@ -34,7 +32,7 @@ public class CoreUnitTest {
     public CoreUnitTest() {
         Global.RUN_AS_TEST = true;
         Assets.loadFields();
-        
+
         players = new Player[4];
         for (int i = 0; i < 4; i++) {
             Player player = new Player("Mathias " + (i + 1), i, 1500);
@@ -148,7 +146,7 @@ public class CoreUnitTest {
 
         Player p = players[0];
         CardManager cm = board.getCardManager();
-        
+
         for (Card.Action action : Card.Action.values()) {
             cm.applyCardAction(action, p);
         }
@@ -226,7 +224,7 @@ public class CoreUnitTest {
         StreetField street2 = (StreetField) fields[13];
         StreetField street3 = (StreetField) fields[14];
         int expHousesStr = 0;
-        int expHousesStr2 = 1;
+        int expHousesStr2 = 0;
         int expMoney = player.getMoney();
 
         street.setOwner(player);
@@ -234,18 +232,29 @@ public class CoreUnitTest {
         street3.setOwner(player);
 
         fm.buyHouse(street);
+        expMoney -= street.getHousePrice();
+        expHousesStr++;
+
         fm.buyHouse(street2);
+        expMoney -= street2.getHousePrice();
+        expHousesStr2++;
+
         fm.buyHouse(street2); // geht nicht, da Straßenzug unausgeglichen
+
         fm.buyHouse(street3);
+        expMoney -= street3.getHousePrice();
 
         fm.sellHouse(street); // wenn du das Haus hier wieder verkaufst kann danach die Anzahl Häuser auf dem Feld nicht 1 sein!
+        expMoney += street.getHousePrice() / 2;
+        expHousesStr--;
 
-        expMoney = expMoney - street.getHousePrice() - (street2.getHousePrice() * 2) - street3.getHousePrice() + (street.getHousePrice() / 2);
         Assert.assertEquals(expMoney, player.getMoney());
         Assert.assertEquals(expHousesStr, street.getHouseCount());
 
-        expMoney += street.getHousePrice() / 2;
         fm.sellHouse(street2);
+        expMoney += street.getHousePrice() / 2;
+        expHousesStr2--;
+
         Assert.assertEquals(expHousesStr2, street2.getHouseCount());
         Assert.assertEquals(expMoney, player.getMoney());
     }
@@ -619,7 +628,7 @@ public class CoreUnitTest {
 
         patrick.setPosition(10);
         patrick.setInJail(true);
-    
+
         CardStack stack = new CardStack();
         JailCard jailCard = new JailCard(stack);
         patrick.getCardStack().addCard(jailCard);
@@ -638,7 +647,7 @@ public class CoreUnitTest {
         fm = board.getFieldManager();
         Player patrick = players[0];
         cm = board.getCardManager();
-        
+
         int currMoney = patrick.getMoney();
 
         cm.applyCardAction(Card.Action.PAY_BANK, 15, patrick);
@@ -661,10 +670,10 @@ public class CoreUnitTest {
         //Karten + Tests
         cm.applyCardAction(Card.Action.MOVE_NEXT_STATION_RENT_AMP, 2, patrick);
         Assert.assertTrue("Spieler ist nicht auf Suedbahnhof(naechster)!", patrick.getPosition() == 5);
-    
+
         cm.applyCardAction(Card.Action.SET_POSITION, 11, patrick);
         Assert.assertTrue("Spieler nicht auf Seestrasse", patrick.getPosition() == 11);
-    
+
         cm.applyCardAction(Card.Action.SET_POSITION, 24, patrick);
         Assert.assertTrue("Spieler nicht auf Opernplatz", patrick.getPosition() == 24);
 
@@ -679,7 +688,7 @@ public class CoreUnitTest {
         cm.applyCardAction(Card.Action.SET_POSITION, 5, patrick);
         Assert.assertTrue("Spieler nicht auf Suedbahnhof", patrick.getPosition() == 5);
         Assert.assertTrue("Spieler hat kein Geld bekommen (Los)", patrick.getMoney() == currMoney + fm.getGoField().getAmount());
-    
+
         cm.applyCardAction(Card.Action.MOVE, 3, patrick);
         Assert.assertTrue("Spieler nicht drei Felder zurueck gegangen!", patrick.getPosition() == 2);
 
@@ -759,7 +768,7 @@ public class CoreUnitTest {
         int currMoney1 = patrick.getMoney();
         int currMoney2 = schmarotzer.getMoney();
         int currMoney3 = parasit.getMoney();
-        
+
         //Vorstandswahl + Test
         cm.applyCardAction(Card.Action.PAY_ALL, 50, patrick);
         //TODO Spieler wird falsch Geld abgezogen
