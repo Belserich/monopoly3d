@@ -22,6 +22,11 @@ import de.btu.monopoly.ui.fx3d.AnimationListener;
 import de.btu.monopoly.ui.fx3d.Fx3dGameBoard;
 import de.btu.monopoly.ui.fx3d.Fx3dPropertyField;
 import de.btu.monopoly.util.Assets;
+import java.util.ArrayList;
+import java.util.InputMismatchException;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.stream.Collectors;
 import javafx.animation.*;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -41,12 +46,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.util.Duration;
 
-import java.util.ArrayList;
-import java.util.InputMismatchException;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.stream.Collectors;
-
 public class GameSceneManager implements AnimationListener {
 
     private static final double DEFAULT_SCENE_WIDTH = 1280;
@@ -65,7 +64,7 @@ public class GameSceneManager implements AnimationListener {
     private final VBox gameInfoBox;
     private final VBox playerBox;
     private final VBox cardHandle;
-    
+
     private CameraManager camMan;
 
     private Label auctionLabel = new Label("0 €");
@@ -91,7 +90,7 @@ public class GameSceneManager implements AnimationListener {
         popupWrapper = new VBox();
 
         popupQueue = new LinkedList<>();
-        
+
         playerBox = new VBox();
         cardHandle = new VBox();
         gameInfoBox = new VBox(playerBox, cardHandle);
@@ -131,7 +130,7 @@ public class GameSceneManager implements AnimationListener {
     }
 
     private void initUi() {
-        
+
         cardHandle.setPadding(new Insets(20, 0, 0, 20));
         cardHandle.setPickOnBounds(false);
         
@@ -475,7 +474,7 @@ public class GameSceneManager implements AnimationListener {
 
         box.getChildren().addAll(label, fieldBox, eingabeButton, exitButton);
         box.setAlignment(Pos.CENTER);
-        
+
         Popup pop = new Popup(gridPane);
         queuePopup(pop);
 
@@ -711,7 +710,7 @@ public class GameSceneManager implements AnimationListener {
             this(pane, Duration.INDEFINITE);
         }
     }
-    
+
     /*
      * Init Popup fuer den Handel
      */
@@ -1035,6 +1034,7 @@ public class GameSceneManager implements AnimationListener {
                     tradeGui.setPartnersMoney(Integer.parseInt(partnersMoneyTextField.getText()));
                     tradeGui.setPartnersCardAmount(Integer.parseInt(partnersCardsTextField.getText()));
                 } catch (NumberFormatException n) {
+                    destroyPopup(pop);
                     showTradeWarningPopup(tradeGui);
                 }
 
@@ -1054,6 +1054,7 @@ public class GameSceneManager implements AnimationListener {
                 }
 
                 else {
+                    destroyPopup(pop);
                     showTradeWarningPopup(tradeGui);
                 }
             } catch (InputMismatchException i) {
@@ -1153,7 +1154,6 @@ public class GameSceneManager implements AnimationListener {
      * Zeigt fuer 3,5 Sekunden ein Warining Popup
      */
     private void showTradeWarningPopup(GuiTrade tradeGui) {
-//        Global.ref().getGameSceneManager().queueNullPopup();
 
         //Initialisierung der benoetigten Objekte
         //Gridpane(s)
@@ -1184,16 +1184,11 @@ public class GameSceneManager implements AnimationListener {
         tradeWarningVBox.setAlignment(Pos.CENTER);
         tradeWarningVBox.getChildren().addAll(tradeWarningLabel);
 
-//        queueNullPopup();
-        Popup pop = new Popup(tradeWarningGridPane);
+        Popup pop = new Popup(tradeWarningGridPane, Duration.millis(3500));
         queuePopup(pop);
 
         //Weiterleitung an das naechste Popup
-        Timeline timer = new Timeline(new KeyFrame(
-                Duration.millis(3500),
-                timeOver -> selectTradeOfferPopup(tradeGui)));
-
-        timer.play();
+        selectTradeOfferPopup(tradeGui);
     }
 
     /**
@@ -1239,8 +1234,6 @@ public class GameSceneManager implements AnimationListener {
     }
 
     public void showOfferPopup(GuiTrade tradeGui) {
-
-//        Global.ref().getGameSceneManager().queueNullPopup();
         //Initialisierung der benoetigten Objekte
         //GridPane(s)
         GridPane showOfferGridPane = new GridPane();
@@ -1397,6 +1390,7 @@ public class GameSceneManager implements AnimationListener {
         tradeResponseVBox.getChildren().addAll(tradeResponseLabel);
 
         Popup pop = new Popup(tradeResponseGridPane);
+        Global.ref().getGuiTrade().setWaitForResponsePopup(pop);
         queuePopup(pop);
 
     }
@@ -1440,33 +1434,33 @@ public class GameSceneManager implements AnimationListener {
         Global.ref().getGameSceneManager().queuePopup(pop);
 
     }
-    
+
     private class GameStateAdapterImpl extends GameStateAdapter {
-        
+
         private VBox playerBox;
-        
+
         public GameStateAdapterImpl(VBox playerBox) {
             this.playerBox = playerBox;
         }
-        
+
         @Override
         public void onPlayerOnCardField(Player player, CardField cardField, Card card) {
             showCard(card, cardField.getStackType());
         }
-    
+
         @Override
         public void onTurnEnd(Player oldPlayer, Player newPlayer) {
             Platform.runLater(() -> {
                 ObservableList<Node> children = playerBox.getChildren();
                 Pane firstChild = (Pane) children.get(oldPlayer.getId());
-                
+
                 int size = children.size();
                 double newY = firstChild.getTranslateY() + size * firstChild.getHeight() + size * playerBox.getSpacing();
-                
+
                 TranslateTransition tt1 = new TranslateTransition(Duration.millis(200), firstChild);
                 tt1.setByX(-firstChild.getWidth());
                 tt1.setOnFinished(inv -> firstChild.setTranslateY(newY));
-    
+
                 ParallelTransition par = new ParallelTransition();
                 ObservableList<Animation> parChildren = par.getChildren();
                 children.stream()
@@ -1477,10 +1471,10 @@ public class GameSceneManager implements AnimationListener {
                             tt2.setByY(-(firstChild.getHeight() + playerBox.getSpacing()));
                             parChildren.add(tt2);
                         });
-    
+
                 TranslateTransition tt3 = new TranslateTransition(Duration.millis(200), firstChild);
                 tt3.setByX(firstChild.getWidth());
-                
+
                 SequentialTransition st = new SequentialTransition(tt1, par, tt3);
                 st.play();
             });

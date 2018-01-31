@@ -5,6 +5,7 @@
  */
 package de.btu.monopoly.ki;
 
+import de.btu.monopoly.Global;
 import de.btu.monopoly.core.mechanics.Trade;
 import de.btu.monopoly.core.mechanics.TradeOffer;
 import de.btu.monopoly.data.field.FieldManager;
@@ -54,7 +55,9 @@ public class TradeAi {
         // prüfen ob die Ki danach geuegend Geld hat
         int rawBalance = sMoney - dMoney;
         if (rawBalance < 0 && (ki.getMoney() + rawBalance) < para[6]) {
-            GUIChat.getInstance().msgLocal(ki, "Also das kann ich mir nicht leisten");
+            if (!Global.RUN_AS_TEST) {
+                GUIChat.getInstance().msgLocal(ki, "Also das kann ich mir nicht leisten");
+            }
             return false;
         }
 
@@ -101,7 +104,9 @@ public class TradeAi {
 
         // KI nimmt keine GFKarten an
         if (sCards.length > 0) {
-            GUIChat.getInstance().msgLocal(ki, "Also für Gefängnis-Frei-Karten bezahle ich nichts");
+            if (!Global.RUN_AS_TEST) {
+                GUIChat.getInstance().msgLocal(ki, "Also für Gefängnis-Frei-Karten bezahle ich nichts");
+            }
         }
 
         // KI verkauft zum Spielbeginn keine GFKarten, sonst fur festgelegten Wert

@@ -1,11 +1,11 @@
 package de.btu.monopoly.core.service;
 
+import de.btu.monopoly.Global;
 import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.field.SupplyField;
 import de.btu.monopoly.data.field.TaxField;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.net.chat.GUIChat;
-
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -71,7 +71,9 @@ public class FieldService {
             builder.append(String.format("%s kauft das Grundstück %s", player.getName(), prop.getName()));
             prop.setOwner(player);
             retVal = true;
-            GUIChat.getInstance().event(String.format("%s kauft das Grundstück %s", player.getName(), prop.getName()));
+            if (!Global.RUN_AS_TEST) {
+                GUIChat.getInstance().event(String.format("%s kauft das Grundstück %s", player.getName(), prop.getName()));
+            }
         }
         else {
             builder.append(String.format("%s hat nicht genug Geld, um %s zu kaufen!", player.getName(), prop.getName()));
@@ -134,7 +136,9 @@ public class FieldService {
 
             int rent = getRent(prop, rollResult, amplifier);
             PlayerService.takeAndGiveMoneyUnchecked(player, owner, rent);
-            GUIChat.getInstance().event(String.format("%s zahlt %d Miete an %s.", player.getName(), rent, owner.getName()));
+            if (!Global.RUN_AS_TEST) {
+                GUIChat.getInstance().event(String.format("%s zahlt %d Miete an %s.", player.getName(), rent, owner.getName()));
+            }
 
             return true;
         }
@@ -151,8 +155,10 @@ public class FieldService {
      */
     public static void payTax(Player player, TaxField taxField) {
 
-        GUIChat.getInstance().event(String.format("%s steht auf einem Steuerfeld. Er muss Steuern in Höhe von %d zahlen",
-                player.getName(), taxField.getTax()));
+        if (!Global.RUN_AS_TEST) {
+            GUIChat.getInstance().event(String.format("%s steht auf einem Steuerfeld. Er muss Steuern in Höhe von %d zahlen",
+                    player.getName(), taxField.getTax()));
+        }
         PlayerService.takeMoneyUnchecked(player, taxField.getTax());
     }
 }

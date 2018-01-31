@@ -1,11 +1,11 @@
 package de.btu.monopoly.core.service;
 
+import de.btu.monopoly.Global;
 import de.btu.monopoly.core.GameBoard;
 import de.btu.monopoly.data.player.Bank;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.net.chat.GUIChat;
 import de.btu.monopoly.net.client.GameClient;
-
 import java.util.Random;
 import java.util.logging.Logger;
 
@@ -27,7 +27,9 @@ public class PlayerService {
         player.setInJail(true);
         player.setDaysInJail(0);
         IOService.sleep(2000);
-        GUIChat.getInstance().event(String.format("%s ist jetzt im Gefaengnis.", player.getName()));
+        if (!Global.RUN_AS_TEST) {
+            GUIChat.getInstance().event(String.format("%s ist jetzt im Gefaengnis.", player.getName()));
+        }
     }
 
     /**
@@ -49,7 +51,9 @@ public class PlayerService {
     public static void freeFromJail(Player player) {
         player.setInJail(false);
         player.setDaysInJail(-1);
-        GUIChat.getInstance().event(String.format("%s wurde aus dem Gefängnis befreit.", player.getName()));
+        if (!Global.RUN_AS_TEST) {
+            GUIChat.getInstance().event(String.format("%s wurde aus dem Gefängnis befreit.", player.getName()));
+        }
     }
 
     /**
@@ -152,7 +156,9 @@ public class PlayerService {
         result[0] = rng.nextInt(6) + 1;
         result[1] = rng.nextInt(6) + 1;
 
-        GUIChat.getInstance().event(String.format("und würfelt eine %d und eine %d.", result[0], result[1]));
+        if (!Global.RUN_AS_TEST) {
+            GUIChat.getInstance().event(String.format("und würfelt eine %d und eine %d.", result[0], result[1]));
+        }
         return result;
     }
 
@@ -163,9 +169,10 @@ public class PlayerService {
      * @param board Spielbrett-Instanz
      */
     public static void bankrupt(Player player, GameBoard board) {
-        GUIChat.getInstance().event(String.format("%s ist Bankrott und ab jetzt nur noch Zuschauer. All sein Besitz geht zurück an die Bank.",
-                player.getName()));
-
+        if (!Global.RUN_AS_TEST) {
+            GUIChat.getInstance().event(String.format("%s ist Bankrott und ab jetzt nur noch Zuschauer. All sein Besitz geht zurück an die Bank.",
+                    player.getName()));
+        }
         player.setBankrupt(true);
         board.getFieldManager().bankrupt(player);
         board.getCardManager().bankrupt(player);
