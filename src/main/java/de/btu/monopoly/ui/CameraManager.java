@@ -39,7 +39,7 @@ public class CameraManager {
     private static final int ORTHO_CAM_ROTATE_MILLIS = 200;
     
     private static final double PREF_NODE_CAM_Z = -2000;
-    private static final double MIN_NODE_CAM_Z = PREF_NODE_CAM_Z * 0.75;
+    private static final double MIN_NODE_CAM_Z = PREF_NODE_CAM_Z * 0.25;
     private static final double MAX_NODE_CAM_Z = PREF_NODE_CAM_Z * 1.5;
     
     private static final Point3D NODE_CAM_AXIS = Rotate.X_AXIS;
@@ -54,6 +54,8 @@ public class CameraManager {
     private final ObjectProperty<Node> watchedNode;
     
     private final DoubleProperty nodeCamDist;
+    
+    private WatchMode mode;
     
     private Point2D.Double dragPoint;
     private boolean transitioning;
@@ -74,15 +76,11 @@ public class CameraManager {
                 nodeCamTransl
         );
         
+        mode = WatchMode.ORTHOGONAL;
         currCam = new SimpleObjectProperty<>(orthoCam);
         scene.cameraProperty().bindBidirectional(currCam);
         
-        ChangeListener<Transform> translateListener = (prop, oldT, newT) -> {
-            Camera cam = currCam.get();
-            cam.setTranslateX(newT.getTx());
-            cam.setTranslateY(newT.getTy());
-            cam.setTranslateZ(newT.getTz());
-        };
+        ChangeListener<Transform> translateListener = (prop, oldT, newT) -> adjustCamPosTo(newT);
         
         watchedNode = new SimpleObjectProperty<>(scene);
         watchedNode.addListener((prop, oldN, newN) -> {
@@ -134,9 +132,29 @@ public class CameraManager {
         return cam;
     }
     
-    public void watch(Node node, WatchMode mode) {
+    public void watch(Node node, WatchMode mode, double newZ) {
+        this.mode = mode;
         watchedNode.set(node);
         currCam.set(mode == WatchMode.ORTHOGONAL ? orthoCam : nodeCam);
+        nodeCamDist.set(newZ);
+        adjustCamPosTo(node.getLocalToSceneTransform());
+    }
+    
+    public void watch(Node node, double newZ) {
+        watch(node, WatchMode.PERSPECTIVE, newZ);
+    }
+    
+    public void watch(Node node, WatchMode mode) {
+        if (mode == WatchMode.PERSPECTIVE)
+            watch(node, mode, PREF_NODE_CAM_Z);
+        watch(node, mode, nodeCamDist.get());
+    }
+    
+    private void adjustCamPosTo(Transform transform) {
+        Camera currCam = this.currCam.get();
+        currCam.setTranslateX(transform.getTx());
+        currCam.setTranslateY(transform.getTy());
+        currCam.setTranslateZ(transform.getTz());
     }
     
     private void setDragPoint(MouseEvent event) {
@@ -145,6 +163,10 @@ public class CameraManager {
     
     public SubScene scene() {
         return scene;
+    }
+    
+    public WatchMode getWatchMode() {
+        return mode;
     }
     
     public ObjectProperty<Camera> currCamProperty() {
