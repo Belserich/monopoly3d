@@ -68,7 +68,7 @@ public class Launcher extends Application {
                 new Player("Patrick", 0, 1500, "#4286f4ff"),
                 new Player("Christian", 1, 1500, "#f44242ff")
             };
-            players[1].setAiLevel(1);
+            players[1].setAiLevel(2);
 
             GameClient client = new GameClient(7777, 1000);
 

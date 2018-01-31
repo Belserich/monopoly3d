@@ -35,9 +35,11 @@ public class StationField extends PropertyField {
                     .count();
             return rents[validNeighbourCount];
         }
-        else return 0;
+        else {
+            return 0;
+        }
     }
-    
+
     public int getRent(int num) {
         if (num < 0 || num >= rents.length) {
             return -1;
@@ -50,10 +52,15 @@ public class StationField extends PropertyField {
         return String.format("[Bahnhof] Name: %s, Preis: %s, Miete0: %s, Miete1: %s, Miete2: %s, Miete3: %s, Hypothekswert: %s, Hypotheksrückwert: %s",
                 getName(), getPrice(), rents[0], rents[1], rents[2], rents[3], getMortgageValue(), getMortgageBack());
     }
-    
+
     public String stationInformation() {
         return String.format("[Bahnhof] %nName: %s, %nPreis: %s, %nMiete bei 1 Bahnhof: %s, %nMiete bei 2 Bahnhöfe: %s,"
                 + " %nMiete bei 3 Bahnhöfe: %s, %nMiete bei 4 Bahnhöfe: %s, %nHypothekswert: %s, %nHypotheksrückwert: %s",
                 getName(), getPrice(), rents[0], rents[1], rents[2], rents[3], getMortgageValue(), getMortgageBack());
+    }
+
+    @Override
+    public int getTradingValue() {
+        return super.getPrice();
     }
 }

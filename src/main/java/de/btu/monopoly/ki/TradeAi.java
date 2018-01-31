@@ -23,17 +23,17 @@ public class TradeAi {
     private static int[] para;
 
     // Value = Wertveraenderung in %
-    private static final int VALUE_OF_MONEY_POOR = 130;
-    private static final int VALUE_OF_MONEY_RICH = 85;
-    private static final int CARD_SELLING_AMOUNT = 50;
-    private static final int MINIMUM_ACCEPT_AMOUNT = -50;
-    private static final int VALUE_OF_CHEAP_PROP = 70;
-    private static final int VALUE_OF_LUCRATIVE_PROP = 150;
-    private static final int VALUE_OF_EXPANSIVE_PROP = 110;
-    private static final int VALUE_IF_SOME_NEIGHBOURS_OWNED = 110;
-    private static final int VALUE_IF_ALL_NEIGHBOURS_OWNED = 130;
-    private static final int VALUE_IF_DEMANDING_COMPLETING_PROP = 200; //falls eine komplettierende Straße verkauft wird
-    private static final int VALUE_IF_KI_IS_SUPERRICH = 110;
+    private static final double VALUE_OF_MONEY_POOR = 130;
+    private static final double VALUE_OF_MONEY_RICH = 85;
+    private static final double CARD_SELLING_AMOUNT = 50;
+    private static final double MINIMUM_ACCEPT_AMOUNT = -50;
+    private static final double VALUE_OF_CHEAP_PROP = 70;
+    private static final double VALUE_OF_LUCRATIVE_PROP = 150;
+    private static final double VALUE_OF_EXPANSIVE_PROP = 110;
+    private static final double VALUE_IF_SOME_NEIGHBOURS_OWNED = 110;
+    private static final double VALUE_IF_ALL_NEIGHBOURS_OWNED = 130;
+    private static final double VALUE_IF_DEMANDING_COMPLETING_PROP = 200; //falls eine komplettierende Straße verkauft wird
+    private static final double VALUE_IF_KI_IS_SUPERRICH = 110;
 
     protected static boolean calculateChoice(Trade trade, Player ki, FieldManager fima) {
         IOService.sleep(1000);
@@ -50,12 +50,11 @@ public class TradeAi {
         int[] dCards = demand.getCardIds();
 
         // Anderes:
-        int balance = 0;                    // balance die entscheidet, ob das Angebot angenommen wird
+        double balance = 0;                    // balance die entscheidet, ob das Angebot angenommen wird
         para = HardKi.getParameters();
-        String name = ki.getName();
 
         // prüfen ob die Ki danach geuegend Geld hat
-        int rawBalance = sMoney - dMoney;
+        double rawBalance = sMoney - dMoney;
         if (rawBalance < 0 && (ki.getMoney() + rawBalance) < para[6]) {
             if (!Global.RUN_AS_TEST) {
                 GUIChat.getInstance().msgLocal(ki, "Also das kann ich mir nicht leisten");
@@ -75,14 +74,14 @@ public class TradeAi {
         }
         // Ausgehende Strassen werden auf balance gerechnet
         for (int propId : dProps) {
-            balance += calcProperty(ki, propId, fima, true);
+            balance -= calcProperty(ki, propId, fima, true);
         }
 
-        ChatAi.tradeResultMessage(ki, balance, MINIMUM_ACCEPT_AMOUNT);
+        ChatAi.tradeResultMessage(ki, (int) balance, (int) MINIMUM_ACCEPT_AMOUNT);
         return (balance > 0 + MINIMUM_ACCEPT_AMOUNT);
     }
 
-    private static int calcMoney(Player ki, int sMoney, int dMoney) {
+    private static double calcMoney(Player ki, int sMoney, int dMoney) {
         IOService.sleep(1000);
         int balance = 0;
 
@@ -102,9 +101,9 @@ public class TradeAi {
         return balance;
     }
 
-    private static int calcCards(Player ki, int[] sCards, int[] dCards) {
+    private static double calcCards(Player ki, int[] sCards, int[] dCards) {
         IOService.sleep(1000);
-        int balance = 0;
+        double balance = 0;
 
         // KI nimmt keine GFKarten an
         if (sCards.length > 0) {
@@ -120,9 +119,9 @@ public class TradeAi {
         return balance;
     }
 
-    private static int calcProperty(Player ki, int propId, FieldManager fima, boolean demanding) {
+    private static double calcProperty(Player ki, int propId, FieldManager fima, boolean demanding) {
         IOService.sleep(1000);
-        int multiplicator = 1;
+        double multiplicator = 1;
 
         // Strasse rausbekommen
         PropertyField prop = (PropertyField) fima.getField(propId);
@@ -154,8 +153,8 @@ public class TradeAi {
         multiplicator *= (ki.getMoney() > para[4]) ? (VALUE_IF_KI_IS_SUPERRICH / 100) : 1;
 
         // Multiplikator anwenden
-        int calculatedValue = prop.getTradingValue() * multiplicator;
-        ChatAi.propertyMessage(ki, prop.getName(), prop.getTradingValue(), calculatedValue, MINIMUM_ACCEPT_AMOUNT);
+        double calculatedValue = (int) (prop.getTradingValue() * multiplicator);
+        ChatAi.propertyMessage(ki, prop.getName(), prop.getTradingValue(), (int) calculatedValue, (int) MINIMUM_ACCEPT_AMOUNT);
         return calculatedValue;
     }
 }

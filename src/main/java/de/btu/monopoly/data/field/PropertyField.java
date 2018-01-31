@@ -51,7 +51,7 @@ public abstract class PropertyField extends Field implements Tradeable {
         this.price = price;
         this.mortgage = mortgage;
         this.mortgageBack = mortgageBack;
-        
+
         owner = new SimpleObjectProperty<>(null);
         mortgageTaken = new SimpleBooleanProperty(false);
     }
@@ -104,19 +104,21 @@ public abstract class PropertyField extends Field implements Tradeable {
     public void setMortgageTaken(boolean mortgageTaken) {
         this.mortgageTaken.set(mortgageTaken);
     }
-    
-    public int getRent() { return 0; }
-    
+
+    public int getRent() {
+        return 0;
+    }
+
     public BooleanProperty mortgageTakenProperty() {
         return mortgageTaken;
     }
-    
+
     public ObjectProperty<Player> ownerProperty() {
         return owner;
     }
-    
-    @Override
-    public int getTradingValue() {
-        return getRent();
-    }
+//
+//    @Override
+//    public int getTradingValue() {
+//        return getRent();
+//    }
 }

@@ -25,7 +25,7 @@ public class ChatAi {
         String mess = "";
 
         if (balance < (MINIMUM_ACCEPT_AMOUNT * 6)) {           // viel zu teuer
-            switch (ran.nextInt(8)) {
+            switch (ran.nextInt(7) + 1) {
                 case 1:
                     mess += "Wow, das lohnt sich gar nicht für mich!";
                     break;
@@ -52,7 +52,7 @@ public class ChatAi {
             }
         }
         else if (balance < MINIMUM_ACCEPT_AMOUNT) {             // zu teuer
-            switch (ran.nextInt(6)) {
+            switch (ran.nextInt(5) + 1) {
                 case 1:
                     mess += "Sorry, aber das lohnt sich nicht für mich.";
                     break;
@@ -73,7 +73,7 @@ public class ChatAi {
             }
         }
         else if (balance < (Math.sqrt(Math.pow(MINIMUM_ACCEPT_AMOUNT, 2)) * 6)) {      // okay
-            switch (ran.nextInt(6)) {
+            switch (ran.nextInt(5) + 1) {
                 case 1:
                     mess += "Es war mir eine Ehre mit ihnen Geschäfte zu machen";
                     break;
@@ -95,7 +95,7 @@ public class ChatAi {
             }
         }
         else {                                                  // sehr gut
-            switch (ran.nextInt(6)) {
+            switch (ran.nextInt(5) + 1) {
                 case 1:
                     mess += "Das ist ein Angebot, was ich nicht ablehnen kann!";
                     break;
@@ -124,11 +124,11 @@ public class ChatAi {
         String mess = "";
         Random ran = new Random();
         int balance = tradVal - calcVal;
-        int lowBoarder = 0 - MINIMUM_ACCEPT_AMOUNT;
-        int highBoarder = 0 + MINIMUM_ACCEPT_AMOUNT;
+        int lowBoarder = 0 + MINIMUM_ACCEPT_AMOUNT;
+        int highBoarder = 0 - MINIMUM_ACCEPT_AMOUNT;
 
         if (balance < lowBoarder) {         // zu teuer
-            switch (ran.nextInt(4)) {
+            switch (ran.nextInt(3) + 1) {
                 case 1:
                     mess += name + " zu diesem Preis? ziemlich unlukrativ";
                     break;
@@ -141,7 +141,7 @@ public class ChatAi {
             }
         }
         else if (balance < highBoarder) {  // gut
-            switch (ran.nextInt(4)) {
+            switch (ran.nextInt(3) + 1) {
                 case 1:
                     mess += name + " klingt ganz okay";
                     break;
@@ -154,7 +154,7 @@ public class ChatAi {
             }
         }
         else {                             // sehr gut
-            switch (ran.nextInt(4)) {
+            switch (ran.nextInt(3) + 1) {
                 case 1:
                     mess += name + " ist auf jeden Fall okay.";
                     break;

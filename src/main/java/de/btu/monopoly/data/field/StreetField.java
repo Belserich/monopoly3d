@@ -75,7 +75,7 @@ public class StreetField extends PropertyField {
         }
         return 0;
     }
-    
+
     public int getRent(int num) {
         if (num < 0 || num >= rents.length) {
             return -1;
@@ -100,7 +100,7 @@ public class StreetField extends PropertyField {
     public void setHouseCount(int houseCount) {
         this.houseCount.set(houseCount);
     }
-    
+
     public IntegerProperty houseCountProperty() {
         return houseCount;
     }
@@ -110,5 +110,10 @@ public class StreetField extends PropertyField {
         return String.format("[Straßenfeld] Name: %s, Preis: %s, Miete0: %s, Miete1: %s, Miete2: %s, Miete3: %s, Miete4: %s"
                 + ", Miete5: %s, Hauspreis: %s, Hypothekswert: %s, Hypotheksrückwert: %s",
                 getName(), getPrice(), rents[0], rents[1], rents[2], rents[3], rents[4], rents[5], housePrice, getMortgageValue(), getMortgageBack());
+    }
+
+    @Override
+    public int getTradingValue() {
+        return super.getPrice() + (houseCount.get() * housePrice);
     }
 }

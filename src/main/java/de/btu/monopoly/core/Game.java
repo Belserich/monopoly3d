@@ -124,7 +124,9 @@ public class Game {
             for (int id = 0; id < activePlayers.size(); id++) {
 
                 currPlayer = activePlayers.get(id);
-                LOGGER.info(String.format("%s ist an der Reihe.", currPlayer.getName()));
+                if (!Global.RUN_AS_TEST) {
+                    GUIChat.getInstance().event(String.format("%s ist an der Reihe.", currPlayer.getName()));
+                }
                 stateListeners.forEach(l -> l.onTurnStart(currPlayer));
 
                 turn();

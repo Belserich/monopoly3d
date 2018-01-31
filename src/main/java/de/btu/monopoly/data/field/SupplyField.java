@@ -37,9 +37,13 @@ public class SupplyField extends PropertyField {
             if (validNeighbourCount == 0) {
                 return mult1;
             }
-            else return mult2;
+            else {
+                return mult2;
+            }
         }
-        else return 0;
+        else {
+            return 0;
+        }
     }
 
     @Override
@@ -48,10 +52,15 @@ public class SupplyField extends PropertyField {
                 + "Multiplikator1: %s, Multiplikator2: %s, Hypothekswert: %s, Hypotheksrückwert: %s",
                 getName(), getPrice(), mult1, mult2, getMortgageValue(), getMortgageBack());
     }
-    
+
     public String supplyInformation() {
         return String.format("[Versorgungswerk] %nName: %s, %nPreis: %s, "
                 + "%nBei einem Werk: %s, %nBei zwei Werke : %s, %nHypothekswert: %s, %nHypotheksrückwert: %s",
                 getName(), getPrice(), mult1, mult2, getMortgageValue(), getMortgageBack());
+    }
+
+    @Override
+    public int getTradingValue() {
+        return super.getPrice();
     }
 }
