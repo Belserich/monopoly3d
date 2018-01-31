@@ -165,8 +165,8 @@ public class FieldManager {
 
         System.out.println("HAI");
         LOGGER.info(String.format("%s versucht, ein Haus auf %s zu kaufen.", player.getName(), street.getName()));
-        // if (isComplete(street)) {
-        // if (balanceCheck(street, 1, 0)
+   
+        if (isComplete(street) && balanceCheck(street, 1, 0)){
         if (PlayerService.checkLiquidity(player, street.getHousePrice())) {
             if (street.getHouseCount() < 5) {
                 if (!street.isMortgageTaken()) {
@@ -182,13 +182,16 @@ public class FieldManager {
             }
         }
         return false;
-        //  }
-//        else {
-//            LOGGER.warning(String.format("Auf %s kann kein Haus bebaut werden, weil nicht alle Strassen des Spielers "
-//                    + "gehören.", street.getName()));
-//
-//        }
-//        return false;
+          }
+
+    
+        else {
+            LOGGER.warning(String.format("Auf %s kann kein Haus bebaut werden, weil nicht alle Strassen des Spielers "
+                + "gehören.", street.getName()));
+
+    }
+
+return false;
     }
 
     /**
@@ -216,15 +219,15 @@ public class FieldManager {
         Player player = street.getOwner();
 
         LOGGER.info(String.format("%s versucht, ein Haus auf %s zu verkaufen.", player.getName(), street.getName()));
-        //  if (balanceCheck(street, 0, 1)) {
+          if (balanceCheck(street, 0, 1)) {
         if (street.getHouseCount() > 0) {
             sellHouseUnchecked(street);
             return true;
         }
-//            else {
-//                LOGGER.warning(String.format("Auf %s stehen keine Haeuser.", street.getName()));
-//            }
-        //  }
+            else {
+                LOGGER.warning(String.format("Auf %s stehen keine Haeuser.", street.getName()));
+            }
+        }
         return false;
     }
 
