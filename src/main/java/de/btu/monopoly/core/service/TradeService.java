@@ -12,7 +12,6 @@ import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.ki.HardKi;
 import de.btu.monopoly.menu.Lobby;
-import de.btu.monopoly.net.chat.GUIChat;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.data.PlayerTradeRequest;
 import de.btu.monopoly.net.data.PlayerTradeResponse;
@@ -65,7 +64,7 @@ public class TradeService {
 
         if (response.isAccepted()) {
             if (Global.RUN_IN_CONSOLE) {
-                GUIChat.getInstance().event("<<< HANDEL ANGENOMMEN >>>");
+                LOGGER.info("<<< HANDEL ANGENOMMEN >>>");
                 TradeService.completeTrade(response.getRequest().getTrade(), board);
             }
             else {
@@ -76,7 +75,7 @@ public class TradeService {
         }
         else {
             if (Global.RUN_IN_CONSOLE) {
-                GUIChat.getInstance().event("<<< HANDEL ABGELEHNT >>>");
+                LOGGER.info("<<< HANDEL ABGELEHNT >>>");
             }
             else {
                 Global.ref().getGameSceneManager().showAnswerPopup(false);

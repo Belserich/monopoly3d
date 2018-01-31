@@ -12,7 +12,6 @@ import de.btu.monopoly.net.data.BidRequest;
 import de.btu.monopoly.net.data.BroadcastAuctionResponse;
 import de.btu.monopoly.net.data.ExitAuctionRequest;
 import de.btu.monopoly.net.data.JoinAuctionRequest;
-
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -102,7 +101,9 @@ public class AuctionService extends Listener {
             message += "Wir haben" + auc.getHighestBid() + "€ von "
                     + AuctionService.getPlayer(AuctionService.getHighestBidder()).getName() + ". ";
         }
-        GUIChat.getInstance().msgLocal("Auktionsleiter", message);
+        if (!Global.RUN_AS_TEST) {
+            GUIChat.getInstance().msgLocal("Auktionsleiter", message);
+        }
         message = "";
         for (int i = 1; i < 5; i++) {
             IOService.sleepDeep(1600);
@@ -126,7 +127,9 @@ public class AuctionService extends Listener {
                 case 4:
                     message = "Vorbei!";
             }
-            GUIChat.getInstance().msgLocal("Auktionsleiter", message);
+            if (!Global.RUN_AS_TEST) {
+                GUIChat.getInstance().msgLocal("Auktionsleiter", message);
+            }
             message = "";
         }
     }
@@ -134,8 +137,10 @@ public class AuctionService extends Listener {
     private static void terminateAuction() {
         if (AuctionService.getHighestBid() > 0) {   // falls ein Bieter gefunden
             // verkaufe
-            GUIChat.getInstance().msgLocal("Auktionsleiter", "Das Grundstück geht für " + auc.getHighestBid()
-                    + "€ an " + AuctionService.getPlayer(AuctionService.getHighestBidder()).getName());
+            if (!Global.RUN_AS_TEST) {
+                GUIChat.getInstance().msgLocal("Auktionsleiter", "Das Grundstück geht für " + auc.getHighestBid()
+                        + "€ an " + AuctionService.getPlayer(AuctionService.getHighestBidder()).getName());
+            }
             if (!Global.RUN_IN_CONSOLE) {
                 Global.ref().getGameSceneManager().updateAuctionPopup(auctionStillActive(), false);
             }
@@ -143,7 +148,9 @@ public class AuctionService extends Listener {
         }
         else {                                    // falls kein Bieter gefunden
             // verkaufe nicht
-            GUIChat.getInstance().msgLocal("Auktionsleiter", "Das Grundstück wird nicht verkauft");
+            if (!Global.RUN_AS_TEST) {
+                GUIChat.getInstance().msgLocal("Auktionsleiter", "Das Grundstück wird nicht verkauft");
+            }
             if (!Global.RUN_IN_CONSOLE) {
                 Global.ref().getGameSceneManager().updateAuctionPopup(auctionStillActive(), true);
             }

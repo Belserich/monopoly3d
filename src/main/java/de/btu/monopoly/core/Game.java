@@ -8,7 +8,6 @@ import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.ki.HardKi;
 import de.btu.monopoly.net.chat.GUIChat;
 import de.btu.monopoly.net.client.GameClient;
-
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -61,15 +60,14 @@ public class Game {
      * Alle registrierten Listener die auf das Ende einer Runde warten.
      */
     private List<GameStateListener> stateListeners;
-    
+
     protected Player currPlayer;
-    
+
     protected int rollResult[];
     protected int doubletCount;
 
     /**
-     * Die fachliche Komponente des Spiels als Einheit, bestehend aus einem
-     * Spielbrett, den Spielern sowie Zuschauern.
+     * Die fachliche Komponente des Spiels als Einheit, bestehend aus einem Spielbrett, den Spielern sowie Zuschauern.
      *
      * @param client GameClient
      * @param players Spieler
@@ -79,24 +77,24 @@ public class Game {
         this.client = client;
         this.players = players;
         random = new Random(seed);
-        
+
         stateListeners = new LinkedList<>();
-        
+
         IOService.setClient(client);
-        
+
         init();
     }
-    
+
     public void addGameStateListener(GameStateListener listener) {
         stateListeners.add(listener);
     }
-    
+
     public void removeGameStateListener(GameStateListener listener) {
         stateListeners.remove(listener);
     }
 
     protected void init() {
-        
+
         LOGGER.info("Spiel wird initialisiert.");
         stateListeners.forEach(GameStateListener::onGameInit);
 
@@ -113,7 +111,9 @@ public class Game {
     public void start() {
 
         LOGGER.setLevel(Level.ALL);
-        GUIChat.getInstance().event("Das Spiel beginnt!");
+        if (!Global.RUN_AS_TEST) {
+            GUIChat.getInstance().event("Das Spiel beginnt!");
+        }
         stateListeners.forEach(l -> l.onGameStart(players));
 
         List<Player> activePlayers = board.getActivePlayers();
@@ -121,13 +121,13 @@ public class Game {
         while (activePlayers.size() > 1) {
 
             for (int id = 0; id < activePlayers.size(); id++) {
-    
+
                 currPlayer = activePlayers.get(id);
                 LOGGER.info(String.format("%s ist an der Reihe.", currPlayer.getName()));
                 stateListeners.forEach(l -> l.onTurnStart(currPlayer));
-                
+
                 turn();
-                
+
                 if (!currPlayer.getBank().isLiquid()) {
                     PlayerService.bankrupt(currPlayer, board);
                 }
@@ -139,12 +139,14 @@ public class Game {
         }
 
         Player winner = board.getActivePlayers().get(0);
-        GUIChat.getInstance().event(String.format("%s hat das Spiel gewonnen!", winner.getName()));
+        if (!Global.RUN_AS_TEST) {
+            GUIChat.getInstance().event(String.format("%s hat das Spiel gewonnen!", winner.getName()));
+        }
         stateListeners.forEach(l -> l.onGameEnd(winner));
     }
 
     protected void turn() {
-        
+
         if (currPlayer.isInJail()) {
             stateListeners.forEach(l -> l.onPlayerStartsTurnInJail(currPlayer));
             jailPhase();
@@ -155,18 +157,18 @@ public class Game {
                 rollPhase();
                 if (doubletCount < 3) {
                     fieldPhase();
-                    if (currPlayer.isInJail())
+                    if (currPlayer.isInJail()) {
                         break;
+                    }
                 }
                 actionPhase();
-            }
-            while (rollResult[0] == rollResult[1]);
+            } while (rollResult[0] == rollResult[1]);
             doubletCount = 0;
         }
     }
 
     protected void rollPhase() {
-        
+
         LOGGER.info(String.format("%s ist dran mit würfeln.", currPlayer.getName()));
         stateListeners.forEach(l -> l.onRollPhaseStart(currPlayer));
         IOService.sleep(2000);
@@ -177,8 +179,10 @@ public class Game {
         stateListeners.forEach(l -> l.onDiceThrow(rollResult, doubletCount));
 
         if (doubletCount >= 3) {
-            GUIChat.getInstance().event(String.format("%s hat seinen 3. Pasch und geht nicht über LOS, direkt ins Gefängnis!",
-                    currPlayer.getName()));
+            if (!Global.RUN_AS_TEST) {
+                GUIChat.getInstance().event(String.format("%s hat seinen 3. Pasch und geht nicht über LOS, direkt ins Gefängnis!",
+                        currPlayer.getName()));
+            }
             FieldService.toJail(currPlayer);
             LOGGER.info(String.format("%s hat seinen 3. Pasch und geht nicht über LOS, direkt ins Gefängnis!", currPlayer.getName()));
             FieldService.toJail(currPlayer);
@@ -187,20 +191,20 @@ public class Game {
             int oldPos = currPlayer.getPosition();
             int moveAmount = rollResult[0] + rollResult[1];
             int newPos = (oldPos + moveAmount) % FieldTypes.GAMEBOARD_FIELD_STRUCT.length;
-            
+
             board.getFieldManager().movePlayer(currPlayer, moveAmount);
             boolean passedGo = (oldPos >= newPos);
 
             for (GameStateListener l : stateListeners) {
                 l.onPlayerMove(currPlayer, oldPos, newPos, passedGo);
             }
-            
+
         }
     }
-    
+
     protected void fieldPhase() {
         stateListeners.forEach(l -> l.onFieldPhaseStart(currPlayer));
-        
+
         boolean repeatPhase;
         FieldTypes type;
         Field field;
@@ -209,11 +213,12 @@ public class Game {
             repeatPhase = false;
             type = FieldTypes.GAMEBOARD_FIELD_STRUCT[currPlayer.getPosition()];
             field = board.getFieldManager().getField(currPlayer.getPosition());
-            
+
             LOGGER.fine(String.format("Feldphase begonnen: Spieler %s, Feld: %s", currPlayer.getName(), type));
-            for (GameStateListener l : stateListeners)
+            for (GameStateListener l : stateListeners) {
                 l.onPlayerOnNewField(currPlayer, type);
-            
+            }
+
             if (type.isProperty()) {
                 PropertyField prop = (PropertyField) board.getFields()[currPlayer.getPosition()];
                 onPlayerOnProperty(prop);
@@ -226,14 +231,15 @@ public class Game {
                 CardField cardField = (CardField) field;
                 Card card = board.getCardManager().pullAndProcess(cardField.getStackType(), currPlayer);
                 repeatPhase = Card.Action.mustRepeatFieldPhase(card.getAction());
-    
+
                 stateListeners.forEach(l -> l.onPlayerOnCardField(currPlayer, cardField, card));
             }
-            else if (type == FieldTypes.CORNER_3) /* "Gehen Sie ins Gefängnis" */ {
+            else if (type == FieldTypes.CORNER_3) /*
+             * "Gehen Sie ins Gefängnis"
+             */ {
                 FieldService.toJail(currPlayer);
             }
-        }
-        while (repeatPhase);
+        } while (repeatPhase);
     }
 
     protected void onPlayerOnProperty(PropertyField prop) {
@@ -255,9 +261,9 @@ public class Game {
             PlayerService.takeAndGiveMoneyUnchecked(currPlayer, other, FieldService.getRent(prop, rollResult));
         }
     }
-    
+
     protected void onBuyPropertyOption(PropertyField prop) {
-        
+
         int choice = IOService.getBuyPropertyChoice(currPlayer, prop);
         switch (choice) {
             case 1: // Kaufen
@@ -268,54 +274,67 @@ public class Game {
                     onAuction(prop);
                 }
                 break;
-            
+
             case 2: // Auktion
                 LOGGER.log(Level.INFO, "{0} hat sich gegen den Kauf entschieden, die Stra\u00dfe wird nun versteigert.", currPlayer.getName());
                 onAuction(prop);
                 break;
-            
+
             default:
                 LOGGER.warning("Fehler: Wahl außerhalb des gültigen Bereichs!");
                 break;
         }
     }
-    
+
     protected void actionPhase() {
         stateListeners.forEach(l -> l.onActionPhaseStart(currPlayer));
-        
+
         int actionChoice;
         do {
             if (Global.RUN_IN_CONSOLE) {
                 LOGGER.info(String.format("%s ist an der Reihe! Waehle eine Aktion:%n[1] - Nichts%n[2] - Haus kaufen%n[3] - Haus verkaufen%n[4] - "
                         + "Hypothek aufnehmen%n[5] - Hypothek abbezahlen%n[6] - Handeln", currPlayer.getName()));
             }
-            
+
             actionChoice = IOService.getActionChoice(currPlayer, board);
-            for (GameStateListener l : stateListeners)
+            for (GameStateListener l : stateListeners) {
                 l.onPlayerActionOption(currPlayer, actionChoice);
-            
+            }
+
             if (actionChoice > ACTION_NOTHING && actionChoice < ACTION_TRADE) {
 
                 FieldManager fima = board.getFieldManager();
                 int fieldChoice;
-                if (currPlayer.getAiLevel() < 2) fieldChoice = getFieldChoice();
-                else fieldChoice = HardKi.getChosenFieldId();
-                
-                if (fieldChoice == -1) continue;
+                if (currPlayer.getAiLevel() < 2) {
+                    fieldChoice = getFieldChoice();
+                }
+                else {
+                    fieldChoice = HardKi.getChosenFieldId();
+                }
+
+                if (fieldChoice == -1) {
+                    continue;
+                }
 
                 PropertyField prop = (PropertyField) board.getFieldManager().getField(fieldChoice);
                 switch (actionChoice) {
 
                     case ACTION_BUY_HOUSE:
-                        if (prop instanceof StreetField)
-                           fima.buyHouse((StreetField) prop);
-                        else LOGGER.info("Gewähltes Feld ist keine Straße!");
+                        if (prop instanceof StreetField) {
+                            fima.buyHouse((StreetField) prop);
+                        }
+                        else {
+                            LOGGER.info("Gewähltes Feld ist keine Straße!");
+                        }
                         break;
 
                     case ACTION_SELL_HOUSE:
-                        if (prop instanceof StreetField)
+                        if (prop instanceof StreetField) {
                             fima.sellHouse((StreetField) prop);
-                        else LOGGER.info("Gewähltes Feld ist keine Straße!");
+                        }
+                        else {
+                            LOGGER.info("Gewähltes Feld ist keine Straße!");
+                        }
                         break;
 
                     case ACTION_TAKE_MORTGAGE:
@@ -327,18 +346,19 @@ public class Game {
                         break;
                 }
             }
-            else if (actionChoice == ACTION_TRADE) onPlayerTradeOption();
-        }
-        while (actionChoice != 1);
+            else if (actionChoice == ACTION_TRADE) {
+                onPlayerTradeOption();
+            }
+        } while (actionChoice != 1);
     }
-    
+
     private int getFieldChoice() {
-        
+
         int[] ownedFieldIds = board.getFieldManager().getOwnedPropertyFieldIds(currPlayer);
         String[] fieldNames = Arrays.stream(ownedFieldIds)
                 .mapToObj(id -> board.getFieldManager().getField(id).getName())
                 .toArray(String[]::new);
-        
+
         if (currPlayer.getAiLevel() < 2) {
             int chosenFieldChoice = IOService.askForField(currPlayer, fieldNames) - 1;
             if (chosenFieldChoice < 0) {
@@ -347,26 +367,29 @@ public class Game {
             }
             return ownedFieldIds[chosenFieldChoice];
         }
-        else return HardKi.getChosenFieldId();
+        else {
+            return HardKi.getChosenFieldId();
+        }
         // Das hier verwendete Feld wurde vorher in HardKi.processActionSequence() festgelegt.
     }
 
     protected void jailPhase() {
         stateListeners.forEach(l -> l.onJailPhaseStart(currPlayer));
-        
+
         int choice;
         do {
             if (Global.RUN_IN_CONSOLE) {
                 LOGGER.info(String.format(" %s ist im Gefängnis und kann: %n[1] - 3-mal Würfeln, um mit einem Pasch freizukommen "
                         + "%n[2] - Bezahlen (50€) %n[3] - Gefängnis-Frei-Karte benutzen", currPlayer.getName()));
             }
-            
+
             choice = IOService.getJailChoice(currPlayer);
-            for (GameStateListener l : stateListeners)
+            for (GameStateListener l : stateListeners) {
                 l.onPlayerJailOption(currPlayer, choice);
-            
+            }
+
             switch (choice) {
-                
+
                 case JAIL_ROLL_OPTION:
                     onJailRollOption();
                     break;
@@ -379,49 +402,55 @@ public class Game {
                 default:
                     throw new RuntimeException("Undefined player jail choice!");
             }
-        }
-        while (currPlayer.isInJail() && choice != JAIL_ROLL_OPTION);
+        } while (currPlayer.isInJail() && choice != JAIL_ROLL_OPTION);
     }
 
     protected void onJailRollOption() {
         int[] rollResult = PlayerService.roll(random);
-        if (rollResult[0] == rollResult[1])
+        if (rollResult[0] == rollResult[1]) {
             onJailRollSuccess();
-        else onJailRollFailure();
+        }
+        else {
+            onJailRollFailure();
+        }
     }
-    
+
     protected void onJailRollSuccess() {
         stateListeners.forEach(l -> l.onJailRollSuccess(currPlayer));
         PlayerService.freeFromJail(currPlayer);
     }
-    
+
     protected void onJailRollFailure() {
         stateListeners.forEach(l -> l.onJailRollFailure(currPlayer));
-        
+
         currPlayer.addDayInJail();
-        if (currPlayer.getDaysInJail() >= 3)
+        if (currPlayer.getDaysInJail() >= 3) {
             onForceJailPayOption();
+        }
     }
 
     protected void onForceJailPayOption() {
         stateListeners.forEach(l -> l.onForceJailPayOption(currPlayer));
-    
+
         LOGGER.info("Drei Runden ohne Pasch, Spieler muss zahlen.");
         PlayerService.takeMoneyUnchecked(currPlayer, 50);
         PlayerService.freeFromJail(currPlayer);
     }
 
     protected void onJailPayOption() {
-        if (PlayerService.takeMoney(currPlayer, 50))
+        if (PlayerService.takeMoney(currPlayer, 50)) {
             onJailPayFailure();
-        else onJailPaySuccess();
+        }
+        else {
+            onJailPaySuccess();
+        }
     }
-    
+
     protected void onJailPayFailure() {
         stateListeners.forEach(l -> l.onJailPayFailure(currPlayer));
         LOGGER.info(String.format("%s hat kein Geld um sich freizukaufen.", currPlayer.getName()));
     }
-    
+
     protected void onJailPaySuccess() {
         stateListeners.forEach(l -> l.onJailPaySuccess(currPlayer));
         LOGGER.info(String.format("%s hat 50 gezahlt und ist frei!", currPlayer.getName()));
@@ -429,11 +458,14 @@ public class Game {
     }
 
     protected void onJailCardOption() {
-        if (board.getCardManager().hasJailCards(currPlayer))
+        if (board.getCardManager().hasJailCards(currPlayer)) {
             onJailCardSuccess();
-        else onJailCardFailure();
+        }
+        else {
+            onJailCardFailure();
+        }
     }
-    
+
     protected void onJailCardSuccess() {
         stateListeners.forEach(l -> l.onJailCardSuccess(currPlayer));
         LOGGER.info(String.format("%s hat eine Gefängnis-Frei-Karte benutzt.", currPlayer.getName()));
@@ -485,7 +517,7 @@ public class Game {
     public Random getRandom() {
         return random;
     }
-    
+
     public Player getCurrentPlayer() {
         return currPlayer;
     }

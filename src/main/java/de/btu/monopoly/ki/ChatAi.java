@@ -5,10 +5,10 @@
  */
 package de.btu.monopoly.ki;
 
+import de.btu.monopoly.Global;
 import de.btu.monopoly.core.service.IOService;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.net.chat.GUIChat;
-
 import java.util.Random;
 import java.util.logging.Logger;
 
@@ -115,7 +115,9 @@ public class ChatAi {
                     mess += "Also wenn ich das nicht annehmen würde, wäre ich kein Geschäftsmann!";
             }
         }
-        GUIChat.getInstance().msgLocal(ki, mess);
+        if (!Global.RUN_AS_TEST) {
+            GUIChat.getInstance().msgLocal(ki, mess);
+        }
     }
 
     static void propertyMessage(Player ki, String name, int tradVal, int calcVal, int MINIMUM_ACCEPT_AMOUNT) {
@@ -164,6 +166,8 @@ public class ChatAi {
                     break;
             }
         }
-        GUIChat.getInstance().msgLocal(ki, mess);
+        if (!Global.RUN_AS_TEST) {
+            GUIChat.getInstance().msgLocal(ki, mess);
+        }
     }
 }
