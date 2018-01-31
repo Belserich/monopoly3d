@@ -181,14 +181,12 @@ public class GameSceneManager implements AnimationListener {
     }
 
     private void initCams() {
+        
         camMan = new CameraManager(gameSub);
         camMan.watch(board3d, WatchMode.ORTHOGONAL);
         
-        board3d.getPlayers().forEach(p -> {
-            p.setOnMouseReleased(event -> {
-                camMan.watch(p, PLAYER_ZOOM);
-            });
-        });
+        board3d.getPlayers().forEach(p ->
+                p.setOnMouseReleased(event -> camMan.watch(p, PLAYER_ZOOM)));
     }
 
     private void displayPopup(Popup pop) {
