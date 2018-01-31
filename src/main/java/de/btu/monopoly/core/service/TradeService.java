@@ -10,6 +10,7 @@ import de.btu.monopoly.data.card.CardStack;
 import de.btu.monopoly.data.field.FieldManager;
 import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.player.Player;
+import de.btu.monopoly.ki.EasyKi;
 import de.btu.monopoly.ki.HardKi;
 import de.btu.monopoly.menu.Lobby;
 import de.btu.monopoly.net.client.GameClient;
@@ -175,7 +176,12 @@ public class TradeService {
         Trade trade = request.getTrade();
         Player receipt = board.getPlayer(request.getTrade().getDemand().getPlayerId());
         boolean accepted = false;
-        accepted = HardKi.calculateTradingChoice(trade, receipt);
+        if (receipt.getAiLevel() == 1) {
+            accepted = EasyKi.calculateTradingChoice(trade, receipt);
+        }
+        else {
+            accepted = HardKi.calculateTradingChoice(trade, receipt);
+        }
         response.setAccepted(accepted);
 
         return response;

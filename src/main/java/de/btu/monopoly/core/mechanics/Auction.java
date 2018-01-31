@@ -13,13 +13,13 @@ public class Auction {
 
     private Player[] players;
     private Player winner;
-    
+
     private PropertyField property;
-    
+
     private int[][] aucPlayers;
     private int highestBidder;
     private int highestBid;
-    
+
     private GameClient client;
     private String playerName;
 

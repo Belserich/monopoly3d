@@ -8,6 +8,7 @@ package de.btu.monopoly.ki;
 import de.btu.monopoly.Global;
 import de.btu.monopoly.core.mechanics.Trade;
 import de.btu.monopoly.core.mechanics.TradeOffer;
+import de.btu.monopoly.core.service.IOService;
 import de.btu.monopoly.data.field.FieldManager;
 import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.player.Player;
@@ -35,6 +36,7 @@ public class TradeAi {
     private static final int VALUE_IF_KI_IS_SUPERRICH = 110;
 
     protected static boolean calculateChoice(Trade trade, Player ki, FieldManager fima) {
+        IOService.sleep(1000);
         // Was die Ki bekommt:
         TradeOffer supply = trade.getSupply();
         int sMoney = supply.getMoney();
@@ -81,6 +83,7 @@ public class TradeAi {
     }
 
     private static int calcMoney(Player ki, int sMoney, int dMoney) {
+        IOService.sleep(1000);
         int balance = 0;
 
         if (ki.getMoney() < para[6]) {                      //arm
@@ -100,6 +103,7 @@ public class TradeAi {
     }
 
     private static int calcCards(Player ki, int[] sCards, int[] dCards) {
+        IOService.sleep(1000);
         int balance = 0;
 
         // KI nimmt keine GFKarten an
@@ -117,6 +121,7 @@ public class TradeAi {
     }
 
     private static int calcProperty(Player ki, int propId, FieldManager fima, boolean demanding) {
+        IOService.sleep(1000);
         int multiplicator = 1;
 
         // Strasse rausbekommen

@@ -16,7 +16,6 @@ import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.field.StreetField;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.util.Assets;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -44,9 +43,9 @@ public class HardKi {
     // nach der lukrativen Zone teure Strassen, die aber trotzdem kaufenswert sind (Zone 3)
 
     // Reichtumsbereiche (bis zu...): (arm -> fluessig -> reich -> superreich)
-    private static final int RICH = (int) (Assets.START_MONEY * 0.87);      // reich
-    private static final int LIQUID = Assets.START_MONEY / 2;               // fluessig
-    private static final int POOR = Assets.START_MONEY / 5;                 // arm
+    private static final int RICH = (int) (Assets.START_MONEY * 0.87);      // reich 1300
+    private static final int LIQUID = Assets.START_MONEY / 2;               // fluessig 750
+    private static final int POOR = Assets.START_MONEY / 5;                 // arm 300
 
     // Auktion:
     private static final int HIGH_BID = 120;    // Maiximalgebot (in %) fuer eine gute Strasse
@@ -111,6 +110,7 @@ public class HardKi {
      * @return int fuer die Wahl der Kaufentscheidung 1 - kaufen (interessiert) , 2 - nicht kaufen (nicht interessiert)
      */
     public static int buyPropOption(Player player, PropertyField prop) {
+        IOService.sleep(2000);
         boolean buy = false;
         int propertyId = FIELDMANAGER.getFieldId(prop);
         int amount = player.getMoney();
@@ -147,6 +147,7 @@ public class HardKi {
      * @return int fuer die choice in der actionPhase() in game()
      */
     public static int processActionSequence(Player player, GameBoard board) {
+        IOService.sleep(1000);
         int amount = player.getMoney();
         int buildings = FIELDMANAGER.getHouseAndHotelCount(player)[0] + FIELDMANAGER.getHouseAndHotelCount(player)[1];
 
@@ -218,7 +219,7 @@ public class HardKi {
                     EasyKi.processBetSequence(player, LOW_BID);
                 }
                 else { // Ansonsten bietet sie nicht und steigt sofort aus
-                    AuctionService.playerExit(player.getId());
+                    EasyKi.processBetSequence(player, LOW_BID);
                 }
                 break;
             default:

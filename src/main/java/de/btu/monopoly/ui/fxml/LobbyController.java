@@ -768,7 +768,7 @@ public class LobbyController implements Initializable {
             try {
                 Global.ref().getMenuSceneManager().changeScene(new FXMLLoader(getClass().getResource("/fxml/settings_scene.fxml")));
 
-            } catch (IOException ex) { //TODO @Maxi warum gibt er hier nen Fehler an? :/
+            } catch (IOException ex) {
                 Logger.getLogger(LobbyController.class
                         .getName()).log(Level.SEVERE, null, ex);
             }
