@@ -17,10 +17,15 @@ public class Fx3dHouse extends Box
     
     public Fx3dHouse() {
         super(HOUSE_MODEL.getWidth(), 0, HOUSE_MODEL.getDepth());
+        setHouseCount(0);
         setMaterial(HOUSE_MATERIAL);
     }
     
     public void setHouseCount(int count) {
+        
+        if (count == 0)
+            setVisible(false);
+        else setVisible(true);
         
         setHeight(-count * HOUSE_MODEL.getHeight());
         setTranslateY(-getHeight() / 2);
