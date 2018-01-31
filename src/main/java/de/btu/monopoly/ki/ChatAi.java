@@ -24,7 +24,7 @@ public class ChatAi {
         Random ran = new Random();
         String mess = "";
 
-        if (balance < -(MINIMUM_ACCEPT_AMOUNT * 6)) {           // viel zu teuer
+        if (balance < (MINIMUM_ACCEPT_AMOUNT * 6)) {           // viel zu teuer
             switch (ran.nextInt(8)) {
                 case 1:
                     mess += "Wow, das lohnt sich gar nicht für mich!";
@@ -72,7 +72,7 @@ public class ChatAi {
                     mess += "Mein Buchhalter hat mir empfohlen, dieses Geschäft nicht abzuschließen";
             }
         }
-        else if (balance < -(MINIMUM_ACCEPT_AMOUNT * 6)) {      // okay
+        else if (balance < (Math.sqrt(Math.pow(MINIMUM_ACCEPT_AMOUNT, 2)) * 6)) {      // okay
             switch (ran.nextInt(6)) {
                 case 1:
                     mess += "Es war mir eine Ehre mit ihnen Geschäfte zu machen";

@@ -1,0 +1,29 @@
+#general{
+    -fx-background-color: #f8ffd7;
+    -fx-background: #f8ffd7;
+    -fx-border-color: #94af76;
+}
+#chat_area{
+    -fx-background-color: #f8ffd7;
+    -fx-background: #f8ffd7;
+    -fx-border-color: #f8ffd7;
+    -fx-font-family: 'Tahoma';    
+}
+#chat_field{
+    -fx-background-color: #c5e1a5;
+    -fx-background: #c5e1a5;
+    -fx-border-color: #94af76;
+    -fx-font-family: 'Tahoma';
+}
+
+#send_button{
+    -fx-background-color: #94af76;
+    -fx-text-fill: black;
+    -fx-font-size: 13;
+    -fx-font-weight: bold;
+}
+
+/*.scroll-pane > .viewport {  
+    -fx-background-color: white;
+    -fx-border-color: transparent;
+}*/
