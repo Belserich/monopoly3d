@@ -494,7 +494,7 @@ public class GameSceneManager {
         box.getChildren().addAll(label, fieldBox, eingabeButton, exitButton);
         box.setAlignment(Pos.CENTER);
         
-        Popup pop = new Popup(gridPane, Duration.seconds(2));
+        Popup pop = new Popup(gridPane);
         queuePopup(pop);
         
         if (fima.getOwnedPropertyFields(currPlayer).count() == 0) {
@@ -512,9 +512,11 @@ public class GameSceneManager {
 
         while (!eingabeButton.isPressed() || !exitButton.isPressed()) {
             if (eingabeButton.isPressed()) {
+                destroyPopup(pop);
                 return fieldBox.getSelectionModel().getSelectedIndex() + 1;
             }
             if (exitButton.isPressed()) {
+                destroyPopup(pop);
                 return 0;
             }
             IOService.sleep(50);
