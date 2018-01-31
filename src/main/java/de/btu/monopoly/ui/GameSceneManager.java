@@ -4,16 +4,22 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
 import de.btu.monopoly.Global;
+import de.btu.monopoly.core.Game;
 import de.btu.monopoly.core.GameBoard;
+import de.btu.monopoly.core.GameStateAdapter;
 import de.btu.monopoly.core.service.AuctionService;
 import de.btu.monopoly.core.service.IOService;
 import de.btu.monopoly.data.card.Card;
+import de.btu.monopoly.data.card.CardStack;
+import de.btu.monopoly.data.field.CardField;
 import de.btu.monopoly.data.field.Field;
+import de.btu.monopoly.data.field.FieldManager;
 import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.menu.Lobby;
 import de.btu.monopoly.ui.CameraManager.WatchMode;
 import de.btu.monopoly.ui.fx3d.Fx3dGameBoard;
+import de.btu.monopoly.ui.fx3d.Fx3dPropertyField;
 import de.btu.monopoly.util.Assets;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
@@ -21,6 +27,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 import javafx.animation.KeyFrame;
+import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -33,6 +40,7 @@ import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.*;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -47,15 +55,14 @@ public class GameSceneManager {
     private static final Pane EMPTY_POPUP_PANE = new Pane();
 
     private final Scene scene;
-    private final Fx3dGameBoard board3d;
     private final SubScene gameSub;
+    private final Fx3dGameBoard board3d;
 
     private final BorderPane uiPane;
     private final VBox popupWrapper;
-    private final List<Pane> popupQueue;
+    private final List<Popup> popupQueue;
 
-    private VBox playerBox;
-
+    private final VBox playerBox;
     private CameraManager camMan;
 
     private Label auctionLabel = new Label("0 €");
@@ -70,7 +77,6 @@ public class GameSceneManager {
     private char currency = '€';
 
     public GameSceneManager(GameBoard board) {
-
         this.board3d = new Fx3dGameBoard(board);
 
         gameSub = new SubScene(board3d, 0, 0, true, SceneAntialiasing.DISABLED);
@@ -79,17 +85,21 @@ public class GameSceneManager {
 
         uiPane = new BorderPane();
         popupWrapper = new VBox();
+
         popupQueue = new LinkedList<>();
 
         playerBox = new VBox();
 
         StackPane uiStack = new StackPane(gameSub, uiPane, popupWrapper);
         uiStack.setAlignment(Pos.CENTER);
+        uiStack.setPickOnBounds(false);
+
         scene = new Scene(
                 uiStack,
                 DEFAULT_SCENE_WIDTH, DEFAULT_SCENE_HEIGHT
         );
 
+        Global.ref().getGame().addGameStateListener(new GameStateAdapterImpl());
         Global.ref().getGame().addGameStateListener(board3d.gameStateAdapter());
         initScene();
     }
@@ -109,12 +119,21 @@ public class GameSceneManager {
 
         board3d.animatingProperty().addListener((prop, oldB, newB) -> {
             if (!newB && !popupQueue.isEmpty()) {
-                nextPopup();
+                displayPopups();
             }
         });
     }
 
     private void initUi() {
+
+        ObservableList<Node> children1 = popupWrapper.getChildren();
+        board3d.getFields()
+                .filter(Fx3dPropertyField.class::isInstance)
+                .map(Fx3dPropertyField.class::cast)
+                .forEach(prop -> {
+                    prop.addEventHandler(MouseEvent.MOUSE_ENTERED, event -> children1.add(0, prop.infoPane()));
+                    prop.addEventHandler(MouseEvent.MOUSE_EXITED, event -> children1.remove(prop.infoPane()));
+                });
 
         popupWrapper.setAlignment(Pos.CENTER);
         popupWrapper.setPickOnBounds(false);
@@ -140,7 +159,6 @@ public class GameSceneManager {
 
         uiPane.setTop(topButtonPane);
 
-        playerBox = new VBox();
         playerBox.setPickOnBounds(false);
         playerBox.setPadding(new Insets(10, 0, 0, 0));
         playerBox.setSpacing(10);
@@ -158,23 +176,39 @@ public class GameSceneManager {
         camMan.watch(board3d, WatchMode.ORTHOGONAL);
     }
 
-    private void nextPopup() {
-        popupWrapper.getChildren().clear();
-        Pane pop = popupQueue.remove(0);
-        popupWrapper.getChildren().add(pop);
+    private void displayPopup(Popup pop) {
+        pop.pane.setPickOnBounds(false);
+        popupWrapper.getChildren().add(pop.pane);
     }
 
-    private void queuePopup(Pane pane) {
+    private void displayPopups() {
+
+        popupQueue.forEach(pop -> {
+            displayPopup(pop);
+
+            Duration dur = pop.duration;
+            if (!dur.isIndefinite()) {
+                PauseTransition pause = new PauseTransition(dur);
+                pause.setOnFinished(inv -> popupWrapper.getChildren().remove(pop.pane));
+                pause.play();
+            }
+        });
+        popupQueue.clear();
+    }
+
+    private void queuePopup(Popup pop) {
         Platform.runLater(() -> {
-            popupQueue.add(pane);
+            popupQueue.add(pop);
             if (!board3d.animatingProperty().get()) {
-                nextPopup();
+                displayPopups();
             }
         });
     }
 
-    private void queueNullPopup() {
-        queuePopup(EMPTY_POPUP_PANE);
+    private void destroyPopup(Popup pop) {
+        Platform.runLater(() -> {
+            popupWrapper.getChildren().remove(pop.pane);
+        });
     }
 
     public Scene getScene() {
@@ -184,6 +218,7 @@ public class GameSceneManager {
     public int buyPropertyPopup() {
 
         GridPane gridpane = new GridPane();
+        gridpane.setPickOnBounds(false);
         // ScrollPane scroll = new ScrollPane();
         VBox box = new VBox();
         gridpane.setAlignment(Pos.CENTER);
@@ -214,16 +249,17 @@ public class GameSceneManager {
         box.getChildren().addAll(label, buyButton, dontBuyButton);
         box.setAlignment(Pos.CENTER);
 
-        queuePopup(gridpane);
+        Popup pop = new Popup(gridpane);
+        queuePopup(pop);
 
         while (!buyButton.isPressed() || !dontBuyButton.isPressed()) {
             IOService.sleep(50);
             if (buyButton.isPressed()) {
-                queueNullPopup();
+                destroyPopup(pop);
                 return 1;
             }
             if (dontBuyButton.isPressed()) {
-                queueNullPopup();
+                destroyPopup(pop);
                 return 2;
             }
         }
@@ -267,20 +303,21 @@ public class GameSceneManager {
         box.getChildren().addAll(label, rollButton, payButton, cardButton);
         box.setAlignment(Pos.CENTER);
 
-        queuePopup(gridpane);
+        Popup pop = new Popup(gridpane);
+        queuePopup(pop);
 
         while (!rollButton.isPressed() || !payButton.isPressed() || !cardButton.isPressed()) {
             IOService.sleep(50);
             if (rollButton.isPressed()) {
-                queueNullPopup();
+                destroyPopup(pop);
                 return 1;
             }
             if (payButton.isPressed()) {
-                queueNullPopup();
+                destroyPopup(pop);
                 return 2;
             }
             if (cardButton.isPressed()) {
-                queueNullPopup();
+                destroyPopup(pop);
                 return 3;
             }
         }
@@ -353,32 +390,33 @@ public class GameSceneManager {
         box.setAlignment(Pos.CENTER);
         vbox.setAlignment(Pos.CENTER);
 
-        queuePopup(gridpane);
+        Popup pop = new Popup(gridpane);
+        queuePopup(pop);
 
         while (!nothingButton.isPressed() || !buyHouseButton.isPressed() || !removeHouseButton.isPressed() || !addMortgageButton.isPressed() || !removeMortgageButton.isPressed() || !tradeButton.isPressed()) {
             IOService.sleep(50);
             if (nothingButton.isPressed()) {
-                queueNullPopup();
+                destroyPopup(pop);
                 return 1;
             }
             if (buyHouseButton.isPressed()) {
-                queueNullPopup();
+                destroyPopup(pop);
                 return 2;
             }
             if (removeHouseButton.isPressed()) {
-                queueNullPopup();
+                destroyPopup(pop);
                 return 3;
             }
             if (addMortgageButton.isPressed()) {
-                queueNullPopup();
+                destroyPopup(pop);
                 return 4;
             }
             if (removeMortgageButton.isPressed()) {
-                queueNullPopup();
+                destroyPopup(pop);
                 return 5;
             }
             if (tradeButton.isPressed()) {
-                queueNullPopup();
+                destroyPopup(pop);
                 return 6;
             }
         }
@@ -386,7 +424,7 @@ public class GameSceneManager {
         return -1;
     }
 
-    public int askForFieldPopup(Player player, String[] fields) {
+    public int askForFieldPopup() {
 
         GridPane gridPane = new GridPane();
         VBox box = new VBox();
@@ -415,18 +453,20 @@ public class GameSceneManager {
         exitButton.setBackground(new Background(new BackgroundFill(Color.web("#e1f5fe"), CornerRadii.EMPTY, Insets.EMPTY)));
         label.setFont(Font.font("Tahoma", 14));
 
-        for (String fieldName : fields) {
-            fieldBox.getItems().add(fieldName);
-        }
+        Game game = Global.ref().getGame();
+        Player currPlayer = game.getCurrentPlayer();
+        FieldManager fima = game.getBoard().getFieldManager();
+        fima.getOwnedPropertyFields(currPlayer).forEach(prop -> fieldBox.getItems().add(prop.getName()));
 
         fieldBox.getSelectionModel().selectFirst();
 
         box.getChildren().addAll(label, fieldBox, eingabeButton, exitButton);
         box.setAlignment(Pos.CENTER);
 
-        queuePopup(gridPane);
+        Popup pop = new Popup(gridPane, Duration.seconds(2));
+        queuePopup(pop);
 
-        if (fields.length == 0) {
+        if (fima.getOwnedPropertyFields(currPlayer).count() == 0) {
             Task task = new Task() {
                 @Override
                 protected Object call() throws Exception {
@@ -435,8 +475,7 @@ public class GameSceneManager {
                 }
             };
             Platform.runLater(task);
-            IOService.sleep(3000);
-            queueNullPopup();
+            destroyPopup(pop);
             return 0;
         }
 
@@ -450,50 +489,9 @@ public class GameSceneManager {
             IOService.sleep(50);
         }
 
-        queueNullPopup();
+        destroyPopup(pop);
 
         return 0;
-    }
-
-    public void showCard() {
-
-        GridPane cardInfoPane = new GridPane();
-        HBox box = new HBox();
-
-        cardInfoPane.setAlignment(Pos.CENTER);
-        cardInfoPane.getChildren().add(box);
-        box.setStyle(
-                "-fx-background-color: #fff59d;"
-                + "-fx-border-color: #ff7043;"
-                + "-fx-border-insets: 5;"
-                + "-fx-border-width: 1;"
-        );
-
-        Label text = new Label();
-
-        box.setAlignment(Pos.CENTER);
-        box.setPrefSize(250, 150);
-        Player[] players = Lobby.getPlayerClient().getGame().getPlayers();
-        Field[] fields = Lobby.getPlayerClient().getGame().getBoard().getFieldManager().getFields();
-
-//        for (Player p : players) {
-//            for (Card.Action action : Card.Action.values()) { //TODO :/
-//
-//                CardStack stack = p.getCardStack();
-//
-//                Card card = Lobby.getPlayerClient().getGame().getBoard()
-//                        .getCardManager().getCard(p, stack.countCardsOfAction(action));
-//
-//                if (fields[p.getPosition()] instanceof CardField) {
-//                    text.setText(card.getName() + "\n" + card.getText());
-//                    cardInfoPane.getChildren().add(text);
-//                    GameController.setPopupAbove(cardInfoPane);
-//                }
-//
-//            }
-//        }
-//
-//        GameController.resetPopupAbove();
     }
 
     public void auctionPopup() {
@@ -551,7 +549,8 @@ public class GameSceneManager {
         auctionHBox.getChildren().addAll(hoechstgebotLabel, auctionLabel, gebotsLabel, bidTextField, auctionVBox);
         auctionHBox.setAlignment(Pos.CENTER);
 
-        queuePopup(auctionGP);
+        Popup pop = new Popup(auctionGP);
+        queuePopup(pop);
 
         //Verknuepfung mit EventHandler(n)
         bidTextField.setOnAction(bid);
@@ -560,7 +559,7 @@ public class GameSceneManager {
             @Override
             public void handle(ActionEvent event) {
                 AuctionService.playerExit(Lobby.getPlayerClient().getPlayerOnClient().getId());
-                queueNullPopup();
+                destroyPopup(pop);
             }
         });
     }
@@ -581,8 +580,7 @@ public class GameSceneManager {
         IOService.sleep(500);
         if (!stillActive) {
 
-            queueNullPopup();
-
+            // TODO
             GridPane resetGridPane = new GridPane();
             VBox resetBox = new VBox();
             Label endLabel = new Label();
@@ -610,12 +608,56 @@ public class GameSceneManager {
             resetBox.setCenterShape(true);
             resetBox.getChildren().addAll(endLabel);
             resetBox.setAlignment(Pos.CENTER);
-            queuePopup(resetGridPane);
-            IOService.sleep(3500);
-            queueNullPopup();
+
+            Popup pop = new Popup(resetGridPane, Duration.seconds(3));
+            queuePopup(pop);
             auctionLabel.setText("0 €");
         }
 
+    }
+
+    public void showCard(Card card, CardStack.Type type) {
+
+        if (Lobby.getPlayerClient().getGame() != null) {
+            if (Lobby.getPlayerClient().getGame().getBoard() != null) {
+
+                GridPane kartPane = new GridPane();
+                VBox box = new VBox();
+
+                kartPane.setAlignment(Pos.CENTER);
+                kartPane.getChildren().add(box);
+
+                Label text = new Label("\t" + card.getText());
+
+                box.setAlignment(Pos.CENTER);
+                box.setPrefSize(250, 150);
+                kartPane.getChildren().add(text);
+                kartPane.setAlignment(Pos.CENTER);
+                Player[] players = Lobby.getPlayerClient().getGame().getPlayers();
+                Field[] fields = Lobby.getPlayerClient().getGame().getBoard().getFieldManager().getFields();
+
+                if (type == CardStack.Type.COMMUNITY) {
+                    //Gemeinschaft
+                    box.setStyle("-fx-background-color: #fff59d;\n"
+                            + "    -fx-border-color: #ff7043;\n"
+                            + "    -fx-border-insets: 5;\n"
+                            + "    -fx-border-width: 1;\n"
+                            + "    -fx-effect: dropshadow(gaussian, #aabb97, 20, 0, 0, 0);\n"
+                    );
+                }
+                else {
+                    //Ereignis
+                    box.setStyle("-fx-background-color: #ff8a65;\n"
+                            + "    -fx-border-color: #ffd54f;\n"
+                            + "    -fx-border-insets: 5;\n"
+                            + "    -fx-border-width: 1;\n"
+                            + "    -fx-effect: dropshadow(gaussian, #e57373, 20, 0, 0, 0);\n");
+                }
+
+                Popup pop = new Popup(kartPane, Duration.seconds(3));
+                queuePopup(pop);
+            }
+        }
     }
 
     public void bidTextFieldFocus() {
@@ -630,13 +672,34 @@ public class GameSceneManager {
 
     }
 
+    protected class Popup {
+
+        private Pane pane;
+        private Duration duration;
+
+        private Popup(Pane pane, Duration duration) {
+            this.pane = pane;
+            this.duration = duration;
+        }
+
+        private Popup(Pane pane) {
+            this(pane, Duration.INDEFINITE);
+        }
+    }
+
+    private class GameStateAdapterImpl extends GameStateAdapter {
+
+        @Override
+        public void onPlayerOnCardField(Player player, CardField cardField, Card card) {
+            showCard(card, cardField.getStackType());
+        }
+    }
+
 
     /*
      * Init Popup fuer den Handel
      */
     public void initTradePopup(Player player, GuiTrade tradeGui) {
-
-        queueNullPopup();
 
         tradeGui.setTradeStarter(player);
 
@@ -656,6 +719,8 @@ public class GameSceneManager {
         JFXButton acceptPlayerButton = new JFXButton("Handeln");
         //ComboBox(en)
         JFXComboBox choosePlayerBox = new JFXComboBox(choosePlayerOptions);
+
+        Popup pop = new Popup(initTradeGP);
 
         //Eventhandler
         EventHandler selectPlayer = new EventHandler<ActionEvent>() {
@@ -680,6 +745,7 @@ public class GameSceneManager {
                         @Override
                         protected Object call() throws Exception {
                             showTradeInfoPopup(tradeGui);
+                            destroyPopup(pop);
                             return null;
                         }
                     };
@@ -716,7 +782,7 @@ public class GameSceneManager {
         initTradeVBox.getChildren().addAll(initTradeLabel, choosePlayerBox, initTradeHBox);
         initTradeVBox.setAlignment(Pos.CENTER);
 
-        Global.ref().getGameSceneManager().queuePopup(initTradeGP);
+        Global.ref().getGameSceneManager().queuePopup(pop);
 
         //Verkünpfung mit Eventhandler(n)
         acceptPlayerButton.setOnAction(selectPlayer);
@@ -756,8 +822,6 @@ public class GameSceneManager {
 
     private void showTradeInfoPopup(GuiTrade tradeGui) {
 
-        Global.ref().getGameSceneManager().queueNullPopup();
-
         //Initialisierung der benoetigten Objekte
         //Gridpane(s)
         GridPane tradeInfoGridPane = new GridPane();
@@ -783,14 +847,16 @@ public class GameSceneManager {
         tradeInfoVBox.setAlignment(Pos.CENTER);
         tradeInfoVBox.getChildren().addAll(tradeInfoLabel);
 
-        Global.ref().getGameSceneManager().queuePopup(tradeInfoGridPane);
+        Popup pop = new Popup(tradeInfoGridPane, Duration.millis(2500));
+        Global.ref().getGameSceneManager().queuePopup(pop);
 
-        //Weiterleitung an das naechste Popup
-        Timeline timer = new Timeline(new KeyFrame(
-                Duration.millis(2500),
-                timeOver -> selectTradeOfferPopup(tradeGui)));
-
-        timer.play();
+        selectTradeOfferPopup(tradeGui);
+////        //Weiterleitung an das naechste Popup
+////        Timeline timer = new Timeline(new KeyFrame(
+////                Duration.millis(2500),
+////                timeOver -> selectTradeOfferPopup(tradeGui)));
+////
+////        timer.play();
 
     }
 
@@ -798,8 +864,6 @@ public class GameSceneManager {
      * Erzeugt das Gui-Fenster in dem man ein TradeOffer erstellt
      */
     private void selectTradeOfferPopup(GuiTrade tradeGui) {
-
-        Global.ref().getGameSceneManager().queueNullPopup();
 
         //Liste(n)
         List<CheckMenuItem> yourProps = tradePlayersProps(Lobby.getPlayerClient().getPlayerOnClient());
@@ -944,6 +1008,7 @@ public class GameSceneManager {
         partnersPropsOfferVBox.getChildren().addAll(partnersSideLabel, partnersPropsLabel, partnersPropsMenu);
         partnersTradeOfferVBox.getChildren().addAll(partnersOfferMoneyLabel, partnersMoneyTextField, partnersCardLabel, partnersOfferCardLabel, partnersCardsTextField);
 
+        Popup pop = new Popup(tradeOfferGridPane);
         //Funktionen/Eventhandler
         offerTradeButton.setOnAction(event -> {
 
@@ -967,6 +1032,7 @@ public class GameSceneManager {
 
                     tradeOfferIsCreated = true;
 
+                    destroyPopup(pop);
                     waitForResponsePopup(tradeGui);
 
                 }
@@ -979,8 +1045,7 @@ public class GameSceneManager {
             }
 
         });
-
-        Global.ref().getGameSceneManager().queuePopup(tradeOfferGridPane);
+        Global.ref().getGameSceneManager().queuePopup(pop);
 
     }
 
@@ -1072,7 +1137,7 @@ public class GameSceneManager {
      * Zeigt fuer 3,5 Sekunden ein Warining Popup
      */
     private void showTradeWarningPopup(GuiTrade tradeGui) {
-        Global.ref().getGameSceneManager().queueNullPopup();
+//        Global.ref().getGameSceneManager().queueNullPopup();
 
         //Initialisierung der benoetigten Objekte
         //Gridpane(s)
@@ -1103,8 +1168,9 @@ public class GameSceneManager {
         tradeWarningVBox.setAlignment(Pos.CENTER);
         tradeWarningVBox.getChildren().addAll(tradeWarningLabel);
 
-        queueNullPopup();
-        queuePopup(tradeWarningGridPane);
+//        queueNullPopup();
+        Popup pop = new Popup(tradeWarningGridPane);
+        queuePopup(pop);
 
         //Weiterleitung an das naechste Popup
         Timeline timer = new Timeline(new KeyFrame(
@@ -1158,8 +1224,7 @@ public class GameSceneManager {
 
     public void showOfferPopup(GuiTrade tradeGui) {
 
-        Global.ref().getGameSceneManager().queueNullPopup();
-
+//        Global.ref().getGameSceneManager().queueNullPopup();
         //Initialisierung der benoetigten Objekte
         //GridPane(s)
         GridPane showOfferGridPane = new GridPane();
@@ -1233,20 +1298,23 @@ public class GameSceneManager {
         showOfferHBox.setPadding(new Insets(2));
         showOfferHBox.getChildren().addAll(yourOfferVBox, offersSeparator, partnersOfferVBox);
 
+        Popup pop = new Popup(showOfferGridPane);
         //Eventlistener(s)
         acceptOfferButton.setOnAction(event -> {
             tradeAnswer = true;
             tradeAnswerIsGiven = true;
+            destroyPopup(pop);
             showAnswerPopup(tradeAnswer);
         });
 
         deniedOfferButton.setOnAction(event -> {
             tradeAnswer = false;
             tradeAnswerIsGiven = true;
+            destroyPopup(pop);
             showAnswerPopup(tradeAnswer);
         });
 
-        queuePopup(showOfferGridPane);
+        queuePopup(pop);
 
     }
 
@@ -1286,9 +1354,6 @@ public class GameSceneManager {
     }
 
     public void waitForResponsePopup(GuiTrade tradeGui) {
-
-        queueNullPopup();
-
         //Initialisierung der benoetigten Objekte
         //Gridpane(s)
         GridPane tradeResponseGridPane = new GridPane();
@@ -1315,14 +1380,14 @@ public class GameSceneManager {
         tradeResponseVBox.setAlignment(Pos.CENTER);
         tradeResponseVBox.getChildren().addAll(tradeResponseLabel);
 
-        queuePopup(tradeResponseGridPane);
+        Popup pop = new Popup(tradeResponseGridPane);
+        queuePopup(pop);
 
     }
 
     public void showAnswerPopup(boolean choice) {
 
-        queueNullPopup();
-
+        destroyPopup(Global.ref().getGuiTrade().getWaitForResponsePopup());
         //Initialisierung der benoetigten Objekte
         //Gridpane(s)
         GridPane tradeAnswerGridPane = new GridPane();
@@ -1355,13 +1420,8 @@ public class GameSceneManager {
         tradeAnswerVBox.setAlignment(Pos.CENTER);
         tradeAnswerVBox.getChildren().addAll(tradeAnswerLabel);
 
-        Global.ref().getGameSceneManager().queuePopup(tradeAnswerGridPane);
-
-        Timeline timer = new Timeline(new KeyFrame(
-                Duration.millis(2000),
-                timeOver -> queueNullPopup()));
-
-        timer.play();
+        Popup pop = new Popup(tradeAnswerGridPane, Duration.millis(2000));
+        Global.ref().getGameSceneManager().queuePopup(pop);
 
     }
 

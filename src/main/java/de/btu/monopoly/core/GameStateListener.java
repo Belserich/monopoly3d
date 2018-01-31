@@ -1,5 +1,7 @@
 package de.btu.monopoly.core;
 
+import de.btu.monopoly.data.card.Card;
+import de.btu.monopoly.data.field.CardField;
 import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.player.Player;
 
@@ -59,4 +61,6 @@ public interface GameStateListener {
     void onTradeEnd(Player player);
     
     void onPlayerMove(Player player, int oldPos, int newPos, boolean passedGo);
+    
+    void onPlayerOnCardField(Player player, CardField cardField, Card card);
 }

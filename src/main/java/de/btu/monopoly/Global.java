@@ -4,6 +4,7 @@ import de.btu.monopoly.core.Game;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.ui.GameSceneManager;
+import de.btu.monopoly.ui.GuiTrade;
 import de.btu.monopoly.ui.MenuSceneManager;
 
 /**
@@ -27,6 +28,8 @@ public class Global {
 
     private GameClient client;
     private Game game;
+
+    private GuiTrade guiTrade;
 
     /**
      * Lazy-Konstruktion des Instanz-Objekts.
@@ -77,7 +80,11 @@ public class Global {
         return client.getPlayerOnClient();
     }
 
-//    public Player currentPlayer() {
-//        return game.getCurrentPlayer();
-//    }
+    public GuiTrade getGuiTrade() {
+        return guiTrade;
+    }
+
+    public void setGuiTrade(GuiTrade guiTrade) {
+        this.guiTrade = guiTrade;
+    }
 }

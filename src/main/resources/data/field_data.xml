@@ -13,7 +13,7 @@
 
     <field id="3" name="Turmstrasse" price="60" rent0="4" rent1="20" rent2="60" rent3="180" rent4="320" rent5="450" house_price="50" mortgage="30" mortgage_back="33" />
 
-    <field id="6" name="Chausseestrasse" price="100" rent0="6" rent1="30" rent2="90" rent3="270" rent4="400" rent5="550" house_price="50" mortgage="50" mortgage_back="55"/>
+    <field id="6" name="Chaussee-strasse" price="100" rent0="6" rent1="30" rent2="90" rent3="270" rent4="400" rent5="550" house_price="50" mortgage="50" mortgage_back="55"/>
 
     <field id="8" name="Elisenstrasse" price="100" rent0="6" rent1="30" rent2="90" rent3="270" rent4="400" rent5="550" house_price="50" mortgage="50" mortgage_back="55"/>
 
@@ -25,21 +25,21 @@
 
     <field id="14" name="Neue Strasse" price="160" rent0="12" rent1="60" rent2="180" rent3="500" rent4="700" rent5="900" house_price="100" mortgage="80" mortgage_back="88"/>
 
-    <field id="16" name="Muenchener Strasse" price="180" rent0="14" rent1="70" rent2="200" rent3="550" rent4="750" rent5="950" house_price="100" mortgage="90" mortgage_back="99"/>
+    <field id="16" name="Muenchener- Strasse" price="180" rent0="14" rent1="70" rent2="200" rent3="550" rent4="750" rent5="950" house_price="100" mortgage="90" mortgage_back="99"/>
 
-    <field id="18" name="Wiener Strasse" price="180" rent0="14" rent1="70" rent2="200" rent3="550" rent4="750" rent5="950" house_price="100" mortgage="90" mortgage_back="99"/>
+    <field id="18" name="Wiener- Strasse" price="180" rent0="14" rent1="70" rent2="200" rent3="550" rent4="750" rent5="950" house_price="100" mortgage="90" mortgage_back="99"/>
 
-    <field id="19" name="Berliner Strasse" price="200" rent0="16" rent1="80" rent2="220" rent3="600" rent4="800" rent5="1000" house_price="100" mortgage="100" mortgage_back="110"/>
+    <field id="19" name="Berliner- Strasse" price="200" rent0="16" rent1="80" rent2="220" rent3="600" rent4="800" rent5="1000" house_price="100" mortgage="100" mortgage_back="110"/>
 
-    <field id="21" name="Theaterstrasse" price="220" rent0="18" rent1="90" rent2="250" rent3="700" rent4="875" rent5="1050" house_price="150" mortgage="110" mortgage_back="121"/>
+    <field id="21" name="Theater-strasse" price="220" rent0="18" rent1="90" rent2="250" rent3="700" rent4="875" rent5="1050" house_price="150" mortgage="110" mortgage_back="121"/>
 
-    <field id="23" name="Museumstrasse" price="220" rent0="18" rent1="90" rent2="250" rent3="700" rent4="875" rent5="1050" house_price="150" mortgage="110" mortgage_back="121"/>
+    <field id="23" name="Museum-strasse" price="220" rent0="18" rent1="90" rent2="250" rent3="700" rent4="875" rent5="1050" house_price="150" mortgage="110" mortgage_back="121"/>
 
     <field id="24" name="Opernplatz" price="240" rent0="20" rent1="100" rent2="300" rent3="750" rent4="925" rent5="1100" house_price="150" mortgage="120" mortgage_back="132"/>
 
-    <field id="26" name="Lessingstrasse" price="260" rent0="22" rent1="110" rent2="330" rent3="800" rent4="975" rent5="1150" house_price="150" mortgage="130" mortgage_back="143"/>
+    <field id="26" name="Lessing-strasse" price="260" rent0="22" rent1="110" rent2="330" rent3="800" rent4="975" rent5="1150" house_price="150" mortgage="130" mortgage_back="143"/>
 
-    <field id="27" name="Schillerstrasse" price="260" rent0="22" rent1="110" rent2="330" rent3="800" rent4="975" rent5="1150" house_price="150" mortgage="130" mortgage_back="143"/>
+    <field id="27" name="Schiller-strasse" price="260" rent0="22" rent1="110" rent2="330" rent3="800" rent4="975" rent5="1150" house_price="150" mortgage="130" mortgage_back="143"/>
 
     <field id="29" name="Goethestrasse" price="280" rent0="24" rent1="120" rent2="360" rent3="850" rent4="1025" rent5="1200" house_price="150" mortgage="140" mortgage_back="154"/>
 
@@ -47,7 +47,7 @@
 
     <field id="32" name="Hauptstrasse" price="300" rent0="26" rent1="130" rent2="390" rent3="900" rent4="1100" rent5="1275" house_price="200" mortgage="150" mortgage_back="165"/>
 
-    <field id="34" name="Bahnhofstrasse" price="320" rent0="28" rent1="150" rent2="450" rent3="1000" rent4="1200" rent5="1400" house_price="200" mortgage="160" mortgage_back="176"/>
+    <field id="34" name="Bahnhof-strasse" price="320" rent0="28" rent1="150" rent2="450" rent3="1000" rent4="1200" rent5="1400" house_price="200" mortgage="160" mortgage_back="176"/>
 
     <field id="37" name="Parkstrasse" price="350" rent0="35" rent1="175" rent2="500" rent3="1100" rent4="1300" rent5="1500" house_price="200" mortgage="175" mortgage_back="193"/>
 

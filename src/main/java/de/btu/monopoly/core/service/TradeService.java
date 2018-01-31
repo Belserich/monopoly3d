@@ -43,6 +43,7 @@ public class TradeService {
 
         PlayerTradeResponse response;
         GuiTrade tradeGui = new GuiTrade();
+        Global.ref().setGuiTrade(tradeGui);
 
         if (PlayerService.isMainPlayer(player, client)) {
             PlayerTradeRequest ptr = TradeService.createAndSendTradeRequest(client, board, player, tradeGui);

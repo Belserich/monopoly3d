@@ -6,6 +6,7 @@
 package de.btu.monopoly.ui;
 
 import de.btu.monopoly.data.player.Player;
+import de.btu.monopoly.ui.GameSceneManager.Popup;
 
 /**
  *
@@ -23,6 +24,7 @@ public class GuiTrade {
     private int partnersMoney;
     private int yourCardAmount;
     private int partnersCardAmount;
+    private Popup waitForResponsePopup;
 
     public GuiTrade() {
 
@@ -110,6 +112,20 @@ public class GuiTrade {
 
     public void setPartnersCardAmount(int partnersCardAmount) {
         this.partnersCardAmount = partnersCardAmount;
+    }
+
+    /**
+     * @return the waitForResponsePopup
+     */
+    public Popup getWaitForResponsePopup() {
+        return waitForResponsePopup;
+    }
+
+    /**
+     * @param waitForResponsePopup the waitForResponsePopup to set
+     */
+    public void setWaitForResponsePopup(Popup waitForResponsePopup) {
+        this.waitForResponsePopup = waitForResponsePopup;
     }
 
 }

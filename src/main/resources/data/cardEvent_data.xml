@@ -2,7 +2,7 @@
 
 <cards>
 
-    <card name="Gefaengnis Frei" text="Du kommst aus dem Gefaengnis frei." amount="2" action="jail" />
+    <card name="Gefaengnis Frei" text="Du kommst aus dem Gefaengnis frei." amount="1" action="jail" />
 
     <card name="Strafzettel" text="Strafzettel! Zahle #1{$currency}." action="pay_bank">
         <arg>15</arg>

@@ -18,13 +18,13 @@ import javafx.scene.AmbientLight;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Affine;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Transform;
 import javafx.scene.transform.Translate;
 import javafx.util.Duration;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Stream;
@@ -50,9 +50,12 @@ public class Fx3dGameBoard extends Group
     private final GameStateAdapterImpl stateAdapter;
     
     private final Cuboid boardModel;
+    private final Group[] fieldGroups;
     private final Fx3dField[] fieldModels;
     
     private final Group fieldGroup;
+    private final Group fieldInfoGroup;
+    
     private final Group houseGroup;
     private final Group playerGroup;
     
@@ -66,9 +69,12 @@ public class Fx3dGameBoard extends Group
         stateAdapter = new GameStateAdapterImpl();
         
         boardModel = new Cuboid(BOARD_MODEL.getWidth(), BOARD_MODEL.getHeight(), BOARD_MODEL.getDepth());
-        fieldModels = new Fx3dField[FIELD_COUNT];
+        fieldGroups = new Group[FIELD_COUNT];
+        fieldModels = new Fx3dField[fieldGroups.length];
         
         fieldGroup = new Group();
+        fieldInfoGroup = new Group();
+        
         houseGroup = new Group();
         playerGroup = new Group();
         
@@ -76,7 +82,7 @@ public class Fx3dGameBoard extends Group
         isAnimatingProperty = new SimpleBooleanProperty(false);
         isAnimatingProperty.addListener((inv, oldV, newV) -> requestNextMoveAnim());
         
-        getChildren().addAll(boardModel, fieldGroup, houseGroup, playerGroup);
+        getChildren().addAll(boardModel, fieldGroup, fieldInfoGroup, houseGroup, playerGroup);
         
         init();
     }
@@ -144,7 +150,7 @@ public class Fx3dGameBoard extends Group
     
         Fx3dPlayer fxPlayer = new Fx3dPlayer(player, new Color(Math.random(), Math.random(), Math.random(), 1));
         
-        Shape3D positionField = fieldModels[player.getPosition()];
+        Group positionField = fieldGroups[player.getPosition()];
         fxPlayer.getTransforms().add(positionField.getLocalToSceneTransform());
         
         return fxPlayer;
@@ -165,7 +171,7 @@ public class Fx3dGameBoard extends Group
     
         Transform[] waypoints = new Transform[diff];
         for (int i = 0; i < diff; i++) {
-            waypoints[i % FIELD_COUNT] = fieldModels[(oldPos + i) % FIELD_COUNT].getLocalToParentTransform();
+            waypoints[i % FIELD_COUNT] = fieldGroups[(oldPos + i) % FIELD_COUNT].getLocalToParentTransform();
         }
         return createMoveTransition(player, waypoints);
     }
@@ -207,6 +213,7 @@ public class Fx3dGameBoard extends Group
     private void initFields() {
         
         ObservableList<Node> children = fieldGroup.getChildren();
+        
         FieldTypes[] struct = FieldTypes.GAMEBOARD_FIELD_STRUCT;
         FieldManager fieldMan = board.getFieldManager();
         
@@ -225,20 +232,27 @@ public class Fx3dGameBoard extends Group
                 affine.appendTranslation(CORNER_DIST, 0);
                 if (currType != FieldTypes.CORNER_0) affine.appendRotation(90, 0, 0, 0, Rotate.Y_AXIS);
                 
-                fieldShape = new Fx3dCorner(fieldMan.getField(id), Assets.getImage(currType));
+                fieldShape = new Fx3dCorner(fieldMan.getField(id), Assets.getImage(currType.name().toLowerCase()));
             }
             else {
                 affine.appendTranslation(lastType.isCorner() ? CORNER_DIST : FIELD_DIST, 0);
                 
                 if (currType.isStreet() || currType.isStation() || currType.isSupply())
                     fieldShape = new Fx3dPropertyField((PropertyField) fieldMan.getField(id), currType);
-                else fieldShape = new Fx3dField(fieldMan.getField(id), currType, Assets.getImage(currType));
+                else fieldShape = new Fx3dField(fieldMan.getField(id), currType, Assets.getImage(currType.name().toLowerCase()));
             }
             
-            fieldShape.getTransforms().add(0, affine.clone());
+            Group holder = new Group(fieldShape);
+            holder.getTransforms().add(0, affine.clone());
+            
+            fieldGroups[id] = holder;
             fieldModels[id] = fieldShape;
-            children.add(fieldShape);
+            children.add(holder);
         }
+    }
+    
+    public Stream<Fx3dField> getFields() {
+        return Arrays.stream(fieldModels);
     }
     
     public Stream<Fx3dPlayer> getPlayers() {

@@ -195,10 +195,6 @@ public class Player {
     public void setAiLevel(int aiLevel) {
         this.aiLevel = aiLevel;
     }
-
-    public IntegerProperty positionProperty() {
-        return position;
-    }
     
     public IntegerProperty balanceProperty() { return bank.balanceProperty(); }
     
