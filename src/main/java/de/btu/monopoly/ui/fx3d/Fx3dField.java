@@ -5,7 +5,6 @@ import de.btu.monopoly.data.field.Field;
 import javafx.animation.TranslateTransition;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
 public class Fx3dField extends Cuboid
@@ -38,7 +37,7 @@ public class Fx3dField extends Cuboid
         reactTrans.setToY(0);
         
         addEventHandler(MouseEvent.MOUSE_ENTERED, event -> react());
-        setMaterial(texture != null ? FxHelper.getMaterialFor(texture) : FxHelper.getMaterialFor(Color.WHITE));
+        setMaterial(MaterialBuilder.buildFor(field, type));
     }
     
     private void react() {
