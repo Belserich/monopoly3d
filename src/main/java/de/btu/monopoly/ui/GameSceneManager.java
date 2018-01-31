@@ -154,15 +154,15 @@ public class GameSceneManager implements AnimationListener {
         BorderPane topButtonPane = new BorderPane();
         topButtonPane.setPickOnBounds(false);
 
-        ToggleButton viewButton = new ToggleButton(null, Assets.getIcon("3d_icon"));
+        Label viewButton = new Label(null, Assets.getIcon("3d_icon"));
         viewButton.setOnMousePressed(event -> {
-            boolean selected = !viewButton.isSelected();
-            camMan.watch(board3d, selected ? WatchMode.PERSPECTIVE : WatchMode.ORTHOGONAL);
+            WatchMode mode = camMan.getWatchMode();
+            camMan.watch(board3d, mode == WatchMode.ORTHOGONAL ? WatchMode.PERSPECTIVE : WatchMode.ORTHOGONAL);
         });
         viewButton.setPrefSize(50, 50);
 
-        topButtonPane.setPadding(new Insets(0, 0, 5, 0));
-        topButtonPane.setLeft(viewButton);
+        topButtonPane.setPadding(new Insets(0, 0, 25, 0));
+        chatToggleBox.getChildren().add(viewButton);
         topButtonPane.setRight(chatToggleBox);
 
         uiPane.setTop(topButtonPane);

@@ -55,6 +55,8 @@ public class CameraManager {
     
     private final DoubleProperty nodeCamDist;
     
+    private WatchMode mode;
+    
     private Point2D.Double dragPoint;
     private boolean transitioning;
     
@@ -74,6 +76,7 @@ public class CameraManager {
                 nodeCamTransl
         );
         
+        mode = WatchMode.ORTHOGONAL;
         currCam = new SimpleObjectProperty<>(orthoCam);
         scene.cameraProperty().bindBidirectional(currCam);
         
@@ -130,6 +133,7 @@ public class CameraManager {
     }
     
     public void watch(Node node, WatchMode mode, double newZ) {
+        this.mode = mode;
         watchedNode.set(node);
         currCam.set(mode == WatchMode.ORTHOGONAL ? orthoCam : nodeCam);
         nodeCamDist.set(newZ);
@@ -159,6 +163,10 @@ public class CameraManager {
     
     public SubScene scene() {
         return scene;
+    }
+    
+    public WatchMode getWatchMode() {
+        return mode;
     }
     
     public ObjectProperty<Camera> currCamProperty() {

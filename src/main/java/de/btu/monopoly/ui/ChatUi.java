@@ -69,7 +69,7 @@ public class ChatUi {
         scrollChat.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scrollChat.vvalueProperty().bind(chatArea.heightProperty());
         chatArea.setMinWidth(200);
-        chatArea.setMaxWidth(550);
+        chatArea.setMaxWidth(400);
         wholeChatBox.getChildren().addAll(scrollChat, chatInteractionBox);
 
         VBox.setVgrow(scrollChat, Priority.ALWAYS);
