@@ -633,7 +633,9 @@ public class GameSceneManager implements AnimationListener {
             destroyPopup(aucPopup);
             Popup pop = new Popup(resetGridPane, Duration.seconds(3));
             queuePopup(pop);
-            auctionLabel.setText("0 €");
+
+            Platform.runLater(() -> auctionLabel.setText("0 €"));
+
         }
 
     }
