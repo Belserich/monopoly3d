@@ -78,6 +78,9 @@ public class GameSceneManager implements AnimationListener {
     private boolean tradeAnswer = false;
     private char currency = '€';
 
+    //Auktion
+    private Popup aucPopup;
+
     public GameSceneManager(GameBoard board) {
         this.board3d = new Fx3dGameBoard(board);
         this.board3d.addPlayerAnimationListener(this);
@@ -568,6 +571,7 @@ public class GameSceneManager implements AnimationListener {
         auctionHBox.setAlignment(Pos.CENTER);
 
         Popup pop = new Popup(auctionGP);
+        aucPopup = pop;
         queuePopup(pop);
 
         //Verknuepfung mit EventHandler(n)
@@ -577,7 +581,6 @@ public class GameSceneManager implements AnimationListener {
             @Override
             public void handle(ActionEvent event) {
                 AuctionService.playerExit(Lobby.getPlayerClient().getPlayerOnClient().getId());
-                destroyPopup(pop);
             }
         });
     }
@@ -627,6 +630,7 @@ public class GameSceneManager implements AnimationListener {
             resetBox.getChildren().addAll(endLabel);
             resetBox.setAlignment(Pos.CENTER);
 
+            destroyPopup(aucPopup);
             Popup pop = new Popup(resetGridPane, Duration.seconds(3));
             queuePopup(pop);
             auctionLabel.setText("0 €");
