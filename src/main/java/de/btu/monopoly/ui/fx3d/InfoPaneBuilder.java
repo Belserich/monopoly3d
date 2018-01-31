@@ -1,7 +1,8 @@
-package de.btu.monopoly.util;
+package de.btu.monopoly.ui.fx3d;
 
 import de.btu.monopoly.core.FieldTypes;
 import de.btu.monopoly.data.field.*;
+import de.btu.monopoly.util.Assets;
 import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
