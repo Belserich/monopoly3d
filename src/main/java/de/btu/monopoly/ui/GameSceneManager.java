@@ -106,6 +106,7 @@ public class GameSceneManager implements AnimationListener {
                 uiStack,
                 DEFAULT_SCENE_WIDTH, DEFAULT_SCENE_HEIGHT
         );
+        scene.getStylesheets().add(this.getClass().getResource("/styles/game.css").toExternalForm());
 
         Global.ref().getGame().addGameStateListener(new GameStateAdapterImpl(playerBox));
         Global.ref().getGame().addGameStateListener(board3d.gameStateAdapter());
@@ -252,13 +253,7 @@ public class GameSceneManager implements AnimationListener {
         dontBuyButton.setText("Nicht kaufen");
         dontBuyButton.setBackground(new Background(new BackgroundFill(Color.web("#e1f5fe"), CornerRadii.EMPTY, Insets.EMPTY)));
 
-        String cssLayout = "-fx-background-color: #fbe9e7;\n"
-                + "-fx-border-color: black;\n"
-                + "-fx-border-insets: 5;\n"
-                + "-fx-effect: dropshadow(gaussian, #757575, 20, 0, 0, 0);\n"
-                + "-fx-border-width: 1";
-
-        box.setStyle(cssLayout);
+        box.setId("rosePopup");
         box.setSpacing(10);
         box.setPrefSize(300, 200);
         label.setFont(Font.font("Tahoma", 14));
@@ -308,13 +303,7 @@ public class GameSceneManager implements AnimationListener {
         cardButton.setText("Frei-Karte nutzen");
         cardButton.setBackground(new Background(new BackgroundFill(Color.web("#e1f5fe"), CornerRadii.EMPTY, Insets.EMPTY)));
 
-        String cssLayout = "-fx-background-color: #ffccbc;\n"
-                + "-fx-border-color: black;\n"
-                + "-fx-border-insets: 5;\n"
-                + "-fx-effect: dropshadow(gaussian, #757575, 20, 0, 0, 0);\n"
-                + "-fx-border-width: 1";
-
-        box.setStyle(cssLayout);
+        box.setId("rosePopup");
         box.setSpacing(10);
         box.setPrefSize(200, 300);
         box.getChildren().addAll(label, rollButton, payButton, cardButton);
@@ -382,13 +371,14 @@ public class GameSceneManager implements AnimationListener {
 
         label.setFont(Font.font("Tahoma", 14));
 
-        vbox.setStyle(
-                "-fx-background-color: #b9f6ca; "
-                + "-fx-border-color: black; "
-                + "-fx-effect: dropshadow(gaussian, #212121, 20, 0, 0, 0); "
-                + "-fx-border-insets: 5; "
-                + "-fx-border-width: 1"
-        );
+        vbox.setId("greenPopup");
+//        vbox.setStyle(
+//                "-fx-background-color: #b9f6ca; "
+//                + "-fx-border-color: black; "
+//                + "-fx-effect: dropshadow(gaussian, #212121, 20, 0, 0, 0); "
+//                + "-fx-border-insets: 5; "
+//                + "-fx-border-width: 1"
+//        );
 
         box.setSpacing(10);
         box.setPrefSize(500, 200);
@@ -451,13 +441,7 @@ public class GameSceneManager implements AnimationListener {
         Button eingabeButton = new Button();
         Button exitButton = new Button();
 
-        String cssLayout = "-fx-background-color: #b2dfdb;\n"
-                + "-fx-border-color: black;\n"
-                + "-fx-border-insets: 5;\n"
-                + "-fx-effect: dropshadow(gaussian, #757575, 20, 0, 0, 0);"
-                + "-fx-border-width: 1";
-
-        box.setStyle(cssLayout);
+        box.setId("greenPopup");
 
         box.setSpacing(7);
         box.setPrefSize(200, 250);
@@ -553,13 +537,7 @@ public class GameSceneManager implements AnimationListener {
 
         bidTextField.setPromptText(" ");
 
-        String cssLayout = "-fx-background-color: #dcedc8;\n"
-                + "-fx-border-color: black;\n"
-                + "-fx-border-insets: 5;\n"
-                + "-fx-effect: dropshadow(gaussian, #757575, 6.0, 0.7, 0.0, 1.5);"
-                + "-fx-border-width: 1";
-
-        auctionHBox.setStyle(cssLayout);
+        auctionHBox.setId("greenPopup");
         auctionHBox.setSpacing(10);
         auctionHBox.setPrefSize(700, 200);
         auctionHBox.setCenterShape(true);
@@ -616,13 +594,9 @@ public class GameSceneManager implements AnimationListener {
                         + " hat die Auktion gewonnen und muss " + AuctionService.getHighestBid() + "€ für das Grundstück "
                         + AuctionService.getPropertyString() + " zahlen!");
             }
-            String cssLayout = "-fx-background-color: #dcedc8;\n"
-                    + "-fx-border-color: black;\n"
-                    + "-fx-border-insets: 5;\n"
-                    + "-fx-border-width: 1";
 
             endLabel.setFont(Font.font("Tahoma", FontWeight.BOLD, 10));
-            resetBox.setStyle(cssLayout);
+            resetBox.setId("greenPopup");
             resetBox.setSpacing(10);
             resetBox.setPrefSize(550, 150);
             resetBox.setCenterShape(true);
@@ -672,11 +646,11 @@ public class GameSceneManager implements AnimationListener {
 
                 if (type == CardStack.Type.COMMUNITY) {
                     //Gemeinschaft
-                    box.setStyle(communityStyle);
+                    box.setId("yellowPopup");
                 }
                 else {
                     //Ereignis
-                    box.setStyle(eventStyle);
+                    box.setId("orangePopup");
                 }
 
                 Popup pop = new Popup(kartPane, Duration.seconds(3));
@@ -789,19 +763,13 @@ public class GameSceneManager implements AnimationListener {
         initTradeLabel.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
         acceptPlayerButton.setBackground(new Background(new BackgroundFill(Color.web("#e1f5fe"), CornerRadii.EMPTY, Insets.EMPTY)));
 
-        String cssLayout = "-fx-background-color: #dcedc8;\n"
-                + "-fx-border-color: black;\n"
-                + "-fx-border-insets: 5;\n"
-                + "-fx-border-width: 1;\n"
-                + "-fx-border-style: double;\n";
-
         //Einstellen HBox
         initTradeHBox.getChildren().addAll(acceptPlayerButton);
         initTradeHBox.setSpacing(10);
         initTradeHBox.setAlignment(Pos.CENTER);
 
         //Einstellen VBox
-        initTradeVBox.setStyle(cssLayout);
+        initTradeVBox.setId("greenPopup");
         initTradeVBox.setSpacing(10);
         initTradeVBox.setPrefSize(800, 200);
         initTradeVBox.setCenterShape(true);
@@ -858,17 +826,10 @@ public class GameSceneManager implements AnimationListener {
         VBox tradeInfoVBox = new VBox();
 
         //Einstellung der Objekte
-        String cssLayout = "-fx-background-color: #dcedc8;\n"
-                + "-fx-border-color: black;\n"
-                + "-fx-border-insets: 5;\n"
-                + "-fx-border-width: 1;\n"
-                + "-fx-border-style: double;\n"
-                + " -fx-effect: dropshadow(gaussian, #757575, 20, 0, 0, 0);\n";
-
         tradeInfoGridPane.setAlignment(Pos.CENTER);
         tradeInfoGridPane.add(tradeInfoVBox, 0, 0);
 
-        tradeInfoVBox.setStyle(cssLayout);
+        tradeInfoVBox.setId("greenPopup");
         tradeInfoVBox.setSpacing(10);
         tradeInfoVBox.setPrefSize(800, 200);
         tradeInfoVBox.setAlignment(Pos.CENTER);
@@ -1002,17 +963,10 @@ public class GameSceneManager implements AnimationListener {
         offerTradeButton.setBackground(new Background(new BackgroundFill(Color.web("#e1f5fe"), CornerRadii.EMPTY, Insets.EMPTY)));
         offerTradeButton.setFont(Font.font("Tahoma", FontWeight.NORMAL, 14));
 
-        String cssLayout = "-fx-background-color: #dcedc8;\n"
-                + "-fx-border-color: black;\n"
-                + "-fx-border-insets: 5;\n"
-                + "-fx-border-width: 1;\n"
-                + "-fx-border-style: double;\n"
-                + " -fx-effect: dropshadow(gaussian, #757575, 20, 0, 0, 0);\n";
-
         //Anordnen des GUI
         tradeOfferGridPane.add(tradeOfferVBox, 0, 0);
         //Main VBox
-        tradeOfferVBox.setStyle(cssLayout);
+        tradeOfferVBox.setId("greenPopup");
         tradeOfferVBox.setSpacing(10);
         tradeOfferVBox.setPrefSize(800, 200);
         tradeOfferVBox.setAlignment(Pos.CENTER);
@@ -1182,17 +1136,10 @@ public class GameSceneManager implements AnimationListener {
         VBox tradeWarningVBox = new VBox();
 
         //Einstellung der Objekte
-        String cssLayout = "-fx-background-color: #dcedc8;\n"
-                + "-fx-border-color: black;\n"
-                + "-fx-border-insets: 5;\n"
-                + "-fx-border-width: 1;\n"
-                + "-fx-border-style: double;\n"
-                + " -fx-effect: dropshadow(gaussian, #757575, 20, 0, 0, 0);\n";
-
         tradeWarningGridPane.setAlignment(Pos.CENTER);
         tradeWarningGridPane.add(tradeWarningVBox, 0, 0);
 
-        tradeWarningVBox.setStyle(cssLayout);
+        tradeWarningVBox.setId("greenPopup");
         tradeWarningVBox.setSpacing(10);
         tradeWarningVBox.setPrefSize(800, 200);
         tradeWarningVBox.setAlignment(Pos.CENTER);
@@ -1295,17 +1242,10 @@ public class GameSceneManager implements AnimationListener {
         Separator underPartnersCardsSeparator = new Separator(Orientation.HORIZONTAL);
 
         //Einstellen des GUI Fensters
-        String cssLayout = "-fx-background-color: #dcedc8;\n"
-                + "-fx-border-color: black;\n"
-                + "-fx-border-insets: 5;\n"
-                + "-fx-border-width: 1;\n"
-                + "-fx-border-style: double;\n"
-                + " -fx-effect: dropshadow(gaussian, #757575, 20, 0, 0, 0);\n";
-
         showOfferGridPane.add(mainOfferVBox, 0, 0);
         showOfferGridPane.setAlignment(Pos.CENTER);
 
-        mainOfferVBox.setStyle(cssLayout);
+        mainOfferVBox.setId("greenPopup");
         mainOfferVBox.setSpacing(10);
         mainOfferVBox.setPrefSize(800, 300);
         mainOfferVBox.setAlignment(Pos.CENTER);
@@ -1389,17 +1329,10 @@ public class GameSceneManager implements AnimationListener {
         VBox tradeResponseVBox = new VBox();
 
         //Einstellung der Objekte
-        String cssLayout = "-fx-background-color: #dcedc8;\n"
-                + "-fx-border-color: black;\n"
-                + "-fx-border-insets: 5;\n"
-                + "-fx-border-width: 1;\n"
-                + "-fx-border-style: double;\n"
-                + " -fx-effect: dropshadow(gaussian, #757575, 20, 0, 0, 0);\n";
-
         tradeResponseGridPane.setAlignment(Pos.CENTER);
         tradeResponseGridPane.add(tradeResponseVBox, 0, 0);
 
-        tradeResponseVBox.setStyle(cssLayout);
+        tradeResponseVBox.setId("greenPopup");
         tradeResponseVBox.setSpacing(10);
         tradeResponseVBox.setPrefSize(800, 200);
         tradeResponseVBox.setAlignment(Pos.CENTER);
@@ -1431,17 +1364,10 @@ public class GameSceneManager implements AnimationListener {
         VBox tradeAnswerVBox = new VBox();
 
         //Einstellung der Objekte
-        String cssLayout = "-fx-background-color: #dcedc8;\n"
-                + "-fx-border-color: black;\n"
-                + "-fx-border-insets: 5;\n"
-                + "-fx-border-width: 1;\n"
-                + "-fx-border-style: double;\n"
-                + " -fx-effect: dropshadow(gaussian, #757575, 20, 0, 0, 0);\n";
-
         tradeAnswerGridPane.setAlignment(Pos.CENTER);
         tradeAnswerGridPane.add(tradeAnswerVBox, 0, 0);
 
-        tradeAnswerVBox.setStyle(cssLayout);
+        tradeAnswerVBox.setId("greenPopup");
         tradeAnswerVBox.setSpacing(10);
         tradeAnswerVBox.setPrefSize(800, 200);
         tradeAnswerVBox.setAlignment(Pos.CENTER);

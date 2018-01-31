@@ -454,7 +454,9 @@ public class Game {
         currPlayer.addDayInJail();
         if (currPlayer.getDaysInJail() >= 3) {
             onForceJailPayOption();
+            return;
         }
+        actionPhase();
     }
 
     protected void onForceJailPayOption() {

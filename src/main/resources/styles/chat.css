@@ -15,15 +15,12 @@
     -fx-border-color: #94af76;
     -fx-font-family: 'Tahoma';
 }
-
 #send_button{
     -fx-background-color: #94af76;
     -fx-text-fill: black;
     -fx-font-size: 13;
     -fx-font-weight: bold;
 }
-
-/*.scroll-pane > .viewport {  
-    -fx-background-color: white;
-    -fx-border-color: transparent;
-}*/
+#whole_chat{
+    -fx-effect: dropshadow(gaussian, #494949, 7.5, 0.2, 0.0, 4.0);
+}

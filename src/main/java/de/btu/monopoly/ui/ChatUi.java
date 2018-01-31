@@ -42,6 +42,7 @@ public class ChatUi {
 
     private void initChatBox() {
         wholeChatBox.getStylesheets().add(this.getClass().getResource("/styles/chat.css").toExternalForm());
+        wholeChatBox.setId("whole_chat");
         JFXTextField chatField = new JFXTextField();
         chatField.setId("chat_field");
         chatField.setOnKeyPressed((KeyEvent event) -> {
