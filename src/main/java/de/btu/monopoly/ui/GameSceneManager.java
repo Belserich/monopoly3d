@@ -581,7 +581,6 @@ public class GameSceneManager implements AnimationListener {
             @Override
             public void handle(ActionEvent event) {
                 AuctionService.playerExit(Lobby.getPlayerClient().getPlayerOnClient().getId());
-                destroyPopup(pop);
             }
         });
     }
@@ -1099,8 +1098,7 @@ public class GameSceneManager implements AnimationListener {
     }
 
     /**
-     * Erstellt ein int[] mit Property IDs, welches dem Trade uebergeben werden
-     * kann
+     * Erstellt ein int[] mit Property IDs, welches dem Trade uebergeben werden kann
      *
      * @param itemList
      * @return
