@@ -53,7 +53,7 @@
 
     <field id="39" name="Schlossallee" price="400" rent0="50" rent1="200" rent2="600" rent3="1400" rent4="1700" rent5="2000" house_price="200" mortgage="200" mortgage_back="220"/>
 
-    <field id="4" name="Einkommenssteuer" tax="200" />
+    <field id="4" name="Einkommens-steuer" tax="200" />
 
     <field id="38" name="Zusatzsteuer" tax="100" />
 
@@ -65,15 +65,15 @@
 
     <field id="35" name="Hauptbahnhof" price="200" rent0="25" rent1="50" rent2="100" rent3="200" mortgage="100" mortgage_back="110"/>
 
-    <field id="12" name="Elektrizitaetswerk" price="150" mult1="4" mult2="10" mortgage="75" mortgage_back="90"/>
+    <field id="12" name="Elektrizitaets-werk" price="150" mult1="4" mult2="10" mortgage="75" mortgage_back="90"/>
 
     <field id="28" name="Wasserwerk" price="150" mult1="4" mult2="10" mortgage="75" mortgage_back="90"/>
 
-    <field id="2" name="Gemeinschaftsfeld" type="0" />
+    <field id="2" name="Gemeinschafts-feld" type="0" />
 
-    <field id="17" name="Gemeinschaftsfeld" type="0" />
+    <field id="17" name="Gemeinschafts-feld" type="0" />
 
-    <field id="33" name="Gemeinschaftsfeld" type="0" />
+    <field id="33" name="Gemeinschafts-feld" type="0" />
 
     <field id="7" name="Ereignisfeld" type="1" />
 
