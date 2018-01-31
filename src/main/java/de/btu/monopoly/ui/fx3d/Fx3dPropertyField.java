@@ -20,7 +20,7 @@ public class Fx3dPropertyField extends Fx3dField {
     private static final double TURN_ANGLE = 180;
     
     private static final Color DEFAULT_COLOR = MaterialBuilder.DEFAULT_BACKGROUND_FILL;
-    private static final Color MORTGAGE_COLOR = Color.RED;
+    private static final Color MORTGAGE_COLOR = Color.rgb(237, 26, 36, 1);
     
     private final Pane infoPane;
     

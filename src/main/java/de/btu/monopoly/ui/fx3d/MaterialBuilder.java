@@ -174,7 +174,7 @@ public class MaterialBuilder {
             gc.setTextAlign(TextAlignment.CENTER);
             gc.fillText("Hypothek".toUpperCase(), backCenterX, backCenterY - 30);
             gc.strokeLine(backCenterX - 40, backCenterY, backCenterX + 40, backCenterY);
-            gc.fillText("€" + field.getMortgageValue(), backCenterX, backCenterY + 25);
+            gc.fillText("€" + field.getMortgageValue(), backCenterX, backCenterY + 20);
             gc.strokeLine(backCenterX - 40, backCenterY + 30, backCenterX + 40, backCenterY + 30);
         
             gc.setFont(temp);

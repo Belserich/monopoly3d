@@ -35,11 +35,11 @@ public class Fx3dPlayer extends Cylinder {
     
     private InfoPane infoPane;
     
-    public Fx3dPlayer(Player player, Color color) {
+    public Fx3dPlayer(Player player) {
         
         super(PLAYER_MODEL.getRadius(), PLAYER_MODEL.getHeight());
         this.player = player;
-        this.color = color;
+        this.color = Color.web(player.getColor());
         
         TranslateTransition tt = new TranslateTransition(Duration.millis(400), this);
         tt.setByY(-20);
@@ -50,7 +50,7 @@ public class Fx3dPlayer extends Cylinder {
         getTransforms().add(new Translate(0, INIT_PLAYER_Y, 0));
         setMaterial(FxHelper.getMaterialFor(color));
         
-        infoPane = new InfoPane();
+        infoPane = new InfoPane(color);
     }
     
     TranslateTransition createJumpAnimation() {
@@ -71,7 +71,7 @@ public class Fx3dPlayer extends Cylinder {
     
     private class InfoPane extends HBox {
         
-        private static final double PANE_WIDTH = 210;
+        private static final double PANE_WIDTH = 190;
         private static final double PANE_HEIGHT = 60;
         
         private static final double BOX_WIDTH = PANE_HEIGHT;
@@ -87,7 +87,7 @@ public class Fx3dPlayer extends Cylinder {
         
         private ObservableList<Node> iconList;
         
-        private InfoPane() {
+        private InfoPane(Color color) {
             super();
             this.material = (PhongMaterial) Fx3dPlayer.this.getMaterial();
             this.brighterColor = material.getDiffuseColor().brighter();
@@ -101,31 +101,28 @@ public class Fx3dPlayer extends Cylinder {
             iconPane.setPrefSize(BOX_WIDTH, BOX_HEIGHT);
             
             getChildren().addAll(canv, iconPane);
-            setStyle(
-                    "-fx-background-color: #ffffff33;" +
-                            "-fx-background-radius: 5;"
-            );
+            setStyle("-fx-background-color: #ffffffaa; -fx-background-radius: 5");
             
             setOnMouseEntered(event -> material.setDiffuseColor(brighterColor) );
             setOnMouseExited(event -> material.setDiffuseColor(color));
         }
         
         private void drawCanvas() {
-            GraphicsContext g = canv.getGraphicsContext2D();
-            g.clearRect(0, 0, canv.getWidth(), canv.getHeight());
+            GraphicsContext gc = canv.getGraphicsContext2D();
+            gc.clearRect(0, 0, canv.getWidth(), canv.getHeight());
             
-            g.setFill(color);
-            g.setFont(Font.font("Kabel", 16));
+            gc.setFill(color);
+            gc.setFont(Font.font("Kabel", 16));
     
-            g.fillRoundRect(5, 5, COLORED_SQUARE_LENGTH, COLORED_SQUARE_LENGTH, 5, 5);
+            gc.fillRoundRect(5, 5, COLORED_SQUARE_LENGTH, COLORED_SQUARE_LENGTH, 5, 5);
     
-            g.setTextBaseline(VPos.TOP);
-            g.fillText(player.getName().toUpperCase(), COLORED_SQUARE_LENGTH + 10, 10, MAX_TEXT_WIDTH);
+            gc.setTextBaseline(VPos.TOP);
+            gc.fillText(player.getName().toUpperCase(), COLORED_SQUARE_LENGTH + 10, 10, MAX_TEXT_WIDTH);
             
-            g.setTextBaseline(VPos.BASELINE);
-            g.fillText(player.getMoney() + "€", COLORED_SQUARE_LENGTH + 10, PANE_HEIGHT - 10);
+            gc.setTextBaseline(VPos.BASELINE);
+            gc.fillText(player.getMoney() + "€", COLORED_SQUARE_LENGTH + 10, PANE_HEIGHT - 10);
     
-            g.save();
+            gc.save();
         }
         
         public void addIcon(ImageView icon) {

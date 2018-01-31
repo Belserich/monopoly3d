@@ -5,6 +5,7 @@ import de.btu.monopoly.core.GameBoard;
 import de.btu.monopoly.core.GameStateAdapter;
 import de.btu.monopoly.data.field.FieldManager;
 import de.btu.monopoly.data.field.PropertyField;
+import de.btu.monopoly.data.field.StreetField;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.util.Assets;
 import javafx.animation.Animation;
@@ -17,7 +18,6 @@ import javafx.collections.ObservableList;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.paint.Color;
 import javafx.scene.transform.Affine;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Transform;
@@ -149,7 +149,7 @@ public class Fx3dGameBoard extends Group
      */
     private Fx3dPlayer initPlayer(Player player) {
     
-        Fx3dPlayer fxPlayer = new Fx3dPlayer(player, new Color(Math.random(), Math.random(), Math.random(), 1));
+        Fx3dPlayer fxPlayer = new Fx3dPlayer(player);
         
         Group positionField = fieldGroups[player.getPosition()];
         fxPlayer.getTransforms().add(positionField.getLocalToSceneTransform());
@@ -224,6 +224,7 @@ public class Fx3dGameBoard extends Group
         Affine affine = new Affine(new Translate(FIELDS_OFF_X, FIELDS_OFF_Y, FIELDS_OFF_Z));
         for (int id = 0; id < struct.length; id++) {
             
+            Group holder = new Group();
             Fx3dField fieldShape;
             lastType = currType;
             currType = struct[id];
@@ -239,12 +240,16 @@ public class Fx3dGameBoard extends Group
             else {
                 affine.appendTranslation(lastType.isCorner() ? CORNER_DIST : FIELD_DIST, 0);
                 
-                if (currType.isStreet() || currType.isStation() || currType.isSupply())
+                if (currType.isStreet()) {
+                    fieldShape = new Fx3dStreetField((StreetField) fieldMan.getField(id), currType);
+                    holder.getChildren().add(((Fx3dStreetField) fieldShape).house());
+                }
+                else if (currType.isStation() || currType.isSupply())
                     fieldShape = new Fx3dPropertyField((PropertyField) fieldMan.getField(id), currType);
                 else fieldShape = new Fx3dField(fieldMan.getField(id), currType, Assets.getImage(currType.name().toLowerCase()));
             }
             
-            Group holder = new Group(fieldShape);
+            holder.getChildren().add(fieldShape);
             holder.getTransforms().add(0, affine.clone());
             
             fieldGroups[id] = holder;

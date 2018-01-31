@@ -10,9 +10,9 @@ import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.controls.JFXToggleButton;
 import de.btu.monopoly.Global;
 import de.btu.monopoly.net.chat.GUIChat;
+import javafx.animation.*;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
-import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
@@ -23,6 +23,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+import javafx.util.Duration;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -36,6 +37,9 @@ public class ChatUi {
     private final VBox wholeChatBox = new VBox();
     private final HBox chatToggleBox = new HBox();
     private boolean fixedToggle = false;
+    
+    private ParallelTransition fadeTrans;
+    private ParallelTransition revFadeTrans;
 
     private void initChatBox() {
         wholeChatBox.getStylesheets().add(this.getClass().getResource("/styles/chat.css").toExternalForm());
@@ -46,7 +50,7 @@ public class ChatUi {
                 clickSendMessage(chatField);
             }
         });
-        JFXButton sendButton = new JFXButton("Senden");
+        JFXButton sendButton = new JFXButton("Enter");
         sendButton.setId("send_button");
         sendButton.setOnMouseClicked((MouseEvent event) -> {
             clickSendMessage(chatField);
@@ -64,21 +68,48 @@ public class ChatUi {
         scrollChat.setId("general");
         scrollChat.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scrollChat.vvalueProperty().bind(chatArea.heightProperty());
-        chatArea.setMaxWidth(350);
+        chatArea.setMinWidth(200);
+        chatArea.setMaxWidth(550);
         wholeChatBox.getChildren().addAll(scrollChat, chatInteractionBox);
 
         VBox.setVgrow(scrollChat, Priority.ALWAYS);
 
-        wholeChatBox.setPrefWidth(275);
+        wholeChatBox.setPrefWidth(200);
+        wholeChatBox.setPickOnBounds(false);
         wholeChatBox.setOnMouseEntered(event -> changeChatSize(true));
         wholeChatBox.setOnMouseExited(event -> changeChatSize(false));
+    
+        initTransitions(chatArea.getMinWidth(), chatArea.getMaxWidth());
+        makeTranslucent();
+    }
+    
+    private void initTransitions(double chatMinWidth, double chatMaxWidth) {
+        
+        FadeTransition ft = new FadeTransition(Duration.millis(500), wholeChatBox);
+        ft.setToValue(0.2);
+    
+        Timeline tl = new Timeline(
+                new KeyFrame(Duration.millis(100),
+                        new KeyValue(wholeChatBox.prefWidthProperty(), chatMinWidth, Interpolator.LINEAR))
+        );
+        ft.playFromStart();
+    
+        fadeTrans = new ParallelTransition(ft, tl);
+    
+        FadeTransition rft = new FadeTransition(Duration.millis(500), wholeChatBox);
+        rft.setToValue(1);
+    
+        Timeline rtl = new Timeline(
+                new KeyFrame(Duration.millis(100),
+                        new KeyValue(wholeChatBox.prefWidthProperty(), chatMaxWidth, Interpolator.LINEAR))
+        );
+    
+        revFadeTrans = new ParallelTransition(rft, rtl);
     }
 
     private void initChatToggleBox() {
-        Label toggle = new Label("\n Chat maximieren");
-        toggle.setId("general");
         JFXToggleButton chatButton = new JFXToggleButton();
-        chatToggleBox.getChildren().addAll(toggle, chatButton);
+        chatToggleBox.getChildren().addAll(chatButton);
         chatButton.setOnMouseReleased((MouseEvent event) -> {
             changeChatSize(chatButton.isSelected());
             fixedToggle = chatButton.isSelected();
@@ -88,9 +119,19 @@ public class ChatUi {
     }
 
     private void changeChatSize(boolean toggled) {
+        
         if (!fixedToggle) {
-            wholeChatBox.setPrefWidth((toggled) ? 350 : 275);
+            if (toggled) makeSolid();
+            else makeTranslucent();
         }
+    }
+    
+    private void makeSolid() {
+        revFadeTrans.playFromStart();
+    }
+    
+    private void makeTranslucent() {
+        fadeTrans.playFromStart();
     }
 
     public VBox getWholeChatBox() {

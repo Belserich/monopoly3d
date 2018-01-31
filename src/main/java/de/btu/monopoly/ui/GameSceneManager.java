@@ -21,9 +21,7 @@ import de.btu.monopoly.ui.CameraManager.WatchMode;
 import de.btu.monopoly.ui.fx3d.Fx3dGameBoard;
 import de.btu.monopoly.ui.fx3d.Fx3dPropertyField;
 import de.btu.monopoly.util.Assets;
-import javafx.animation.KeyFrame;
-import javafx.animation.PauseTransition;
-import javafx.animation.Timeline;
+import javafx.animation.*;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -61,7 +59,10 @@ public class GameSceneManager {
     private final VBox popupWrapper;
     private final List<Popup> popupQueue;
 
+    private final VBox gameInfoBox;
     private final VBox playerBox;
+    private final VBox cardHandle;
+    
     private CameraManager camMan;
 
     private Label auctionLabel = new Label("0 €");
@@ -86,8 +87,10 @@ public class GameSceneManager {
         popupWrapper = new VBox();
 
         popupQueue = new LinkedList<>();
-
+        
         playerBox = new VBox();
+        cardHandle = new VBox();
+        gameInfoBox = new VBox(playerBox, cardHandle);
 
         StackPane uiStack = new StackPane(gameSub, uiPane, popupWrapper);
         uiStack.setAlignment(Pos.CENTER);
@@ -98,7 +101,7 @@ public class GameSceneManager {
                 DEFAULT_SCENE_WIDTH, DEFAULT_SCENE_HEIGHT
         );
 
-        Global.ref().getGame().addGameStateListener(new GameStateAdapterImpl());
+        Global.ref().getGame().addGameStateListener(new GameStateAdapterImpl(playerBox));
         Global.ref().getGame().addGameStateListener(board3d.gameStateAdapter());
         initScene();
     }
@@ -124,14 +127,15 @@ public class GameSceneManager {
     }
 
     private void initUi() {
-
-        ObservableList<Node> children1 = popupWrapper.getChildren();
+        
+        cardHandle.setPadding(new Insets(20, 0, 0, 20));
+        
         board3d.getFields()
                 .filter(Fx3dPropertyField.class::isInstance)
                 .map(Fx3dPropertyField.class::cast)
                 .forEach(prop -> {
-                    prop.addEventHandler(MouseEvent.MOUSE_ENTERED, event -> children1.add(0, prop.infoPane()));
-                    prop.addEventHandler(MouseEvent.MOUSE_EXITED, event -> children1.remove(prop.infoPane()));
+                    prop.addEventHandler(MouseEvent.MOUSE_ENTERED, event -> cardHandle.getChildren().add(0, prop.infoPane()));
+                    prop.addEventHandler(MouseEvent.MOUSE_EXITED, event -> cardHandle.getChildren().remove(prop.infoPane()));
                 });
 
         popupWrapper.setAlignment(Pos.CENTER);
@@ -164,7 +168,7 @@ public class GameSceneManager {
         ObservableList<Node> children = playerBox.getChildren();
         board3d.getPlayers().forEach(p -> children.add(p.infoPane()));
 
-        uiPane.setLeft(playerBox);
+        uiPane.setLeft(gameInfoBox);
 
         uiPane.setPadding(new Insets(5, 5, 5, 5));
         uiPane.setPickOnBounds(false);
@@ -687,16 +691,7 @@ public class GameSceneManager {
             this(pane, Duration.INDEFINITE);
         }
     }
-
-    private class GameStateAdapterImpl extends GameStateAdapter {
-
-        @Override
-        public void onPlayerOnCardField(Player player, CardField cardField, Card card) {
-            showCard(card, cardField.getStackType());
-        }
-    }
-
-
+    
     /*
      * Init Popup fuer den Handel
      */
@@ -1425,5 +1420,50 @@ public class GameSceneManager {
         Global.ref().getGameSceneManager().queuePopup(pop);
 
     }
-
+    
+    private class GameStateAdapterImpl extends GameStateAdapter {
+        
+        private VBox playerBox;
+        
+        public GameStateAdapterImpl(VBox playerBox) {
+            this.playerBox = playerBox;
+        }
+        
+        @Override
+        public void onPlayerOnCardField(Player player, CardField cardField, Card card) {
+            showCard(card, cardField.getStackType());
+        }
+    
+        @Override
+        public void onTurnEnd(Player oldPlayer, Player newPlayer) {
+            Platform.runLater(() -> {
+                ObservableList<Node> children = playerBox.getChildren();
+                Pane firstChild = (Pane) children.get(oldPlayer.getId());
+                
+                int size = children.size();
+                double newY = firstChild.getTranslateY() + size * firstChild.getHeight() + size * playerBox.getSpacing();
+                
+                TranslateTransition tt1 = new TranslateTransition(Duration.millis(200), firstChild);
+                tt1.setByX(-firstChild.getWidth());
+                tt1.setOnFinished(inv -> firstChild.setTranslateY(newY));
+    
+                ParallelTransition par = new ParallelTransition();
+                ObservableList<Animation> parChildren = par.getChildren();
+                children.stream()
+                        .map(Pane.class::cast)
+                        .forEach(pane -> {
+                            TranslateTransition tt2 = new TranslateTransition(Duration.millis(200), pane);
+                            tt2.setInterpolator(Interpolator.EASE_OUT);
+                            tt2.setByY(-(firstChild.getHeight() + playerBox.getSpacing()));
+                            parChildren.add(tt2);
+                        });
+    
+                TranslateTransition tt3 = new TranslateTransition(Duration.millis(200), firstChild);
+                tt3.setByX(firstChild.getWidth());
+                
+                SequentialTransition st = new SequentialTransition(tt1, par, tt3);
+                st.play();
+            });
+        }
+    }
 }

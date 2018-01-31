@@ -1,5 +1,8 @@
 package de.btu.monopoly.data.field;
 
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+
 /**
  * @author Maximilian Bels (belsmaxi@b-tu.de)
  */
@@ -18,7 +21,7 @@ public class StreetField extends PropertyField {
     /**
      * Anzahl der Haeuser auf der Strasse
      */
-    private int houseCount;
+    private IntegerProperty houseCount;
 
     /**
      * Instanzen dieser Klasse repräsentieren sämtliche Straßen des Spiels.
@@ -55,7 +58,7 @@ public class StreetField extends PropertyField {
         this.rents[5] = rent5;
         this.housePrice = housePrice;
 
-        this.houseCount = 0;
+        this.houseCount = new SimpleIntegerProperty(0);
     }
 
     /**
@@ -63,11 +66,11 @@ public class StreetField extends PropertyField {
      */
     public int getRent() {
         if (!isMortgageTaken() && getOwner() != null) {
-            if (fieldManager.isComplete(this) && houseCount == 0) {
+            if (fieldManager.isComplete(this) && houseCount.get() == 0) {
                 return rents[0] * 2;
             }
             else {
-                return rents[houseCount];
+                return rents[houseCount.get()];
             }
         }
         return 0;
@@ -91,11 +94,15 @@ public class StreetField extends PropertyField {
      * @return Anzahl der Haeuser
      */
     public int getHouseCount() {
-        return houseCount;
+        return houseCount.get();
     }
 
     public void setHouseCount(int houseCount) {
-        this.houseCount = houseCount;
+        this.houseCount.set(houseCount);
+    }
+    
+    public IntegerProperty houseCountProperty() {
+        return houseCount;
     }
 
     @Override
@@ -103,15 +110,5 @@ public class StreetField extends PropertyField {
         return String.format("[Straßenfeld] Name: %s, Preis: %s, Miete0: %s, Miete1: %s, Miete2: %s, Miete3: %s, Miete4: %s"
                 + ", Miete5: %s, Hauspreis: %s, Hypothekswert: %s, Hypotheksrückwert: %s",
                 getName(), getPrice(), rents[0], rents[1], rents[2], rents[3], rents[4], rents[5], housePrice, getMortgageValue(), getMortgageBack());
-    }
-
-    public String fieldsInformation() {
-        return String.format("[Straßenfeld] %nName: %s, %nPreis: %s,"
-                + " %nMiete ohne Häuser: %s, %nMiete mit 1 Haus: %s,"
-                + " %nMiete mit 2 Häuser: %s, %nMiete mit 3 Häuser: %s, "
-                + "%nMiete mit 4 Häuser: %s, %nMiete mit 5 Häuser: %s, "
-                + "%nHauspreis: %s, %nHypothekswert: %s, %nHypotheksrückwert: %s",
-                getName(), getPrice(), rents[0], rents[1], rents[2], rents[3], rents[4], rents[5], housePrice, getMortgageValue(), getMortgageBack());
-
     }
 }

@@ -64,8 +64,8 @@ public class Launcher extends Application {
             
             
             Player[] players = new Player[]{
-                    new Player("Patrick", 0, 1500, "#fff11fff"),
-                    new Player("Christian", 1, 1500, "#ffddaacc")
+                    new Player("Patrick", 0, 1500, "#4286f4ff"),
+                    new Player("Christian", 1, 1500, "#f44242ff")
             };
             players[1].setAiLevel(1);
             
