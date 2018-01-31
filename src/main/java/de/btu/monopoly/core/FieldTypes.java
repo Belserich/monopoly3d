@@ -5,7 +5,6 @@ package de.btu.monopoly.core;
  */
 public enum FieldTypes {
     
-    CORNER,
     CORNER_0,
     CORNER_1,
     CORNER_2,
