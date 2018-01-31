@@ -2,6 +2,7 @@ package de.btu.monopoly.ui.fx3d;
 
 import de.btu.monopoly.core.FieldTypes;
 import de.btu.monopoly.data.field.*;
+import static de.btu.monopoly.ui.fx3d.Fx3dField.*;
 import de.btu.monopoly.util.Assets;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
@@ -14,30 +15,28 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 
-import static de.btu.monopoly.ui.fx3d.Fx3dField.*;
-
 /**
  * @author Maximilian Bels (belsmaxi@b-tu.de)
  */
 public class MaterialBuilder {
-    
+
     public static final Color DEFAULT_BACKGROUND_FILL = new Color(205d / 255, 230d / 255, 208d / 255, 1);
-    
+
     private static final Street streetBuilder = new Street();
     private static final Property propertyBuilder = new Property();
     private static final Card cardBuilder = new Card();
     private static final Tax taxBuilder = new Tax();
     private static final Corner cornerBuilder = new Corner();
-    
+
     private static SnapshotParameters params = new SnapshotParameters();
-    
+
     public static Material buildFor(Field field, FieldTypes type, Color color) {
-        
+
         if (params == null) {
             params = new SnapshotParameters();
             params.setFill(Color.TRANSPARENT);
         }
-        
+
         if (type.isStreet()) {
             return streetBuilder.build((StreetField) field, type, color);
         }
@@ -55,33 +54,33 @@ public class MaterialBuilder {
         }
         return FxHelper.getMaterialFor(Color.WHITE);
     }
-    
+
     public static Material buildFor(Field field, FieldTypes types) {
         return buildFor(field, types, DEFAULT_BACKGROUND_FILL);
     }
-    
+
     private static abstract class Base<T extends Field> {
-        
+
         private static final double DEFAULT_TEXTURE_WIDTH = FIELD_HEIGHT * 2 + FIELD_WIDTH * 2;
         private static final double DEFAULT_TEXTURE_HEIGHT = FIELD_HEIGHT * 2 + FIELD_DEPTH;
-        
+
         private static final double DEFAULT_FRONT_CENTER_X = FIELD_HEIGHT + FIELD_WIDTH / 2;
         private static final double DEFAULT_FRONT_CENTER_Y = FIELD_HEIGHT + FIELD_DEPTH / 2;
-    
+
         private static final double DEFAULT_BACK_CENTER_X = DEFAULT_TEXTURE_WIDTH - FIELD_WIDTH / 2;
         private static final double DEFAULT_BACK_CENTER_Y = DEFAULT_TEXTURE_HEIGHT - DEFAULT_FRONT_CENTER_Y;
-        
+
         protected final double texWidth;
         protected final double texHeight;
-        
+
         protected final double frontCenterX;
         protected final double frontCenterY;
-    
+
         protected final double backCenterX;
         protected final double backCenterY;
-        
+
         private Base(double texWidth, double texHeight, double frontCenterX, double frontCenterY,
-                     double backCenterX, double backCenterY) {
+                double backCenterX, double backCenterY) {
             this.texWidth = texWidth;
             this.texHeight = texHeight;
             this.frontCenterX = frontCenterX;
@@ -89,50 +88,50 @@ public class MaterialBuilder {
             this.backCenterX = backCenterX;
             this.backCenterY = backCenterY;
         }
-        
+
         private Base() {
             this(DEFAULT_TEXTURE_WIDTH, DEFAULT_TEXTURE_HEIGHT, DEFAULT_FRONT_CENTER_X, DEFAULT_FRONT_CENTER_Y,
                     DEFAULT_BACK_CENTER_X, DEFAULT_BACK_CENTER_Y);
         }
-        
+
         Material build(T field, FieldTypes type, Color color) {
-    
+
             Canvas canv = createFilledCanvas(color);
             GraphicsContext gc = canv.getGraphicsContext2D();
-            
+
             Image img = Assets.getImage(type.name().toLowerCase());
             gc.drawImage(img, 0, 0);
             drawGraphicsAdditions(gc, field, type);
-    
+
             prepareGraphicsForText(field, type, gc);
             drawTextAdditions(field, type, gc);
-            
+
             return createMaterial(canv);
         }
-        
+
         void drawGraphicsAdditions(GraphicsContext gc, T field, FieldTypes type) {
             // zum überschreiben
         }
-    
+
         void prepareGraphicsForText(T field, FieldTypes type, GraphicsContext gc) {
             gc.setLineWidth(Fx3dField.FIELD_WIDTH);
             gc.setFont(Font.font(Assets.FONT_KABEL_FAMILY, 12));
             gc.setTextAlign(TextAlignment.CENTER);
             gc.translate(frontCenterX, frontCenterY);
         }
-        
+
         void drawTextAdditions(T field, FieldTypes type, GraphicsContext gc) {
             // zum überschreiben
         }
-        
+
         String format(String name, boolean singleNs) {
             return name.replace("-", singleNs ? "\n" : "\n\n").toUpperCase();
         }
-        
+
         String format(String name) {
             return format(name, false);
         }
-        
+
         private Canvas createFilledCanvas(Color color) {
             Canvas canv = new Canvas(texWidth, texHeight);
             GraphicsContext gc = canv.getGraphicsContext2D();
@@ -141,93 +140,93 @@ public class MaterialBuilder {
             gc.setFill(Color.BLACK);
             return canv;
         }
-        
+
         private Material createMaterial(Canvas canv) {
-            WritableImage writable = new WritableImage((int) canv.getWidth(), (int)canv.getHeight());
+            WritableImage writable = new WritableImage((int) canv.getWidth(), (int) canv.getHeight());
             writable = canv.snapshot(params, writable);
             PhongMaterial retObj = new PhongMaterial();
             retObj.setDiffuseMap(writable);
             return retObj;
         }
     }
-    
+
     private static class Property extends Base<PropertyField> {
-        
+
         @Override
         void drawTextAdditions(PropertyField field, FieldTypes type, GraphicsContext gc) {
             gc.fillText(format(field.getName()), 0, -frontCenterY + 30);
             gc.fillText("€" + field.getPrice(), 0, 70);
         }
-        
+
         @Override
         void drawGraphicsAdditions(GraphicsContext gc, PropertyField field, FieldTypes type) {
             drawBackSide(gc, field);
         }
-    
+
         private void drawBackSide(GraphicsContext gc, PropertyField field) {
-        
+
             gc.setFill(Color.WHITE);
             gc.setStroke(Color.WHITE);
             Font temp = gc.getFont();
             gc.setFont(Font.font(null, 18));
-        
+
             gc.setTextAlign(TextAlignment.CENTER);
             gc.fillText("Hypothek".toUpperCase(), backCenterX, backCenterY - 30);
             gc.strokeLine(backCenterX - 40, backCenterY, backCenterX + 40, backCenterY);
             gc.fillText("€" + field.getMortgageValue(), backCenterX, backCenterY + 20);
             gc.strokeLine(backCenterX - 40, backCenterY + 30, backCenterX + 40, backCenterY + 30);
-        
+
             gc.setFont(temp);
             gc.setFill(Color.BLACK);
             gc.setStroke(Color.BLACK);
         }
     }
-    
+
     private static class Street extends Property {
-    
+
         @Override
         void drawTextAdditions(PropertyField field, FieldTypes type, GraphicsContext gc) {
             gc.fillText(format(field.getName()), 0, -25);
             gc.fillText("€" + field.getPrice(), 0, 70);
         }
     }
-    
+
     private static class Card extends Base<CardField> {
-    
+
         @Override
         void drawTextAdditions(CardField field, FieldTypes type, GraphicsContext gc) {
             gc.fillText(format(field.getName()), 0, -frontCenterY + 30);
         }
     }
-    
+
     private static class Tax extends Base<TaxField> {
-    
+
         @Override
         void drawTextAdditions(TaxField field, FieldTypes type, GraphicsContext gc) {
             gc.fillText(format(field.getName()), 0, -frontCenterY + 30);
             gc.fillText("€" + field.getTax(), 0, 70);
         }
     }
-    
+
     private static class Corner extends Base<Field> {
-    
+
         private static final double DEFAULT_TEXTURE_WIDTH = Fx3dCorner.FIELD_HEIGHT * 2 + Fx3dCorner.FIELD_WIDTH * 2;
         private static final double DEFAULT_TEXTURE_HEIGHT = Fx3dCorner.FIELD_HEIGHT * 2 + Fx3dCorner.FIELD_DEPTH;
-    
+
         private static final double DEFAULT_FRONT_CENTER_X = Fx3dCorner.FIELD_HEIGHT + Fx3dCorner.FIELD_WIDTH / 2;
         private static final double DEFAULT_FRONT_CENTER_Y = Fx3dCorner.FIELD_HEIGHT + Fx3dCorner.FIELD_DEPTH / 2;
-    
+
         private static final double DEFAULT_BACK_CENTER_X = DEFAULT_TEXTURE_WIDTH - DEFAULT_FRONT_CENTER_X;
         private static final double DEFAULT_BACK_CENTER_Y = DEFAULT_TEXTURE_HEIGHT - DEFAULT_FRONT_CENTER_Y;
-        
+
         Corner() {
             super(DEFAULT_TEXTURE_WIDTH, DEFAULT_TEXTURE_HEIGHT, DEFAULT_FRONT_CENTER_X, DEFAULT_FRONT_CENTER_Y,
                     DEFAULT_BACK_CENTER_X, DEFAULT_BACK_CENTER_Y);
         }
-        
+
         @Override
         void drawTextAdditions(Field field, FieldTypes type, GraphicsContext gc) {
-            
+
             gc.rotate(-45);
             switch (type) {
                 case CORNER_0:
@@ -265,11 +264,12 @@ public class MaterialBuilder {
             }
             gc.rotate(45);
         }
-        
+
         private String[] splitToSize(String str, int size) {
             String[] subs = str.split("-");
-            if (subs.length != size)
+            if (subs.length != size) {
                 throw new RuntimeException("Name of a corner field doesn't match the general pattern!");
+            }
             return subs;
         }
     }
