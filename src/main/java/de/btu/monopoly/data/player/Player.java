@@ -79,6 +79,11 @@ public class Player {
         isInJail = false;
         daysInJail = 0;
     }
+    
+    public Player(String name, int id, int startMoney, String color) {
+        this(name, id, startMoney);
+        this.color = color;
+    }
 
     /**
      * @return Spielername

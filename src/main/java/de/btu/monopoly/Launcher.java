@@ -63,7 +63,10 @@ public class Launcher extends Application {
         else {
             
             
-            Player[] players = new Player[]{ new Player("Patrick", 0, 1500), new Player("Christian", 1, 1500) };
+            Player[] players = new Player[]{
+                    new Player("Patrick", 0, 1500, "#fff11fff"),
+                    new Player("Christian", 1, 1500, "#ffddaacc")
+            };
             players[1].setAiLevel(1);
             
             GameClient client = new GameClient(55556, 1000);
