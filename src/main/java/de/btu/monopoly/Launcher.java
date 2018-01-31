@@ -68,12 +68,12 @@ public class Launcher extends Application {
                 new Player("Patrick", 0, 1500, "#4286f4ff"),
                 new Player("Christian", 1, 1500, "#f44242ff")
             };
-            players[1].setAiLevel(2);
+            players[0].setAiLevel(2);
 
             GameClient client = new GameClient(7777, 1000);
 
             Lobby.setPlayerClient(client);
-            client.setPlayerOnClient(players[0]);
+            client.setPlayerOnClient(players[1]);
 
             Global.ref().setClient(client);
             Game game = new Game(client, players, Global.ref().getRandomSeed());

@@ -150,14 +150,14 @@ public class PlayerService {
      *
      * @return int[] mit den beiden Wuerfelergebnissen
      */
-    public static int[] roll(Random rng) {
+    public static int[] roll(Random rng, Player currPlayer) {
         int[] result = new int[2];
 
         result[0] = rng.nextInt(6) + 1;
         result[1] = rng.nextInt(6) + 1;
 
         if (!Global.RUN_AS_TEST) {
-            GUIChat.getInstance().event(String.format("und würfelt eine %d und eine %d.", result[0], result[1]));
+            GUIChat.getInstance().event(String.format(currPlayer.getName() + " würfelt eine %d und eine %d.", result[0], result[1]));
         }
         return result;
     }

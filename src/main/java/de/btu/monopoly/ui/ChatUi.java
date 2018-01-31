@@ -10,6 +10,8 @@ import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.controls.JFXToggleButton;
 import de.btu.monopoly.Global;
 import de.btu.monopoly.net.chat.GUIChat;
+import java.util.Observable;
+import java.util.Observer;
 import javafx.animation.*;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
@@ -25,9 +27,6 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.util.Duration;
 
-import java.util.Observable;
-import java.util.Observer;
-
 /**
  *
  * @author Christian Prinz
@@ -37,7 +36,7 @@ public class ChatUi {
     private final VBox wholeChatBox = new VBox();
     private final HBox chatToggleBox = new HBox();
     private boolean fixedToggle = false;
-    
+
     private ParallelTransition fadeTrans;
     private ParallelTransition revFadeTrans;
 
@@ -78,32 +77,32 @@ public class ChatUi {
         wholeChatBox.setPickOnBounds(false);
         wholeChatBox.setOnMouseEntered(event -> changeChatSize(true));
         wholeChatBox.setOnMouseExited(event -> changeChatSize(false));
-    
+
         initTransitions(chatArea.getMinWidth(), chatArea.getMaxWidth());
         makeTranslucent();
     }
-    
+
     private void initTransitions(double chatMinWidth, double chatMaxWidth) {
-        
+
         FadeTransition ft = new FadeTransition(Duration.millis(500), wholeChatBox);
         ft.setToValue(0.2);
-    
+
         Timeline tl = new Timeline(
                 new KeyFrame(Duration.millis(100),
                         new KeyValue(wholeChatBox.prefWidthProperty(), chatMinWidth, Interpolator.LINEAR))
         );
         ft.playFromStart();
-    
+
         fadeTrans = new ParallelTransition(ft, tl);
-    
+
         FadeTransition rft = new FadeTransition(Duration.millis(500), wholeChatBox);
         rft.setToValue(1);
-    
+
         Timeline rtl = new Timeline(
                 new KeyFrame(Duration.millis(100),
-                        new KeyValue(wholeChatBox.prefWidthProperty(), chatMaxWidth, Interpolator.LINEAR))
+                        new KeyValue(wholeChatBox.prefWidthProperty(), chatMaxWidth + 10, Interpolator.LINEAR))
         );
-    
+
         revFadeTrans = new ParallelTransition(rft, rtl);
     }
 
@@ -119,17 +118,21 @@ public class ChatUi {
     }
 
     private void changeChatSize(boolean toggled) {
-        
+
         if (!fixedToggle) {
-            if (toggled) makeSolid();
-            else makeTranslucent();
+            if (toggled) {
+                makeSolid();
+            }
+            else {
+                makeTranslucent();
+            }
         }
     }
-    
+
     private void makeSolid() {
         revFadeTrans.playFromStart();
     }
-    
+
     private void makeTranslucent() {
         fadeTrans.playFromStart();
     }

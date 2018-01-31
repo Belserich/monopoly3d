@@ -74,7 +74,7 @@ public class CoreUnitTest {
         Player patrick = players[0];
 
         for (int j = 0; j < 1000; j++) {
-            int[] result = PlayerService.roll(new Random());
+            int[] result = PlayerService.roll(new Random(), patrick);
             for (int i : result) {
                 Assert.assertTrue("Wuerfelergebnis ungueltig", i > 0 && i < 7);
             }

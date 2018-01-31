@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <cards>
+    <card name="Ins Gefaengnis" text="Gehe in das Gefaengnis. Begib dich direkt dorthin. Gehe nicht uber LOS. Ziehe keine #1{$currency}." action="go_jail">
+        <arg>200</arg>
+    </card>
+    
     <card name="Gefaengnis Frei" text="Du kommst aus dem Gefaengnis frei." amount="1" action="jail" />
 
     <card name="Lebensversicherung" text="Deine Lebensversicherung wird fällig. Du erhälst #1{$currency}." action="get_money">

@@ -124,9 +124,8 @@ public class Game {
             for (int id = 0; id < activePlayers.size(); id++) {
 
                 currPlayer = activePlayers.get(id);
-                if (!Global.RUN_AS_TEST) {
-                    GUIChat.getInstance().event(String.format("%s ist an der Reihe.", currPlayer.getName()));
-                }
+                LOGGER.info(String.format("%s ist an der Reihe.", currPlayer.getName()));
+
                 stateListeners.forEach(l -> l.onTurnStart(currPlayer));
 
                 turn();
@@ -176,7 +175,7 @@ public class Game {
         stateListeners.forEach(l -> l.onRollPhaseStart(currPlayer));
         IOService.sleep(2000);
 
-        rollResult = PlayerService.roll(random);
+        rollResult = PlayerService.roll(random, currPlayer);
         doubletCount += (rollResult[0] == rollResult[1]) ? 1 : 0;
 
         stateListeners.forEach(l -> l.onDiceThrow(rollResult, doubletCount));
@@ -186,8 +185,6 @@ public class Game {
                 GUIChat.getInstance().event(String.format("%s hat seinen 3. Pasch und geht nicht über LOS, direkt ins Gefängnis!",
                         currPlayer.getName()));
             }
-            FieldService.toJail(currPlayer);
-            LOGGER.info(String.format("%s hat seinen 3. Pasch und geht nicht über LOS, direkt ins Gefängnis!", currPlayer.getName()));
             FieldService.toJail(currPlayer);
         }
         else {
@@ -437,7 +434,7 @@ public class Game {
     }
 
     protected void onJailRollOption() {
-        int[] rollResult = PlayerService.roll(random);
+        int[] rollResult = PlayerService.roll(random, currPlayer);
         if (rollResult[0] == rollResult[1]) {
             onJailRollSuccess();
         }
@@ -470,10 +467,10 @@ public class Game {
 
     protected void onJailPayOption() {
         if (PlayerService.takeMoney(currPlayer, 50)) {
-            onJailPayFailure();
+            onJailPaySuccess();
         }
         else {
-            onJailPaySuccess();
+            onJailPayFailure();
         }
     }
 
