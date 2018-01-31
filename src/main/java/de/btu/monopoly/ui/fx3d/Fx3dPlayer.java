@@ -6,6 +6,7 @@ import javafx.animation.TranslateTransition;
 import javafx.collections.ObservableList;
 import javafx.geometry.Orientation;
 import javafx.geometry.VPos;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -22,13 +23,15 @@ import javafx.util.Duration;
 /**
  * @author Maximilian Bels (belsmaxi@b-tu.de)
  */
-public class Fx3dPlayer extends Cylinder {
+public class Fx3dPlayer extends Group {
     
     public static final double FIELD_MOVE_DURATION = 400;
     
     private static final Cylinder PLAYER_MODEL = new Cylinder(20, 50);
     private static final double INIT_PLAYER_Y = -PLAYER_MODEL.getHeight();
-    private static final double JUMP_HEIGHT = 100;
+    private static final double JUMP_HEIGHT = -100;
+    
+    private final Cylinder shape;
     
     private Player player;
     private Color color;
@@ -36,29 +39,31 @@ public class Fx3dPlayer extends Cylinder {
     private InfoPane infoPane;
     
     public Fx3dPlayer(Player player) {
-        
-        super(PLAYER_MODEL.getRadius(), PLAYER_MODEL.getHeight());
+        super();
         this.player = player;
         this.color = Color.web(player.getColor());
+    
+        shape = new Cylinder(PLAYER_MODEL.getRadius(), PLAYER_MODEL.getHeight());
+        getChildren().add(shape);
         
-        TranslateTransition tt = new TranslateTransition(Duration.millis(400), this);
-        tt.setByY(-20);
-        tt.setAutoReverse(true);
-        tt.setCycleCount(Animation.INDEFINITE);
-        tt.play();
+        TranslateTransition hoverTransition = new TranslateTransition(Duration.millis(400), shape);
+        hoverTransition.setByY(-30);
+        hoverTransition.setAutoReverse(true);
+        hoverTransition.setCycleCount(Animation.INDEFINITE);
+        hoverTransition.play();
         
         getTransforms().add(new Translate(0, INIT_PLAYER_Y, 0));
-        setMaterial(FxHelper.getMaterialFor(color));
+        shape.setMaterial(FxHelper.getMaterialFor(color));
         
         infoPane = new InfoPane(color);
     }
     
     TranslateTransition createJumpAnimation() {
-        TranslateTransition jt = new TranslateTransition(
-                Duration.millis(FIELD_MOVE_DURATION / 2), this);
-        jt.setByY(-JUMP_HEIGHT);
-        jt.setAutoReverse(true);
-        return jt;
+        TranslateTransition la = new TranslateTransition(
+                Duration.millis(FIELD_MOVE_DURATION / 2), shape);
+        la.setByY(JUMP_HEIGHT);
+        la.setAutoReverse(true);
+        return la;
     }
     
     public InfoPane infoPane() {
@@ -89,7 +94,7 @@ public class Fx3dPlayer extends Cylinder {
         
         private InfoPane(Color color) {
             super();
-            this.material = (PhongMaterial) Fx3dPlayer.this.getMaterial();
+            this.material = (PhongMaterial) Fx3dPlayer.this.shape.getMaterial();
             this.brighterColor = material.getDiffuseColor().brighter();
             
             canv = new Canvas(PANE_WIDTH, PANE_HEIGHT);

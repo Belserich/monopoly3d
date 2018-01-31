@@ -18,6 +18,7 @@ import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.menu.Lobby;
 import de.btu.monopoly.ui.CameraManager.WatchMode;
+import de.btu.monopoly.ui.fx3d.AnimationListener;
 import de.btu.monopoly.ui.fx3d.Fx3dGameBoard;
 import de.btu.monopoly.ui.fx3d.Fx3dPropertyField;
 import de.btu.monopoly.util.Assets;
@@ -46,10 +47,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class GameSceneManager {
+public class GameSceneManager implements AnimationListener {
 
     private static final double DEFAULT_SCENE_WIDTH = 1280;
     private static final double DEFAULT_SCENE_HEIGHT = 720;
+    
+    private static final double PLAYER_ZOOM = -1000;
 
     private final Scene scene;
     private final SubScene gameSub;
@@ -78,6 +81,7 @@ public class GameSceneManager {
 
     public GameSceneManager(GameBoard board) {
         this.board3d = new Fx3dGameBoard(board);
+        this.board3d.addPlayerAnimationListener(this);
 
         gameSub = new SubScene(board3d, 0, 0, true, SceneAntialiasing.DISABLED);
         gameSub.setCache(true);
@@ -129,6 +133,7 @@ public class GameSceneManager {
     private void initUi() {
         
         cardHandle.setPadding(new Insets(20, 0, 0, 20));
+        cardHandle.setPickOnBounds(false);
         
         board3d.getFields()
                 .filter(Fx3dPropertyField.class::isInstance)
@@ -168,6 +173,7 @@ public class GameSceneManager {
         ObservableList<Node> children = playerBox.getChildren();
         board3d.getPlayers().forEach(p -> children.add(p.infoPane()));
 
+        gameInfoBox.setPickOnBounds(false);
         uiPane.setLeft(gameInfoBox);
 
         uiPane.setPadding(new Insets(5, 5, 5, 5));
@@ -177,6 +183,12 @@ public class GameSceneManager {
     private void initCams() {
         camMan = new CameraManager(gameSub);
         camMan.watch(board3d, WatchMode.ORTHOGONAL);
+        
+        board3d.getPlayers().forEach(p -> {
+            p.setOnMouseReleased(event -> {
+                camMan.watch(p, PLAYER_ZOOM);
+            });
+        });
     }
 
     private void displayPopup(Popup pop) {
@@ -676,8 +688,18 @@ public class GameSceneManager {
         Platform.runLater(task);
 
     }
-
-    protected class Popup {
+    
+    @Override
+    public void onStartAnimation(Node node) {
+        camMan.watch(node, PLAYER_ZOOM);
+    }
+    
+    @Override
+    public void onEndAnimation(Node node) {
+        // nothing
+    }
+    
+    class Popup {
 
         private Pane pane;
         private Duration duration;
