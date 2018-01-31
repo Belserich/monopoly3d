@@ -3,7 +3,9 @@ package de.btu.monopoly.data.field;
 import de.btu.monopoly.data.Tradeable;
 import de.btu.monopoly.data.player.Player;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
 
 /**
  * @author Maximilian Bels (belsmaxi@b-tu.de)
@@ -28,12 +30,12 @@ public abstract class PropertyField extends Field implements Tradeable {
     /**
      * Besitzer des Grundstuecks
      */
-    private Player ownedBy;
+    private ObjectProperty<Player> owner;
 
     /**
      * Gibt an, ob die Hypothek aufgenommen wurde.
      */
-    private SimpleBooleanProperty mortgageTaken;
+    private BooleanProperty mortgageTaken;
 
     /**
      * Die abstrakte Oberklasse aller Felder, die kaufbar und mit Mietspreisen belegt sind. Man soll diese Felder außerdem mit
@@ -50,14 +52,15 @@ public abstract class PropertyField extends Field implements Tradeable {
         this.mortgage = mortgage;
         this.mortgageBack = mortgageBack;
         
-        mortgageTaken = new SimpleBooleanProperty();
+        owner = new SimpleObjectProperty<>(null);
+        mortgageTaken = new SimpleBooleanProperty(false);
     }
 
     /**
      * @return Besitzer des Grundstuecks
      */
     public Player getOwner() {
-        return ownedBy;
+        return owner.get();
     }
 
     /**
@@ -92,7 +95,7 @@ public abstract class PropertyField extends Field implements Tradeable {
      * @param player Besitzer des Grundstuecks
      */
     public void setOwner(Player player) {
-        this.ownedBy = player;
+        this.owner.set(player);
     }
 
     /**
@@ -106,6 +109,10 @@ public abstract class PropertyField extends Field implements Tradeable {
     
     public BooleanProperty mortgageTakenProperty() {
         return mortgageTaken;
+    }
+    
+    public ObjectProperty<Player> ownerProperty() {
+        return owner;
     }
     
     @Override
