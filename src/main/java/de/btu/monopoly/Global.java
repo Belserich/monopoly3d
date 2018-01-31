@@ -6,6 +6,7 @@ import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.ui.GameSceneManager;
 import de.btu.monopoly.ui.GuiTrade;
 import de.btu.monopoly.ui.MenuSceneManager;
+import java.util.Random;
 
 /**
  * Das ServiceLocator-Pattern als technische Komponente.
@@ -16,7 +17,8 @@ public class Global {
 
     public static boolean RUN_IN_CONSOLE = false;
     public static boolean RUN_AS_TEST = false;
-    public static boolean FX_3D_TEST = true;
+    public static boolean FX_3D_TEST = false;           // kurze Version (ohne Menu)
+    public static long randomSeed = 2;                  // setzt den RandomSeed für kurze und originale Version; 0 = zufall
 
     /**
      * Singleton-Instance
@@ -86,5 +88,9 @@ public class Global {
 
     public void setGuiTrade(GuiTrade guiTrade) {
         this.guiTrade = guiTrade;
+    }
+
+    public long getRandomSeed() {
+        return (randomSeed == 0) ? (new Random().nextLong()) : randomSeed;
     }
 }

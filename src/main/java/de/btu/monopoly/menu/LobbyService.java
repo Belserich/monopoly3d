@@ -20,7 +20,6 @@ import javafx.scene.paint.Color;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -188,7 +187,7 @@ public class LobbyService extends Listener {
      * Generiert einen RandomSeed
      */
     private static void generateRandomSeed() {
-        long seed = new Random().nextLong();
+        long seed = Global.ref().getRandomSeed();
         setRandomSeed(seed);
     }
 

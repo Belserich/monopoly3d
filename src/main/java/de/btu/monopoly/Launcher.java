@@ -76,7 +76,7 @@ public class Launcher extends Application {
             client.setPlayerOnClient(players[0]);
 
             Global.ref().setClient(client);
-            Game game = new Game(client, players, 2);
+            Game game = new Game(client, players, Global.ref().getRandomSeed());
 
             client.setGame(game);
 

@@ -9,11 +9,11 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 import de.btu.monopoly.net.data.lobby.*;
-import javafx.scene.paint.Color;
-
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Random;
 import java.util.logging.Logger;
+import javafx.scene.paint.Color;
 
 /**
  *
@@ -167,14 +167,14 @@ public class LobbyTable extends Listener {
         JoinResponse joinres = new JoinResponse();
         joinres.setId(id);
         joinres.setSeed(randomSeed);
-        
+
         connection.sendTCP(joinres);
     }
 
     public void refreshLobbyResponse() {
         RefreshLobbyResponse refres = new RefreshLobbyResponse();
         refres.setUsers(users);
-        
+
         server.sendToAllTCP(refres);
     }
 
@@ -182,7 +182,7 @@ public class LobbyTable extends Listener {
         shuffle();
         refreshLobbyResponse();
         GamestartResponse gares = new GamestartResponse();
-        
+
         server.sendToAllTCP(gares);
     }
 
@@ -191,13 +191,13 @@ public class LobbyTable extends Listener {
     public void received(Connection connection, Object object) {
 
         if (object instanceof JoinRequest) {
-            
+
             if (!gameStarted) {
                 JoinRequest joinreq = (JoinRequest) object;
                 registerUser(joinreq.getName(), connection, 0);
             }
             else {
-                
+
                 connection.sendTCP(new JoinImpossibleResponse());
             }
         }
@@ -206,29 +206,27 @@ public class LobbyTable extends Listener {
             deleteUser(connection, del.getId());
         }
         else if (object instanceof AddKiRequest) {
-            
+
             AddKiRequest akr = (AddKiRequest) object;
             registerUser(akr.getName(), connection, akr.getKiLevel());
         }
         else if (object instanceof ChangeUsernameRequest) {
-            
+
             ChangeUsernameRequest chanreq = (ChangeUsernameRequest) object;
             changeUserName(chanreq.getUserId(), chanreq.getUserName());
         }
         else if (object instanceof ChangeUsercolorRequest) {
-            
+
             ChangeUsercolorRequest chanreq = (ChangeUsercolorRequest) object;
             changeUserColor(chanreq.getUserId(), chanreq.getUserColor());
         }
         else if (object instanceof GamestartRequest) {
-            
+
             gameStarted = true;
-            shuffle();
-            refreshLobbyResponse();
             gamestartResponse();
         }
         else if (object instanceof BroadcastRandomSeedRequest) {
-            
+
             BroadcastRandomSeedRequest req = (BroadcastRandomSeedRequest) object;
             randomSeed = req.getSeed();
         }
@@ -241,7 +239,7 @@ public class LobbyTable extends Listener {
     }
 
     public void shuffle() { //TODO ausprobieren und implementieren
-        Collections.shuffle(Arrays.asList(users));
+        Collections.shuffle(Arrays.asList(users), new Random(randomSeed));
     }
 
 }
