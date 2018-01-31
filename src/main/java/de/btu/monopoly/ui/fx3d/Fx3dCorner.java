@@ -3,7 +3,6 @@ package de.btu.monopoly.ui.fx3d;
 import de.btu.monopoly.core.FieldTypes;
 import de.btu.monopoly.data.field.Field;
 import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
 
 public class Fx3dCorner extends Fx3dField
 {
@@ -14,11 +13,9 @@ public class Fx3dCorner extends Fx3dField
     private final Field field;
     private final Image texture;
     
-    public Fx3dCorner(Field field, Image texture) {
-        super(field, FieldTypes.CORNER, texture, FIELD_WIDTH, FIELD_HEIGHT, FIELD_DEPTH);
+    public Fx3dCorner(Field field, FieldTypes type, Image texture) {
+        super(field, type, texture, FIELD_WIDTH, FIELD_HEIGHT, FIELD_DEPTH);
         this.field = field;
         this.texture = texture;
-        
-        setMaterial(texture != null ? FxHelper.getMaterialFor(texture) : FxHelper.getMaterialFor(Color.WHITE));
     }
 }
