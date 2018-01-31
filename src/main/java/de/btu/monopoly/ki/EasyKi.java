@@ -5,6 +5,7 @@
  */
 package de.btu.monopoly.ki;
 
+import de.btu.monopoly.core.mechanics.Trade;
 import de.btu.monopoly.core.service.AuctionService;
 import de.btu.monopoly.core.service.IOService;
 import de.btu.monopoly.core.service.PlayerService;
@@ -12,7 +13,7 @@ import de.btu.monopoly.data.card.Card.Action;
 import de.btu.monopoly.data.card.CardStack;
 import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.player.Player;
-
+import de.btu.monopoly.net.chat.GUIChat;
 import java.util.Random;
 import java.util.logging.Logger;
 
@@ -66,9 +67,8 @@ public class EasyKi {
      *
      * @return 1 fur die Wahl in der Aktionsphase nichts zu tun
      */
-    public static int processActionSequence() { //wird zu void
-        LOGGER.finer("Der Computergegner hat keine Lust zu bauen, oder sich um Hyoptheken zu kümmern. "
-                + "Zum Handeln ist er nicht schlau genug");
+    public static int processActionSequence() {
+        LOGGER.finer("Der Computergegner hat keine Lust zu bauen, oder sich um Hyoptheken zu kümmern.");
         IOService.sleep(3000);
         return 1;
     }
@@ -100,6 +100,18 @@ public class EasyKi {
                 AuctionService.playerExit(ki.getId());
             }
         }
+    }
+
+    /**
+     * Der KI wird ein Trade übergeben, sie liest es aus und entscheidet dann, ob sie annimmt, oder ablehnt.
+     *
+     * @param trade Handel
+     * @return Gibt an, ob die KI mit dem Handel einverstanden ist
+     */
+    public static boolean calculateTradingChoice(Trade trade, Player ki) {
+        IOService.sleep(2000);
+        GUIChat.getInstance().msgLocal(ki, "Sorry aber ich bin zu doof zum Handeln");
+        return false;
     }
 
     /**

@@ -50,7 +50,7 @@ public class GameSceneManager implements AnimationListener {
 
     private static final double DEFAULT_SCENE_WIDTH = 1280;
     private static final double DEFAULT_SCENE_HEIGHT = 720;
-    
+
     private static final double PLAYER_ZOOM = -1000;
 
     private final Scene scene;
@@ -77,6 +77,9 @@ public class GameSceneManager implements AnimationListener {
     private boolean tradeAnswerIsGiven = false;
     private boolean tradeAnswer = false;
     private char currency = '€';
+
+    //Auktion
+    private Popup aucPopup;
 
     public GameSceneManager(GameBoard board) {
         this.board3d = new Fx3dGameBoard(board);
@@ -133,7 +136,7 @@ public class GameSceneManager implements AnimationListener {
 
         cardHandle.setPadding(new Insets(20, 0, 0, 20));
         cardHandle.setPickOnBounds(false);
-        
+
         board3d.getFields()
                 .filter(Fx3dPropertyField.class::isInstance)
                 .map(Fx3dPropertyField.class::cast)
@@ -180,12 +183,12 @@ public class GameSceneManager implements AnimationListener {
     }
 
     private void initCams() {
-        
+
         camMan = new CameraManager(gameSub);
         camMan.watch(board3d, WatchMode.ORTHOGONAL);
-        
-        board3d.getPlayers().forEach(p ->
-                p.setOnMouseReleased(event -> camMan.watch(p, PLAYER_ZOOM)));
+
+        board3d.getPlayers().forEach(p
+                -> p.setOnMouseReleased(event -> camMan.watch(p, PLAYER_ZOOM)));
     }
 
     private void displayPopup(Popup pop) {
@@ -564,6 +567,7 @@ public class GameSceneManager implements AnimationListener {
         auctionHBox.setAlignment(Pos.CENTER);
 
         Popup pop = new Popup(auctionGP);
+        aucPopup = pop;
         queuePopup(pop);
 
         //Verknuepfung mit EventHandler(n)
@@ -623,6 +627,7 @@ public class GameSceneManager implements AnimationListener {
             resetBox.getChildren().addAll(endLabel);
             resetBox.setAlignment(Pos.CENTER);
 
+            destroyPopup(aucPopup);
             Popup pop = new Popup(resetGridPane, Duration.seconds(3));
             queuePopup(pop);
             auctionLabel.setText("0 €");
@@ -685,17 +690,17 @@ public class GameSceneManager implements AnimationListener {
         Platform.runLater(task);
 
     }
-    
+
     @Override
     public void onStartAnimation(Node node) {
         camMan.watch(node, PLAYER_ZOOM);
     }
-    
+
     @Override
     public void onEndAnimation(Node node) {
         // nothing
     }
-    
+
     class Popup {
 
         private Pane pane;
