@@ -124,6 +124,7 @@ public class Fx3dGameBoard extends Group
      * Erstellt das Spielbrett und lädt die Texturen.
      */
     private void initBoard() {
+        boardModel.setTranslateY(-BOARD_MODEL.getHeight());
         boardModel.setMaterial(FxHelper.getMaterialFor(Assets.getImage("game_board")));
     }
     
@@ -232,7 +233,8 @@ public class Fx3dGameBoard extends Group
                 affine.appendTranslation(CORNER_DIST, 0);
                 if (currType != FieldTypes.CORNER_0) affine.appendRotation(90, 0, 0, 0, Rotate.Y_AXIS);
                 
-                fieldShape = new Fx3dCorner(fieldMan.getField(id), Assets.getImage(currType.name().toLowerCase()));
+                fieldShape = new Fx3dCorner(fieldMan.getField(id), currType,
+                        Assets.getImage(currType.name().toLowerCase()));
             }
             else {
                 affine.appendTranslation(lastType.isCorner() ? CORNER_DIST : FIELD_DIST, 0);
