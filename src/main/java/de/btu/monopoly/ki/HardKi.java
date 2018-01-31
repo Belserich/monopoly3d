@@ -219,7 +219,7 @@ public class HardKi {
                     EasyKi.processBetSequence(player, LOW_BID);
                 }
                 else { // Ansonsten bietet sie nicht und steigt sofort aus
-                    AuctionService.playerExit(player.getId());
+                    EasyKi.processBetSequence(player, LOW_BID);
                 }
                 break;
             default:
