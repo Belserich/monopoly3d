@@ -213,7 +213,7 @@ public class InfoPaneBuilder {
             VBox box = createBaseBox(new Insets(148, 0, 0, 0), imgLabel);
             ObservableList<Node> children = box.getChildren();
             
-            Text nameText = createText(field.getName(), Font.font("Kabel", FontWeight.BOLD, 14));
+            Text nameText = createText(field.getName().replace("-", ""), Font.font("Kabel", FontWeight.BOLD, 14));
     
             Text desc1 = createText("Wenn man Besitzer eines Elektrizitätswerks ist, " +
                     "so ist die Miete 4-mal so hoch, wie Augen auf den zwei Würfeln sind.", 9);

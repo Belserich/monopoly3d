@@ -68,7 +68,7 @@ public class MaterialBuilder {
         private static final double DEFAULT_FRONT_CENTER_X = FIELD_HEIGHT + FIELD_WIDTH / 2;
         private static final double DEFAULT_FRONT_CENTER_Y = FIELD_HEIGHT + FIELD_DEPTH / 2;
     
-        private static final double DEFAULT_BACK_CENTER_X = DEFAULT_TEXTURE_WIDTH - DEFAULT_FRONT_CENTER_X;
+        private static final double DEFAULT_BACK_CENTER_X = DEFAULT_TEXTURE_WIDTH - FIELD_WIDTH / 2;
         private static final double DEFAULT_BACK_CENTER_Y = DEFAULT_TEXTURE_HEIGHT - DEFAULT_FRONT_CENTER_Y;
         
         protected final double texWidth;
@@ -102,7 +102,7 @@ public class MaterialBuilder {
             
             Image img = Assets.getImage(type.name().toLowerCase());
             gc.drawImage(img, 0, 0);
-            drawImageAdditions(img, field, type, gc);
+            drawGraphicsAdditions(gc, field, type);
     
             prepareGraphicsForText(field, type, gc);
             drawTextAdditions(field, type, gc);
@@ -110,7 +110,7 @@ public class MaterialBuilder {
             return createMaterial(canv);
         }
         
-        void drawImageAdditions(Image img, T field, FieldTypes type, GraphicsContext gc) {
+        void drawGraphicsAdditions(GraphicsContext gc, T field, FieldTypes type) {
             // zum überschreiben
         }
     
@@ -158,12 +158,35 @@ public class MaterialBuilder {
             gc.fillText(format(field.getName()), 0, -frontCenterY + 30);
             gc.fillText("€" + field.getPrice(), 0, 70);
         }
+        
+        @Override
+        void drawGraphicsAdditions(GraphicsContext gc, PropertyField field, FieldTypes type) {
+            drawBackSide(gc, field);
+        }
+    
+        private void drawBackSide(GraphicsContext gc, PropertyField field) {
+        
+            gc.setFill(Color.WHITE);
+            gc.setStroke(Color.WHITE);
+            Font temp = gc.getFont();
+            gc.setFont(Font.font(null, 18));
+        
+            gc.setTextAlign(TextAlignment.CENTER);
+            gc.fillText("Hypothek".toUpperCase(), backCenterX, backCenterY - 30);
+            gc.strokeLine(backCenterX - 40, backCenterY, backCenterX + 40, backCenterY);
+            gc.fillText("€" + field.getMortgageValue(), backCenterX, backCenterY + 25);
+            gc.strokeLine(backCenterX - 40, backCenterY + 30, backCenterX + 40, backCenterY + 30);
+        
+            gc.setFont(temp);
+            gc.setFill(Color.BLACK);
+            gc.setStroke(Color.BLACK);
+        }
     }
     
-    private static class Street extends Base<StreetField> {
+    private static class Street extends Property {
     
         @Override
-        void drawTextAdditions(StreetField field, FieldTypes type, GraphicsContext gc) {
+        void drawTextAdditions(PropertyField field, FieldTypes type, GraphicsContext gc) {
             gc.fillText(format(field.getName()), 0, -25);
             gc.fillText("€" + field.getPrice(), 0, 70);
         }
