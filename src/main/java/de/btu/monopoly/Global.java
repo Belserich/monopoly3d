@@ -15,7 +15,7 @@ public class Global {
 
     public static boolean RUN_IN_CONSOLE = false;
     public static boolean RUN_AS_TEST = false;
-    public static boolean FX_3D_TEST = false;
+    public static boolean FX_3D_TEST = true;
 
     /**
      * Singleton-Instance

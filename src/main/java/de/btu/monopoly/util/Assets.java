@@ -5,6 +5,8 @@ import de.btu.monopoly.data.field.Field;
 import de.btu.monopoly.data.parser.CardDataParser;
 import de.btu.monopoly.data.parser.FieldDataParser;
 import de.btu.monopoly.ui.fx3d.Fx3dGameBoard;
+import de.btu.monopoly.ui.fx3d.FxHelper;
+import de.btu.monopoly.ui.fx3d.MaterialBuilder;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
@@ -21,15 +23,14 @@ public class Assets
 {
     public static final int START_MONEY = 1500;
     
+    public static final String FONT_KABEL_FAMILY = "Kabel-Heavy";
+    
     private static final String ROOT_DIR = "/images/new/";
     
     private static final String IMG_DIR = ROOT_DIR + "images/";
     private static final String FONT_DIR = ROOT_DIR + "fonts/";
     private static final String DATA_DIR = "/data/";
     private static final String ICON_DIR = ROOT_DIR + "icons/";
-    
-    private static final Color COLOR_TO_REPLACE = Color.TRANSPARENT;
-    private static final Color REPLACEMENT_COLOR = new Color(205d / 255, 230d / 255, 208d / 255, 1);
     
     private static final double GAMEBOARD_TEXTURE_WIDTH = Fx3dGameBoard.BOARD_MODEL_LENGTH * 2 + FIELD_HEIGHT * 2;
     private static final double GAMEBOARD_TEXTURE_HEIGHT = Fx3dGameBoard.BOARD_MODEL_LENGTH + FIELD_HEIGHT * 2;
@@ -121,6 +122,10 @@ public class Assets
     
     public static void loadFxImages() {
     
+        Image boardImage = loadImage(BOARD_PATH, GAMEBOARD_TEXTURE_WIDTH, GAMEBOARD_TEXTURE_HEIGHT);
+        boardImage = FxHelper.replaceColorInImage(boardImage, Color.TRANSPARENT, MaterialBuilder.DEFAULT_BACKGROUND_FILL);
+        registeredImages.put("game_board", boardImage);
+        
         registeredImages.put("street_0_info", loadImage(INFO_STREET_0_PATH, FIELD_WIDTH * 2, FIELD_DEPTH * 2));
         registeredImages.put("street_1_info", loadImage(INFO_STREET_1_PATH, FIELD_WIDTH * 2, FIELD_DEPTH * 2));
         registeredImages.put("street_2_info", loadImage(INFO_STREET_2_PATH, FIELD_WIDTH * 2, FIELD_DEPTH * 2));
@@ -133,9 +138,6 @@ public class Assets
         registeredImages.put("station_info", loadImage(INFO_STATION_PATH, FIELD_WIDTH * 2, FIELD_DEPTH * 2));
         registeredImages.put("supply_0_info", loadImage(INFO_SUPPLY_0_PATH, FIELD_WIDTH * 2, FIELD_DEPTH * 2));
         registeredImages.put("supply_1_info", loadImage(INFO_SUPPLY_1_PATH, FIELD_WIDTH * 2, FIELD_DEPTH * 2));
-        
-        registeredImages.put("game_board", loadImage(BOARD_PATH,
-                GAMEBOARD_TEXTURE_WIDTH, GAMEBOARD_TEXTURE_HEIGHT));
     
         registeredImages.put("street_0", loadImage(STREET_0_PATH));
         registeredImages.put("street_1", loadImage(STREET_1_PATH));
@@ -171,8 +173,8 @@ public class Assets
         loadFxImages();
     }
     
-    public static void loadFont(String path) {
-        Font.loadFont(Assets.class.getResource(FONT_DIR + path).toExternalForm(), 12);
+    public static Font loadFont(String path) {
+        return Font.loadFont(Assets.class.getResource(FONT_DIR + path).toExternalForm(), 12);
     }
     
     private static Image loadImage(String path, double requestedWidth, double requestedHeight) {
