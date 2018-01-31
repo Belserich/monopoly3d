@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 
 /**
  * @author Christian Prinz
@@ -306,7 +307,7 @@ public class Game {
                 FieldManager fima = board.getFieldManager();
                 int fieldChoice;
                 if (currPlayer.getAiLevel() < 2) {
-                    fieldChoice = getFieldChoice();
+                    fieldChoice = getFieldChoice(actionChoice);
                 }
                 else {
                     fieldChoice = HardKi.getChosenFieldId();
@@ -352,12 +353,40 @@ public class Game {
         } while (actionChoice != 1);
     }
 
-    private int getFieldChoice() {
+    /**
+     *
+     * @param choiceType 1 - allOwned , 2 - allUnMortgaged , 3 - allMortgaged
+     * @return
+     */
+    private int getFieldChoice(int choiceType) {
 
         int[] ownedFieldIds = board.getFieldManager().getOwnedPropertyFieldIds(currPlayer);
-        String[] fieldNames = Arrays.stream(ownedFieldIds)
-                .mapToObj(id -> board.getFieldManager().getField(id).getName())
-                .toArray(String[]::new);
+        Stream<PropertyField> allOwned = Arrays.stream(ownedFieldIds)
+                .mapToObj(id -> board.getFieldManager().getField(id))
+                .map(PropertyField.class::cast);
+        String[] fieldNames;
+
+        switch (choiceType) {
+            case ACTION_BUY_HOUSE:
+                fieldNames = HardKi.buyableBuildingsList(currPlayer).stream()
+                        .map(p -> p.getName()).toArray(String[]::new);
+                break;
+            case ACTION_SELL_HOUSE:
+                fieldNames = HardKi.sellableBuildingsList(currPlayer).stream()
+                        .map(p -> p.getName()).toArray(String[]::new);
+                break;
+            case ACTION_TAKE_MORTGAGE:
+                System.out.println("takeMort");
+                fieldNames = allOwned.filter(p -> !p.isMortgageTaken()).map(p -> p.getName()).toArray(String[]::new);
+                break;
+            case ACTION_PAY_MORTGAGE:
+                System.out.println("payMort");
+                fieldNames = allOwned.filter(p -> p.isMortgageTaken()).map(p -> p.getName()).toArray(String[]::new);
+                break;
+            default:
+                fieldNames = allOwned.toArray(String[]::new);
+                break;
+        }
 
         if (currPlayer.getAiLevel() < 2) {
             int chosenFieldChoice = IOService.askForField(currPlayer, fieldNames) - 1;

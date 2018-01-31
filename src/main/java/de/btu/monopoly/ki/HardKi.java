@@ -302,11 +302,7 @@ public class HardKi {
          * komplettem Strassenzug -> bei denen beim verkauf eines Hauses die Balance gewaehrleistet bleibt -> die noch Haueser zum
          * Verkauf haben
          */
-        List<PropertyField> props = FIELDMANAGER.getOwnedPropertyFields(player)
-                .filter(p -> p instanceof StreetField).map(p -> (StreetField) p)
-                .filter(p -> FIELDMANAGER.isComplete(p)).filter((StreetField p) -> FIELDMANAGER.balanceCheck(p, 0, 1))
-                .filter(p -> p.getHouseCount() > 0)
-                .collect(Collectors.toList());
+        List<PropertyField> props = sellableBuildingsList(player);
         // check auf isEmpty() bereits in processActionPhase()
         chosenFieldId = FIELDMANAGER.getFieldId(props.get(0));
     }
@@ -364,13 +360,21 @@ public class HardKi {
      * @param player Ki
      * @return Liste aus Properties, auf denen ein Haus gebaut werden kann.
      */
-    private static List<PropertyField> buyableBuildingsList(Player player) {
+    public static List<PropertyField> buyableBuildingsList(Player player) {
         List<PropertyField> props = FIELDMANAGER.getOwnedPropertyFields(player)
                 .filter(p -> p instanceof StreetField).map(p -> (StreetField) p)
                 .filter(p -> FIELDMANAGER.isComplete(p)).filter(p -> FIELDMANAGER.balanceCheck(p, 1, 0))
                 .filter(p -> p.getHouseCount() < 5)
                 .collect(Collectors.toList());
+        return props;
+    }
 
+    public static List<PropertyField> sellableBuildingsList(Player player) {
+        List<PropertyField> props = FIELDMANAGER.getOwnedPropertyFields(player)
+                .filter(p -> p instanceof StreetField).map(p -> (StreetField) p)
+                .filter(p -> FIELDMANAGER.isComplete(p)).filter((StreetField p) -> FIELDMANAGER.balanceCheck(p, 0, 1))
+                .filter(p -> p.getHouseCount() > 0)
+                .collect(Collectors.toList());
         return props;
     }
 }

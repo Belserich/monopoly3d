@@ -15,7 +15,6 @@ import de.btu.monopoly.ki.EasyKi;
 import de.btu.monopoly.ki.HardKi;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.data.BroadcastPlayerChoiceRequest;
-
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -42,7 +41,7 @@ public class IOService {
                     choice = getClientChoice(player, 3);
                 }
                 else {
-                    choice = getClientChoiceFromGUI(player, JAIL);
+                    choice = getClientChoiceFromGUI(player, JAIL, null);
                 }
                 break;
             case 1:
@@ -66,7 +65,7 @@ public class IOService {
                     choice = getClientChoice(player, 2);
                 }
                 else {
-                    choice = getClientChoiceFromGUI(player, BUY);
+                    choice = getClientChoiceFromGUI(player, BUY, null);
                 }
 
                 break;
@@ -90,7 +89,7 @@ public class IOService {
                     choice = getClientChoice(player, 6);
                 }
                 else {
-                    choice = getClientChoiceFromGUI(player, ACTION);
+                    choice = getClientChoiceFromGUI(player, ACTION, null);
                 }
                 break;
             case 1:
@@ -156,7 +155,7 @@ public class IOService {
         }
     }
 
-    public static int getClientChoiceFromGUI(Player player, int type) {
+    public static int getClientChoiceFromGUI(Player player, int type, String[] fieldNames) {
         boolean isChoiceFromThisClient = (player == client.getPlayerOnClient());
         if (isChoiceFromThisClient) {
             int choice = -1;
@@ -170,7 +169,7 @@ public class IOService {
                 choice = Global.ref().getGameSceneManager().buyPropertyPopup();
             }
             if (type == FIELD) {
-                choice = Global.ref().getGameSceneManager().askForFieldPopup();
+                choice = Global.ref().getGameSceneManager().askForFieldPopup(fieldNames);
             }
 
             BroadcastPlayerChoiceRequest packet = new BroadcastPlayerChoiceRequest();
@@ -246,7 +245,7 @@ public class IOService {
             return IOService.getClientChoice(player, 39);
         }
         else {
-            return IOService.getClientChoiceFromGUI(player, FIELD);
+            return IOService.getClientChoiceFromGUI(player, FIELD, fieldNames);
         }
     }
 

@@ -44,7 +44,6 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 
 public class GameSceneManager implements AnimationListener {
@@ -439,7 +438,7 @@ public class GameSceneManager implements AnimationListener {
         return -1;
     }
 
-    public int askForFieldPopup() {
+    public int askForFieldPopup(String fieldNames[]) {
 
         GridPane gridPane = new GridPane();
         VBox box = new VBox();
@@ -472,7 +471,9 @@ public class GameSceneManager implements AnimationListener {
         Game game = Global.ref().getGame();
         Player currPlayer = game.getCurrentPlayer();
         FieldManager fima = game.getBoard().getFieldManager();
-        fima.getOwnedPropertyFields(currPlayer).forEach(prop -> fieldBox.getItems().add(prop.getName()));
+        for (String name : fieldNames) {
+            fieldBox.getItems().add(name);
+        }
 
         fieldBox.getSelectionModel().selectFirst();
 
@@ -665,8 +666,7 @@ public class GameSceneManager implements AnimationListener {
                         + "    -fx-border-insets: 5;\n"
                         + "    -fx-border-width: 1;\n"
                         + "    -fx-effect: dropshadow(gaussian, #757575, 20, 0, 0, 0);\n";
-                
-                
+
                 Player[] players = Lobby.getPlayerClient().getGame().getPlayers();
                 Field[] fields = Lobby.getPlayerClient().getGame().getBoard().getFieldManager().getFields();
 
