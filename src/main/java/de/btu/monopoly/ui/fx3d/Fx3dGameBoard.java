@@ -8,10 +8,7 @@ import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.field.StreetField;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.util.Assets;
-import javafx.animation.Animation;
-import javafx.animation.ParallelTransition;
-import javafx.animation.SequentialTransition;
-import javafx.animation.TranslateTransition;
+import javafx.animation.*;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.ObservableList;
@@ -59,7 +56,8 @@ public class Fx3dGameBoard extends Group
     private final Group houseGroup;
     private final Group playerGroup;
     
-    private List<Animation> animQueue;
+    private List<ParallelTransition> animQueue;
+    private List<AnimationListener> animationListeners;
     private BooleanProperty isAnimatingProperty;
     
     public Fx3dGameBoard(GameBoard board) {
@@ -79,6 +77,7 @@ public class Fx3dGameBoard extends Group
         playerGroup = new Group();
         
         animQueue = new LinkedList<>();
+        animationListeners = new LinkedList<>();
         isAnimatingProperty = new SimpleBooleanProperty(false);
         isAnimatingProperty.addListener((inv, oldV, newV) -> requestNextMoveAnim());
         
@@ -87,13 +86,29 @@ public class Fx3dGameBoard extends Group
         init();
     }
     
+    public void addPlayerAnimationListener(AnimationListener listener) {
+        animationListeners.add(listener);
+    }
+    
+    public void removePlayerAnimationListener(AnimationListener listener) {
+        animationListeners.remove(listener);
+    }
+    
     private void requestNextMoveAnim() {
         if (!isAnimatingProperty.get() && !animQueue.isEmpty()) {
             isAnimatingProperty.set(true);
-            Animation anim = animQueue.remove(0);
-            anim.setOnFinished(inv -> isAnimatingProperty.set(false));
+            ParallelTransition anim = animQueue.remove(0);
+            Node node = anim.getNode();
+            anim.setOnFinished(inv -> finishPlayerMoveAnim(node));
             anim.play();
+            animationListeners.forEach(l -> l.onStartAnimation(node));
         }
+    }
+    
+    private void finishPlayerMoveAnim(Node node) {
+        isAnimatingProperty.set(false);
+        animationListeners.forEach(l -> l.onEndAnimation(node));
+        requestNextMoveAnim();
     }
     
     private Fx3dPlayer findEquivalent(Player player) {
@@ -201,6 +216,7 @@ public class Fx3dGameBoard extends Group
         
             TranslateTransition tt = new TranslateTransition(
                     Duration.millis(Fx3dPlayer.FIELD_MOVE_DURATION), player);
+            tt.setInterpolator(Interpolator.LINEAR);
             tt.setByX(nextTransform.getTx() - currTransform.getTx());
             tt.setByY(nextTransform.getTy() - currTransform.getTy());
             tt.setByZ(nextTransform.getTz() - currTransform.getTz());
@@ -208,7 +224,9 @@ public class Fx3dGameBoard extends Group
             anims.add(tt);
         }
         
-        return new ParallelTransition(st, jt);
+        ParallelTransition retObj = new ParallelTransition(jt, st);
+        retObj.setNode(player);
+        return retObj;
     }
     
     private void initFields() {
