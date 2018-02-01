@@ -15,11 +15,12 @@ import de.btu.monopoly.net.server.GameServer;
 import de.btu.monopoly.ui.GameSceneManager;
 import de.btu.monopoly.ui.MenuSceneManager;
 import de.btu.monopoly.util.Assets;
+import javafx.application.Application;
+import javafx.stage.Stage;
+
 import java.io.IOException;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
-import javafx.application.Application;
-import javafx.stage.Stage;
 
 /**
  * @author Markus Uhlig (markus.uhlig@b-tu.de)
@@ -65,8 +66,8 @@ public class Launcher extends Application {
         else {
 
             Player[] players = new Player[]{
-                new Player("Patrick", 0, 1500, "#4286f4ff"),
-                new Player("Christian", 1, 1500, "#f44242ff")
+                new Player("Patrick", 0, Assets.START_MONEY, "#4286f4ff"),
+                new Player("Christian", 1, Assets.START_MONEY, "#f44242ff")
             };
             players[1].setAiLevel(2);
 

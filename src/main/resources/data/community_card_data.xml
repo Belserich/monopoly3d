@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<cards>
+
+    <card name="Bahnhof" text="Ruecke vor bis zum naechsten Bahnhof. Die zu zahlende Miete erhoeht sich um 2. Wenn der Bahnhof noch niemandem gehoert, kannst du ihn von der Bank kaufen." amount="2" action="move_next_station_rent_amp">
+        <arg>2</arg>
+    </card>
+
+    <card name="Ins Gefaengnis" text="Gehe in das Gefaengnis. Begib dich direkt dorthin. Gehe nicht uber LOS. Ziehe keine €200." action="go_jail">
+        <arg>200</arg>
+    </card>
+
+    <card name="Gefaengnis Frei" text="Du kommst aus dem Gefaengnis frei." amount="1" action="jail" />
+
+    <card name="Lebensversicherung" text="Deine Lebensversicherung wird faellig. Du erhaelst €100." action="get_money">
+        <arg>100</arg>
+    </card>
+
+    <card name="Geburtstag" text="Du hast Geburtstag. Jeder Spieler schenkt dir €10." action="birthday">
+        <arg>10</arg>
+    </card>
+    
+    <card name="Schoenheit" text="Zweiter Preis im Schoenheitswettbewerb. Du erhaelst €10." action="get_money">
+        <arg>10</arg>
+    </card>
+    
+    <card name="Lagerverkauf" text="Aus Lagerverkaeufen erhaelst du €50." action="get_money">
+        <arg>50</arg>
+    </card>
+    
+    <card name="Bank-Irrtum" text="Bank-Irrtum  zu deinen Gutsten. Ziehe €200." action="get_money">
+        <arg>200</arg>
+    </card>
+
+    <card name="Schulgeld" text="Zahle Schulgeld €50." action="pay_bank">
+        <arg>50</arg>
+    </card>
+    
+    <card name="Einkommensteuerrueckzahlung" text="Einkommensteuerrueckzahlung. Du erhaelst €20." action="get_money">
+        <arg>20</arg>
+    </card>
+    
+    <card name="Urlaubsgeld" text="Urlaubsgeld. Du erhaelst €100." action="get_money">
+        <arg>100</arg>
+    </card>
+    
+    <card name="Beratungsgebuehr" text="Du erhaelst eine Beratungsgebuehr von €25." action="get_money">
+        <arg>25</arg>
+    </card>
+
+    <card name="Arztkosten" text="Arztkosten kommen auf dich zu. Zahle €50." action="pay_bank">
+        <arg>50</arg>
+    </card>
+    
+    <card name="Krankenhausgebuehren" text="Krankenhausgebuehren. Du zahlst €100." action="pay_bank">
+        <arg>100</arg>
+    </card>
+    
+    <card name="LOS" text="Ruecke vor bis auf LOS. Ziehe €200." action="set_position">
+        <arg>200</arg>
+    </card>
+
+    <card name="Erben" text="Du erbst €100." action="get_money">
+        <arg>100</arg>
+    </card>
+    
+    <card name="Strassenausbesserungen" text="Kosten fuer Strassenausbesserungen! Zahle: €40 pro Haus, (x4 fuer Hotels)." action="renovate">
+        <arg>40</arg>
+    </card>
+    
+</cards>
+
+    

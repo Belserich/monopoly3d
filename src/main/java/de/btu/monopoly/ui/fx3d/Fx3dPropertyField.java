@@ -3,7 +3,9 @@ package de.btu.monopoly.ui.fx3d;
 import de.btu.monopoly.core.FieldTypes;
 import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.player.Player;
+import de.btu.monopoly.ui.AnimationQueuer;
 import de.btu.monopoly.util.Assets;
+import javafx.animation.PauseTransition;
 import javafx.animation.RotateTransition;
 import javafx.application.Platform;
 import javafx.scene.layout.Pane;
@@ -24,28 +26,46 @@ public class Fx3dPropertyField extends Fx3dField {
     
     private final Pane infoPane;
     
+    private final AnimationQueuer queuer;
     private final RotateTransition turnTrans;
     
-    public Fx3dPropertyField(PropertyField field, FieldTypes type) {
+    public Fx3dPropertyField(PropertyField field, FieldTypes type, AnimationQueuer queuer) {
         super(field, type, Assets.getImage(type.name().toLowerCase()));
+        this.queuer = queuer;
+        
         infoPane = InfoPaneBuilder.buildFor(field, type);
     
         turnTrans = new RotateTransition(Duration.millis(TURN_DURATION_MILLIS), this);
         turnTrans.setByAngle(TURN_ANGLE);
         turnTrans.setAxis(Rotate.Z_AXIS);
-        
+    
         field.mortgageTakenProperty().addListener((prop, oldB, newB) ->
-                Platform.runLater(() -> onMortgageChange(newB)));
-        
-        field.ownerProperty().addListener((prop, oldP, newP) ->
-                Platform.runLater(() -> changeColor(Color.web(newP.getColor()))));
+                Platform.runLater(() -> queuer.queueAnimation(pauseAndMortageChange(newB)))
+        );
+    
+        field.ownerProperty().addListener((prop, oldP, newP) -> {
+            Color newColor = Color.web(newP.getColor());
+            Platform.runLater(() -> queuer.queueAnimation(pauseAndChangeColor(newColor)));
+        });
+    }
+    
+    private PauseTransition pauseAndChangeColor(Color newColor) {
+        PauseTransition pause = new PauseTransition(Duration.millis(500));
+        pause.setOnFinished(inv -> changeColor(newColor));
+        return pause;
+    }
+    
+    private PauseTransition pauseAndMortageChange(boolean newB) {
+        PauseTransition pause = new PauseTransition(Duration.millis(500));
+        pause.setOnFinished(inv -> changeMortgageStatus(newB));
+        return pause;
     }
     
     private void changeColor(Color newColor) {
         setMaterial(MaterialBuilder.buildFor(field, type, newColor));
     }
     
-    public void onMortgageChange(boolean newVal) {
+    private void changeMortgageStatus(boolean newVal) {
         if (!newVal) {
             Player owner = ((PropertyField) field).getOwner();
             changeColor(owner == null ? DEFAULT_COLOR : Color.web(owner.getColor()));

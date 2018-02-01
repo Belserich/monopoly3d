@@ -18,17 +18,13 @@ import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.menu.Lobby;
 import de.btu.monopoly.ui.CameraManager.WatchMode;
-import de.btu.monopoly.ui.fx3d.AnimationListener;
 import de.btu.monopoly.ui.fx3d.Fx3dGameBoard;
 import de.btu.monopoly.ui.fx3d.Fx3dPropertyField;
 import de.btu.monopoly.util.Assets;
-import java.util.ArrayList;
-import java.util.InputMismatchException;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.stream.Collectors;
 import javafx.animation.*;
 import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -46,12 +42,19 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.util.Duration;
 
-public class GameSceneManager implements AnimationListener {
+import java.util.ArrayList;
+import java.util.InputMismatchException;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+public class GameSceneManager implements AnimationQueuer {
 
     private static final double DEFAULT_SCENE_WIDTH = 1280;
     private static final double DEFAULT_SCENE_HEIGHT = 720;
-
+    
     private static final double PLAYER_ZOOM = -1000;
+    private static final int DEFAULT_ACTION_DELAY_MILLIS = 1000;
 
     private final Scene scene;
     private final SubScene gameSub;
@@ -66,6 +69,9 @@ public class GameSceneManager implements AnimationListener {
     private final VBox cardHandle;
 
     private CameraManager camMan;
+    
+    private List<Animation> visualQueue;
+    private BooleanProperty isPlayingAnim;
 
     private Label auctionLabel = new Label("0 €");
     private Label hoechstgebotLabel = new Label("Höchstgebot:");
@@ -82,16 +88,18 @@ public class GameSceneManager implements AnimationListener {
     private Popup aucPopup;
 
     public GameSceneManager(GameBoard board) {
-        this.board3d = new Fx3dGameBoard(board);
-        this.board3d.addPlayerAnimationListener(this);
-
+        this.board3d = new Fx3dGameBoard(board, this);
+    
+        visualQueue = new LinkedList<>();
+        isPlayingAnim = new SimpleBooleanProperty(false);
+        isPlayingAnim.addListener((prop, oldB, newB) -> tryNextAnim());
+        
         gameSub = new SubScene(board3d, 0, 0, true, SceneAntialiasing.DISABLED);
         gameSub.setCache(true);
         gameSub.setCacheHint(CacheHint.SPEED);
 
         uiPane = new BorderPane();
         popupWrapper = new VBox();
-
         popupQueue = new LinkedList<>();
 
         playerBox = new VBox();
@@ -107,8 +115,9 @@ public class GameSceneManager implements AnimationListener {
                 DEFAULT_SCENE_WIDTH, DEFAULT_SCENE_HEIGHT
         );
 
-        Global.ref().getGame().addGameStateListener(new GameStateAdapterImpl(playerBox));
-        Global.ref().getGame().addGameStateListener(board3d.gameStateAdapter());
+        Game game = Global.ref().getGame();
+        game.addGameStateListener(new GameStateAdapterImpl());
+        game.addGameStateListener(board3d.stateListener());
         initScene();
     }
 
@@ -118,18 +127,8 @@ public class GameSceneManager implements AnimationListener {
         gameSub.widthProperty().bind(scene.widthProperty());
         gameSub.heightProperty().bind(scene.heightProperty());
 
-        initPopups();
         initUi();
         initCams();
-    }
-
-    private void initPopups() {
-
-        board3d.animatingProperty().addListener((prop, oldB, newB) -> {
-            if (!newB && !popupQueue.isEmpty()) {
-                displayPopups();
-            }
-        });
     }
 
     private void initUi() {
@@ -186,44 +185,94 @@ public class GameSceneManager implements AnimationListener {
 
         camMan = new CameraManager(gameSub);
         camMan.watch(board3d, WatchMode.ORTHOGONAL);
-
-        board3d.getPlayers().forEach(p
-                -> p.setOnMouseReleased(event -> camMan.watch(p, PLAYER_ZOOM)));
+        
+        board3d.getPlayers().forEach(fxPlayer ->
+                fxPlayer.setOnMouseReleased(event -> watchNode(fxPlayer)));
+    }
+    
+    private void changeFirstPlayer(Player oldFirst) {
+        
+        ObservableList<Node> children = playerBox.getChildren();
+        Pane firstChild = (Pane) children.get(oldFirst.getId());
+    
+        int size = children.size();
+        double newY = firstChild.getTranslateY() + size * firstChild.getHeight() + size * playerBox.getSpacing();
+    
+        TranslateTransition tt1 = new TranslateTransition(Duration.millis(200), firstChild);
+        tt1.setByX(-firstChild.getWidth());
+        tt1.setOnFinished(inv -> firstChild.setTranslateY(newY));
+    
+        ParallelTransition par = new ParallelTransition();
+        ObservableList<Animation> parChildren = par.getChildren();
+        children.stream()
+                .map(Pane.class::cast)
+                .forEach(pane -> {
+                    TranslateTransition tt2 = new TranslateTransition(Duration.millis(200), pane);
+                    tt2.setInterpolator(Interpolator.EASE_OUT);
+                    tt2.setByY(-(firstChild.getHeight() + playerBox.getSpacing()));
+                    parChildren.add(tt2);
+                });
+    
+        TranslateTransition tt3 = new TranslateTransition(Duration.millis(200), firstChild);
+        tt3.setByX(firstChild.getWidth());
+    
+        SequentialTransition st = new SequentialTransition(tt1, par, tt3);
+        st.play();
+    }
+    
+    private PauseTransition taskAnim(Runnable runnable, int initialDelayMillis) {
+        PauseTransition pause = new PauseTransition(Duration.millis(initialDelayMillis));
+        pause.setOnFinished(inv -> runnable.run());
+        return pause;
+    }
+    
+    private PauseTransition taskAnim(Runnable runnable) {
+        return taskAnim(runnable, DEFAULT_ACTION_DELAY_MILLIS);
+    }
+    
+    private void queueTask(Runnable runnable, int initalDelayMillis) {
+        PauseTransition pause = taskAnim(runnable, initalDelayMillis);
+        queueAnimation(pause);
+    }
+    
+    private void queueTask(Runnable runnable) {
+        queueTask(runnable, DEFAULT_ACTION_DELAY_MILLIS);
+    }
+    
+    private void safelyQueueTask(Runnable runnable) {
+        safelyQueueTask(runnable, DEFAULT_ACTION_DELAY_MILLIS);
+    }
+    
+    private void safelyQueueTask(Runnable runnable, int initialDelayMillis) {
+        Platform.runLater(() -> queueTask(runnable, initialDelayMillis));
     }
 
     private void displayPopup(Popup pop) {
         pop.pane.setPickOnBounds(false);
         popupWrapper.getChildren().add(pop.pane);
+    
+        Duration dur = pop.duration;
+        if (!dur.isIndefinite()) {
+            PauseTransition pause = new PauseTransition(dur);
+            pause.setOnFinished(inv -> popupWrapper.getChildren().remove(pop.pane));
+            pause.play();
+        }
     }
-
-    private void displayPopups() {
-
-        popupQueue.forEach(pop -> {
-            displayPopup(pop);
-
-            Duration dur = pop.duration;
-            if (!dur.isIndefinite()) {
-                PauseTransition pause = new PauseTransition(dur);
-                pause.setOnFinished(inv -> popupWrapper.getChildren().remove(pop.pane));
-                pause.play();
-            }
-        });
-        popupQueue.clear();
-    }
-
+    
     private void queuePopup(Popup pop) {
-        Platform.runLater(() -> {
-            popupQueue.add(pop);
-            if (!board3d.animatingProperty().get()) {
-                displayPopups();
-            }
-        });
+        queueTask(() -> displayPopup(pop));
+    }
+    
+    private void safelyQueuePopup(Popup pop) {
+        Platform.runLater(() -> queuePopup(pop));
     }
 
     private void destroyPopup(Popup pop) {
-        Platform.runLater(() -> {
-            popupWrapper.getChildren().remove(pop.pane);
-        });
+        Platform.runLater(() -> popupWrapper.getChildren().remove(pop.pane));
+    }
+    
+    private void watchNode(Node node) {
+        camMan.watch(node, PLAYER_ZOOM);
     }
 
     public Scene getScene() {
@@ -266,7 +315,7 @@ public class GameSceneManager implements AnimationListener {
         box.setAlignment(Pos.CENTER);
 
         Popup pop = new Popup(gridpane);
-        queuePopup(pop);
+        safelyQueuePopup(pop);
 
         while (!buyButton.isPressed() || !dontBuyButton.isPressed()) {
             IOService.sleep(50);
@@ -321,7 +370,7 @@ public class GameSceneManager implements AnimationListener {
         box.setAlignment(Pos.CENTER);
 
         Popup pop = new Popup(gridpane);
-        queuePopup(pop);
+        safelyQueuePopup(pop);
 
         while (!rollButton.isPressed() || !payButton.isPressed() || !cardButton.isPressed()) {
             IOService.sleep(50);
@@ -405,7 +454,7 @@ public class GameSceneManager implements AnimationListener {
         vbox.setAlignment(Pos.CENTER);
 
         Popup pop = new Popup(gridpane);
-        queuePopup(pop);
+        safelyQueuePopup(pop);
 
         while (!nothingButton.isPressed() || !buyHouseButton.isPressed() || !removeHouseButton.isPressed() || !addMortgageButton.isPressed() || !removeMortgageButton.isPressed() || !tradeButton.isPressed()) {
             IOService.sleep(50);
@@ -481,7 +530,7 @@ public class GameSceneManager implements AnimationListener {
         box.setAlignment(Pos.CENTER);
 
         Popup pop = new Popup(gridPane);
-        queuePopup(pop);
+        safelyQueuePopup(pop);
 
         if (fima.getOwnedPropertyFields(currPlayer).count() == 0) {
             Task task = new Task() {
@@ -571,7 +620,7 @@ public class GameSceneManager implements AnimationListener {
 
         Popup pop = new Popup(auctionGP);
         aucPopup = pop;
-        queuePopup(pop);
+        safelyQueuePopup(pop);
 
         //Verknuepfung mit EventHandler(n)
         bidTextField.setOnAction(bid);
@@ -631,7 +680,7 @@ public class GameSceneManager implements AnimationListener {
 
             destroyPopup(aucPopup);
             Popup pop = new Popup(resetGridPane, Duration.seconds(3));
-            queuePopup(pop);
+            safelyQueuePopup(pop);
 
             Platform.runLater(() -> auctionLabel.setText("0 €"));
 
@@ -651,6 +700,8 @@ public class GameSceneManager implements AnimationListener {
                 kartPane.setAlignment(Pos.CENTER);
 
                 Label text = new Label(card.getText());
+                text.setPadding(new Insets(20, 20, 20, 20));
+                text.setWrapText(true);
                 box.setPrefSize(250, 150);
                 box.getChildren().add(text);
                 box.setAlignment(Pos.CENTER);
@@ -680,7 +731,7 @@ public class GameSceneManager implements AnimationListener {
                 }
 
                 Popup pop = new Popup(kartPane, Duration.seconds(3));
-                queuePopup(pop);
+                displayPopup(pop);
             }
         }
     }
@@ -694,19 +745,41 @@ public class GameSceneManager implements AnimationListener {
             }
         };
         Platform.runLater(task);
-
     }
-
+    
     @Override
-    public void onStartAnimation(Node node) {
-        camMan.watch(node, PLAYER_ZOOM);
+    public void queueAnimation(Animation anim) {
+        visualQueue.add(anim);
+        tryNextAnim();
     }
-
-    @Override
-    public void onEndAnimation(Node node) {
-        // nothing
+    
+    public void safelyQueueAnimation(Animation anim) {
+        Platform.runLater(() -> queueAnimation(anim));
     }
-
+    
+    private void tryNextAnim() {
+        if (!visualQueue.isEmpty() && !isPlayingAnim.get()) {
+            nextAnim();
+        }
+    }
+    
+    private void nextAnim() {
+        
+        isPlayingAnim.set(true);
+        Animation anim = visualQueue.remove(0);
+        EventHandler<ActionEvent> oldHandler = anim.getOnFinished();
+        anim.setOnFinished(event -> finishAnim(oldHandler, event));
+        anim.play();
+    }
+    
+    private void finishAnim(EventHandler<ActionEvent> handler, ActionEvent event) {
+        
+        if (handler != null) handler.handle(event);
+        
+        if (!visualQueue.isEmpty()) nextAnim();
+        else isPlayingAnim.set(false);
+    }
+    
     class Popup {
 
         private Pane pane;
@@ -808,7 +881,7 @@ public class GameSceneManager implements AnimationListener {
         initTradeVBox.getChildren().addAll(initTradeLabel, choosePlayerBox, initTradeHBox);
         initTradeVBox.setAlignment(Pos.CENTER);
 
-        Global.ref().getGameSceneManager().queuePopup(pop);
+        Global.ref().getGameSceneManager().safelyQueuePopup(pop);
 
         //Verkünpfung mit Eventhandler(n)
         acceptPlayerButton.setOnAction(selectPlayer);
@@ -875,7 +948,7 @@ public class GameSceneManager implements AnimationListener {
         tradeInfoVBox.getChildren().addAll(tradeInfoLabel);
 
         Popup pop = new Popup(tradeInfoGridPane, Duration.millis(2500));
-        Global.ref().getGameSceneManager().queuePopup(pop);
+        Global.ref().getGameSceneManager().safelyQueuePopup(pop);
 
         selectTradeOfferPopup(tradeGui);
 ////        //Weiterleitung an das naechste Popup
@@ -1075,7 +1148,7 @@ public class GameSceneManager implements AnimationListener {
             }
 
         });
-        Global.ref().getGameSceneManager().queuePopup(pop);
+        Global.ref().getGameSceneManager().safelyQueuePopup(pop);
 
     }
 
@@ -1199,7 +1272,7 @@ public class GameSceneManager implements AnimationListener {
         tradeWarningVBox.getChildren().addAll(tradeWarningLabel);
 
         Popup pop = new Popup(tradeWarningGridPane, Duration.millis(3500));
-        queuePopup(pop);
+        safelyQueuePopup(pop);
 
         //Weiterleitung an das naechste Popup
         selectTradeOfferPopup(tradeGui);
@@ -1338,7 +1411,7 @@ public class GameSceneManager implements AnimationListener {
             showAnswerPopup(tradeAnswer);
         });
 
-        queuePopup(pop);
+        safelyQueuePopup(pop);
 
     }
 
@@ -1407,7 +1480,7 @@ public class GameSceneManager implements AnimationListener {
 
         Popup pop = new Popup(tradeResponseGridPane);
         Global.ref().getGuiTrade().setWaitForResponsePopup(pop);
-        queuePopup(pop);
+        safelyQueuePopup(pop);
 
     }
 
@@ -1448,53 +1521,24 @@ public class GameSceneManager implements AnimationListener {
         tradeAnswerVBox.getChildren().addAll(tradeAnswerLabel);
 
         Popup pop = new Popup(tradeAnswerGridPane, Duration.millis(2000));
-        Global.ref().getGameSceneManager().queuePopup(pop);
-
+        Global.ref().getGameSceneManager().safelyQueuePopup(pop);
     }
 
     private class GameStateAdapterImpl extends GameStateAdapter {
-
-        private VBox playerBox;
-
-        public GameStateAdapterImpl(VBox playerBox) {
-            this.playerBox = playerBox;
+        
+        @Override
+        public void onTurnStart(Player player) {
+            safelyQueueTask(() -> watchNode(board3d.findFxEquivalent(player)));
         }
 
         @Override
         public void onPlayerOnCardField(Player player, CardField cardField, Card card) {
-            showCard(card, cardField.getStackType());
+            safelyQueueTask(() -> showCard(card, cardField.getStackType()), 1000);
         }
 
         @Override
         public void onTurnEnd(Player oldPlayer, Player newPlayer) {
-            Platform.runLater(() -> {
-                ObservableList<Node> children = playerBox.getChildren();
-                Pane firstChild = (Pane) children.get(oldPlayer.getId());
-
-                int size = children.size();
-                double newY = firstChild.getTranslateY() + size * firstChild.getHeight() + size * playerBox.getSpacing();
-
-                TranslateTransition tt1 = new TranslateTransition(Duration.millis(200), firstChild);
-                tt1.setByX(-firstChild.getWidth());
-                tt1.setOnFinished(inv -> firstChild.setTranslateY(newY));
-
-                ParallelTransition par = new ParallelTransition();
-                ObservableList<Animation> parChildren = par.getChildren();
-                children.stream()
-                        .map(Pane.class::cast)
-                        .forEach(pane -> {
-                            TranslateTransition tt2 = new TranslateTransition(Duration.millis(200), pane);
-                            tt2.setInterpolator(Interpolator.EASE_OUT);
-                            tt2.setByY(-(firstChild.getHeight() + playerBox.getSpacing()));
-                            parChildren.add(tt2);
-                        });
-
-                TranslateTransition tt3 = new TranslateTransition(Duration.millis(200), firstChild);
-                tt3.setByX(firstChild.getWidth());
-
-                SequentialTransition st = new SequentialTransition(tt1, par, tt3);
-                st.play();
-            });
+            safelyQueueTask(() -> changeFirstPlayer(oldPlayer), 0);
         }
     }
 }

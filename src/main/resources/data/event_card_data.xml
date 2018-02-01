@@ -1,0 +1,61 @@
+<?xml version="1.1" encoding="UTF-8"?>
+
+<cards>
+
+    <card name="Bahnhof" text="Ruecke vor bis zum naechsten Bahnhof. Die zu zahlende Miete erhoeht sich um 2. Wenn der Bahnhof noch niemandem gehoert, kannst du ihn von der Bank kaufen." amount="2" action="move_next_station_rent_amp">
+        <arg>2</arg>
+    </card>
+
+    <card name="Gefaengnis Frei" text="Du kommst aus dem Gefaengnis frei." amount="1" action="jail" />
+
+    <card name="Strafzettel" text="Strafzettel! Zahle €15." action="pay_bank">
+        <arg>15</arg>
+    </card>
+
+    <card name="Drei Felder zurueck" text="Gehe 3 Felder zurueck." action="move">
+        <arg>-3</arg>
+    </card>
+
+    <card name="Bausparvertrag" text="Dein Bausparvertrag wird faellig. Du erhaelst €150." action="get_money">
+        <arg>150</arg>
+    </card>
+
+    <card name="Seestrasse" text="Ruecke vor bis zur Seestrasse. Wenn du ueber LOS kommst, ziehe 11." action="set_position">
+        <arg>11</arg>
+    </card>
+
+    <card name="LOS" text="Ruecke vor bis auf LOS. Ziehe €200." action="set_position">
+        <arg>200</arg>
+    </card>
+
+    <card name="Schlossallee" text="Ruecke vor bis zum Schossallee." action="set_position">
+        <arg>39</arg>
+    </card>
+
+    <card name="Renovieren" text="Du laesst deine Haeuser renovieren. Zahle: €25 pro Haus, (x4 fuer Hotels)." action="renovate">
+        <arg>25</arg>
+    </card>
+
+    <card name="Vorstand" text="Du bist zum Vorstand gewaehlt worden. Zahle jedem Spieler €50." action="pay_all">
+        <arg>50</arg>
+    </card>
+
+    <card name="Dividende" text="Die Bank zahlt dir eine Dividende von €50." action="get_money">
+        <arg>50</arg>
+    </card>
+
+    <card name="Opernplatz" text="Ruecke vor bis zum Opernplatz. Wenn du ueber LOS kommst, ziehe €24." action="set_position">
+        <arg>24</arg>
+    </card>
+
+    <card name="Suedbahnhof" text="Mache einen Ausflug zum Suedbahnhof. Wenn du uber LOS kommst, ziehe €200." action="set_position">
+        <arg>5</arg>
+    </card>
+
+    <card name="Ins Gefaengnis" text="Gehe in das Gefaengnis. Begib dich direkt dorthin. Gehe nicht uber LOS. Ziehe keine €200." action="go_jail">
+        <arg>200</arg>
+    </card>
+
+    <card name="Werk" text="Ruecke vor bis zum naechsten Werk." action="move_next_supply" />
+
+</cards>

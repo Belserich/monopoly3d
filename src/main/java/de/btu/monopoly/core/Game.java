@@ -3,11 +3,13 @@ package de.btu.monopoly.core;
 import de.btu.monopoly.Global;
 import de.btu.monopoly.core.service.*;
 import de.btu.monopoly.data.card.Card;
+import de.btu.monopoly.data.card.CardManager;
 import de.btu.monopoly.data.field.*;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.ki.HardKi;
 import de.btu.monopoly.net.chat.GUIChat;
 import de.btu.monopoly.net.client.GameClient;
+
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -231,11 +233,13 @@ public class Game {
                 FieldService.payTax(currPlayer, taxField);
             }
             else if (type.isCard()) {
+                CardManager cama = board.getCardManager();
                 CardField cardField = (CardField) field;
-                Card card = board.getCardManager().pullAndProcess(cardField.getStackType(), currPlayer);
-                repeatPhase = Card.Action.mustRepeatFieldPhase(card.getAction());
-
+                Card card = cama.getStack(cardField.getStackType()).cardAt(0);
+    
                 stateListeners.forEach(l -> l.onPlayerOnCardField(currPlayer, cardField, card));
+                cama.pullAndProcess(cardField.getStackType(), currPlayer);
+                repeatPhase = Card.Action.mustRepeatFieldPhase(card.getAction());
             }
             else if (type == FieldTypes.CORNER_3) /*
              * "Gehen Sie ins Gefängnis"
@@ -470,10 +474,10 @@ public class Game {
 
     protected void onJailPayOption() {
         if (PlayerService.takeMoney(currPlayer, 50)) {
-            onJailPayFailure();
+            onJailPaySuccess();
         }
         else {
-            onJailPaySuccess();
+            onJailPayFailure();
         }
     }
 
