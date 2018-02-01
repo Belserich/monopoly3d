@@ -3,6 +3,7 @@ package de.btu.monopoly.ui.fx3d;
 import de.btu.monopoly.data.player.Player;
 import javafx.animation.Animation;
 import javafx.animation.TranslateTransition;
+import javafx.beans.property.IntegerProperty;
 import javafx.collections.ObservableList;
 import javafx.geometry.Orientation;
 import javafx.geometry.VPos;
@@ -31,6 +32,8 @@ public class Fx3dPlayer extends Group {
     private static final double INIT_PLAYER_Y = -PLAYER_MODEL.getHeight();
     private static final double JUMP_HEIGHT = -100;
     
+    IntegerProperty positionProperty;
+    
     private final Cylinder shape;
     
     private Player player;
@@ -56,6 +59,8 @@ public class Fx3dPlayer extends Group {
         shape.setMaterial(FxHelper.getMaterialFor(color));
         
         infoPane = new InfoPane(color);
+        
+        positionProperty = player.positionProperty();
     }
     
     TranslateTransition createJumpAnimation() {

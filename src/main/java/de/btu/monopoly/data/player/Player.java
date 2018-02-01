@@ -72,7 +72,7 @@ public class Player {
         this.aiLevel = 0;
         this.name = name;
 
-        position = new SimpleIntegerProperty();
+        position = new SimpleIntegerProperty(0);
 
         stack = new CardStack();
 
@@ -201,7 +201,13 @@ public class Player {
         this.aiLevel = aiLevel;
     }
     
-    public IntegerProperty balanceProperty() { return bank.balanceProperty(); }
+    public IntegerProperty positionProperty() {
+        return position;
+    }
+    
+    public IntegerProperty balanceProperty() {
+        return bank.balanceProperty();
+    }
     
     @Override
     public String toString() {

@@ -21,7 +21,7 @@ import static de.btu.monopoly.ui.fx3d.Fx3dField.*;
 
 public class Assets
 {
-    public static final int START_MONEY = 1500;
+    public static final int START_MONEY = 2000;
     
     public static final String FONT_KABEL_FAMILY = "Kabel-Heavy";
     
@@ -79,8 +79,8 @@ public class Assets
     
     private static final String DATA_FIELD_PATH = "field_data.xml";
     
-    private static final String COMM_CARDS_PATH = "cardCommunity_data.xml";
-    private static final String EVENT_CARDS_PATH = "cardEvent_data.xml";
+    private static final String COMM_CARDS_PATH = "community_card_data.xml";
+    private static final String EVENT_CARDS_PATH = "event_card_data.xml";
     
     private static final HashMap<String, Image> registeredImages = new HashMap<>();
     private static final HashMap<String, ImageView> registeredIcons = new HashMap<>();

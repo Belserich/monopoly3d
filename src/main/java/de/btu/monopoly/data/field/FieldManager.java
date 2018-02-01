@@ -163,7 +163,6 @@ public class FieldManager {
     public boolean buyHouse(StreetField street) {
         Player player = street.getOwner();
 
-        System.out.println("HAI");
         LOGGER.info(String.format("%s versucht, ein Haus auf %s zu kaufen.", player.getName(), street.getName()));
    
         if (isComplete(street) && balanceCheck(street, 1, 0)){
