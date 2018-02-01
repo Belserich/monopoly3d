@@ -59,7 +59,6 @@ public class InfoPaneBuilder {
             Text text = new Text(str);
             text.setTextAlignment(TextAlignment.CENTER);
             text.setFont(font);
-            text.setPickOnBounds(false);
             return text;
         }
     
@@ -76,7 +75,7 @@ public class InfoPaneBuilder {
         }
     
         Text createText(int value) {
-            return createText(String.valueOf(value), null, 12);
+            return createText(String.valueOf(value) + "€", null, 12);
         }
         
         VBox createBaseBox(Insets insets, String imgLabel) {
@@ -121,11 +120,14 @@ public class InfoPaneBuilder {
         }
         
         void addNameText(VBox box, String name) {
-            name = name.replace('-', '\n').toUpperCase();
-            box.getChildren().add(createText(name, Font.font("Kabel", 17)));
-            if (name.contains("\n")) {
-                box.setPadding(new Insets(12, 0, 0, 0));
-                box.setSpacing(2);
+            String[] nameLines = name.split("-");
+            ObservableList<Node> children = box.getChildren();
+            for (String nameLine : nameLines)
+                children.add(createText(nameLine.toUpperCase(), Font.font("Kabel", 17)));
+            
+            if (nameLines.length > 1) {
+                box.setPadding(new Insets(14, 0, 0, 0));
+                box.setSpacing(1);
             }
         }
     }
