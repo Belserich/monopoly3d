@@ -1,0 +1,32 @@
+#greenPopup{
+    -fx-background-color: #dcedc8;
+    -fx-border-color: #94af76;
+    -fx-border-insets: 5;
+    -fx-border-width: 1;
+    -fx-border-style: solid;
+    -fx-effect: dropshadow(gaussian, #494949, 15.0, 0.0, 0.0, 8.0);
+}
+#rosePopup{
+    -fx-background-color: #fce4ec;
+    -fx-border-color: #c9b2ba;
+    -fx-border-insets: 5;
+    -fx-border-width: 1;
+    -fx-border-style: solid;
+    -fx-effect: dropshadow(gaussian, #494949, 15.0, 0.0, 0.0, 8.0);
+}
+#yellowPopup{
+    -fx-background-color: #fff59d;
+    -fx-border-color: #cbc26d;
+    -fx-border-insets: 5;
+    -fx-border-width: 1;
+    -fx-border-style: solid;
+    -fx-effect: dropshadow(gaussian, #494949, 15.0, 0.0, 0.0, 8.0);
+}
+#orangePopup{
+    -fx-background-color: #ff8a65;
+    -fx-border-color: #c75b39;
+    -fx-border-insets: 5;
+    -fx-border-width: 1;
+    -fx-border-style: solid;
+    -fx-effect: dropshadow(gaussian, #494949, 15.0, 0.0, 0.0, 8.0);
+}
