@@ -2,12 +2,12 @@
 
 <cards>
 
-    <card name="Bahnhof" text="Ruecke vor bis zum naechsten Bahnhof. Die zu zahlende Miete erhoeht sich um 2. Wenn der Bahnhof noch niemandem gehoert, kannst du ihn von der Bank kaufen." amount="2" action="move_next_station_rent_amp">
-        <arg>2</arg>
-    </card>
-
     <card name="Ins Gefaengnis" text="Gehe in das Gefaengnis. Begib dich direkt dorthin. Gehe nicht uber LOS. Ziehe keine €200." action="go_jail">
         <arg>200</arg>
+    </card>
+
+    <card name="Bahnhof" text="Ruecke vor bis zum naechsten Bahnhof. Die zu zahlende Miete erhoeht sich um 2. Wenn der Bahnhof noch niemandem gehoert, kannst du ihn von der Bank kaufen." amount="2" action="move_next_station_rent_amp">
+        <arg>2</arg>
     </card>
 
     <card name="Gefaengnis Frei" text="Du kommst aus dem Gefaengnis frei." amount="1" action="jail" />

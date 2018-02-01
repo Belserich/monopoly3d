@@ -6,6 +6,7 @@
 package de.btu.monopoly;
 
 import de.btu.monopoly.core.Game;
+import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.menu.Lobby;
 import de.btu.monopoly.menu.MainMenu;
@@ -15,12 +16,11 @@ import de.btu.monopoly.net.server.GameServer;
 import de.btu.monopoly.ui.GameSceneManager;
 import de.btu.monopoly.ui.MenuSceneManager;
 import de.btu.monopoly.util.Assets;
-import javafx.application.Application;
-import javafx.stage.Stage;
-
 import java.io.IOException;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
+import javafx.application.Application;
+import javafx.stage.Stage;
 
 /**
  * @author Markus Uhlig (markus.uhlig@b-tu.de)
@@ -66,8 +66,8 @@ public class Launcher extends Application {
         else {
 
             Player[] players = new Player[]{
-                new Player("Patrick", 0, Assets.START_MONEY, "#4286f4ff"),
-                new Player("Christian", 1, Assets.START_MONEY, "#f44242ff")
+                new Player("Spieler", 0, Assets.START_MONEY, "#4286f4ff"),
+                new Player("Gegner(Hard)", 1, Assets.START_MONEY, "#f44242ff")
             };
             players[1].setAiLevel(2);
 
@@ -97,6 +97,11 @@ public class Launcher extends Application {
 
             Thread thread = new Thread(game::start);
             thread.start();
+
+            if (Global.START_COMPLETED) {
+                ((PropertyField) Global.ref().getGame().getBoard().getFields()[1]).setOwner(players[0]);
+                ((PropertyField) Global.ref().getGame().getBoard().getFields()[3]).setOwner(players[0]);
+            }
         }
     }
 }

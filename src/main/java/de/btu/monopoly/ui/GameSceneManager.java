@@ -21,6 +21,11 @@ import de.btu.monopoly.ui.CameraManager.WatchMode;
 import de.btu.monopoly.ui.fx3d.Fx3dGameBoard;
 import de.btu.monopoly.ui.fx3d.Fx3dPropertyField;
 import de.btu.monopoly.util.Assets;
+import java.util.ArrayList;
+import java.util.InputMismatchException;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.stream.Collectors;
 import javafx.animation.*;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
@@ -42,17 +47,11 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.util.Duration;
 
-import java.util.ArrayList;
-import java.util.InputMismatchException;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.stream.Collectors;
-
 public class GameSceneManager implements AnimationQueuer {
 
     private static final double DEFAULT_SCENE_WIDTH = 1280;
     private static final double DEFAULT_SCENE_HEIGHT = 720;
-    
+
     private static final double PLAYER_ZOOM = -1000;
     private static final int DEFAULT_ACTION_DELAY_MILLIS = 1000;
 
@@ -69,7 +68,7 @@ public class GameSceneManager implements AnimationQueuer {
     private final VBox cardHandle;
 
     private CameraManager camMan;
-    
+
     private List<Animation> visualQueue;
     private BooleanProperty isPlayingAnim;
 
@@ -89,11 +88,11 @@ public class GameSceneManager implements AnimationQueuer {
 
     public GameSceneManager(GameBoard board) {
         this.board3d = new Fx3dGameBoard(board, this);
-    
+
         visualQueue = new LinkedList<>();
         isPlayingAnim = new SimpleBooleanProperty(false);
         isPlayingAnim.addListener((prop, oldB, newB) -> tryNextAnim());
-        
+
         gameSub = new SubScene(board3d, 0, 0, true, SceneAntialiasing.DISABLED);
         gameSub.setCache(true);
         gameSub.setCacheHint(CacheHint.SPEED);
@@ -186,23 +185,23 @@ public class GameSceneManager implements AnimationQueuer {
 
         camMan = new CameraManager(gameSub);
         camMan.watch(board3d, WatchMode.ORTHOGONAL);
-        
-        board3d.getPlayers().forEach(fxPlayer ->
-                fxPlayer.setOnMouseReleased(event -> watchNode(fxPlayer)));
+
+        board3d.getPlayers().forEach(fxPlayer
+                -> fxPlayer.setOnMouseReleased(event -> watchNode(fxPlayer)));
     }
-    
+
     private void changeFirstPlayer(Player oldFirst) {
-        
+
         ObservableList<Node> children = playerBox.getChildren();
         Pane firstChild = (Pane) children.get(oldFirst.getId());
-    
+
         int size = children.size();
         double newY = firstChild.getTranslateY() + size * firstChild.getHeight() + size * playerBox.getSpacing();
-    
+
         TranslateTransition tt1 = new TranslateTransition(Duration.millis(200), firstChild);
         tt1.setByX(-firstChild.getWidth());
         tt1.setOnFinished(inv -> firstChild.setTranslateY(newY));
-    
+
         ParallelTransition par = new ParallelTransition();
         ObservableList<Animation> parChildren = par.getChildren();
         children.stream()
@@ -213,37 +212,37 @@ public class GameSceneManager implements AnimationQueuer {
                     tt2.setByY(-(firstChild.getHeight() + playerBox.getSpacing()));
                     parChildren.add(tt2);
                 });
-    
+
         TranslateTransition tt3 = new TranslateTransition(Duration.millis(200), firstChild);
         tt3.setByX(firstChild.getWidth());
-    
+
         SequentialTransition st = new SequentialTransition(tt1, par, tt3);
         st.play();
     }
-    
+
     private PauseTransition taskAnim(Runnable runnable, int initialDelayMillis) {
         PauseTransition pause = new PauseTransition(Duration.millis(initialDelayMillis));
         pause.setOnFinished(inv -> runnable.run());
         return pause;
     }
-    
+
     private PauseTransition taskAnim(Runnable runnable) {
         return taskAnim(runnable, DEFAULT_ACTION_DELAY_MILLIS);
     }
-    
+
     private void queueTask(Runnable runnable, int initalDelayMillis) {
         PauseTransition pause = taskAnim(runnable, initalDelayMillis);
         queueAnimation(pause);
     }
-    
+
     private void queueTask(Runnable runnable) {
         queueTask(runnable, DEFAULT_ACTION_DELAY_MILLIS);
     }
-    
+
     private void safelyQueueTask(Runnable runnable) {
         safelyQueueTask(runnable, DEFAULT_ACTION_DELAY_MILLIS);
     }
-    
+
     private void safelyQueueTask(Runnable runnable, int initialDelayMillis) {
         Platform.runLater(() -> queueTask(runnable, initialDelayMillis));
     }
@@ -251,7 +250,7 @@ public class GameSceneManager implements AnimationQueuer {
     private void displayPopup(Popup pop) {
         pop.pane.setPickOnBounds(false);
         popupWrapper.getChildren().add(pop.pane);
-    
+
         Duration dur = pop.duration;
         if (!dur.isIndefinite()) {
             PauseTransition pause = new PauseTransition(dur);
@@ -259,11 +258,11 @@ public class GameSceneManager implements AnimationQueuer {
             pause.play();
         }
     }
-    
+
     private void queuePopup(Popup pop) {
         queueTask(() -> displayPopup(pop));
     }
-    
+
     private void safelyQueuePopup(Popup pop) {
         Platform.runLater(() -> queuePopup(pop));
     }
@@ -271,7 +270,7 @@ public class GameSceneManager implements AnimationQueuer {
     private void destroyPopup(Popup pop) {
         Platform.runLater(() -> popupWrapper.getChildren().remove(pop.pane));
     }
-    
+
     private void watchNode(Node node) {
         camMan.watch(node, PLAYER_ZOOM);
     }
@@ -525,7 +524,8 @@ public class GameSceneManager implements AnimationQueuer {
         while (!eingabeButton.isPressed() || !exitButton.isPressed()) {
             if (eingabeButton.isPressed()) {
                 destroyPopup(pop);
-                return fieldBox.getSelectionModel().getSelectedIndex() + 1;
+                int selection = fieldBox.getSelectionModel().getSelectedIndex() + 1;
+                return selection;
             }
             if (exitButton.isPressed()) {
                 destroyPopup(pop);
@@ -713,40 +713,46 @@ public class GameSceneManager implements AnimationQueuer {
         };
         Platform.runLater(task);
     }
-    
+
     @Override
     public void queueAnimation(Animation anim) {
         visualQueue.add(anim);
         tryNextAnim();
     }
-    
+
     public void safelyQueueAnimation(Animation anim) {
         Platform.runLater(() -> queueAnimation(anim));
     }
-    
+
     private void tryNextAnim() {
         if (!visualQueue.isEmpty() && !isPlayingAnim.get()) {
             nextAnim();
         }
     }
-    
+
     private void nextAnim() {
-        
+
         isPlayingAnim.set(true);
         Animation anim = visualQueue.remove(0);
         EventHandler<ActionEvent> oldHandler = anim.getOnFinished();
         anim.setOnFinished(event -> finishAnim(oldHandler, event));
         anim.play();
     }
-    
+
     private void finishAnim(EventHandler<ActionEvent> handler, ActionEvent event) {
-        
-        if (handler != null) handler.handle(event);
-        
-        if (!visualQueue.isEmpty()) nextAnim();
-        else isPlayingAnim.set(false);
+
+        if (handler != null) {
+            handler.handle(event);
+        }
+
+        if (!visualQueue.isEmpty()) {
+            nextAnim();
+        }
+        else {
+            isPlayingAnim.set(false);
+        }
     }
-    
+
     class Popup {
 
         private Pane pane;
@@ -1444,7 +1450,7 @@ public class GameSceneManager implements AnimationQueuer {
     }
 
     private class GameStateAdapterImpl extends GameStateAdapter {
-        
+
         @Override
         public void onTurnStart(Player player) {
             safelyQueueTask(() -> watchNode(board3d.findFxEquivalent(player)));
