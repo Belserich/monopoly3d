@@ -379,11 +379,9 @@ public class Game {
                         .map(p -> p.getName()).toArray(String[]::new);
                 break;
             case ACTION_TAKE_MORTGAGE:
-                System.out.println("takeMort");
                 fieldNames = allOwned.filter(p -> !p.isMortgageTaken()).map(p -> p.getName()).toArray(String[]::new);
                 break;
             case ACTION_PAY_MORTGAGE:
-                System.out.println("payMort");
                 fieldNames = allOwned.filter(p -> p.isMortgageTaken()).map(p -> p.getName()).toArray(String[]::new);
                 break;
             default:
