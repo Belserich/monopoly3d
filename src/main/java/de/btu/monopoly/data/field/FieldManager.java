@@ -144,14 +144,13 @@ public class FieldManager {
         FieldTypes type;
         
         do {
-            System.out.println(pos + " "  + movedFields + " " + FieldService.FIELD_COUNT);
             int i = (pos + movedFields) % FieldService.FIELD_COUNT;
             type = FieldTypes.GAMEBOARD_FIELD_STRUCT[i];
             movedFields++;
         }
         while (!type.is(nextFieldType));
         
-        return movePlayer(player, movedFields);
+        return movePlayer(player, movedFields - 1);
     }
 
     /**

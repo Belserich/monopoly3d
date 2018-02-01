@@ -7,16 +7,15 @@ package de.btu.monopoly.ui;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
-import com.jfoenix.controls.JFXToggleButton;
 import de.btu.monopoly.Global;
 import de.btu.monopoly.net.chat.GUIChat;
-import java.util.Observable;
-import java.util.Observer;
+import de.btu.monopoly.util.Assets;
 import javafx.animation.*;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -26,6 +25,9 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.util.Duration;
+
+import java.util.Observable;
+import java.util.Observer;
 
 /**
  *
@@ -108,7 +110,14 @@ public class ChatUi {
     }
 
     private void initChatToggleBox() {
-        JFXToggleButton chatButton = new JFXToggleButton();
+        ToggleButton chatButton = new ToggleButton(null, Assets.getIcon("chat"));
+        chatButton.setStyle("-fx-background-color: transparent;");
+        chatButton.setOnMouseEntered(event -> {
+            chatButton.setGraphic(Assets.getIcon("chat_rollover"));
+        });
+        chatButton.setOnMouseExited(event -> {
+            chatButton.setGraphic(Assets.getIcon("chat"));
+        });
         chatToggleBox.getChildren().addAll(chatButton);
         chatButton.setOnMouseReleased((MouseEvent event) -> {
             changeChatSize(chatButton.isSelected());

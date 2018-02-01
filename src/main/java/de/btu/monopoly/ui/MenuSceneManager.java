@@ -44,7 +44,9 @@ public class MenuSceneManager extends Stage {
             }
         });
         
+        stage.setTitle("MONOPOLY");
         stage.setScene(scene);
+        stage.setFullScreen(true);
         stage.show();
 
         stage.setOnCloseRequest(event -> {
@@ -94,10 +96,8 @@ public class MenuSceneManager extends Stage {
         sceneData = new GameSceneManager(lobby.getController().getBoard());
         Global.ref().setGameSceneManager(sceneData);
         
-        Scene gameScene = sceneData.getScene();
-        
         Platform.runLater(() -> {
-            stage.setScene(gameScene);
+            scene.setRoot(sceneData.getSceneRoot());
         });
     }
 

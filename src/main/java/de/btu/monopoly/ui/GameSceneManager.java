@@ -33,7 +33,10 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
-import javafx.scene.*;
+import javafx.scene.CacheHint;
+import javafx.scene.Node;
+import javafx.scene.SceneAntialiasing;
+import javafx.scene.SubScene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
@@ -49,14 +52,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class GameSceneManager implements AnimationQueuer {
-
-    private static final double DEFAULT_SCENE_WIDTH = 1280;
-    private static final double DEFAULT_SCENE_HEIGHT = 720;
     
-    private static final double PLAYER_ZOOM = -1000;
+    private static final double PLAYER_ZOOM = -1500;
     private static final int DEFAULT_ACTION_DELAY_MILLIS = 1000;
 
-    private final Scene scene;
+    private final StackPane rootPane;
+    
     private final SubScene gameSub;
     private final Fx3dGameBoard board3d;
 
@@ -94,7 +95,7 @@ public class GameSceneManager implements AnimationQueuer {
         isPlayingAnim = new SimpleBooleanProperty(false);
         isPlayingAnim.addListener((prop, oldB, newB) -> tryNextAnim());
         
-        gameSub = new SubScene(board3d, 0, 0, true, SceneAntialiasing.DISABLED);
+        gameSub = new SubScene(board3d, 0, 0, true, SceneAntialiasing.BALANCED);
         gameSub.setCache(true);
         gameSub.setCacheHint(CacheHint.SPEED);
 
@@ -106,15 +107,10 @@ public class GameSceneManager implements AnimationQueuer {
         cardHandle = new VBox();
         gameInfoBox = new VBox(playerBox, cardHandle);
 
-        StackPane uiStack = new StackPane(gameSub, uiPane, popupWrapper);
-        uiStack.setAlignment(Pos.CENTER);
-        uiStack.setPickOnBounds(false);
-
-        scene = new Scene(
-                uiStack,
-                DEFAULT_SCENE_WIDTH, DEFAULT_SCENE_HEIGHT
-        );
-        scene.getStylesheets().add(this.getClass().getResource("/styles/game.css").toExternalForm());
+        rootPane = new StackPane(gameSub, uiPane, popupWrapper);
+        rootPane.setAlignment(Pos.CENTER);
+        rootPane.setPickOnBounds(false);
+        rootPane.getStylesheets().add(getClass().getResource("/styles/game.css").toExternalForm());
 
         Game game = Global.ref().getGame();
         game.addGameStateListener(new GameStateAdapterImpl());
@@ -124,9 +120,9 @@ public class GameSceneManager implements AnimationQueuer {
 
     private void initScene() {
         gameSub.setFill(Color.LIGHTGRAY);
-
-        gameSub.widthProperty().bind(scene.widthProperty());
-        gameSub.heightProperty().bind(scene.heightProperty());
+        
+        gameSub.widthProperty().bind(rootPane.widthProperty());
+        gameSub.heightProperty().bind(rootPane.heightProperty());
 
         initUi();
         initCams();
@@ -161,13 +157,18 @@ public class GameSceneManager implements AnimationQueuer {
             WatchMode mode = camMan.getWatchMode();
             camMan.watch(board3d, mode == WatchMode.ORTHOGONAL ? WatchMode.PERSPECTIVE : WatchMode.ORTHOGONAL);
         });
+        viewButton.setOnMouseEntered(event -> {
+            viewButton.setGraphic(Assets.getIcon("3d_icon_rollover"));
+        });
+        viewButton.setOnMouseExited(event -> {
+            viewButton.setGraphic(Assets.getIcon("3d_icon"));
+        });
         viewButton.setPrefSize(50, 50);
-
-        topButtonPane.setPadding(new Insets(0, 0, 25, 0));
+        
         chatToggleBox.getChildren().add(viewButton);
-        topButtonPane.setRight(chatToggleBox);
+        topButtonPane.setLeft(chatToggleBox);
 
-        uiPane.setTop(topButtonPane);
+        uiPane.setBottom(topButtonPane);
 
         playerBox.setPickOnBounds(false);
         playerBox.setPadding(new Insets(10, 0, 0, 0));
@@ -276,8 +277,8 @@ public class GameSceneManager implements AnimationQueuer {
         camMan.watch(node, PLAYER_ZOOM);
     }
 
-    public Scene getScene() {
-        return scene;
+    public Pane getSceneRoot() {
+        return rootPane;
     }
 
     public int buyPropertyPopup() {

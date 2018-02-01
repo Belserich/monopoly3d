@@ -21,7 +21,7 @@ import static de.btu.monopoly.ui.fx3d.Fx3dField.*;
 
 public class Assets
 {
-    public static final int START_MONEY = 2000;
+    public static final int START_MONEY = 1500;
     
     public static final String FONT_KABEL_FAMILY = "Kabel-Heavy";
     
@@ -38,7 +38,9 @@ public class Assets
     private static final String FONT_KABEL_PATH = "kabel.ttf";
     
     private static final String ICON_3D_PATH = "3d_rotation.png";
-    private static final String ICON_DICE_1_PATH = "dice_1.png";
+    private static final String ICON_3D_ROLLOVER_PATH = "3d_rotation_rollover.png";
+    private static final String ICON_CHAT_PATH = "chat.png";
+    private static final String ICON_CHAT_SELECTED_PATH = "chat_rollover.png";
     
     private static final String BOARD_PATH = "game_board.png";
     
@@ -117,7 +119,9 @@ public class Assets
     public static void loadFxIcons() {
         
         registeredIcons.put("3d_icon", loadIcon(ICON_3D_PATH));
-        registeredIcons.put("dice_1", loadIcon(ICON_DICE_1_PATH));
+        registeredIcons.put("3d_icon_rollover", loadIcon(ICON_3D_ROLLOVER_PATH));
+        registeredIcons.put("chat", loadIcon(ICON_CHAT_PATH));
+        registeredIcons.put("chat_rollover", loadIcon(ICON_CHAT_SELECTED_PATH));
     }
     
     public static void loadFxImages() {

@@ -16,6 +16,7 @@ import de.btu.monopoly.ui.GameSceneManager;
 import de.btu.monopoly.ui.MenuSceneManager;
 import de.btu.monopoly.util.Assets;
 import javafx.application.Application;
+import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -91,7 +92,8 @@ public class Launcher extends Application {
             client.connect("localhost");
             AuctionTable.setPlayers(players);
 
-            stage.setScene(man.getScene());
+            Scene scene = new Scene(man.getSceneRoot(), 1280, 720);
+            stage.setScene(scene);
             stage.show();
             stage.setOnCloseRequest(ev -> System.exit(0));
 

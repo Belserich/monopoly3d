@@ -4,15 +4,10 @@ import de.btu.monopoly.data.player.Player;
 import javafx.animation.Animation;
 import javafx.animation.TranslateTransition;
 import javafx.beans.property.IntegerProperty;
-import javafx.collections.ObservableList;
-import javafx.geometry.Orientation;
 import javafx.geometry.VPos;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -81,7 +76,7 @@ public class Fx3dPlayer extends Group {
     
     private class InfoPane extends HBox {
         
-        private static final double PANE_WIDTH = 190;
+        private static final double PANE_WIDTH = 230;
         private static final double PANE_HEIGHT = 60;
         
         private static final double BOX_WIDTH = PANE_HEIGHT;
@@ -95,8 +90,6 @@ public class Fx3dPlayer extends Group {
         private PhongMaterial material;
         private Color brighterColor;
         
-        private ObservableList<Node> iconList;
-        
         private InfoPane(Color color) {
             super();
             this.material = (PhongMaterial) Fx3dPlayer.this.shape.getMaterial();
@@ -106,15 +99,15 @@ public class Fx3dPlayer extends Group {
             drawCanvas();
             player.balanceProperty().addListener(prop -> drawCanvas());
             
-            FlowPane iconPane = new FlowPane(Orientation.HORIZONTAL);
-            iconList = iconPane.getChildren();
-            iconPane.setPrefSize(BOX_WIDTH, BOX_HEIGHT);
-            
-            getChildren().addAll(canv, iconPane);
+            getChildren().addAll(canv);
             setStyle("-fx-background-color: #ffffffaa; -fx-background-radius: 5");
             
             setOnMouseEntered(event -> material.setDiffuseColor(brighterColor) );
             setOnMouseExited(event -> material.setDiffuseColor(color));
+        }
+        
+        public Color brighterColor() {
+            return brighterColor;
         }
         
         private void drawCanvas() {
@@ -133,14 +126,6 @@ public class Fx3dPlayer extends Group {
             gc.fillText(player.getMoney() + "€", COLORED_SQUARE_LENGTH + 10, PANE_HEIGHT - 10);
     
             gc.save();
-        }
-        
-        public void addIcon(ImageView icon) {
-            iconList.add(icon);
-        }
-        
-        public void removeIcon(ImageView icon) {
-            iconList.remove(icon);
         }
     }
 }
