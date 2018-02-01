@@ -1,6 +1,6 @@
 # \<Protokollfenster und Chat\>
 
-**User story:**\<Chatlogik implementieren / MONOPOLY-191\>
+**User story:**\<Log-Einträge überarbeiten / MONOPOLY-189\>
 
 <\Protokollfenster verwerfen und Inhalte mit im Chat anzeigen.\>
 
