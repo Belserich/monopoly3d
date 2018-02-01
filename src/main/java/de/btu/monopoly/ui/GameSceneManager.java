@@ -21,7 +21,7 @@ import de.btu.monopoly.ui.CameraManager.WatchMode;
 import de.btu.monopoly.ui.fx3d.Fx3dGameBoard;
 import de.btu.monopoly.ui.fx3d.Fx3dPropertyField;
 import de.btu.monopoly.util.Assets;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.InputMismatchException;
 import java.util.LinkedList;
 import java.util.List;
@@ -53,13 +53,11 @@ import javafx.util.Duration;
 
 public class GameSceneManager implements AnimationQueuer {
 
-    
-    
     private static final double PLAYER_ZOOM = -1200;
     private static final int DEFAULT_ACTION_DELAY_MILLIS = 1000;
 
     private final StackPane rootPane;
-    
+
     private final SubScene gameSub;
     private final Fx3dGameBoard board3d;
 
@@ -122,7 +120,7 @@ public class GameSceneManager implements AnimationQueuer {
 
     private void initScene() {
         gameSub.setFill(Color.LIGHTGRAY);
-        
+
         gameSub.widthProperty().bind(rootPane.widthProperty());
         gameSub.heightProperty().bind(rootPane.heightProperty());
 
@@ -153,7 +151,7 @@ public class GameSceneManager implements AnimationQueuer {
 
         BorderPane botButtonPane = new BorderPane();
         botButtonPane.setPickOnBounds(false);
-        
+
         Label viewButton = new Label(null, Assets.getIcon("3d_icon"));
         viewButton.setOnMousePressed(event -> {
             WatchMode mode = camMan.getWatchMode();
@@ -161,9 +159,9 @@ public class GameSceneManager implements AnimationQueuer {
         });
         viewButton.setOnMouseEntered(event -> viewButton.setGraphic(Assets.getIcon("3d_icon_rollover")));
         viewButton.setOnMouseExited(event -> viewButton.setGraphic(Assets.getIcon("3d_icon")));
-        
+
         chatToggleBox.getChildren().add(viewButton);
-        
+
         botButtonPane.setLeft(viewButton);
 
         uiPane.setBottom(botButtonPane);
@@ -325,11 +323,11 @@ public class GameSceneManager implements AnimationQueuer {
 
         return -1;
     }
-    
+
     public Popup winnerPopup(Player winner) {
-        
+
         ImageView winnerView = new ImageView(Assets.getImage("game_won"));
-        
+
         VBox winnerBox = new VBox(winnerView);
         winnerBox.setStyle("-fx-background-color: white; -fx-background-radius: 10px;");
         return new Popup(winnerBox);
@@ -785,7 +783,7 @@ public class GameSceneManager implements AnimationQueuer {
         tradeGui.setTradeStarter(player);
 
         //Liste(n)
-        ObservableList<String> choosePlayerOptions = FXCollections.observableArrayList(tradePlayersNames());
+        ObservableList<String> choosePlayerOptions = FXCollections.observableList(tradePlayersNames());
 
         //initialisierung der benoetigten Objekte
         //GridPane(s)
@@ -869,18 +867,12 @@ public class GameSceneManager implements AnimationQueuer {
      *
      * @return
      */
-    private static ArrayList<String> tradePlayersNames() {
-
-        int playerCount = Lobby.getPlayerClient().getGame().getBoard().getActivePlayers().size();
-        ArrayList<String> tradePlayers = new ArrayList<>();
-
-        for (int i = 0; i < playerCount; i++) {
-            if (Lobby.getPlayerClient().getGame().getPlayers()[i] != Lobby.getPlayerClient().getPlayerOnClient()) {
-                tradePlayers.add(Lobby.getPlayerClient().getGame().getPlayers()[i].getName());
-            }
-        }
-
-        return tradePlayers;
+    private static List<String> tradePlayersNames() {
+        return Arrays.asList(
+                (Global.ref().getGame().getBoard().getActivePlayers()).stream()
+                        .filter(p -> p.getId() != Lobby.getPlayerClient().getPlayerOnClient().getId())
+                        .map(p -> p.getName()).toArray(String[]::new)
+        );
     }
 
     public Player getTradePartner(GuiTrade tradeGui) {
@@ -1459,10 +1451,12 @@ public class GameSceneManager implements AnimationQueuer {
     }
 
     private class GameStateAdapterImpl extends GameStateAdapter {
+
         @Override
         public void onGameEnd(Player winner) {
             safelyQueuePopup(winnerPopup(winner));
         }
+
         @Override
         public void onTurnStart(Player player) {
             safelyQueueTask(() -> watchNode(board3d.findFxEquivalent(player)));
