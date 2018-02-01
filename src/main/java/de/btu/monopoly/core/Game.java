@@ -9,7 +9,6 @@ import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.ki.HardKi;
 import de.btu.monopoly.net.chat.GUIChat;
 import de.btu.monopoly.net.client.GameClient;
-
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -233,7 +232,7 @@ public class Game {
                 CardManager cama = board.getCardManager();
                 CardField cardField = (CardField) field;
                 Card card = cama.getStack(cardField.getStackType()).cardAt(0);
-    
+
                 stateListeners.forEach(l -> l.onPlayerOnCardField(currPlayer, cardField, card));
                 cama.pullAndProcess(cardField.getStackType(), currPlayer);
                 repeatPhase = Card.Action.mustRepeatFieldPhase(card.getAction());
@@ -260,8 +259,10 @@ public class Game {
             LOGGER.fine(String.format("%s steht auf seinem eigenen Grundstück.", currPlayer.getName()));
         }
         else { // PropertyField nicht in eigenem Besitz
-            LOGGER.info(String.format("%s steht auf %s. Dieses Grundstück gehört von %s.",
-                    currPlayer.getName(), prop.getName(), other.getName()));
+            if (!Global.RUN_AS_TEST) {
+                GUIChat.getInstance().event(String.format("%s steht auf %s und muss %s€ an %s zahlen.",
+                        currPlayer.getName(), prop.getName(), prop.getRent(), other.getName()));
+            }
             PlayerService.takeAndGiveMoneyUnchecked(currPlayer, other, FieldService.getRent(prop, rollResult));
         }
     }

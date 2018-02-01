@@ -6,6 +6,7 @@
 package de.btu.monopoly;
 
 import de.btu.monopoly.core.Game;
+import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.menu.Lobby;
 import de.btu.monopoly.menu.MainMenu;
@@ -67,10 +68,10 @@ public class Launcher extends Application {
         else {
 
             Player[] players = new Player[]{
-                new Player("Patrick", 0, Assets.START_MONEY, "#4286f4ff")//,
-//                new Player("Christian", 1, Assets.START_MONEY, "#f44242ff")
+                new Player("Spieler", 0, Assets.START_MONEY, "#4286f4ff"),
+                new Player("Gegner(Hard)", 1, Assets.START_MONEY, "#f44242ff")
             };
-//            players[1].setAiLevel(2);
+            players[1].setAiLevel(2);
 
             GameClient client = new GameClient(7777, 1000);
 
