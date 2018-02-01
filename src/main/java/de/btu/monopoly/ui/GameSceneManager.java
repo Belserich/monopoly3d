@@ -38,6 +38,7 @@ import javafx.scene.Node;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
 import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -53,7 +54,7 @@ import java.util.stream.Collectors;
 
 public class GameSceneManager implements AnimationQueuer {
     
-    private static final double PLAYER_ZOOM = -1500;
+    private static final double PLAYER_ZOOM = -1200;
     private static final int DEFAULT_ACTION_DELAY_MILLIS = 1000;
 
     private final StackPane rootPane;
@@ -144,31 +145,27 @@ public class GameSceneManager implements AnimationQueuer {
         popupWrapper.setAlignment(Pos.CENTER);
         popupWrapper.setPickOnBounds(false);
 
-        VBox wholeChatBox = ChatUi.getInstance().getWholeChatBox();
+        StackPane wholeChatBox = ChatUi.getInstance().getWholeChatBox();
         HBox chatToggleBox = ChatUi.getInstance().getChatToggleBox();
 
         uiPane.setRight(wholeChatBox);
 
-        BorderPane topButtonPane = new BorderPane();
-        topButtonPane.setPickOnBounds(false);
-
+        BorderPane botButtonPane = new BorderPane();
+        botButtonPane.setPickOnBounds(false);
+        
         Label viewButton = new Label(null, Assets.getIcon("3d_icon"));
         viewButton.setOnMousePressed(event -> {
             WatchMode mode = camMan.getWatchMode();
             camMan.watch(board3d, mode == WatchMode.ORTHOGONAL ? WatchMode.PERSPECTIVE : WatchMode.ORTHOGONAL);
         });
-        viewButton.setOnMouseEntered(event -> {
-            viewButton.setGraphic(Assets.getIcon("3d_icon_rollover"));
-        });
-        viewButton.setOnMouseExited(event -> {
-            viewButton.setGraphic(Assets.getIcon("3d_icon"));
-        });
-        viewButton.setPrefSize(50, 50);
+        viewButton.setOnMouseEntered(event -> viewButton.setGraphic(Assets.getIcon("3d_icon_rollover")));
+        viewButton.setOnMouseExited(event -> viewButton.setGraphic(Assets.getIcon("3d_icon")));
         
         chatToggleBox.getChildren().add(viewButton);
-        topButtonPane.setLeft(chatToggleBox);
+        
+        botButtonPane.setLeft(viewButton);
 
-        uiPane.setBottom(topButtonPane);
+        uiPane.setBottom(botButtonPane);
 
         playerBox.setPickOnBounds(false);
         playerBox.setPadding(new Insets(10, 0, 0, 0));
@@ -326,6 +323,15 @@ public class GameSceneManager implements AnimationQueuer {
         }
 
         return -1;
+    }
+    
+    public Popup winnerPopup(Player winner) {
+        
+        ImageView winnerView = new ImageView(Assets.getImage("game_won"));
+        
+        VBox winnerBox = new VBox(winnerView);
+        winnerBox.setStyle("-fx-background-color: white; -fx-background-radius: 10px;");
+        return new Popup(winnerBox);
     }
 
     public int jailChoicePopup() {
@@ -1452,6 +1458,11 @@ public class GameSceneManager implements AnimationQueuer {
     }
 
     private class GameStateAdapterImpl extends GameStateAdapter {
+        
+        @Override
+        public void onGameEnd(Player winner) {
+            safelyQueuePopup(winnerPopup(winner));
+        }
         
         @Override
         public void onTurnStart(Player player) {

@@ -12,7 +12,6 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
@@ -41,8 +40,7 @@ public class CardDataParser {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
 
-        File file = new File(CardDataParser.class.getResource(path).getFile());
-        Document doc = builder.parse(file);
+        Document doc = builder.parse(CardDataParser.class.getResourceAsStream(path.replaceAll("%20", " ")));
         
         NodeList nList = doc.getElementsByTagName("card");
         cards = new LinkedList<>();

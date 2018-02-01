@@ -32,7 +32,7 @@ public class FieldDataParser {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         builder = factory.newDocumentBuilder();
 
-        Document doc = builder.parse(CardDataParser.class.getResourceAsStream(path.replaceAll("%20", " ")));
+        Document doc = builder.parse(FieldDataParser.class.getResourceAsStream(path.replaceAll("%20", " ")));
         LOGGER.info("Dokument erfolgreich ausgelesen!");
 
         NodeList fieldList = doc.getElementsByTagName("field");

@@ -39,10 +39,11 @@ public class Assets
     
     private static final String ICON_3D_PATH = "3d_rotation.png";
     private static final String ICON_3D_ROLLOVER_PATH = "3d_rotation_rollover.png";
-    private static final String ICON_CHAT_PATH = "chat.png";
-    private static final String ICON_CHAT_SELECTED_PATH = "chat_rollover.png";
+    private static final String ICON_PIN_PATH = "pin.png";
+    private static final String ICON_UNPIN_PATH = "unpin.png";
     
     private static final String BOARD_PATH = "game_board.png";
+    private static final String GAME_WON_PATH = "game_won.png";
     
     private static final String INFO_STREET_0_PATH = "street_0_info.png";
     private static final String INFO_STREET_1_PATH = "street_1_info.png";
@@ -93,6 +94,7 @@ public class Assets
     private static CardStack eventCards;
     
     public static void loadFonts() {
+        System.out.println("FONT");
         loadFont(FONT_KABEL_PATH);
     }
     
@@ -118,10 +120,10 @@ public class Assets
     
     public static void loadFxIcons() {
         
-        registeredIcons.put("3d_icon", loadIcon(ICON_3D_PATH));
-        registeredIcons.put("3d_icon_rollover", loadIcon(ICON_3D_ROLLOVER_PATH));
-        registeredIcons.put("chat", loadIcon(ICON_CHAT_PATH));
-        registeredIcons.put("chat_rollover", loadIcon(ICON_CHAT_SELECTED_PATH));
+        registeredIcons.put("3d_icon", loadIcon(ICON_3D_PATH, 50));
+        registeredIcons.put("3d_icon_rollover", loadIcon(ICON_3D_ROLLOVER_PATH, 50));
+        registeredIcons.put("pin_icon", loadIcon(ICON_PIN_PATH, 20));
+        registeredIcons.put("unpin_icon", loadIcon(ICON_UNPIN_PATH, 20));
     }
     
     public static void loadFxImages() {
@@ -129,6 +131,7 @@ public class Assets
         Image boardImage = loadImage(BOARD_PATH, GAMEBOARD_TEXTURE_WIDTH, GAMEBOARD_TEXTURE_HEIGHT);
         boardImage = FxHelper.replaceColorInImage(boardImage, Color.TRANSPARENT, MaterialBuilder.DEFAULT_BACKGROUND_FILL);
         registeredImages.put("game_board", boardImage);
+        registeredImages.put("game_won", loadImage(GAME_WON_PATH));
         
         registeredImages.put("street_0_info", loadImage(INFO_STREET_0_PATH, FIELD_WIDTH * 2, FIELD_DEPTH * 2));
         registeredImages.put("street_1_info", loadImage(INFO_STREET_1_PATH, FIELD_WIDTH * 2, FIELD_DEPTH * 2));
@@ -178,7 +181,7 @@ public class Assets
     }
     
     public static Font loadFont(String path) {
-        return Font.loadFont(Assets.class.getResource(FONT_DIR + path).toExternalForm(), 12);
+        return Font.loadFont(Assets.class.getResourceAsStream(FONT_DIR + path), 12);
     }
     
     private static Image loadImage(String path, double requestedWidth, double requestedHeight) {
@@ -191,6 +194,13 @@ public class Assets
     
     private static ImageView loadIcon(String path) {
         return new ImageView(ICON_DIR + path);
+    }
+    
+    private static ImageView loadIcon(String path, double newWidth) {
+        ImageView view = loadIcon(path);
+        view.setPreserveRatio(true);
+        view.setFitWidth(newWidth);
+        return view;
     }
     
     public static Image getImage(String name) {

@@ -13,14 +13,18 @@ import de.btu.monopoly.util.Assets;
 import javafx.animation.*;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
+import javafx.geometry.Insets;
+import javafx.geometry.NodeOrientation;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
@@ -35,7 +39,7 @@ import java.util.Observer;
  */
 public class ChatUi {
 
-    private final VBox wholeChatBox = new VBox();
+    private final StackPane wholeChatBox = new StackPane();
     private final HBox chatToggleBox = new HBox();
     private boolean fixedToggle = false;
 
@@ -72,7 +76,9 @@ public class ChatUi {
         scrollChat.vvalueProperty().bind(chatArea.heightProperty());
         chatArea.setMinWidth(200);
         chatArea.setMaxWidth(400);
-        wholeChatBox.getChildren().addAll(scrollChat, chatInteractionBox);
+        
+        VBox b = new VBox(scrollChat, chatInteractionBox);
+        wholeChatBox.getChildren().add(0, b);
 
         VBox.setVgrow(scrollChat, Priority.ALWAYS);
 
@@ -103,28 +109,31 @@ public class ChatUi {
 
         Timeline rtl = new Timeline(
                 new KeyFrame(Duration.millis(100),
-                        new KeyValue(wholeChatBox.prefWidthProperty(), chatMaxWidth + 10, Interpolator.LINEAR))
+                        new KeyValue(wholeChatBox.prefWidthProperty(), chatMaxWidth, Interpolator.LINEAR))
         );
 
         revFadeTrans = new ParallelTransition(rft, rtl);
     }
 
     private void initChatToggleBox() {
-        ToggleButton chatButton = new ToggleButton(null, Assets.getIcon("chat"));
+        
+        ToggleButton chatButton = new ToggleButton(null, Assets.getIcon("pin_icon"));
         chatButton.setStyle("-fx-background-color: transparent;");
-        chatButton.setOnMouseEntered(event -> {
-            chatButton.setGraphic(Assets.getIcon("chat_rollover"));
+        
+        final ImageView pinView = Assets.getIcon("pin_icon");
+        final ImageView unpinView = Assets.getIcon("unpin_icon");
+        
+        chatButton.setPadding(new Insets(5, 0, 0, 3));
+        chatButton.selectedProperty().addListener((prop, oldB, newB) -> {
+            if (newB) chatButton.setGraphic(unpinView);
+            else chatButton.setGraphic(pinView);
         });
-        chatButton.setOnMouseExited(event -> {
-            chatButton.setGraphic(Assets.getIcon("chat"));
-        });
+        
+        chatToggleBox.setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
         chatToggleBox.getChildren().addAll(chatButton);
-        chatButton.setOnMouseReleased((MouseEvent event) -> {
-            changeChatSize(chatButton.isSelected());
-            fixedToggle = chatButton.isSelected();
-        });
-        chatButton.setPrefSize(50, 50);
-
+        chatButton.setOnMouseReleased((MouseEvent event) -> fixedToggle = chatButton.isSelected());
+        
+        wholeChatBox.getChildren().add(chatToggleBox);
     }
 
     private void changeChatSize(boolean toggled) {
@@ -147,7 +156,7 @@ public class ChatUi {
         fadeTrans.playFromStart();
     }
 
-    public VBox getWholeChatBox() {
+    public StackPane getWholeChatBox() {
         return wholeChatBox;
     }
 

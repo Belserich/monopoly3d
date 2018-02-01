@@ -18,7 +18,7 @@ public class Global {
 
     public static boolean RUN_IN_CONSOLE = false;
     public static boolean RUN_AS_TEST = false;
-    public static boolean FX_3D_TEST = true;           // kurze Version (ohne Menu)
+    public static boolean FX_3D_TEST = false;           // kurze Version (ohne Menu)
     public static long randomSeed = 1;                  // setzt den RandomSeed für kurze und originale Version; 0 = zufall
 
     /**

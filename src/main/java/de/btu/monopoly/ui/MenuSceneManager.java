@@ -34,7 +34,7 @@ public class MenuSceneManager extends Stage {
         stage = this;
         
         Assets.loadFx();
-        
+    
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/menu_scene.fxml"));
         
         scene = new Scene(root);
