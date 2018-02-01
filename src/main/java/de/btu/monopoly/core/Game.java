@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Stream;
+import java.util.stream.Collectors;
 
 /**
  * @author Christian Prinz
@@ -365,28 +365,36 @@ public class Game {
     private int getFieldChoice(int choiceType) {
 
         int[] ownedFieldIds = board.getFieldManager().getOwnedPropertyFieldIds(currPlayer);
-        Stream<PropertyField> allOwned = Arrays.stream(ownedFieldIds)
+        List<PropertyField> allOwned = Arrays.stream(ownedFieldIds)
                 .mapToObj(id -> board.getFieldManager().getField(id))
-                .map(PropertyField.class::cast);
+                .map(PropertyField.class::cast).collect(Collectors.toList());
+
         String[] fieldNames;
+        FieldManager fima = Global.ref().getGame().getBoard().getFieldManager();
 
         switch (choiceType) {
             case ACTION_BUY_HOUSE:
                 fieldNames = HardKi.buyableBuildingsList(currPlayer).stream()
                         .map(p -> p.getName()).toArray(String[]::new);
+                ownedFieldIds = HardKi.buyableBuildingsList(currPlayer).stream()
+                        .mapToInt(p -> fima.getFieldId(p)).toArray();
                 break;
             case ACTION_SELL_HOUSE:
                 fieldNames = HardKi.sellableBuildingsList(currPlayer).stream()
                         .map(p -> p.getName()).toArray(String[]::new);
+                ownedFieldIds = HardKi.sellableBuildingsList(currPlayer).stream()
+                        .mapToInt(p -> fima.getFieldId(p)).toArray();
                 break;
             case ACTION_TAKE_MORTGAGE:
-                fieldNames = allOwned.filter(p -> !p.isMortgageTaken()).map(p -> p.getName()).toArray(String[]::new);
+                fieldNames = allOwned.stream().filter(p -> !p.isMortgageTaken()).map(p -> p.getName()).toArray(String[]::new);
+                ownedFieldIds = allOwned.stream().filter(p -> !p.isMortgageTaken()).mapToInt(p -> fima.getFieldId(p)).toArray();
                 break;
             case ACTION_PAY_MORTGAGE:
-                fieldNames = allOwned.filter(p -> p.isMortgageTaken()).map(p -> p.getName()).toArray(String[]::new);
+                fieldNames = allOwned.stream().filter(p -> p.isMortgageTaken()).map(p -> p.getName()).toArray(String[]::new);
+                ownedFieldIds = allOwned.stream().filter(p -> p.isMortgageTaken()).mapToInt(p -> fima.getFieldId(p)).toArray();
                 break;
             default:
-                fieldNames = allOwned.toArray(String[]::new);
+                fieldNames = allOwned.stream().toArray(String[]::new);
                 break;
         }
 
