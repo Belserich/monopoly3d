@@ -372,13 +372,6 @@ public class GameSceneManager implements AnimationListener {
         label.setFont(Font.font("Tahoma", 14));
 
         vbox.setId("greenPopup");
-//        vbox.setStyle(
-//                "-fx-background-color: #b9f6ca; "
-//                + "-fx-border-color: black; "
-//                + "-fx-effect: dropshadow(gaussian, #212121, 20, 0, 0, 0); "
-//                + "-fx-border-insets: 5; "
-//                + "-fx-border-width: 1"
-//        );
 
         box.setSpacing(10);
         box.setPrefSize(500, 200);
