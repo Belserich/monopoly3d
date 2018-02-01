@@ -6,7 +6,6 @@
 package de.btu.monopoly;
 
 import de.btu.monopoly.core.Game;
-import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.menu.Lobby;
 import de.btu.monopoly.menu.MainMenu;
@@ -16,13 +15,12 @@ import de.btu.monopoly.net.server.GameServer;
 import de.btu.monopoly.ui.GameSceneManager;
 import de.btu.monopoly.ui.MenuSceneManager;
 import de.btu.monopoly.util.Assets;
-import javafx.application.Application;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
-
 import java.io.IOException;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
 /**
  * @author Markus Uhlig (markus.uhlig@b-tu.de)
@@ -68,10 +66,19 @@ public class Launcher extends Application {
         else {
 
             Player[] players = new Player[]{
-                new Player("Spieler", 0, Assets.START_MONEY, "#4286f4ff"),
-                new Player("Gegner(Hard)", 1, Assets.START_MONEY, "#f44242ff")
+                new Player("Looser", 0, 0, "#4286f4ff"),
+                new Player("Hartschmud", 1, Assets.START_MONEY, "#f44242ff"),
+                new Player("Claus", 2, Assets.START_MONEY, "#00c853"),
+                new Player("Markus", 3, Assets.START_MONEY, "#ffd600"),
+                new Player("Mathias", 4, Assets.START_MONEY, "#aa00ff"),
+                new Player("Achilles", 5, Assets.START_MONEY, "#6d4c41")
             };
+
             players[1].setAiLevel(2);
+            players[2].setAiLevel(2);
+            players[3].setAiLevel(2);
+            players[4].setAiLevel(2);
+            players[5].setAiLevel(2);
 
             GameClient client = new GameClient(7777, 1000);
 
