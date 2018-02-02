@@ -66,19 +66,19 @@ public class Launcher extends Application {
         else {
 
             Player[] players = new Player[]{
-                new Player("Looser", 0, 0, "#4286f4ff"),
-                new Player("Hartschmud", 1, Assets.START_MONEY, "#f44242ff"),
-                new Player("Claus", 2, Assets.START_MONEY, "#00c853"),
-                new Player("Markus", 3, Assets.START_MONEY, "#ffd600"),
-                new Player("Mathias", 4, Assets.START_MONEY, "#aa00ff"),
-                new Player("Achilles", 5, Assets.START_MONEY, "#6d4c41")
+                new Player("Looser", 0, Assets.START_MONEY, "#4286f4ff"),
+                new Player("Achilles", 1, Assets.START_MONEY, "#6d4c41")
             };
+            //                new Player("Hartschmud", 5, Assets.START_MONEY, "#f44242ff"),
+            //                new Player("Claus", 2, Assets.START_MONEY, "#00c853"),
+            //                new Player("Markus", 3, Assets.START_MONEY, "#ffd600"),
+            //                new Player("Mathias", 4, Assets.START_MONEY, "#aa00ff"),
 
             players[1].setAiLevel(2);
-            players[2].setAiLevel(2);
-            players[3].setAiLevel(2);
-            players[4].setAiLevel(2);
-            players[5].setAiLevel(2);
+//            players[2].setAiLevel(2);
+//            players[3].setAiLevel(2);
+//            players[4].setAiLevel(2);
+//            players[5].setAiLevel(2);
 
             GameClient client = new GameClient(7777, 1000);
 

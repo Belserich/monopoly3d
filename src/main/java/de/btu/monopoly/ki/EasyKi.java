@@ -79,7 +79,7 @@ public class EasyKi {
      * @param maximalGebot bis zu welcher Grenze (in %) bietet die KI fuer die Strasse mit
      */
     public static void processBetSequence(Player ki, int maximalGebot) {
-        IOService.sleep(2000);
+        IOService.sleep(500);
         int originPrice = AuctionService.getAuc().getProperty().getPrice();
         int actualPrice = AuctionService.getHighestBid();
         double percentage = (double) actualPrice / ((double) originPrice / 100);
@@ -95,9 +95,11 @@ public class EasyKi {
             // wenn sie genuegend Geld hat und noch nicht maximalGebot% des Strassenpreises erreicht sind
             if (PlayerService.checkLiquidity(ki, newPrice) && percentage < maximalGebot) {
                 AuctionService.setBid(ki.getId(), newPrice);
+                ChatAi.continueAuctionMessage(ki, newPrice);
             }
             else {
                 AuctionService.playerExit(ki.getId());
+                ChatAi.exitAuctionMessage(ki);
             }
         }
     }

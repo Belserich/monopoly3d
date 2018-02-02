@@ -20,6 +20,49 @@ public class ChatAi {
 
     private static final Logger LOGGER = Logger.getLogger(HardKi.class.getCanonicalName());
 
+    static void continueAuctionMessage(Player ki, int newPrice) {
+        Random ran = new Random();
+        String mess = "";
+
+        switch (ran.nextInt(4) + 1) {
+            case 1:
+                mess += "Da geht noch was! Und zwar " + newPrice + "€";
+                break;
+            case 2:
+                mess += "Ich setz mal " + newPrice + "€";
+                break;
+            case 3:
+                mess += "Ich biete " + newPrice + "€";
+                break;
+            case 4:
+                mess += newPrice + "€";
+                break;
+        }
+        if (!Global.RUN_AS_TEST) {
+            GUIChat.getInstance().msgLocal(ki, mess);
+        }
+    }
+
+    static void exitAuctionMessage(Player ki) {
+        Random ran = new Random();
+        String mess = "";
+
+        switch (ran.nextInt(3) + 1) {
+            case 1:
+                mess += "Puh! Da bin ich raus!";
+                break;
+            case 2:
+                mess += "Mehr kann ich nicht erübrigen";
+                break;
+            case 3:
+                mess += "Langsam wirds mir zu teuer";
+                break;
+        }
+        if (!Global.RUN_AS_TEST) {
+            GUIChat.getInstance().msgLocal(ki, mess);
+        }
+    }
+
     static void tradeResultMessage(Player ki, int balance, int MINIMUM_ACCEPT_AMOUNT) {
         Random ran = new Random();
         String mess = "";

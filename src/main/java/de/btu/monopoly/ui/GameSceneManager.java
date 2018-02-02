@@ -60,18 +60,11 @@ public class GameSceneManager implements AnimationQueuer {
     private List<Animation> visualQueue;
     private BooleanProperty isPlayingAnim;
 
-    private Label auctionLabel = new Label("0 €");
-    private Label hoechstgebotLabel = new Label("Höchstgebot:");
-    private JFXTextField bidTextField = new JFXTextField();
-
     //Handelsspezifisch
     private boolean tradeOfferIsCreated = false;
     private boolean tradeAnswerIsGiven = false;
     private boolean tradeAnswer = false;
     private char currency = '€';
-
-    //Auktion
-    private Popup aucPopup;
 
     public GameSceneManager(GameBoard board) {
         this.board3d = new Fx3dGameBoard(board, this);
@@ -249,7 +242,7 @@ public class GameSceneManager implements AnimationQueuer {
         Platform.runLater(() -> queuePopup(pop));
     }
 
-    private void destroyPopup(Popup pop) {
+    void destroyPopup(Popup pop) {
         Platform.runLater(() -> popupWrapper.getChildren().remove(pop.pane));
     }
 
@@ -521,111 +514,16 @@ public class GameSceneManager implements AnimationQueuer {
         return 0;
     }
 
-    public void auctionPopup() {
-
-        //initialisierung der benoetigten Objekte
-        HBox auctionHBox = new HBox();
-        VBox auctionVBox = new VBox();
-        GridPane auctionGP = new GridPane();
-        Label gebotsLabel = new Label("Dein Gebot für \n" + AuctionService.getPropertyString() + ":");
-
-        JFXButton bidButton = new JFXButton("Bieten");
-        JFXButton exitButton = new JFXButton("Aussteigen");
-
-        auctionGP.setAlignment(Pos.CENTER);
-        hoechstgebotLabel.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
-
-        //Eventhandler(n)
-        EventHandler bid = (EventHandler<ActionEvent>) (ActionEvent event) -> {
-            try {
-                AuctionService.setBid(Global.ref().getClient().getPlayerOnClient().getId(), Integer.parseInt(bidTextField.getText()));
-                bidTextField.setText("");
-            } catch (NumberFormatException e) {
-                bidTextField.setText("");
-                bidTextField.setPromptText("Nur Zahlen eingeben!");
-                LOGGER.log(Level.WARNING, "FEHLER in auctionPopup: {0}", e);
-            }
-        };
-
-        //Einstellung der benoetigten Objekte
-        auctionGP.setAlignment(Pos.CENTER);
-        auctionGP.add(auctionHBox, 0, 0);
-        hoechstgebotLabel.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
-        gebotsLabel.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
-        bidTextField.setAlignment(Pos.CENTER);
-
-        bidButton.setBackground(new Background(new BackgroundFill(Color.web("#e1f5fe"), CornerRadii.EMPTY, Insets.EMPTY)));
-        exitButton.setBackground(new Background(new BackgroundFill(Color.web("#e1f5fe"), CornerRadii.EMPTY, Insets.EMPTY)));
-
-        bidTextField.setPromptText(" ");
-
-        auctionHBox.setId("greenPopup");
-        auctionHBox.setSpacing(10);
-        auctionHBox.setPrefSize(700, 200);
-        auctionHBox.setCenterShape(true);
-        auctionVBox.getChildren().addAll(bidButton, exitButton);
-        auctionVBox.setSpacing(10);
-        auctionVBox.setAlignment(Pos.CENTER);
-        auctionHBox.getChildren().addAll(hoechstgebotLabel, auctionLabel, gebotsLabel, bidTextField, auctionVBox);
-        auctionHBox.setAlignment(Pos.CENTER);
-
-        Popup pop = new Popup(auctionGP);
-        aucPopup = pop;
+    public void beginAuctionPopup() {
+        Popup pop = new Popup(AuctionUI.getInstance().getGridPane());
+        AuctionUI.getInstance().setPopup(pop);
         safelyQueuePopup(pop);
-
-        //Verknuepfung mit EventHandler(n)
-        bidTextField.setOnAction(bid);
-        bidButton.setOnAction(bid);
-        exitButton.setOnAction((ActionEvent event) -> {
-            AuctionService.playerExit(Global.ref().getClient().getPlayerOnClient().getId());
-        });
     }
 
-    public void updateAuctionPopup(boolean stillActive, boolean noBidder) {
-        Platform.runLater(() -> {
-            auctionLabel.setText(String.valueOf(AuctionService.getHighestBid()) + " €");
-            hoechstgebotLabel.setText("Höchstgebot von \n" + AuctionService.getPlayer(AuctionService.getHighestBidder()).getName() + ":");
-        });
-
-        IOService.sleep(500);
-        if (!stillActive) {
-
-            // TODO
-            GridPane resetGridPane = new GridPane();
-            VBox resetBox = new VBox();
-            Label endLabel = new Label();
-
-            resetGridPane.setAlignment(Pos.CENTER);
-            resetGridPane.add(resetBox, 0, 0);
-
-            if (noBidder) {
-                endLabel.setText("Das Grundstück " + AuctionService.getPropertyString() + " wurde nicht verkauft!");
-            }
-            else {
-                endLabel.setText(Global.ref().getGame().getPlayers()[AuctionService.getHighestBidder()].getName()
-                        + " hat die Auktion gewonnen und muss " + AuctionService.getHighestBid() + "€ für das Grundstück "
-                        + AuctionService.getPropertyString() + " zahlen!");
-            }
-
-            endLabel.setFont(Font.font("Tahoma", FontWeight.BOLD, 10));
-            resetBox.setId("greenPopup");
-            resetBox.setSpacing(10);
-            resetBox.setPrefSize(550, 150);
-            resetBox.setCenterShape(true);
-            resetBox.getChildren().addAll(endLabel);
-            resetBox.setAlignment(Pos.CENTER);
-
-            destroyPopup(aucPopup);
-            Popup pop = new Popup(resetGridPane, Duration.seconds(3));
-            safelyQueuePopup(pop);
-
-            Platform.runLater(() -> auctionLabel.setText("0 €"));
-
-        }
-    }
-
-    public void bidTextFieldFocus() {
-        Platform.runLater(() -> bidTextField.requestFocus());
+    public void endAuctionPopup(Popup oldOne, GridPane newOne) {
+        destroyPopup(oldOne);
+        Popup pop = new Popup(newOne, Duration.seconds(4));
+        safelyQueuePopup(pop);
     }
 
     public void showCard(Card card, CardStack.Type type) {

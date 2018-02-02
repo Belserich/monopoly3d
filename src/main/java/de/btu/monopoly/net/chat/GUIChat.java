@@ -37,7 +37,7 @@ public class GUIChat extends Chat {
     // Vorder- und Hintergrundfarben der Eventnachrichten
     private final String EVENT_MESSAGE_F_COLOR;     //see @ constructor
     private final GameClient client;                //see @ constructor
-    private final Notifier notifier;
+    private final ChatNotifier notifier;
 
     // Styles
     String eventMsg = "-fx-background-color: lightgray;\n"
@@ -62,7 +62,7 @@ public class GUIChat extends Chat {
         Global global = Global.ref();
         client = global.getClient();
         client.addExternalListener(new ChatListener());
-        notifier = new Notifier();
+        notifier = new ChatNotifier();
         // </editor-fold>
     }
 
@@ -202,7 +202,7 @@ public class GUIChat extends Chat {
         //</editor-fold>
     }
 
-    private class Notifier extends Observable {
+    public class ChatNotifier extends Observable {
         // <editor-fold defaultstate="collapsed" desc="Notifier --ChatMessage--> Observers">
 
         private void notify(Text[] message) {

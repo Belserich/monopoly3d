@@ -9,10 +9,12 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
 import de.btu.monopoly.Global;
 import de.btu.monopoly.net.chat.GUIChat;
+import de.btu.monopoly.net.chat.GUIChat.ChatNotifier;
 import de.btu.monopoly.util.Assets;
+import java.util.Observable;
+import java.util.Observer;
 import javafx.animation.*;
 import javafx.application.Platform;
-import javafx.concurrent.Task;
 import javafx.geometry.Insets;
 import javafx.geometry.NodeOrientation;
 import javafx.scene.control.ScrollPane;
@@ -29,9 +31,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.util.Duration;
-
-import java.util.Observable;
-import java.util.Observer;
 
 /**
  *
@@ -76,7 +75,7 @@ public class ChatUi {
         scrollChat.vvalueProperty().bind(chatArea.heightProperty());
         chatArea.setMinWidth(200);
         chatArea.setMaxWidth(400);
-        
+
         VBox b = new VBox(scrollChat, chatInteractionBox);
         wholeChatBox.getChildren().add(0, b);
 
@@ -116,23 +115,27 @@ public class ChatUi {
     }
 
     private void initChatToggleBox() {
-        
+
         ToggleButton chatButton = new ToggleButton(null, Assets.getIcon("pin_icon"));
         chatButton.setStyle("-fx-background-color: transparent;");
-        
+
         final ImageView pinView = Assets.getIcon("pin_icon");
         final ImageView unpinView = Assets.getIcon("unpin_icon");
-        
+
         chatButton.setPadding(new Insets(5, 0, 0, 3));
         chatButton.selectedProperty().addListener((prop, oldB, newB) -> {
-            if (newB) chatButton.setGraphic(unpinView);
-            else chatButton.setGraphic(pinView);
+            if (newB) {
+                chatButton.setGraphic(unpinView);
+            }
+            else {
+                chatButton.setGraphic(pinView);
+            }
         });
-        
+
         chatToggleBox.setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
         chatToggleBox.getChildren().addAll(chatButton);
         chatButton.setOnMouseReleased((MouseEvent event) -> fixedToggle = chatButton.isSelected());
-        
+
         wholeChatBox.getChildren().add(chatToggleBox);
     }
 
@@ -200,17 +203,12 @@ public class ChatUi {
 
         @Override
         public void update(Observable o, Object arg) {
-            Task task = new Task() {
-                @Override
-                protected Object call() throws Exception {
-                    for (int i = 0; i < 5; i++) {
-                        Text[] message = (Text[]) arg;
-                        area.getChildren().addAll(message[0], message[1]);
-                    }
-                    return null;
-                }
-            };
-            Platform.runLater(task);
+            if (o instanceof ChatNotifier) {
+                Platform.runLater(() -> {
+                    Text[] message = (Text[]) arg;
+                    area.getChildren().addAll(message[0], message[1]);
+                });
+            }
         }
 
     }
