@@ -11,15 +11,16 @@ import de.btu.monopoly.Global;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.net.data.ChatMessage;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.logging.Logger;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
-import javafx.scene.text.Text;
 
 /**
  *
@@ -111,7 +112,7 @@ public class GUIChat extends Chat {
             ChatMessage mess = new ChatMessage();
             mess.setMessage(eventMessage);
             mess.setfColor(EVENT_MESSAGE_F_COLOR);
-            mess.setAutor(">>>");
+            mess.setAutor(">>> ");
             mess.setIsEvent(true);
 
             addMessage(mess);
