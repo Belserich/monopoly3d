@@ -6,7 +6,6 @@
 package de.btu.monopoly;
 
 import de.btu.monopoly.core.Game;
-import de.btu.monopoly.data.field.PropertyField;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.menu.Lobby;
 import de.btu.monopoly.menu.MainMenu;
@@ -60,7 +59,8 @@ public class Launcher extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-
+        stage.setTitle("MONOPOLY 1.0");
+        
         if (!Global.FX_3D_TEST) {
             MenuSceneManager menuMan = new MenuSceneManager();
             Global.ref().setMenuSceneManager(menuMan);
@@ -68,10 +68,19 @@ public class Launcher extends Application {
         else {
 
             Player[] players = new Player[]{
-                new Player("Spieler", 0, Assets.START_MONEY, "#4286f4ff"),
-                new Player("Gegner(Hard)", 1, Assets.START_MONEY, "#f44242ff")
+                    new Player("SWP-Monopoly", 0, Assets.START_MONEY, "#43a047"),
+                    new Player("Mathias", 1, Assets.START_MONEY, "#1976d2"),
+                    new Player("Scrum", 2, Assets.START_MONEY, "#ad1457"),
+                    new Player("Reflexionen", 3, Assets.START_MONEY, "#ffeb3b"),
+                    new Player("Zeitdruck", 4, Assets.START_MONEY, "#6a1b9a"),
+                    new Player("Schweinehund", 5, Assets.START_MONEY, "#b71c1c")
             };
-            players[1].setAiLevel(2);
+            players[0].setAiLevel(2);
+            players[1].setAiLevel(1);
+            players[2].setAiLevel(1);
+            players[3].setAiLevel(1);
+            players[4].setAiLevel(1);
+            players[5].setAiLevel(1);
 
             GameClient client = new GameClient(7777, 1000);
 

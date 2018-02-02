@@ -26,12 +26,10 @@ public class Fx3dPropertyField extends Fx3dField {
     
     private final Pane infoPane;
     
-    private final AnimationQueuer queuer;
     private final RotateTransition turnTrans;
     
     public Fx3dPropertyField(PropertyField field, FieldTypes type, AnimationQueuer queuer) {
         super(field, type, Assets.getImage(type.name().toLowerCase()));
-        this.queuer = queuer;
         
         infoPane = InfoPaneBuilder.buildFor(field, type);
     
@@ -44,7 +42,7 @@ public class Fx3dPropertyField extends Fx3dField {
         );
     
         field.ownerProperty().addListener((prop, oldP, newP) -> {
-            Color newColor = Color.web(newP.getColor());
+            Color newColor = Color.web(newP.getColor()).brighter().brighter();
             Platform.runLater(() -> queuer.queueAnimation(pauseAndChangeColor(newColor)));
         });
     }

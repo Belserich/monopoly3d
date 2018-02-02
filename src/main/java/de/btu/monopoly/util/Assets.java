@@ -94,7 +94,6 @@ public class Assets
     private static CardStack eventCards;
     
     public static void loadFonts() {
-        System.out.println("FONT");
         loadFont(FONT_KABEL_PATH);
     }
     

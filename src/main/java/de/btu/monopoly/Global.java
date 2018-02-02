@@ -6,6 +6,7 @@ import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.ui.GameSceneManager;
 import de.btu.monopoly.ui.GuiTrade;
 import de.btu.monopoly.ui.MenuSceneManager;
+
 import java.util.Random;
 
 /**
@@ -17,8 +18,8 @@ public class Global {
 
     public static boolean RUN_IN_CONSOLE = false;
     public static boolean RUN_AS_TEST = false;
-    public static boolean FX_3D_TEST = false;           // kurze Version (ohne Menu)
-    public static long randomSeed = 1;                  // setzt den RandomSeed für kurze und originale Version; 0 = zufall
+    public static boolean FX_3D_TEST = true;           // kurze Version (ohne Menu)
+    public static long randomSeed = 42;                  // setzt den RandomSeed für kurze und originale Version; 0 = zufall
 
     /**
      * Singleton-Instance

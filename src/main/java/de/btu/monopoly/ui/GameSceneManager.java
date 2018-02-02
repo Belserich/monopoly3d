@@ -19,14 +19,14 @@ import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.menu.Lobby;
 import de.btu.monopoly.ui.CameraManager.WatchMode;
 import de.btu.monopoly.ui.fx3d.Fx3dGameBoard;
+import de.btu.monopoly.ui.fx3d.Fx3dPlayer;
 import de.btu.monopoly.ui.fx3d.Fx3dPropertyField;
 import de.btu.monopoly.util.Assets;
-import java.util.ArrayList;
-import java.util.InputMismatchException;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.stream.Collectors;
-import javafx.animation.*;
+import de.btu.monopoly.util.TextUtils;
+import javafx.animation.Animation;
+import javafx.animation.PauseTransition;
+import javafx.animation.SequentialTransition;
+import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -49,7 +49,15 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
+
+import java.util.ArrayList;
+import java.util.InputMismatchException;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class GameSceneManager implements AnimationQueuer {
 
@@ -131,26 +139,21 @@ public class GameSceneManager implements AnimationQueuer {
     }
 
     private void initUi() {
-
-        cardHandle.setPadding(new Insets(20, 0, 0, 20));
-        cardHandle.setPickOnBounds(false);
-
-        board3d.getFields()
-                .filter(Fx3dPropertyField.class::isInstance)
-                .map(Fx3dPropertyField.class::cast)
-                .forEach(prop -> {
-                    prop.addEventHandler(MouseEvent.MOUSE_ENTERED, event -> cardHandle.getChildren().add(0, prop.infoPane()));
-                    prop.addEventHandler(MouseEvent.MOUSE_EXITED, event -> cardHandle.getChildren().remove(prop.infoPane()));
-                });
-
+    
+        uiPane.setPadding(new Insets(5, 5, 5, 5));
+        uiPane.setPickOnBounds(false);
+        
         popupWrapper.setAlignment(Pos.CENTER);
         popupWrapper.setPickOnBounds(false);
-
+        
         StackPane wholeChatBox = ChatUi.getInstance().getWholeChatBox();
-        HBox chatToggleBox = ChatUi.getInstance().getChatToggleBox();
-
+        wholeChatBox.setPickOnBounds(false);
+    
+        HBox toolBox = ChatUi.getInstance().getChatToggleBox();
+        toolBox.setPickOnBounds(false);
+    
         uiPane.setRight(wholeChatBox);
-
+    
         BorderPane botButtonPane = new BorderPane();
         botButtonPane.setPickOnBounds(false);
         
@@ -161,24 +164,29 @@ public class GameSceneManager implements AnimationQueuer {
         });
         viewButton.setOnMouseEntered(event -> viewButton.setGraphic(Assets.getIcon("3d_icon_rollover")));
         viewButton.setOnMouseExited(event -> viewButton.setGraphic(Assets.getIcon("3d_icon")));
-        
-        chatToggleBox.getChildren().add(viewButton);
-        
+    
         botButtonPane.setLeft(viewButton);
-
         uiPane.setBottom(botButtonPane);
-
+    
         playerBox.setPickOnBounds(false);
         playerBox.setPadding(new Insets(10, 0, 0, 0));
         playerBox.setSpacing(10);
         ObservableList<Node> children = playerBox.getChildren();
         board3d.getPlayers().forEach(p -> children.add(p.infoPane()));
-
+    
         gameInfoBox.setPickOnBounds(false);
         uiPane.setLeft(gameInfoBox);
-
-        uiPane.setPadding(new Insets(5, 5, 5, 5));
-        uiPane.setPickOnBounds(false);
+        
+        cardHandle.setPadding(new Insets(20, 0, 0, 20));
+        cardHandle.setPickOnBounds(false);
+        
+        board3d.getFields()
+                .filter(Fx3dPropertyField.class::isInstance)
+                .map(Fx3dPropertyField.class::cast)
+                .forEach(prop -> {
+                    prop.addEventHandler(MouseEvent.MOUSE_ENTERED, event -> cardHandle.getChildren().add(0, prop.infoPane()));
+                    prop.addEventHandler(MouseEvent.MOUSE_EXITED, event -> cardHandle.getChildren().remove(prop.infoPane()));
+                });
     }
 
     private void initCams() {
@@ -190,33 +198,29 @@ public class GameSceneManager implements AnimationQueuer {
                 -> fxPlayer.setOnMouseReleased(event -> watchNode(fxPlayer)));
     }
 
-    private void changeFirstPlayer(Player oldFirst) {
+    private void changeFirstPlayer() {
 
         ObservableList<Node> children = playerBox.getChildren();
-        Pane firstChild = (Pane) children.get(oldFirst.getId());
+        Pane firstChild = (Pane) children.get(0);
 
         int size = children.size();
         double newY = firstChild.getTranslateY() + size * firstChild.getHeight() + size * playerBox.getSpacing();
 
         TranslateTransition tt1 = new TranslateTransition(Duration.millis(200), firstChild);
         tt1.setByX(-firstChild.getWidth());
-        tt1.setOnFinished(inv -> firstChild.setTranslateY(newY));
+        tt1.setOnFinished(inv -> {
+            children.remove(0);
+            firstChild.setTranslateY(newY);
+        });
 
-        ParallelTransition par = new ParallelTransition();
-        ObservableList<Animation> parChildren = par.getChildren();
-        children.stream()
-                .map(Pane.class::cast)
-                .forEach(pane -> {
-                    TranslateTransition tt2 = new TranslateTransition(Duration.millis(200), pane);
-                    tt2.setInterpolator(Interpolator.EASE_OUT);
-                    tt2.setByY(-(firstChild.getHeight() + playerBox.getSpacing()));
-                    parChildren.add(tt2);
-                });
+        TranslateTransition tt2 = new TranslateTransition(Duration.millis(200), firstChild);
+        tt2.setByX(firstChild.getWidth());
+        tt2.setOnFinished(inv -> {
+            firstChild.setTranslateY(0);
+            children.add(firstChild);
+        });
 
-        TranslateTransition tt3 = new TranslateTransition(Duration.millis(200), firstChild);
-        tt3.setByX(firstChild.getWidth());
-
-        SequentialTransition st = new SequentialTransition(tt1, par, tt3);
+        SequentialTransition st = new SequentialTransition(tt1, tt2);
         st.play();
     }
 
@@ -270,6 +274,35 @@ public class GameSceneManager implements AnimationQueuer {
     private void destroyPopup(Popup pop) {
         Platform.runLater(() -> popupWrapper.getChildren().remove(pop.pane));
     }
+    
+    @Override
+    public void queueAnimation(Animation anim) {
+        visualQueue.add(anim);
+        tryNextAnim();
+    }
+    
+    private void tryNextAnim() {
+        if (!visualQueue.isEmpty() && !isPlayingAnim.get()) {
+            nextAnim();
+        }
+    }
+    
+    private void nextAnim() {
+        
+        isPlayingAnim.set(true);
+        Animation anim = visualQueue.remove(0);
+        EventHandler<ActionEvent> oldHandler = anim.getOnFinished();
+        anim.setOnFinished(event -> finishAnim(oldHandler, event));
+        anim.play();
+    }
+    
+    private void finishAnim(EventHandler<ActionEvent> handler, ActionEvent event) {
+        
+        if (handler != null) handler.handle(event);
+        
+        if (!visualQueue.isEmpty()) nextAnim();
+        else isPlayingAnim.set(false);
+    }
 
     private void watchNode(Node node) {
         camMan.watch(node, PLAYER_ZOOM);
@@ -289,8 +322,11 @@ public class GameSceneManager implements AnimationQueuer {
         // scroll.setCenterShape(true);
         gridpane.add(box, 0, 0);
         // box.setContent(box);
-
-        Label label = new Label("Möchtest du die " + Lobby.getPlayerClient().getGame().getBoard().getFields()[Lobby.getPlayerClient().getPlayerOnClient().getPosition()].getName() + " kaufen?");
+    
+        System.out.println("HIAHJIA");
+        String fieldname = TextUtils.format(Lobby.getPlayerClient().getGame().getBoard().getFields()[Lobby.getPlayerClient().getPlayerOnClient().getPosition()].getName());
+        Label label = new Label("Möchtest du " + fieldname + " kaufen?");
+        System.out.println("STATIC");
 
         JFXButton buyButton = new JFXButton();
         JFXButton dontBuyButton = new JFXButton();
@@ -326,13 +362,21 @@ public class GameSceneManager implements AnimationQueuer {
         return -1;
     }
     
-    public Popup winnerPopup(Player winner) {
+    private Popup winnerPopup(Player winner) {
         
         ImageView winnerView = new ImageView(Assets.getImage("game_won"));
+        Text winnerText = new Text(String.format("%s hat das Spiel gewonnen.\n Herzlichen Glückwunsch!", winner.getName()));
+        winnerText.setFont(Font.font("Tahoma", 23));
+        winnerText.setTextAlignment(TextAlignment.CENTER);
         
-        VBox winnerBox = new VBox(winnerView);
-        winnerBox.setStyle("-fx-background-color: white; -fx-background-radius: 10px;");
-        return new Popup(winnerBox);
+        VBox winnerBox = new VBox(winnerView, winnerText);
+        winnerBox.setPadding(new Insets(20, 20, 20, 20));
+        winnerBox.setAlignment(Pos.CENTER);
+        winnerBox.setStyle("-fx-background-color: #d50000aa; -fx-background-radius: 10px;");
+        
+        HBox wrapper = new HBox(winnerBox);
+        wrapper.setAlignment(Pos.CENTER);
+        return new Popup(wrapper);
     }
 
     public int jailChoicePopup() {
@@ -480,6 +524,10 @@ public class GameSceneManager implements AnimationQueuer {
 
     public int askForFieldPopup(String fieldNames[]) {
 
+        for (int i = 0; i < fieldNames.length; i++) {
+            fieldNames[i] = TextUtils.format(fieldNames[i]);
+        }
+        
         GridPane gridPane = new GridPane();
         VBox box = new VBox();
 
@@ -522,6 +570,7 @@ public class GameSceneManager implements AnimationQueuer {
                 @Override
                 protected Object call() throws Exception {
                     fieldBox.setPromptText("Du besitzt keine Straßen!");
+                    destroyPopup(pop);
                     return null;
                 }
             };
@@ -605,11 +654,8 @@ public class GameSceneManager implements AnimationQueuer {
         //Verknuepfung mit EventHandler(n)
         bidTextField.setOnAction(bid);
         bidButton.setOnAction(bid);
-        exitButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                AuctionService.playerExit(Lobby.getPlayerClient().getPlayerOnClient().getId());
-            }
+        exitButton.setOnAction(event -> {
+            AuctionService.playerExit(Lobby.getPlayerClient().getPlayerOnClient().getId());
         });
     }
 
@@ -664,52 +710,32 @@ public class GameSceneManager implements AnimationQueuer {
 
     }
 
-    public void showCard(Card card, CardStack.Type type) {
-
-        if (Lobby.getPlayerClient().getGame() != null) {
-            if (Lobby.getPlayerClient().getGame().getBoard() != null) {
-
-                GridPane kartPane = new GridPane();
-                HBox box = new HBox();
-
-                kartPane.add(box, 0, 0);
-                kartPane.setAlignment(Pos.CENTER);
-
-                Label text = new Label(card.getText());
-                text.setPadding(new Insets(20, 20, 20, 20));
-                text.setWrapText(true);
-                box.setPrefSize(250, 150);
-                box.getChildren().add(text);
-                box.setAlignment(Pos.CENTER);
-
-                String communityStyle = "-fx-background-color: #fff59d;\n"
-                        + "    -fx-border-color: #ff7043;\n"
-                        + "    -fx-border-insets: 5;\n"
-                        + "    -fx-border-width: 1;\n"
-                        + "    -fx-effect: dropshadow(gaussian,#757575, 20, 0, 0, 0);\n";
-
-                String eventStyle = "-fx-background-color: #ff8a65;\n"
-                        + "    -fx-border-color: #ffd54f;\n"
-                        + "    -fx-border-insets: 5;\n"
-                        + "    -fx-border-width: 1;\n"
-                        + "    -fx-effect: dropshadow(gaussian, #757575, 20, 0, 0, 0);\n";
-
-                Player[] players = Lobby.getPlayerClient().getGame().getPlayers();
-                Field[] fields = Lobby.getPlayerClient().getGame().getBoard().getFieldManager().getFields();
-
-                if (type == CardStack.Type.COMMUNITY) {
-                    //Gemeinschaft
-                    box.setId("yellowPopup");
-                }
-                else {
-                    //Ereignis
-                    box.setId("orangePopup");
-                }
-
-                Popup pop = new Popup(kartPane, Duration.seconds(3));
-                displayPopup(pop);
-            }
+    private void showCard(Card card, CardStack.Type type) {
+    
+        GridPane kartPane = new GridPane();
+        HBox box = new HBox();
+    
+        kartPane.add(box, 0, 0);
+        kartPane.setAlignment(Pos.CENTER);
+    
+        Label text = new Label(card.getText());
+        text.setPadding(new Insets(20, 20, 20, 20));
+        text.setWrapText(true);
+        box.setPrefSize(250, 150);
+        box.getChildren().add(text);
+        box.setAlignment(Pos.CENTER);
+    
+        if (type == CardStack.Type.COMMUNITY) {
+            //Gemeinschaft
+            box.setId("yellowPopup");
         }
+        else {
+            //Ereignis
+            box.setId("orangePopup");
+        }
+    
+        Popup pop = new Popup(kartPane, Duration.seconds(4));
+        displayPopup(pop);
     }
 
     public void bidTextFieldFocus() {
@@ -721,60 +747,6 @@ public class GameSceneManager implements AnimationQueuer {
             }
         };
         Platform.runLater(task);
-    }
-
-    @Override
-    public void queueAnimation(Animation anim) {
-        visualQueue.add(anim);
-        tryNextAnim();
-    }
-
-    public void safelyQueueAnimation(Animation anim) {
-        Platform.runLater(() -> queueAnimation(anim));
-    }
-
-    private void tryNextAnim() {
-        if (!visualQueue.isEmpty() && !isPlayingAnim.get()) {
-            nextAnim();
-        }
-    }
-
-    private void nextAnim() {
-
-        isPlayingAnim.set(true);
-        Animation anim = visualQueue.remove(0);
-        EventHandler<ActionEvent> oldHandler = anim.getOnFinished();
-        anim.setOnFinished(event -> finishAnim(oldHandler, event));
-        anim.play();
-    }
-
-    private void finishAnim(EventHandler<ActionEvent> handler, ActionEvent event) {
-
-        if (handler != null) {
-            handler.handle(event);
-        }
-
-        if (!visualQueue.isEmpty()) {
-            nextAnim();
-        }
-        else {
-            isPlayingAnim.set(false);
-        }
-    }
-
-    class Popup {
-
-        private Pane pane;
-        private Duration duration;
-
-        private Popup(Pane pane, Duration duration) {
-            this.pane = pane;
-            this.duration = duration;
-        }
-
-        private Popup(Pane pane) {
-            this(pane, Duration.INDEFINITE);
-        }
     }
 
     /*
@@ -1457,12 +1429,44 @@ public class GameSceneManager implements AnimationQueuer {
         Popup pop = new Popup(tradeAnswerGridPane, Duration.millis(2000));
         Global.ref().getGameSceneManager().safelyQueuePopup(pop);
     }
+    
+    class Popup {
+        
+        private Pane pane;
+        private Duration duration;
+        
+        private Popup(Pane pane, Duration duration) {
+            this.pane = pane;
+            this.duration = duration;
+        }
+        
+        private Popup(Pane pane) {
+            this(pane, Duration.INDEFINITE);
+        }
+    }
 
     private class GameStateAdapterImpl extends GameStateAdapter {
+        
+        @Override
+        public void onDiceThrow(int[] result, int doubletCount) {
+            if (doubletCount == 3)
+                board3d.setNextMoveBackwards(true);
+        }
+        
+        @Override
+        public void onPlayerBankrupt(Player player) {
+            safelyQueueTask((() -> {
+                Fx3dPlayer fxPlayer = board3d.findFxEquivalent(player);
+                playerBox.getChildren().remove(fxPlayer.infoPane());
+                board3d.removePlayer(player);
+            }));
+        }
+        
         @Override
         public void onGameEnd(Player winner) {
             safelyQueuePopup(winnerPopup(winner));
         }
+        
         @Override
         public void onTurnStart(Player player) {
             safelyQueueTask(() -> watchNode(board3d.findFxEquivalent(player)));
@@ -1470,12 +1474,17 @@ public class GameSceneManager implements AnimationQueuer {
 
         @Override
         public void onPlayerOnCardField(Player player, CardField cardField, Card card) {
-            safelyQueueTask(() -> showCard(card, cardField.getStackType()), 1000);
+            queueTask(() -> showCard(card, cardField.getStackType()), 1500);
+            
+            Card.Action action = card.getAction();
+            if (action == Card.Action.GO_JAIL || action == Card.Action.MOVE) {
+                board3d.setNextMoveBackwards(true);
+            }
         }
 
         @Override
         public void onTurnEnd(Player oldPlayer, Player newPlayer) {
-            safelyQueueTask(() -> changeFirstPlayer(oldPlayer), 0);
+            safelyQueueTask(() -> changeFirstPlayer(), 0);
         }
     }
 }

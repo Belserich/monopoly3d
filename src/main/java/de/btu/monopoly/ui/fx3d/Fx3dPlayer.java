@@ -76,11 +76,8 @@ public class Fx3dPlayer extends Group {
     
     private class InfoPane extends HBox {
         
-        private static final double PANE_WIDTH = 230;
+        private static final double PANE_WIDTH = 260;
         private static final double PANE_HEIGHT = 60;
-        
-        private static final double BOX_WIDTH = PANE_HEIGHT;
-        private static final double BOX_HEIGHT = PANE_HEIGHT;
         
         private static final double COLORED_SQUARE_LENGTH = PANE_HEIGHT - 10;
         private static final double MAX_TEXT_WIDTH = PANE_WIDTH - 60;
@@ -96,6 +93,7 @@ public class Fx3dPlayer extends Group {
             this.brighterColor = material.getDiffuseColor().brighter();
             
             canv = new Canvas(PANE_WIDTH, PANE_HEIGHT);
+            
             drawCanvas();
             player.balanceProperty().addListener(prop -> drawCanvas());
             
@@ -108,6 +106,10 @@ public class Fx3dPlayer extends Group {
         
         public Color brighterColor() {
             return brighterColor;
+        }
+        
+        public Player player() {
+            return player;
         }
         
         private void drawCanvas() {

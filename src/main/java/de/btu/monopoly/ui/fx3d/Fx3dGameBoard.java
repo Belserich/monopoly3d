@@ -22,6 +22,7 @@ import javafx.scene.transform.Translate;
 import javafx.util.Duration;
 
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -60,6 +61,8 @@ public class Fx3dGameBoard extends Group
     private AnimationQueuer queuer;
     private GameStateListener stateListener;
     
+    private boolean nextMoveBackwards;
+    
     public Fx3dGameBoard(GameBoard board, AnimationQueuer queuer) {
         super();
         this.board = board;
@@ -91,6 +94,10 @@ public class Fx3dGameBoard extends Group
         }
         throw new RuntimeException(
                 String.format("Couldn't find a proper 3d equivalent for player: %s", player.getName()));
+    }
+    
+    public void setNextMoveBackwards(boolean val) {
+        this.nextMoveBackwards = val;
     }
     
     /**
@@ -147,6 +154,12 @@ public class Fx3dGameBoard extends Group
         return fxPlayer;
     }
     
+    public void removePlayer(Player player) {
+        
+        Fx3dPlayer fxPlayer = findFxEquivalent(player);
+        playerGroup.getChildren().remove(fxPlayer);
+    }
+    
     /**
      * Erstellt eine Laufanimation zwischen den Feldern mit den Indizes oldPos und newPos.
      *
@@ -156,15 +169,23 @@ public class Fx3dGameBoard extends Group
      * @return Animation
      */
     private ParallelTransition createMoveTransition(Fx3dPlayer player, int oldPos, int newPos) {
-        
-        int diff = newPos + 1 - oldPos;
-        if (diff < 0) diff = FIELD_COUNT + diff;
+        ParallelTransition retObj = createMoveTransition(player, oldPos, newPos, nextMoveBackwards);
+        nextMoveBackwards = false;
+        return retObj;
+    }
     
-        Transform[] waypoints = new Transform[diff];
-        for (int i = 0; i < diff; i++) {
-            waypoints[i % FIELD_COUNT] = fieldGroups[(oldPos + i) % FIELD_COUNT].getLocalToParentTransform();
+    private ParallelTransition createMoveTransition(Fx3dPlayer player, int oldPos, int newPos, boolean moveBackwards) {
+    
+        List<Transform> waypoints = new LinkedList<>();
+        moveBackwards &= newPos < oldPos;
+        int dest = (newPos + (moveBackwards ? -1 : 1)) % FIELD_COUNT;
+        
+        while (oldPos != dest) {
+            waypoints.add(fieldGroups[oldPos].getLocalToParentTransform());
+            oldPos = (oldPos + (moveBackwards ? -1 : 1)) % FIELD_COUNT;
         }
-        return createMoveTransition(player, waypoints);
+    
+        return createMoveTransition(player, waypoints.toArray(new Transform[waypoints.size()]));
     }
     
     /**
