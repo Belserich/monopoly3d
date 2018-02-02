@@ -63,4 +63,6 @@ public interface GameStateListener {
     void onPlayerMove(Player player, int oldPos, int newPos, boolean passedGo);
     
     void onPlayerOnCardField(Player player, CardField cardField, Card card);
+    
+    void onPlayerBankrupt(Player player);
 }

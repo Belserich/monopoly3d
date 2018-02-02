@@ -144,4 +144,9 @@ public class GameStateAdapter implements GameStateListener {
     public void onPlayerOnCardField(Player player, CardField cardField, Card card) {
         // nothing
     }
+    
+    @Override
+    public void onPlayerBankrupt(Player player) {
+        // nothing
+    }
 }
