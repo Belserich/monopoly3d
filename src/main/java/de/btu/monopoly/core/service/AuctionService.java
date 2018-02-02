@@ -12,10 +12,12 @@ import de.btu.monopoly.net.data.BidRequest;
 import de.btu.monopoly.net.data.BroadcastAuctionResponse;
 import de.btu.monopoly.net.data.ExitAuctionRequest;
 import de.btu.monopoly.net.data.JoinAuctionRequest;
-
+import de.btu.monopoly.ui.AuctionUI;
+import java.util.Observable;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.scene.text.Text;
 
 /**
  * @author patrick
@@ -53,8 +55,10 @@ public class AuctionService extends Listener {
         if (Global.RUN_AS_TEST) { // nicht fuer Test
             return;
         }
-        Global.ref().getGameSceneManager().auctionPopup();
-        Global.ref().getGameSceneManager().bidTextFieldFocus();
+        Global.ref().getGameSceneManager().beginAuctionPopup();
+
+        IOService.generateAndShuffleAuctionKi(auc.getPlayers(), auc.getHighestBidder());
+
         while (auctionRun) {
             IOService.sleepDeep(500);
             if (Global.RUN_IN_CONSOLE) { // nur fuer @Console
@@ -82,10 +86,9 @@ public class AuctionService extends Listener {
             // wenn die Auktion noch lauft
             else {
                 if (!Global.RUN_IN_CONSOLE) {
-                    Global.ref().getGameSceneManager().updateAuctionPopup(auctionStillActive(), false);
+                    AuctionUI.getInstance().updatePopup(true, auc.getHighestBidder() == -1);
                 }
             }
-
         }
         if (Global.RUN_IN_CONSOLE) {
             sellProperty();
@@ -143,7 +146,7 @@ public class AuctionService extends Listener {
                         + "€ an " + AuctionService.getPlayer(AuctionService.getHighestBidder()).getName());
             }
             if (!Global.RUN_IN_CONSOLE) {
-                Global.ref().getGameSceneManager().updateAuctionPopup(auctionStillActive(), false);
+                AuctionUI.getInstance().updatePopup(auctionStillActive(), false);
             }
             sellProperty();
         }
@@ -153,7 +156,7 @@ public class AuctionService extends Listener {
                 GUIChat.getInstance().msgLocal("Auktionsleiter", "Das Grundstück wird nicht verkauft");
             }
             if (!Global.RUN_IN_CONSOLE) {
-                Global.ref().getGameSceneManager().updateAuctionPopup(auctionStillActive(), true);
+                AuctionUI.getInstance().updatePopup(auctionStillActive(), false);
             }
         }
 
@@ -251,14 +254,12 @@ public class AuctionService extends Listener {
             auc.setHighestBidder(((BroadcastAuctionResponse) object).getHighestBidder());
             IOService.sleepDeep(100);
 
-            //@GUI kommt weg:
             LOGGER.log(Level.FINER, "<AUKTION>: \n  Stra\u00dfe: {0}\n  Auktion\u00e4re:", auc.getProperty());
             for (int[] aucPlayer : auc.getAucPlayers()) {
                 LOGGER.log(Level.FINER, "     ID[{0}] {1}\u20ac - aktiv:{2}", new Object[]{aucPlayer[0], aucPlayer[1], aucPlayer[2]});
             }
             LOGGER.log(Level.FINER, "  H\u00f6chstes Gebot: {0}\u20ac von aucID {1}", new Object[]{auc.getHighestBid(), getHighestBidder()});
 
-            //Das nicht
             IOService.betSequence(auc);
         }
     }
@@ -306,5 +307,15 @@ public class AuctionService extends Listener {
             }
         }
         return false;
+    }
+
+    public class ChatNotifier extends Observable {
+        // <editor-fold defaultstate="collapsed" desc="Notifier --ChatMessage--> Observers">
+
+        private void notify(Text[] message) {
+            setChanged();
+            notifyObservers(message);
+        }
+        //</editor-fold>
     }
 }

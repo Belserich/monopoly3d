@@ -18,6 +18,7 @@ import de.btu.monopoly.net.data.BroadcastPlayerChoiceRequest;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -28,10 +29,13 @@ public class IOService {
     private static final Logger LOGGER = Logger.getLogger(IOService.class.getCanonicalName());
     private static GameClient client;
 
-    private static int JAIL = 0;
-    private static int ACTION = 1;
-    private static int BUY = 2;
-    private static int FIELD = 3;
+    private static final int JAIL = 0;
+    private static final int ACTION = 1;
+    private static final int BUY = 2;
+    private static final int FIELD = 3;
+
+    private static List<Player> aiPlayers;
+    private static int actualAi;
 
     public static int getJailChoice(Player player) {
         int choice = -1;
@@ -104,19 +108,51 @@ public class IOService {
         return choice;
     }
 
-    public static void betSequence(Auction auc) {
+    public static void generateAndShuffleAuctionKi(Player[] players, int highestBidderId) {
         // Liste aus KI-Spielern erzeugen und shufflen
-        List<Player> aiPlayers = new ArrayList<>();
-        Arrays.stream(auc.getPlayers()) // alle Mitspieler
+        List<Player> aiPlayerList = new ArrayList<>();
+        Arrays.stream(players) // alle Mitspieler
                 .filter(p -> p.getAiLevel() > 0) // die eine KI sind
-                .filter(p -> p.getId() != auc.getHighestBidder()) // und nicht das höchste Gebot haben
-                .filter(p -> AuctionService.isStillActive(p)) // und noch an der Auktion teinehmen
-                .forEach(p -> aiPlayers.add(p));
+                .forEach(p -> aiPlayerList.add(p));
+        if (!aiPlayerList.isEmpty()) {
+            Collections.shuffle(aiPlayerList);
+        }
+        aiPlayers = aiPlayerList;
+    }
+
+    private static Player getNextAi(Auction auc) {
+        for (Player p : aiPlayers) {
+            System.out.println("V:" + p.getName());
+        }
+        aiPlayers = aiPlayers.stream()
+                .filter(p -> AuctionService.isStillActive(p))
+                .collect(Collectors.toList());
+        if (aiPlayers.isEmpty()) {
+            return null;
+        }
+        Player nextAi = aiPlayers.get(0);
+        aiPlayers.remove(nextAi);
+        for (Player p : aiPlayers) {
+            System.out.println("R:" + p.getName());
+        }
+        aiPlayers.add(nextAi);
+        for (Player p : aiPlayers) {
+            System.out.println("A:" + p.getName());
+        }
+        if (aiPlayers.size() > 1 && nextAi.getId() == auc.getHighestBidder()) {
+            return getNextAi(auc);
+        }
+        return nextAi;
+    }
+
+    public static void betSequence(Auction auc) {
         if (aiPlayers.isEmpty()) {                                  // falls keine KIs mitspielen -> return
             return;
         }
-        Collections.shuffle(aiPlayers);                             // Liste shuffeln
-        Player rndAi = aiPlayers.get(0);                            // erster aus der Liste ist dran
+        Player rndAi = getNextAi(auc);
+        if (rndAi == null) {
+            return;
+        }
 
         LOGGER.log(Level.FINE, "{0} (KI) nimmt an Auktion teil.", rndAi.getName());
         switch (rndAi.getAiLevel()) {

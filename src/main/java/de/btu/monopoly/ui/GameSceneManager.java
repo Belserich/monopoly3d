@@ -1,79 +1,56 @@
 package de.btu.monopoly.ui;
 
-import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXComboBox;
-import com.jfoenix.controls.JFXTextField;
+import com.jfoenix.controls.*;
 import de.btu.monopoly.Global;
-import de.btu.monopoly.core.Game;
-import de.btu.monopoly.core.GameBoard;
-import de.btu.monopoly.core.GameStateAdapter;
-import de.btu.monopoly.core.service.AuctionService;
-import de.btu.monopoly.core.service.IOService;
-import de.btu.monopoly.data.card.Card;
-import de.btu.monopoly.data.card.CardStack;
-import de.btu.monopoly.data.field.CardField;
-import de.btu.monopoly.data.field.Field;
-import de.btu.monopoly.data.field.FieldManager;
-import de.btu.monopoly.data.field.PropertyField;
+import de.btu.monopoly.core.*;
+import de.btu.monopoly.core.service.*;
+import de.btu.monopoly.data.card.*;
+import de.btu.monopoly.data.field.*;
 import de.btu.monopoly.data.player.Player;
-import de.btu.monopoly.menu.Lobby;
 import de.btu.monopoly.ui.CameraManager.WatchMode;
-import de.btu.monopoly.ui.fx3d.Fx3dGameBoard;
-import de.btu.monopoly.ui.fx3d.Fx3dPlayer;
-import de.btu.monopoly.ui.fx3d.Fx3dPropertyField;
+import de.btu.monopoly.ui.fx3d.*;
 import de.btu.monopoly.util.Assets;
 import de.btu.monopoly.util.TextUtils;
-import javafx.animation.Animation;
-import javafx.animation.PauseTransition;
-import javafx.animation.SequentialTransition;
-import javafx.animation.TranslateTransition;
+import java.util.Arrays;
+import java.util.InputMismatchException;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.logging.*;
+import java.util.stream.Collectors;
+import javafx.animation.*;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
-import javafx.scene.CacheHint;
-import javafx.scene.Node;
-import javafx.scene.SceneAntialiasing;
-import javafx.scene.SubScene;
+import javafx.scene.*;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
+import javafx.scene.text.*;
 import javafx.util.Duration;
-
-import java.util.ArrayList;
-import java.util.InputMismatchException;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class GameSceneManager implements AnimationQueuer {
 
-    
-    
+    private static final Logger LOGGER = Logger.getLogger(GameSceneManager.class.getCanonicalName());
+
     private static final double PLAYER_ZOOM = -1200;
     private static final int DEFAULT_ACTION_DELAY_MILLIS = 1000;
 
     private final StackPane rootPane;
-    
+
     private final SubScene gameSub;
     private final Fx3dGameBoard board3d;
 
     private final BorderPane uiPane;
     private final VBox popupWrapper;
-    private final List<Popup> popupQueue;
 
     private final VBox gameInfoBox;
     private final VBox playerBox;
@@ -84,19 +61,11 @@ public class GameSceneManager implements AnimationQueuer {
     private List<Animation> visualQueue;
     private BooleanProperty isPlayingAnim;
 
-    private Label auctionLabel = new Label("0 €");
-    private Label hoechstgebotLabel = new Label("Höchstgebot:");
-    private JFXTextField bidTextField = new JFXTextField();
-
     //Handelsspezifisch
     private boolean tradeOfferIsCreated = false;
-    private boolean exitTrade = false;
     private boolean tradeAnswerIsGiven = false;
     private boolean tradeAnswer = false;
     private char currency = '€';
-
-    //Auktion
-    private Popup aucPopup;
 
     public GameSceneManager(GameBoard board) {
         this.board3d = new Fx3dGameBoard(board, this);
@@ -111,7 +80,6 @@ public class GameSceneManager implements AnimationQueuer {
 
         uiPane = new BorderPane();
         popupWrapper = new VBox();
-        popupQueue = new LinkedList<>();
 
         playerBox = new VBox();
         cardHandle = new VBox();
@@ -130,7 +98,7 @@ public class GameSceneManager implements AnimationQueuer {
 
     private void initScene() {
         gameSub.setFill(Color.LIGHTGRAY);
-        
+
         gameSub.widthProperty().bind(rootPane.widthProperty());
         gameSub.heightProperty().bind(rootPane.heightProperty());
 
@@ -139,24 +107,24 @@ public class GameSceneManager implements AnimationQueuer {
     }
 
     private void initUi() {
-    
+
         uiPane.setPadding(new Insets(5, 5, 5, 5));
         uiPane.setPickOnBounds(false);
-        
+
         popupWrapper.setAlignment(Pos.CENTER);
         popupWrapper.setPickOnBounds(false);
-        
+
         StackPane wholeChatBox = ChatUi.getInstance().getWholeChatBox();
         wholeChatBox.setPickOnBounds(false);
-    
+
         HBox toolBox = ChatUi.getInstance().getChatToggleBox();
         toolBox.setPickOnBounds(false);
-    
+
         uiPane.setRight(wholeChatBox);
-    
+
         BorderPane botButtonPane = new BorderPane();
         botButtonPane.setPickOnBounds(false);
-        
+
         Label viewButton = new Label(null, Assets.getIcon("3d_icon"));
         viewButton.setOnMousePressed(event -> {
             WatchMode mode = camMan.getWatchMode();
@@ -164,22 +132,22 @@ public class GameSceneManager implements AnimationQueuer {
         });
         viewButton.setOnMouseEntered(event -> viewButton.setGraphic(Assets.getIcon("3d_icon_rollover")));
         viewButton.setOnMouseExited(event -> viewButton.setGraphic(Assets.getIcon("3d_icon")));
-    
+
         botButtonPane.setLeft(viewButton);
         uiPane.setBottom(botButtonPane);
-    
+
         playerBox.setPickOnBounds(false);
         playerBox.setPadding(new Insets(10, 0, 0, 0));
         playerBox.setSpacing(10);
         ObservableList<Node> children = playerBox.getChildren();
         board3d.getPlayers().forEach(p -> children.add(p.infoPane()));
-    
+
         gameInfoBox.setPickOnBounds(false);
         uiPane.setLeft(gameInfoBox);
-        
+
         cardHandle.setPadding(new Insets(20, 0, 0, 20));
         cardHandle.setPickOnBounds(false);
-        
+
         board3d.getFields()
                 .filter(Fx3dPropertyField.class::isInstance)
                 .map(Fx3dPropertyField.class::cast)
@@ -271,37 +239,43 @@ public class GameSceneManager implements AnimationQueuer {
         Platform.runLater(() -> queuePopup(pop));
     }
 
-    private void destroyPopup(Popup pop) {
+    void destroyPopup(Popup pop) {
         Platform.runLater(() -> popupWrapper.getChildren().remove(pop.pane));
     }
-    
+
     @Override
     public void queueAnimation(Animation anim) {
         visualQueue.add(anim);
         tryNextAnim();
     }
-    
+
     private void tryNextAnim() {
         if (!visualQueue.isEmpty() && !isPlayingAnim.get()) {
             nextAnim();
         }
     }
-    
+
     private void nextAnim() {
-        
+
         isPlayingAnim.set(true);
         Animation anim = visualQueue.remove(0);
         EventHandler<ActionEvent> oldHandler = anim.getOnFinished();
         anim.setOnFinished(event -> finishAnim(oldHandler, event));
         anim.play();
     }
-    
+
     private void finishAnim(EventHandler<ActionEvent> handler, ActionEvent event) {
-        
-        if (handler != null) handler.handle(event);
-        
-        if (!visualQueue.isEmpty()) nextAnim();
-        else isPlayingAnim.set(false);
+
+        if (handler != null) {
+            handler.handle(event);
+        }
+
+        if (!visualQueue.isEmpty()) {
+            nextAnim();
+        }
+        else {
+            isPlayingAnim.set(false);
+        }
     }
 
     private void watchNode(Node node) {
@@ -322,9 +296,9 @@ public class GameSceneManager implements AnimationQueuer {
         // scroll.setCenterShape(true);
         gridpane.add(box, 0, 0);
         // box.setContent(box);
-    
+
         System.out.println("HIAHJIA");
-        String fieldname = TextUtils.format(Lobby.getPlayerClient().getGame().getBoard().getFields()[Lobby.getPlayerClient().getPlayerOnClient().getPosition()].getName());
+        String fieldname = TextUtils.format(Global.ref().getGame().getBoard().getFields()[Global.ref().getClient().getPlayerOnClient().getPosition()].getName());
         Label label = new Label("Möchtest du " + fieldname + " kaufen?");
         System.out.println("STATIC");
 
@@ -361,19 +335,19 @@ public class GameSceneManager implements AnimationQueuer {
 
         return -1;
     }
-    
+
     private Popup winnerPopup(Player winner) {
-        
+
         ImageView winnerView = new ImageView(Assets.getImage("game_won"));
         Text winnerText = new Text(String.format("%s hat das Spiel gewonnen.\n Herzlichen Glückwunsch!", winner.getName()));
         winnerText.setFont(Font.font("Tahoma", 23));
         winnerText.setTextAlignment(TextAlignment.CENTER);
-        
+
         VBox winnerBox = new VBox(winnerView, winnerText);
         winnerBox.setPadding(new Insets(20, 20, 20, 20));
         winnerBox.setAlignment(Pos.CENTER);
         winnerBox.setStyle("-fx-background-color: #d50000aa; -fx-background-radius: 10px;");
-        
+
         HBox wrapper = new HBox(winnerBox);
         wrapper.setAlignment(Pos.CENTER);
         return new Popup(wrapper);
@@ -527,7 +501,7 @@ public class GameSceneManager implements AnimationQueuer {
         for (int i = 0; i < fieldNames.length; i++) {
             fieldNames[i] = TextUtils.format(fieldNames[i]);
         }
-        
+
         GridPane gridPane = new GridPane();
         VBox box = new VBox();
 
@@ -566,15 +540,10 @@ public class GameSceneManager implements AnimationQueuer {
         safelyQueuePopup(pop);
 
         if (fima.getOwnedPropertyFields(currPlayer).count() == 0) {
-            Task task = new Task() {
-                @Override
-                protected Object call() throws Exception {
-                    fieldBox.setPromptText("Du besitzt keine Straßen!");
-                    destroyPopup(pop);
-                    return null;
-                }
-            };
-            Platform.runLater(task);
+            Platform.runLater(() -> {
+                fieldBox.setPromptText("Du besitzt keine Straßen!");
+                destroyPopup(pop);
+            });
             destroyPopup(pop);
             return 0;
         }
@@ -597,134 +566,33 @@ public class GameSceneManager implements AnimationQueuer {
         return 0;
     }
 
-    public void auctionPopup() {
-
-        //initialisierung der benoetigten Objekte
-        HBox auctionHBox = new HBox();
-        VBox auctionVBox = new VBox();
-        GridPane auctionGP = new GridPane();
-        Label gebotsLabel = new Label("Dein Gebot für \n" + AuctionService.getPropertyString() + ":");
-
-        JFXButton bidButton = new JFXButton("Bieten");
-        JFXButton exitButton = new JFXButton("Aussteigen");
-
-        auctionGP.setAlignment(Pos.CENTER);
-        hoechstgebotLabel.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
-
-        //Eventhandler(n)
-        EventHandler bid = new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                try {
-                    AuctionService.setBid(Lobby.getPlayerClient().getPlayerOnClient().getId(), Integer.parseInt(bidTextField.getText()));
-                    bidTextField.setText("");
-                } catch (NumberFormatException e) {
-                    bidTextField.setText("");
-                    bidTextField.setPromptText("Nur Zahlen eingeben!");
-                }
-            }
-        };
-
-        //Einstellung der benoetigten Objekte
-        auctionGP.setAlignment(Pos.CENTER);
-        auctionGP.add(auctionHBox, 0, 0);
-        hoechstgebotLabel.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
-        gebotsLabel.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
-        bidTextField.setAlignment(Pos.CENTER);
-
-        bidButton.setBackground(new Background(new BackgroundFill(Color.web("#e1f5fe"), CornerRadii.EMPTY, Insets.EMPTY)));
-        exitButton.setBackground(new Background(new BackgroundFill(Color.web("#e1f5fe"), CornerRadii.EMPTY, Insets.EMPTY)));
-
-        bidTextField.setPromptText(" ");
-
-        auctionHBox.setId("greenPopup");
-        auctionHBox.setSpacing(10);
-        auctionHBox.setPrefSize(700, 200);
-        auctionHBox.setCenterShape(true);
-        auctionVBox.getChildren().addAll(bidButton, exitButton);
-        auctionVBox.setSpacing(10);
-        auctionVBox.setAlignment(Pos.CENTER);
-        auctionHBox.getChildren().addAll(hoechstgebotLabel, auctionLabel, gebotsLabel, bidTextField, auctionVBox);
-        auctionHBox.setAlignment(Pos.CENTER);
-
-        Popup pop = new Popup(auctionGP);
-        aucPopup = pop;
+    public void beginAuctionPopup() {
+        Popup pop = new Popup(AuctionUI.getInstance().getGridPane());
+        AuctionUI.getInstance().setPopup(pop);
         safelyQueuePopup(pop);
-
-        //Verknuepfung mit EventHandler(n)
-        bidTextField.setOnAction(bid);
-        bidButton.setOnAction(bid);
-        exitButton.setOnAction(event -> {
-            AuctionService.playerExit(Lobby.getPlayerClient().getPlayerOnClient().getId());
-        });
     }
 
-    public void updateAuctionPopup(boolean stillActive, boolean noBidder) {
-
-        Task task = new Task() {
-            @Override
-            protected Object call() throws Exception {
-                auctionLabel.setText(String.valueOf(AuctionService.getHighestBid()) + " €");
-                hoechstgebotLabel.setText("Höchstgebot von \n" + AuctionService.getPlayer(AuctionService.getHighestBidder()).getName() + ":");
-                //bidTextField.requestFocus();
-                return null;
-            }
-        };
-        Platform.runLater(task);
-
-        IOService.sleep(500);
-        if (!stillActive) {
-
-            // TODO
-            GridPane resetGridPane = new GridPane();
-            VBox resetBox = new VBox();
-            Label endLabel = new Label();
-
-            resetGridPane.setAlignment(Pos.CENTER);
-            resetGridPane.add(resetBox, 0, 0);
-
-            if (noBidder) {
-                endLabel.setText("Das Grundstück " + AuctionService.getPropertyString() + " wurde nicht verkauft!");
-            }
-            else {
-                endLabel.setText(Lobby.getPlayerClient().getGame().getPlayers()[AuctionService.getHighestBidder()].getName()
-                        + " hat die Auktion gewonnen und muss " + AuctionService.getHighestBid() + "€ für das Grundstück "
-                        + AuctionService.getPropertyString() + " zahlen!");
-            }
-
-            endLabel.setFont(Font.font("Tahoma", FontWeight.BOLD, 10));
-            resetBox.setId("greenPopup");
-            resetBox.setSpacing(10);
-            resetBox.setPrefSize(550, 150);
-            resetBox.setCenterShape(true);
-            resetBox.getChildren().addAll(endLabel);
-            resetBox.setAlignment(Pos.CENTER);
-
-            destroyPopup(aucPopup);
-            Popup pop = new Popup(resetGridPane, Duration.seconds(3));
-            safelyQueuePopup(pop);
-
-            Platform.runLater(() -> auctionLabel.setText("0 €"));
-
-        }
-
+    public void endAuctionPopup(Popup oldOne, GridPane newOne) {
+        destroyPopup(oldOne);
+        Popup pop = new Popup(newOne, Duration.seconds(4));
+        safelyQueuePopup(pop);
     }
 
     private void showCard(Card card, CardStack.Type type) {
-    
+
         GridPane kartPane = new GridPane();
         HBox box = new HBox();
-    
+
         kartPane.add(box, 0, 0);
         kartPane.setAlignment(Pos.CENTER);
-    
+
         Label text = new Label(card.getText());
         text.setPadding(new Insets(20, 20, 20, 20));
         text.setWrapText(true);
         box.setPrefSize(250, 150);
         box.getChildren().add(text);
         box.setAlignment(Pos.CENTER);
-    
+
         if (type == CardStack.Type.COMMUNITY) {
             //Gemeinschaft
             box.setId("yellowPopup");
@@ -733,20 +601,9 @@ public class GameSceneManager implements AnimationQueuer {
             //Ereignis
             box.setId("orangePopup");
         }
-    
+
         Popup pop = new Popup(kartPane, Duration.seconds(4));
         displayPopup(pop);
-    }
-
-    public void bidTextFieldFocus() {
-        Task task = new Task() {
-            @Override
-            protected Object call() throws Exception {
-                bidTextField.requestFocus();
-                return null;
-            }
-        };
-        Platform.runLater(task);
     }
 
     /*
@@ -757,7 +614,7 @@ public class GameSceneManager implements AnimationQueuer {
         tradeGui.setTradeStarter(player);
 
         //Liste(n)
-        ObservableList<String> choosePlayerOptions = FXCollections.observableArrayList(tradePlayersNames());
+        ObservableList<String> choosePlayerOptions = FXCollections.observableList(tradePlayersNames());
 
         //initialisierung der benoetigten Objekte
         //GridPane(s)
@@ -780,32 +637,21 @@ public class GameSceneManager implements AnimationQueuer {
             @Override
             public void handle(ActionEvent event) {
                 try {
-                    /*
-                     * Nimmt die Auswahl aus der Combobox und übergibt Sie dem Handel
-                     */
+                    // Nimmt die Auswahl aus der Combobox und übergibt Sie dem Handel
                     String tradePartnersName = (String) choosePlayerBox.getSelectionModel().getSelectedItem();
-                    GameBoard board = Lobby.getPlayerClient().getGame().getBoard();
 
-                    for (int i = 0; i < Lobby.getPlayerClient().getGame().getBoard().getActivePlayers().size(); i++) {
-                        if (tradePartnersName.equals(Lobby.getPlayerClient().getGame().getPlayers()[i].getName())) {
-                            tradeGui.setTradePartner(Lobby.getPlayerClient().getGame().getPlayers()[i]);
-                            //gibt an, ob sich fuer ein Tauschpartner entschieden wurde
+                    for (int i = 0; i < Global.ref().getGame().getBoard().getActivePlayers().size(); i++) {
+                        if (tradePartnersName.equals(Global.ref().getGame().getPlayers()[i].getName())) {
+                            tradeGui.setTradePartner(Global.ref().getGame().getPlayers()[i]);
                             break;
                         }
                     }
-
-                    Task task = new Task() {
-                        @Override
-                        protected Object call() throws Exception {
-                            showTradeInfoPopup(tradeGui);
-                            destroyPopup(pop);
-                            return null;
-                        }
-                    };
-                    Platform.runLater(task);
-
+                    Platform.runLater(() -> {
+                        showTradeInfoPopup(tradeGui);
+                        destroyPopup(pop);
+                    });
                 } catch (NullPointerException e) {
-                    //Fehler
+                    LOGGER.log(Level.WARNING, "FEHLER in initTradePopup(): {0}", e);
                 }
             }
         };
@@ -841,18 +687,12 @@ public class GameSceneManager implements AnimationQueuer {
      *
      * @return
      */
-    private static ArrayList<String> tradePlayersNames() {
-
-        int playerCount = Lobby.getPlayerClient().getGame().getBoard().getActivePlayers().size();
-        ArrayList<String> tradePlayers = new ArrayList<>();
-
-        for (int i = 0; i < playerCount; i++) {
-            if (Lobby.getPlayerClient().getGame().getPlayers()[i] != Lobby.getPlayerClient().getPlayerOnClient()) {
-                tradePlayers.add(Lobby.getPlayerClient().getGame().getPlayers()[i].getName());
-            }
-        }
-
-        return tradePlayers;
+    private static List<String> tradePlayersNames() {
+        return Arrays.asList(
+                (Global.ref().getGame().getBoard().getActivePlayers()).stream()
+                        .filter(p -> p.getId() != Global.ref().getClient().getPlayerOnClient().getId())
+                        .map(p -> p.getName()).toArray(String[]::new)
+        );
     }
 
     public Player getTradePartner(GuiTrade tradeGui) {
@@ -892,12 +732,6 @@ public class GameSceneManager implements AnimationQueuer {
         Global.ref().getGameSceneManager().safelyQueuePopup(pop);
 
         selectTradeOfferPopup(tradeGui);
-////        //Weiterleitung an das naechste Popup
-////        Timeline timer = new Timeline(new KeyFrame(
-////                Duration.millis(2500),
-////                timeOver -> selectTradeOfferPopup(tradeGui)));
-////
-////        timer.play();
 
     }
 
@@ -907,7 +741,7 @@ public class GameSceneManager implements AnimationQueuer {
     private void selectTradeOfferPopup(GuiTrade tradeGui) {
 
         //Liste(n)
-        List<CheckMenuItem> yourProps = tradePlayersProps(Lobby.getPlayerClient().getPlayerOnClient());
+        List<CheckMenuItem> yourProps = tradePlayersProps(Global.ref().getClient().getPlayerOnClient());
         List<CheckMenuItem> yourPropsForMenu = new LinkedList<>();
         List<CheckMenuItem> partnersProps = FXCollections.observableArrayList(tradePlayersProps(tradeGui.getTradePartner()));
         List<CheckMenuItem> partnersPropsForMenu = new LinkedList<>();
@@ -940,9 +774,6 @@ public class GameSceneManager implements AnimationQueuer {
             partnersProps.remove(item);
         }
 
-        List<String> playersSelectedProps;
-        List<String> partnersSelectedProps;
-
         //Initialisierung der benoetigten Objekte
         //GridPane(s)
         GridPane tradeOfferGridPane = new GridPane();
@@ -967,7 +798,7 @@ public class GameSceneManager implements AnimationQueuer {
         Label yourOfferMoneyLabel = new Label("Wieviel " + currency + " bietest du:");
         yourOfferMoneyLabel.setFont(Font.font("Tahoma", FontWeight.NORMAL, 14));
 
-        Label yourCardLabel = new Label("Gefängnisfreikarten: " + Lobby.getPlayerClient().getPlayerOnClient().getCardStack().countCardsOfAction(Card.Action.JAIL));
+        Label yourCardLabel = new Label("Gefängnisfreikarten: " + Global.ref().getClient().getPlayerOnClient().getCardStack().countCardsOfAction(Card.Action.JAIL));
         yourCardLabel.setFont(Font.font("Tahoma", FontWeight.NORMAL, 14));
 
         Label yourOfferCardLabel = new Label("Biete Karten:");
@@ -1046,7 +877,6 @@ public class GameSceneManager implements AnimationQueuer {
         Popup pop = new Popup(tradeOfferGridPane);
         //Funktionen/Eventhandler
         offerTradeButton.setOnAction(event -> {
-
             try {
                 try {
                     tradeGui.setYourMoney(Integer.parseInt(yourMoneyTextField.getText()));
@@ -1057,7 +887,6 @@ public class GameSceneManager implements AnimationQueuer {
                     destroyPopup(pop);
                     showTradeWarningPopup(tradeGui);
                 }
-
                 if (checkIfInputIsOk(tradeGui.getYourMoney(), tradeGui.getYourCardAmount(), tradeGui.getTradeStarter())
                         && checkIfInputIsOk(tradeGui.getPartnersMoney(), tradeGui.getPartnersCardAmount(), tradeGui.getTradePartner())) {
 
@@ -1070,20 +899,16 @@ public class GameSceneManager implements AnimationQueuer {
 
                     destroyPopup(pop);
                     waitForResponsePopup(tradeGui);
-
                 }
-
                 else {
                     destroyPopup(pop);
                     showTradeWarningPopup(tradeGui);
                 }
             } catch (InputMismatchException i) {
-                //Fehler
+                LOGGER.log(Level.WARNING, "FEHLER in selectTradeOfferPopup(): {0}", i);
             }
-
         });
         Global.ref().getGameSceneManager().safelyQueuePopup(pop);
-
     }
 
     /**
@@ -1096,7 +921,7 @@ public class GameSceneManager implements AnimationQueuer {
 
         //Benoetigte Objekte
         //Liste aller Propertys im Besitzt des Spielers
-        List<PropertyField> playersProps = Lobby.getPlayerClient().getGame().getBoard().getFieldManager()
+        List<PropertyField> playersProps = Global.ref().getGame().getBoard().getFieldManager()
                 .getOwnedPropertyFields(player).collect(Collectors.toList());
         //Liste fuer MenuButton Eintraege
         List<CheckMenuItem> items = new LinkedList<>();
@@ -1117,14 +942,14 @@ public class GameSceneManager implements AnimationQueuer {
      */
     private int[] collectPropertyIds(List<CheckMenuItem> itemList) {
 
-        Field[] fields = Lobby.getPlayerClient().getGame().getBoard().getFieldManager().getFields();
+        Field[] fields = Global.ref().getGame().getBoard().getFieldManager().getFields();
         int[] propertyIds = new int[itemList.size()];
 
         for (int i = 0; i < itemList.size(); i++) {
             for (int j = 0; j < fields.length; j++) {
 
                 if (itemList.get(i).getText().equals(fields[j].getName())) {
-                    propertyIds[i] = Lobby.getPlayerClient().getGame().getBoard().getFieldManager().getFieldId(fields[j]);
+                    propertyIds[i] = Global.ref().getGame().getBoard().getFieldManager().getFieldId(fields[j]);
                 }
 
             }
@@ -1158,16 +983,8 @@ public class GameSceneManager implements AnimationQueuer {
      * @return
      */
     private boolean checkIfInputIsOk(int moneyAmount, int cardAmount, Player player) {
-
-        int playerMoney = player.getMoney();
         int playerCards = player.getCardStack().countCardsOfAction(Card.Action.JAIL);
-
-        if (moneyAmount > -1 && moneyAmount < playerMoney) {
-            if (cardAmount > -1 && cardAmount <= playerCards) {
-                return true;
-            }
-        }
-        return false;
+        return (moneyAmount > -1 && moneyAmount < player.getMoney()) ? (cardAmount > -1 && cardAmount <= playerCards) : false;
     }
 
     /**
@@ -1213,7 +1030,7 @@ public class GameSceneManager implements AnimationQueuer {
      */
     public int[] getPropertyIdsForTrade(Player player, GuiTrade tradeGui) {
 
-        if (player.equals(Lobby.getPlayerClient().getPlayerOnClient())) {
+        if (player.equals(Global.ref().getClient().getPlayerOnClient())) {
             return tradeGui.getYourPropIds();
         }
         else {
@@ -1229,7 +1046,7 @@ public class GameSceneManager implements AnimationQueuer {
      */
     public int[] getCardIdsForTrade(Player player, GuiTrade tradeGui) {
 
-        if (player.equals(Lobby.getPlayerClient().getPlayerOnClient())) {
+        if (player.equals(Global.ref().getClient().getPlayerOnClient())) {
             return tradeGui.getYourCardIds();
         }
         else {
@@ -1239,7 +1056,7 @@ public class GameSceneManager implements AnimationQueuer {
 
     public int getMoneyForTrade(Player player, GuiTrade tradeGui) {
 
-        if (player.equals(Lobby.getPlayerClient().getPlayerOnClient())) {
+        if (player.equals(Global.ref().getClient().getPlayerOnClient())) {
             return tradeGui.getYourMoney();
         }
         else {
@@ -1256,7 +1073,6 @@ public class GameSceneManager implements AnimationQueuer {
         VBox yourOfferVBox = new VBox();
         VBox partnersOfferVBox = new VBox();
         //HBox(en)
-        HBox labelOfferHBox = new HBox();
         HBox showOfferHBox = new HBox();
 
         //Label(s) mit Einstellungen
@@ -1287,7 +1103,6 @@ public class GameSceneManager implements AnimationQueuer {
         deniedOfferButton.setBackground(new Background(new BackgroundFill(Color.web("#e1f5fe"), CornerRadii.EMPTY, Insets.EMPTY)));
         deniedOfferButton.setFont(Font.font("Tahoma", FontWeight.NORMAL, 14));
         //Seperator(en)
-        Separator mainSeparator = new Separator(Orientation.HORIZONTAL);
         Separator offersSeparator = new Separator(Orientation.VERTICAL);
         Separator underYourPropsSeparator = new Separator(Orientation.HORIZONTAL);
         Separator underYourCardsSeparator = new Separator(Orientation.HORIZONTAL);
@@ -1337,7 +1152,7 @@ public class GameSceneManager implements AnimationQueuer {
 
     private String generatePropertyString(int[] propertyIds) {
 
-        Field[] fields = Lobby.getPlayerClient().getGame().getBoard().getFields();
+        Field[] fields = Global.ref().getGame().getBoard().getFields();
         String allPropertyString = "Grundstücke:\n";
 
         /*
@@ -1429,30 +1244,31 @@ public class GameSceneManager implements AnimationQueuer {
         Popup pop = new Popup(tradeAnswerGridPane, Duration.millis(2000));
         Global.ref().getGameSceneManager().safelyQueuePopup(pop);
     }
-    
+
     class Popup {
-        
+
         private Pane pane;
         private Duration duration;
-        
+
         private Popup(Pane pane, Duration duration) {
             this.pane = pane;
             this.duration = duration;
         }
-        
+
         private Popup(Pane pane) {
             this(pane, Duration.INDEFINITE);
         }
     }
 
     private class GameStateAdapterImpl extends GameStateAdapter {
-        
+
         @Override
         public void onDiceThrow(int[] result, int doubletCount) {
-            if (doubletCount == 3)
+            if (doubletCount == 3) {
                 board3d.setNextMoveBackwards(true);
+            }
         }
-        
+
         @Override
         public void onPlayerBankrupt(Player player) {
             safelyQueueTask((() -> {
@@ -1461,12 +1277,12 @@ public class GameSceneManager implements AnimationQueuer {
                 board3d.removePlayer(player);
             }));
         }
-        
+
         @Override
         public void onGameEnd(Player winner) {
             safelyQueuePopup(winnerPopup(winner));
         }
-        
+
         @Override
         public void onTurnStart(Player player) {
             safelyQueueTask(() -> watchNode(board3d.findFxEquivalent(player)));
@@ -1475,7 +1291,7 @@ public class GameSceneManager implements AnimationQueuer {
         @Override
         public void onPlayerOnCardField(Player player, CardField cardField, Card card) {
             queueTask(() -> showCard(card, cardField.getStackType()), 1500);
-            
+
             Card.Action action = card.getAction();
             if (action == Card.Action.GO_JAIL || action == Card.Action.MOVE) {
                 board3d.setNextMoveBackwards(true);

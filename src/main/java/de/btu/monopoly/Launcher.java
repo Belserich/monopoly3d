@@ -68,19 +68,19 @@ public class Launcher extends Application {
         else {
 
             Player[] players = new Player[]{
-                    new Player("SWP-Monopoly", 0, Assets.START_MONEY, "#43a047"),
-                    new Player("Mathias", 1, Assets.START_MONEY, "#1976d2"),
-                    new Player("Scrum", 2, Assets.START_MONEY, "#ad1457"),
-                    new Player("Reflexionen", 3, Assets.START_MONEY, "#ffeb3b"),
-                    new Player("Zeitdruck", 4, Assets.START_MONEY, "#6a1b9a"),
-                    new Player("Schweinehund", 5, Assets.START_MONEY, "#b71c1c")
+                new Player("Looser", 0, Assets.START_MONEY, "#4286f4ff"),
+                new Player("Achilles", 1, Assets.START_MONEY, "#6d4c41")
             };
-            players[0].setAiLevel(2);
-            players[1].setAiLevel(1);
-            players[2].setAiLevel(1);
-            players[3].setAiLevel(1);
-            players[4].setAiLevel(1);
-            players[5].setAiLevel(1);
+            //                new Player("Hartschmud", 5, Assets.START_MONEY, "#f44242ff"),
+            //                new Player("Claus", 2, Assets.START_MONEY, "#00c853"),
+            //                new Player("Markus", 3, Assets.START_MONEY, "#ffd600"),
+            //                new Player("Mathias", 4, Assets.START_MONEY, "#aa00ff"),
+
+            players[1].setAiLevel(2);
+//            players[2].setAiLevel(2);
+//            players[3].setAiLevel(2);
+//            players[4].setAiLevel(2);
+//            players[5].setAiLevel(2);
 
             GameClient client = new GameClient(7777, 1000);
 
