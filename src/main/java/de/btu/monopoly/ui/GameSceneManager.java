@@ -574,6 +574,7 @@ public class GameSceneManager implements AnimationQueuer {
 
     public void endAuctionPopup(Popup oldOne, GridPane newOne) {
         destroyPopup(oldOne);
+        AuctionUI.getInstance().revertPopup();
         Popup pop = new Popup(newOne, Duration.seconds(4));
         safelyQueuePopup(pop);
     }

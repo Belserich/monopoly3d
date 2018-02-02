@@ -88,6 +88,14 @@ public class AuctionUI {
         Platform.runLater(() -> bidTextField.requestFocus());
     }
 
+    public void revertPopup() {
+        Platform.runLater(() -> {
+            hBox.getChildren().addAll(gebotsLabel, bidTextField, vBox);
+            hBox.setPrefSize(600, 200);
+        });
+
+    }
+
     private EventHandler bidButtonHandler() {
         return (EventHandler<ActionEvent>) (ActionEvent event) -> {
             try {

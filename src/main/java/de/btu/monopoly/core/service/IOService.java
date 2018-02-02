@@ -35,7 +35,6 @@ public class IOService {
     private static final int FIELD = 3;
 
     private static List<Player> aiPlayers;
-    private static int actualAi;
 
     public static int getJailChoice(Player player) {
         int choice = -1;
@@ -74,10 +73,10 @@ public class IOService {
 
                 break;
             case 1:
-                choice = EasyKi.buyPropOption(player, prop);
+                choice = EasyKi.buyPropOption(player, prop, false);
                 break;
             case 2:
-                choice = HardKi.buyPropOption(player, prop);
+                choice = HardKi.buyPropOption(player, prop, false);
                 break;
             default:
                 LOGGER.warning("Illegale KI-Stufe in JailChoice registriert");

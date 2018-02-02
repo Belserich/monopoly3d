@@ -109,7 +109,7 @@ public class HardKi {
      * @param prop zu kaufende Strasse
      * @return int fuer die Wahl der Kaufentscheidung 1 - kaufen (interessiert) , 2 - nicht kaufen (nicht interessiert)
      */
-    public static int buyPropOption(Player player, PropertyField prop) {
+    public static int buyPropOption(Player player, PropertyField prop, boolean hardAuc) {
         IOService.sleep(2000);
         boolean buy = false;
         int propertyId = FIELDMANAGER.getFieldId(prop);
@@ -132,7 +132,9 @@ public class HardKi {
                 buy = (player.getMoney() > prop.getPrice());
             }
         }
-
+        if (!hardAuc) {
+            ChatAi.buyStreetMessage(player, buy);
+        }
         return buy ? 1 : 2;
     }
 
@@ -209,7 +211,7 @@ public class HardKi {
     public static void processBetSequence(Player player) {
         PropertyField prop = AuctionService.getAuc().getProperty();
         // Gebotswichtigkeit wie Kaufentscheidung
-        switch (buyPropOption(player, prop)) {
+        switch (buyPropOption(player, prop, true)) {
             case 1: // Diese Strasse will die KI haben
                 boolean cheap = FIELDMANAGER.getFieldId(prop) < BEGIN_LUCRATIVE_AREA;
                 EasyKi.processBetSequence(player, (cheap) ? LOW_BID : HIGH_BID);

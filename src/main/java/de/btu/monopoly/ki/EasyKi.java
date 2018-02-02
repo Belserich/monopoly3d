@@ -56,10 +56,13 @@ public class EasyKi {
      * @param prop
      * @return int für die Kaufentscheidung 1 - kaufen , 2 - nicht kaufen
      */
-    public static int buyPropOption(Player player, PropertyField prop) {
+    public static int buyPropOption(Player player, PropertyField prop, boolean hardAuc) {
         Random random = IOService.getGame().getRandom();
         int percentage = random.nextInt(100);
         IOService.sleep(3000);
+        if (!hardAuc) {
+            ChatAi.buyStreetMessage(player, ((percentage <= BUY_STREET_CAP) ? true : false));
+        }
         return (percentage <= BUY_STREET_CAP) ? 1 : 2;
     }
 

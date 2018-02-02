@@ -20,6 +20,47 @@ public class ChatAi {
 
     private static final Logger LOGGER = Logger.getLogger(HardKi.class.getCanonicalName());
 
+    static void buyStreetMessage(Player ki, boolean choice) {
+        Random ran = new Random();
+        String mess = "";
+
+        if (choice) {
+            switch (ran.nextInt(4) + 1) {
+                case 1:
+                    mess += "Die kauf ich!";
+                    break;
+                case 2:
+                    mess += "Die will ich haben!";
+                    break;
+                case 3:
+                    mess += "Die Straße wird mir gut Geld einspielen";
+                    break;
+                case 4:
+                    mess += "Darf ich vorstellen: Meine neue Straße";
+                    break;
+            }
+        }
+        else {
+            switch (ran.nextInt(4) + 1) {
+                case 1:
+                    mess += "Äh, will die jemand haben?";
+                    break;
+                case 2:
+                    mess += "Die will ich nicht!";
+                    break;
+                case 3:
+                    mess += "Die Straße ist doof";
+                    break;
+                case 4:
+                    mess += "Ich will eine andere Straße haben, darf ich?";
+                    break;
+            }
+        }
+        if (!Global.RUN_AS_TEST) {
+            GUIChat.getInstance().msgLocal(ki, mess);
+        }
+    }
+
     static void continueAuctionMessage(Player ki, int newPrice) {
         Random ran = new Random();
         String mess = "";
