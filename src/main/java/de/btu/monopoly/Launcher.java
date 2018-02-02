@@ -15,12 +15,13 @@ import de.btu.monopoly.net.server.GameServer;
 import de.btu.monopoly.ui.GameSceneManager;
 import de.btu.monopoly.ui.MenuSceneManager;
 import de.btu.monopoly.util.Assets;
-import java.io.IOException;
-import java.util.logging.LogManager;
-import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+
+import java.io.IOException;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
 
 /**
  * @author Markus Uhlig (markus.uhlig@b-tu.de)
