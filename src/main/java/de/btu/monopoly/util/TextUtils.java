@@ -13,11 +13,6 @@ import static de.btu.monopoly.ui.fx3d.Fx3dField.*;
 
 public class TextUtils
 {
-    private static final String FIELD_NAME_KEY = "field_%d_name";
-    private static final String FIELD_PRICE_KEY = "field_%d_price";
-    
-    private static final double LINE_WRAPPING_WIDTH = FIELD_WIDTH - 10;
-    
     private static final double FIELD_TEX_CENTER_X = FIELD_HEIGHT + FIELD_WIDTH / 2;
     private static final double FIELD_TEX_CENTER_Y = FIELD_HEIGHT + FIELD_DEPTH / 2;
     
@@ -56,5 +51,9 @@ public class TextUtils
             context.setFont(Font.font("Kabel", 16));
             context.fillText(field.getName(), 0, STREET_NAME_OFF - 35);
         }
+    }
+    
+    public static String format(String str) {
+        return str.replace("-", "");
     }
 }

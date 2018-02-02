@@ -6,6 +6,7 @@ import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.ui.GameSceneManager;
 import de.btu.monopoly.ui.GuiTrade;
 import de.btu.monopoly.ui.MenuSceneManager;
+
 import java.util.Random;
 
 /**

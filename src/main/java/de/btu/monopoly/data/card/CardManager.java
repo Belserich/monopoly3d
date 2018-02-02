@@ -38,17 +38,18 @@ public class CardManager {
      * @return gezogene Karte
      * @see #pullAndProcess(CardStack.Type, Player)
      */
-    public Card pullAndProcess(CardStack.Type type, Player player) {
+    public boolean pullAndProcess(CardStack.Type type, Player player) {
 
         CardStack stack = stackFor(type);
         Card card = stack.nextCard();
 
         LOGGER.info(String.format("%s hat eine Karte gezogen. Kartentyp: %s", player.getName(), card.getAction()));
         
-        if (card instanceof Takeable) ((Takeable)card).drawTo(player.getCardStack());
-        else applyCardAction(card.getAction(), card.getArg(), player);
-        
-        return card;
+        if (card instanceof Takeable) {
+            ((Takeable)card).drawTo(player.getCardStack());
+            return false;
+        }
+        else return applyCardAction(card.getAction(), card.getArg(), player);
     }
 
     private CardStack stackFor(CardStack.Type type) {
@@ -68,7 +69,7 @@ public class CardManager {
      * @param arg Kartenargument
      * @param player Spieler
      */
-    public void applyCardAction(Card.Action action, int arg, Player player) {
+    public boolean applyCardAction(Card.Action action, int arg, Player player) {
 
         LOGGER.info(String.format("%s benutzt eine Karte (Aktion: %s)", player.getName(), action));
 
@@ -76,49 +77,47 @@ public class CardManager {
 
             case JAIL:
                 processJailAction(player);
-                break;
+                return false;
 
             case GET_MONEY:
                 PlayerService.giveMoney(player, arg);
-                break;
+                return false;
 
             case GO_JAIL:
                 FieldService.toJail(player);
-                break;
+                return false;
 
             case PAY_BANK:
                 PlayerService.takeMoney(player, arg);
-                break;
+                return false;
 
             case MOVE:
                 board.getFieldManager().movePlayer(player, arg);
-                break;
+                return true;
 
             case SET_POSITION:
                 board.getFieldManager().movePlayer(player, arg - player.getPosition());
-                break;
+                return true;
 
             case PAY_ALL:
                 processPayAllAction(player, arg);
-                break;
+                return false;
 
             case BIRTHDAY:
                 processBirthdayAction(player, arg);
-                break;
+                return false;
 
             case RENOVATE:
                 processRenovateAction(player, arg);
-                break;
+                return false;
 
             case MOVE_NEXT_SUPPLY:
                 PropertyField prop = (PropertyField) board.getFieldManager().movePlayer(player, FieldTypes.SUPPLY);
-                FieldService.payRent(player, prop, null, 1);
-                break;
+                return !FieldService.payRent(player, prop, null, 1);
 
             case MOVE_NEXT_STATION_RENT_AMP:
                 prop = (PropertyField) board.getFieldManager().movePlayer(player, FieldTypes.STATION);
-                FieldService.payRent(player, prop, null, arg);
-                break;
+                return !FieldService.payRent(player, prop, null, arg);
         
             default: throw new RuntimeException(String.format("Unknown card action: %s", action));
         }

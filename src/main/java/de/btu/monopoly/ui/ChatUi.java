@@ -48,30 +48,31 @@ public class ChatUi {
     private void initChatBox() {
         wholeChatBox.getStylesheets().add(this.getClass().getResource("/styles/chat.css").toExternalForm());
         wholeChatBox.setId("whole_chat");
-        JFXTextField chatField = new JFXTextField();
-        chatField.setId("chat_field");
-        chatField.setOnKeyPressed((KeyEvent event) -> {
+        JFXTextField enterButton = new JFXTextField();
+        enterButton.setPickOnBounds(true);
+        enterButton.setId("chat_field");
+        enterButton.setOnKeyPressed((KeyEvent event) -> {
             if (event.getCode().equals(KeyCode.ENTER)) {
-                clickSendMessage(chatField);
+                clickSendMessage(enterButton);
             }
         });
         JFXButton sendButton = new JFXButton("Enter");
         sendButton.setId("send_button");
         sendButton.setOnMouseClicked((MouseEvent event) -> {
-            clickSendMessage(chatField);
+            clickSendMessage(enterButton);
         });
 
-        HBox chatInteractionBox = new HBox(chatField, sendButton);
-        HBox.setHgrow(chatField, Priority.ALWAYS);
+        HBox chatInteractionBox = new HBox(enterButton, sendButton);
+        HBox.setHgrow(enterButton, Priority.ALWAYS);
 
         TextFlow chatArea = new TextFlow();
+        chatArea.setPickOnBounds(true);
         chatArea.setId("chat_area");
         ChatObserver obs = new ChatObserver(chatArea);
         GUIChat.getInstance().addObserver(obs);
         ScrollPane scrollChat = new ScrollPane();
         scrollChat.setContent(obs.getTextFlow());
         scrollChat.setId("general");
-        scrollChat.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scrollChat.vvalueProperty().bind(chatArea.heightProperty());
         chatArea.setMinWidth(200);
         chatArea.setMaxWidth(400);
@@ -82,7 +83,7 @@ public class ChatUi {
         VBox.setVgrow(scrollChat, Priority.ALWAYS);
 
         wholeChatBox.setPrefWidth(200);
-        wholeChatBox.setPickOnBounds(false);
+        wholeChatBox.setPickOnBounds(true);
         wholeChatBox.setOnMouseEntered(event -> changeChatSize(true));
         wholeChatBox.setOnMouseExited(event -> changeChatSize(false));
 

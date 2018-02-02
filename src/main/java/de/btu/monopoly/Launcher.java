@@ -58,7 +58,8 @@ public class Launcher extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-
+        stage.setTitle("MONOPOLY 1.0");
+        
         if (!Global.FX_3D_TEST) {
             MenuSceneManager menuMan = new MenuSceneManager();
             Global.ref().setMenuSceneManager(menuMan);

@@ -6,6 +6,7 @@ import de.btu.monopoly.data.field.SupplyField;
 import de.btu.monopoly.data.field.TaxField;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.net.chat.GUIChat;
+
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -132,7 +133,7 @@ public class FieldService {
     public static boolean payRent(Player player, PropertyField prop, int[] rollResult, int amplifier) {
 
         Player owner = prop.getOwner();
-        if (owner != null && owner == player) {
+        if (owner != null && owner != player) {
 
             int rent = getRent(prop, rollResult, amplifier);
             PlayerService.takeAndGiveMoneyUnchecked(player, owner, rent);

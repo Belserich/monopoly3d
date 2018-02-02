@@ -44,7 +44,6 @@ public class MenuSceneManager extends Stage {
             }
         });
         
-        stage.setTitle("MONOPOLY");
         stage.setScene(scene);
         stage.setFullScreen(true);
         stage.show();

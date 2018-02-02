@@ -15,10 +15,6 @@ public class Card {
         SET_POSITION,
         RENOVATE, MOVE_NEXT_SUPPLY,
         BIRTHDAY, PAY_ALL;
-        
-        public static boolean mustRepeatFieldPhase(Action ac) {
-            return ac == MOVE_NEXT_STATION_RENT_AMP || ac == MOVE || ac == MOVE_NEXT_SUPPLY || ac == SET_POSITION;
-        }
     }
     
     /**

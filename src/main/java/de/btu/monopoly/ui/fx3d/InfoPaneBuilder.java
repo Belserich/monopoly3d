@@ -58,6 +58,7 @@ public class InfoPaneBuilder {
         Text createText(String str, Font font) {
             Text text = new Text(str);
             text.setTextAlignment(TextAlignment.CENTER);
+            text.setPickOnBounds(false);
             text.setFont(font);
             return text;
         }
@@ -102,6 +103,7 @@ public class InfoPaneBuilder {
         GridPane createInfoPane() {
             
             GridPane infoPane = new GridPane();
+            infoPane.setPickOnBounds(false);
             infoPane.setPadding(new Insets(3, 17, 0, 17));
     
             ColumnConstraints constraints = new ColumnConstraints();
@@ -165,6 +167,7 @@ public class InfoPaneBuilder {
             doubleRentText.setTextAlignment(TextAlignment.CENTER);
     
             VBox subBox = new VBox(infoPane, new Line(0, 0, 160, 0), doubleRentText);
+            subBox.setPickOnBounds(false);
             subBox.setPadding(new Insets(7, 0, 0, 0));
             subBox.setSpacing(5);
             subBox.setAlignment(Pos.CENTER);

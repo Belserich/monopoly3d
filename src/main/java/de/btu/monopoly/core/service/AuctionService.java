@@ -102,7 +102,7 @@ public class AuctionService extends Listener {
             message += "Wir haben keinen Bieter. ";
         }
         else {
-            message += "Wir haben" + auc.getHighestBid() + "€ von "
+            message += "Wir haben " + auc.getHighestBid() + "€ von "
                     + AuctionService.getPlayer(AuctionService.getHighestBidder()).getName() + ". ";
         }
         if (!Global.RUN_AS_TEST) {

@@ -9,6 +9,8 @@ import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.ki.HardKi;
 import de.btu.monopoly.net.chat.GUIChat;
 import de.btu.monopoly.net.client.GameClient;
+import de.btu.monopoly.util.Assets;
+
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -78,7 +80,7 @@ public class Game {
     public Game(GameClient client, Player[] players, long seed) {
         this.client = client;
         this.players = players;
-        random = new Random(seed);
+        this.random = new Random(seed);
 
         stateListeners = new LinkedList<>();
 
@@ -99,8 +101,11 @@ public class Game {
 
         LOGGER.info("Spiel wird initialisiert.");
         stateListeners.forEach(GameStateListener::onGameInit);
-
+    
+        Assets.getCommunityCards().shuffle(random);
+        Assets.getEventCards().shuffle(random);
         this.board = new GameBoard();
+        
         AuctionService.initAuction(players, client);
 
         for (Player player : players) {
@@ -125,16 +130,18 @@ public class Game {
             for (int id = 0; id < activePlayers.size(); id++) {
 
                 currPlayer = activePlayers.get(id);
+                
                 LOGGER.info(String.format("%s ist an der Reihe.", currPlayer.getName()));
-
                 stateListeners.forEach(l -> l.onTurnStart(currPlayer));
 
                 turn();
-
+                board.updateActivePlayers();
+    
                 if (!currPlayer.getBank().isLiquid()) {
                     PlayerService.bankrupt(currPlayer, board);
+                    LOGGER.info(String.format("Spieler %s ist bankrott, er wird aus dem Spiel entfernt.", currPlayer.getName()));
+                    stateListeners.forEach(l -> l.onPlayerBankrupt(currPlayer));
                 }
-                board.updateActivePlayers();
 
                 Player nextPlayer = activePlayers.get((id + 1) % activePlayers.size());
                 stateListeners.forEach(l -> l.onTurnEnd(currPlayer, nextPlayer));
@@ -234,19 +241,19 @@ public class Game {
                 Card card = cama.getStack(cardField.getStackType()).cardAt(0);
 
                 stateListeners.forEach(l -> l.onPlayerOnCardField(currPlayer, cardField, card));
-                cama.pullAndProcess(cardField.getStackType(), currPlayer);
-                repeatPhase = Card.Action.mustRepeatFieldPhase(card.getAction());
+                repeatPhase = cama.pullAndProcess(cardField.getStackType(), currPlayer);
             }
             else if (type == FieldTypes.CORNER_3) /*
              * "Gehen Sie ins Gefängnis"
              */ {
                 FieldService.toJail(currPlayer);
             }
-        } while (repeatPhase);
+        }
+        while (repeatPhase);
     }
 
     protected void onPlayerOnProperty(PropertyField prop) {
-
+    
         Player other = prop.getOwner();
         if (other == null) { // Feld frei
             if (Global.RUN_IN_CONSOLE) {
@@ -268,7 +275,7 @@ public class Game {
     }
 
     protected void onBuyPropertyOption(PropertyField prop) {
-
+        
         int choice = IOService.getBuyPropertyChoice(currPlayer, prop);
         switch (choice) {
             case 1: // Kaufen
