@@ -1,6 +1,7 @@
 package de.btu.monopoly;
 
 //Imports
+
 import de.btu.monopoly.core.GameBoard;
 import de.btu.monopoly.core.service.FieldService;
 import de.btu.monopoly.core.service.PlayerService;
@@ -12,9 +13,10 @@ import de.btu.monopoly.data.field.*;
 import de.btu.monopoly.data.player.Player;
 import de.btu.monopoly.net.client.GameClient;
 import de.btu.monopoly.util.Assets;
-import java.util.Random;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.Random;
 
 /**
  *
@@ -32,6 +34,7 @@ public class CoreUnitTest {
     public CoreUnitTest() {
         Global.RUN_AS_TEST = true;
         Assets.loadFields();
+        Assets.loadCards();
 
         players = new Player[4];
         for (int i = 0; i < 4; i++) {
