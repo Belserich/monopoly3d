@@ -537,16 +537,15 @@ public class GameSceneManager implements AnimationQueuer {
         box.setAlignment(Pos.CENTER);
 
         Popup pop = new Popup(gridPane);
-        safelyQueuePopup(pop);
 
         if (fima.getOwnedPropertyFields(currPlayer).count() == 0) {
             Platform.runLater(() -> {
                 fieldBox.setPromptText("Du besitzt keine Straßen!");
                 destroyPopup(pop);
             });
-            destroyPopup(pop);
             return 0;
         }
+        safelyQueuePopup(pop);
 
         while (!eingabeButton.isPressed() || !exitButton.isPressed()) {
             if (eingabeButton.isPressed()) {
