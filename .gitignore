@@ -1,15 +1,7 @@
-# Netbeans files #
-############################
 */target/
-
-# Platform generated files #
-############################
 *.dylib
 *.dll
 *.so
-
-# OS generated files #
-######################
 .DS_Store
 .DS_Store?
 ._*
@@ -18,7 +10,15 @@
 ehthumbs.db
 Thumbs.db
 hs_err_pid*
-.idea/
+.idea
 .iml
-/target/
-/nbproject/
+target
+nbproject
+*.swp
+*.swo
+.classpath
+.gradle
+.project
+.settings
+build
+bin

@@ -1,0 +1,43 @@
+plugins {
+	id 'application'
+	id 'org.openjfx.javafxplugin' version '0.0.10'
+}
+
+group = 'de.btu.monopoly'
+version = '1.0'
+description = 'Monopoly'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(15)
+	}
+}
+
+application {
+	mainClass = 'de.btu.monopoly.Launcher'
+}
+
+jar {
+	manifest {
+		attributes 'Main-Class': 'de.btu.monopoly.Launcher'
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'com.esotericsoftware:kryonet:2.22.0-RC1'
+	implementation 'com.jfoenix:jfoenix:9.0.10'
+	testImplementation 'junit:junit:4.12'
+}
+
+javafx {
+	version = "17"
+	modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.base', 'javafx.graphics' ]
+}
+
+tasks.withType(JavaCompile) {
+	options.encoding = 'UTF-8'
+}
